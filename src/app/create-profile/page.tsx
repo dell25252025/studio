@@ -122,6 +122,7 @@ export default function CreateProfilePage() {
     setIsSubmitting(true);
     try {
       const result = await createUserProfile(currentUser.uid, data);
+      
       if (result.success) {
         toast({
           title: 'Profil créé avec succès !',
@@ -133,10 +134,11 @@ export default function CreateProfilePage() {
       }
     } catch (error) {
       console.error('Failed to create profile:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
       toast({
         variant: 'destructive',
         title: 'Erreur lors de la création du profil',
-        description: 'Veuillez réessayer plus tard.',
+        description: errorMessage,
       });
       setIsSubmitting(false);
     }

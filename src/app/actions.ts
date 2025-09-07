@@ -25,29 +25,32 @@ export async function createUserProfile(userId: string, profileData: any) {
 
   try {
     const photoURLs = await Promise.all(
-      profileData.photos.map(async (photoDataUri: string) => {
-        if (!photoDataUri) return null;
+      (profileData.photos || []).map(async (photoDataUri: string) => {
+        if (!photoDataUri || !photoDataUri.startsWith('data:')) return photoDataUri; // Return URL if it's already one
         const storageRef = ref(storage, `profile_pictures/${userId}/${uuidv4()}`);
         const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
         return getDownloadURL(uploadResult.ref);
       })
     );
 
-    const serializableProfileData = { ...profileData, photos: photoURLs.filter(url => url !== null), userId };
+    const serializableProfileData = { ...profileData, photos: photoURLs.filter(url => url !== null) };
 
-    if (profileData.dates?.from && profileData.dates.from instanceof Date) {
-      serializableProfileData.dates.from = profileData.dates.from.toISOString();
+    if (serializableProfileData.dates?.from && typeof serializableProfileData.dates.from !== 'string') {
+      serializableProfileData.dates.from = serializableProfileData.dates.from.toISOString();
     }
-    if (profileData.dates?.to && profileData.dates.to instanceof Date) {
-      serializableProfileData.dates.to = profileData.dates.to.toISOString();
+    if (serializableProfileData.dates?.to && typeof serializableProfileData.dates.to !== 'string') {
+      serializableProfileData.dates.to = serializableProfileData.dates.to.toISOString();
     }
     
     await setDoc(doc(db, "profiles", userId), serializableProfileData);
-    console.log("Document written with ID: ", userId);
+    console.log("Profile successfully created for user: ", userId);
     return { success: true, id: userId };
   } catch (e) {
-    console.error("Error adding document: ", e);
-    throw new Error("Failed to create user profile.");
+    console.error("Error creating user profile in Firestore: ", e);
+    if (e instanceof Error) {
+       throw new Error(`Failed to create user profile: ${e.message}`);
+    }
+    throw new Error("An unknown error occurred while creating the user profile.");
   }
 }
 
