@@ -15,9 +15,10 @@ import { Loader2, Plane, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createUserProfile } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
-import { auth } from '@/lib/firebase';
+import { auth, storage } from '@/lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import Link from 'next/link';
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
 
 
 const formSchema = z.object({
@@ -121,7 +122,24 @@ export default function CreateProfilePage() {
 
     setIsSubmitting(true);
     try {
-      const result = await createUserProfile(currentUser.uid, data);
+      let profilePicUrl: string | null = null;
+      if (data.profilePic && data.profilePic.startsWith('data:')) {
+        const storageRef = ref(storage, `profile_pictures/${currentUser.uid}/profile.jpg`);
+        const uploadResult = await uploadString(storageRef, data.profilePic, 'data_url');
+        profilePicUrl = await getDownloadURL(uploadResult.ref);
+      }
+
+      const profileData: any = { ...data, profilePic: profilePicUrl };
+      
+      if (profileData.dates?.from) {
+        profileData.dates.from = profileData.dates.from.toISOString();
+      }
+      if (profileData.dates?.to) {
+        profileData.dates.to = profileData.dates.to.toISOString();
+      }
+
+
+      const result = await createUserProfile(currentUser.uid, profileData);
       
       if (result.success) {
         toast({

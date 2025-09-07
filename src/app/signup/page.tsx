@@ -52,12 +52,19 @@ export default function SignupPage() {
     setIsLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, values.email, values.password);
+      toast({
+        title: 'Compte créé avec succès !',
+        description: 'Vous pouvez maintenant compléter votre profil.',
+      });
       router.push('/create-profile');
     } catch (error) {
       if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
-        // If email is already in use, try to sign in the user instead
         try {
           await signInWithEmailAndPassword(auth, values.email, values.password);
+          toast({
+            title: 'Connexion réussie !',
+            description: 'Finalisez votre profil pour commencer à voyager.',
+          });
           router.push('/create-profile');
         } catch (signInError) {
           console.error('Sign in error after sign up failed', signInError);
@@ -71,6 +78,9 @@ export default function SignupPage() {
       } else {
         console.error('Sign up error', error);
         let description = "Une erreur inattendue s'est produite. Veuillez réessayer.";
+        if (error instanceof FirebaseError) {
+          description = error.message;
+        }
         toast({
           variant: 'destructive',
           title: 'Erreur de création de compte',

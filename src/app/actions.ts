@@ -24,27 +24,12 @@ export async function createUserProfile(userId: string, profileData: any) {
   }
 
   try {
-    let profilePicUrl: string | null = null;
-    if (profileData.profilePic && profileData.profilePic.startsWith('data:')) {
-      const storageRef = ref(storage, `profile_pictures/${userId}/profile.jpg`);
-      const uploadResult = await uploadString(storageRef, profileData.profilePic, 'data_url');
-      profilePicUrl = await getDownloadURL(uploadResult.ref);
-    }
-
     const dataToSave = {
       ...profileData,
-      profilePic: profilePicUrl,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-
-    if (dataToSave.dates?.from) {
-      dataToSave.dates.from = new Date(dataToSave.dates.from).toISOString();
-    }
-    if (dataToSave.dates?.to) {
-      dataToSave.dates.to = new Date(dataToSave.dates.to).toISOString();
-    }
-
+    
     await setDoc(doc(db, "profiles", userId), dataToSave);
     console.log("Profile successfully created for user: ", userId);
     return { success: true, id: userId };
