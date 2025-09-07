@@ -16,7 +16,17 @@ export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<A
 
 export async function createUserProfile(profileData: any) {
   try {
-    const docRef = await addDoc(collection(db, "profiles"), profileData);
+    // Firestore SDK on the server doesn't handle Date objects well when they come from the client.
+    // We need to convert them to a serializable format.
+    const serializableProfileData = { ...profileData };
+    if (profileData.dates?.from) {
+      serializableProfileData.dates.from = new Date(profileData.dates.from).toISOString();
+    }
+    if (profileData.dates?.to) {
+      serializableProfileData.dates.to = new Date(profileData.dates.to).toISOString();
+    }
+    
+    const docRef = await addDoc(collection(db, "profiles"), serializableProfileData);
     console.log("Document written with ID: ", docRef.id);
     return { success: true, id: docRef.id };
   } catch (e) {
