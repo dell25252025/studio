@@ -51,10 +51,6 @@ export default function SignupPage() {
     setIsLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, values.email, values.password);
-      toast({
-        title: 'Accès créé !',
-        description: "Passons maintenant à la création de votre profil.",
-      });
       router.push('/create-profile');
     } catch (error) {
       console.error('Sign up error', error);
@@ -77,10 +73,6 @@ export default function SignupPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      toast({
-        title: 'Connexion réussie !',
-        description: "Vous allez être redirigé pour créer votre profil.",
-      });
       router.push('/create-profile');
     } catch (error) {
        console.error('Google sign in error', error);
