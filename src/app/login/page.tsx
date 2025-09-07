@@ -24,6 +24,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 
 
 const formSchema = z.object({
@@ -56,10 +57,14 @@ export default function LoginPage() {
       router.push('/create-profile');
     } catch (error) {
       console.error('Sign up error', error);
+      let description = "Une erreur inattendue s'est produite. Veuillez réessayer.";
+      if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
+        description = 'Un compte existe déjà avec cette adresse e-mail.';
+      }
       toast({
         variant: 'destructive',
         title: 'Erreur d\'inscription',
-        description: (error as Error).message,
+        description: description,
       });
     } finally {
       setIsLoading(false);
