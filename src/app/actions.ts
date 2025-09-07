@@ -2,7 +2,7 @@
 
 import { aiPoweredMatching, type AIPoweredMatchingInput, type AIPoweredMatchingOutput } from "@/ai/flows/ai-powered-matching";
 import { db, storage } from "@/lib/firebase";
-import { collection, addDoc, doc, getDoc, DocumentData } from "firebase/firestore";
+import { collection, doc, getDoc, DocumentData, setDoc } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -17,17 +17,21 @@ export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<A
   }
 }
 
-export async function createUserProfile(profileData: any) {
+export async function createUserProfile(userId: string, profileData: any) {
+  if (!userId) {
+    throw new Error("User ID is required to create a profile.");
+  }
+
   try {
     const photoURLs = await Promise.all(
       profileData.photos.map(async (photoDataUri: string) => {
-        const storageRef = ref(storage, `profile_pictures/${uuidv4()}`);
+        const storageRef = ref(storage, `profile_pictures/${userId}/${uuidv4()}`);
         const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
         return getDownloadURL(uploadResult.ref);
       })
     );
 
-    const serializableProfileData = { ...profileData, photos: photoURLs };
+    const serializableProfileData = { ...profileData, photos: photoURLs, userId };
 
     if (profileData.dates?.from && profileData.dates.from instanceof Date) {
       serializableProfileData.dates.from = profileData.dates.from.toISOString();
@@ -36,9 +40,9 @@ export async function createUserProfile(profileData: any) {
       serializableProfileData.dates.to = profileData.dates.to.toISOString();
     }
     
-    const docRef = await addDoc(collection(db, "profiles"), serializableProfileData);
-    console.log("Document written with ID: ", docRef.id);
-    return { success: true, id: docRef.id };
+    await setDoc(doc(db, "profiles", userId), serializableProfileData);
+    console.log("Document written with ID: ", userId);
+    return { success: true, id: userId };
   } catch (e) {
     console.error("Error adding document: ", e);
     throw new Error("Failed to create user profile.");

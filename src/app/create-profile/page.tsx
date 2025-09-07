@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -15,6 +15,8 @@ import { Loader2, Plane, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createUserProfile } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
+import { auth } from '@/lib/firebase';
+import { onAuthStateChanged, type User } from 'firebase/auth';
 
 
 const formSchema = z.object({
@@ -51,8 +53,22 @@ const steps = [
 export default function CreateProfilePage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const router = useRouter();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        router.push('/login');
+      }
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, [router]);
 
   const methods = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -93,9 +109,18 @@ export default function CreateProfilePage() {
   };
 
   const onSubmit = async (data: FormData) => {
+    if (!currentUser) {
+       toast({
+        variant: 'destructive',
+        title: 'Erreur d\'authentification',
+        description: 'Impossible de trouver l\'utilisateur. Veuillez vous reconnecter.',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      const result = await createUserProfile(data);
+      const result = await createUserProfile(currentUser.uid, data);
       if (result.success) {
         toast({
           title: 'Profil créé avec succès !',
@@ -115,6 +140,14 @@ export default function CreateProfilePage() {
       setIsSubmitting(false);
     }
   };
+
+  if (authLoading) {
+    return (
+       <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   const CurrentStepComponent = steps[currentStep].component;
 
