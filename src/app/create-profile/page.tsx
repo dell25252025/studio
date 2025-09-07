@@ -11,7 +11,7 @@ import Step1 from '@/components/profile-creation/step1';
 import Step2 from '@/components/profile-creation/step2';
 import Step3 from '@/components/profile-creation/step3';
 import Step4 from '@/components/profile-creation/step4';
-import { Loader2, Plane } from 'lucide-react';
+import { Loader2, Plane, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createUserProfile } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
@@ -116,13 +116,24 @@ export default function CreateProfilePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4">
-       <div className="w-full max-w-2xl">
+       <div className="w-full max-w-2xl relative">
          <div className="flex items-center gap-2 mb-4 justify-center">
           <Plane className="h-8 w-8 text-primary" />
           <h1 className="text-3xl font-bold font-headline text-primary">
             WanderLink
           </h1>
         </div>
+        
+        <Button 
+            variant="ghost" 
+            size="icon" 
+            className="absolute top-0 right-0"
+            onClick={() => router.push('/')}
+        >
+            <X className="h-6 w-6" />
+            <span className="sr-only">Annuler</span>
+        </Button>
+
         <Progress value={((currentStep + 1) / steps.length) * 100} className="mb-8" />
         
         <FormProvider {...methods}>
