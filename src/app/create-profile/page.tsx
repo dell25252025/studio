@@ -50,10 +50,21 @@ export default function CreateProfilePage() {
   const methods = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      firstName: '',
+      gender: undefined,
       photos: [],
+      bio: '',
       languages: [],
+      location: '',
+      height: undefined,
+      tobacco: undefined,
+      alcohol: undefined,
+      destination: '',
+      dates: { from: undefined, to: undefined },
       activities: [],
       flexibleDates: false,
+      travelStyle: undefined,
+      financialArrangement: undefined,
     },
   });
 
