@@ -11,7 +11,11 @@ import Step1 from '@/components/profile-creation/step1';
 import Step2 from '@/components/profile-creation/step2';
 import Step3 from '@/components/profile-creation/step3';
 import Step4 from '@/components/profile-creation/step4';
-import { Plane } from 'lucide-react';
+import { Loader2, Plane } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { createUserProfile } from '@/app/actions';
+import { useToast } from '@/hooks/use-toast';
+
 
 const formSchema = z.object({
   firstName: z.string().min(1, 'Le prénom est obligatoire.'),
@@ -35,7 +39,7 @@ const formSchema = z.object({
   financialArrangement: z.enum(['Partager les frais (50/50)', 'Je peux sponsoriser le voyage', 'Je cherche un voyage sponsorisé', 'Organiser un voyage de groupe'], { required_error: "L'arrangement financier est obligatoire."}),
 });
 
-type FormData = z.infer<typeof formSchema>;
+export type FormData = z.infer<typeof formSchema>;
 
 const steps = [
   { id: 1, title: 'Qui êtes-vous ?', component: Step1, fields: ['firstName', 'age', 'gender', 'photos', 'bio'] },
@@ -46,6 +50,9 @@ const steps = [
 
 export default function CreateProfilePage() {
   const [currentStep, setCurrentStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
 
   const methods = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -81,14 +88,28 @@ export default function CreateProfilePage() {
 
   const prevStep = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep + 1);
+      setCurrentStep(currentStep - 1);
     }
   };
 
-  const onSubmit = (data: FormData) => {
-    console.log('Profile data:', data);
-    // Handle form submission, e.g., send to server
-    alert('Profil créé avec succès !');
+  const onSubmit = async (data: FormData) => {
+    setIsSubmitting(true);
+    try {
+      await createUserProfile(data);
+      toast({
+        title: 'Profil créé avec succès !',
+        description: "Vous allez être redirigé vers la page d'accueil.",
+      });
+      router.push('/');
+    } catch (error) {
+      console.error('Failed to create profile:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Erreur lors de la création du profil',
+        description: 'Veuillez réessayer plus tard.',
+      });
+      setIsSubmitting(false);
+    }
   };
 
   const CurrentStepComponent = steps[currentStep].component;
@@ -110,7 +131,7 @@ export default function CreateProfilePage() {
 
             <div className="mt-8 flex justify-between items-center">
               {currentStep > 0 ? (
-                <Button type="button" variant="ghost" onClick={prevStep}>
+                <Button type="button" variant="ghost" onClick={prevStep} disabled={isSubmitting}>
                   Précédent
                 </Button>
               ) : (
@@ -121,8 +142,15 @@ export default function CreateProfilePage() {
                   Suivant
                 </Button>
               ) : (
-                <Button type="submit">
-                  Terminer et voir mon profil !
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Création...
+                    </>
+                  ) : (
+                    'Terminer et voir mon profil !'
+                  )}
                 </Button>
               )}
             </div>
