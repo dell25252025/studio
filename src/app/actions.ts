@@ -46,9 +46,9 @@ export async function createUserProfile(userId: string, profileData: any) {
   } catch (e) {
     console.error("Error creating user profile in Firestore: ", e);
     if (e instanceof Error) {
-       throw new Error(`Failed to create user profile: ${e.message}`);
+       return { success: false, error: `Failed to create user profile: ${e.message}`};
     }
-    throw new Error("An unknown error occurred while creating the user profile.");
+    return { success: false, error: "An unknown error occurred while creating the user profile."};
   }
 }
 

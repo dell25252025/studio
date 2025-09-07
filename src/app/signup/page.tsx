@@ -23,6 +23,7 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import Link from 'next/link';
@@ -53,16 +54,29 @@ export default function SignupPage() {
       await createUserWithEmailAndPassword(auth, values.email, values.password);
       router.push('/create-profile');
     } catch (error) {
-      console.error('Sign up error', error);
-      let description = "Une erreur inattendue s'est produite. Veuillez réessayer.";
       if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
-        description = 'Un compte existe déjà avec cette adresse e-mail.';
+        // If email is already in use, try to sign in the user instead
+        try {
+          await signInWithEmailAndPassword(auth, values.email, values.password);
+          router.push('/create-profile');
+        } catch (signInError) {
+          console.error('Sign in error after sign up failed', signInError);
+          let description = "Un compte existe déjà avec cette adresse e-mail, mais le mot de passe est incorrect.";
+          toast({
+            variant: 'destructive',
+            title: 'Erreur de connexion',
+            description: description,
+          });
+        }
+      } else {
+        console.error('Sign up error', error);
+        let description = "Une erreur inattendue s'est produite. Veuillez réessayer.";
+        toast({
+          variant: 'destructive',
+          title: 'Erreur de création de compte',
+          description: description,
+        });
       }
-      toast({
-        variant: 'destructive',
-        title: 'Erreur de création de compte',
-        description: description,
-      });
     } finally {
       setIsLoading(false);
     }

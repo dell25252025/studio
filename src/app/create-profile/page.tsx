@@ -130,7 +130,7 @@ export default function CreateProfilePage() {
         });
         router.push(`/profile?id=${result.id}`);
       } else {
-        throw new Error("La création du profil a échoué.");
+        throw new Error(result.error || "La création du profil a échoué.");
       }
     } catch (error) {
       console.error('Failed to create profile:', error);
