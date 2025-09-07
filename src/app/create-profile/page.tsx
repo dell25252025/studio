@@ -15,7 +15,7 @@ import { Plane } from 'lucide-react';
 
 const formSchema = z.object({
   firstName: z.string().min(1, 'Le prénom est obligatoire.'),
-  dob: z.date({ required_error: 'La date de naissance est obligatoire.' }),
+  age: z.number({ required_error: "L'âge est obligatoire." }).min(18, 'Vous devez avoir au moins 18 ans.'),
   gender: z.enum(['Homme', 'Femme', 'Non-binaire']),
   photos: z.array(z.string()).min(1, 'Veuillez ajouter au moins une photo.').max(5),
   bio: z.string().max(500, 'La description ne doit pas dépasser 500 caractères.').optional(),
@@ -38,7 +38,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const steps = [
-  { id: 1, title: 'Qui êtes-vous ?', component: Step1, fields: ['firstName', 'dob', 'gender', 'photos', 'bio'] },
+  { id: 1, title: 'Qui êtes-vous ?', component: Step1, fields: ['firstName', 'age', 'gender', 'photos', 'bio'] },
   { id: 2, title: 'Votre profil voyageur', component: Step2, fields: ['languages', 'location', 'height'] },
   { id: 3, title: 'Style de vie', component: Step3, fields: ['tobacco', 'alcohol'] },
   { id: 4, title: 'Votre prochain voyage !', component: Step4, fields: ['destination', 'dates', 'flexibleDates', 'travelStyle', 'activities', 'financialArrangement'] },
@@ -51,6 +51,7 @@ export default function CreateProfilePage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: '',
+      age: undefined,
       gender: undefined,
       photos: [],
       bio: '',
