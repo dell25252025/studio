@@ -14,7 +14,7 @@ const BottomNav = () => {
     { icon: XCircle, label: 'Block', href: '#' },
   ];
   
-  const profileItem = { icon: UserPlus, label: 'Profile', href: '/login' };
+  const profileItem = { icon: UserPlus, label: 'Profile', href: '/signup' };
 
 
   return (

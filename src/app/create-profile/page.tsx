@@ -17,6 +17,7 @@ import { createUserProfile } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
+import Link from 'next/link';
 
 
 const formSchema = z.object({
@@ -63,7 +64,7 @@ export default function CreateProfilePage() {
       if (user) {
         setCurrentUser(user);
       } else {
-        router.push('/login');
+        router.push('/signup');
       }
       setAuthLoading(false);
     });
@@ -155,10 +156,12 @@ export default function CreateProfilePage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4">
        <div className="w-full max-w-2xl relative">
          <div className="flex items-center gap-2 mb-4 justify-center">
-          <Plane className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-bold font-headline text-primary">
-            WanderLink
-          </h1>
+          <Link href="/" className="flex items-center gap-2">
+            <Plane className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold font-headline text-primary">
+              WanderLink
+            </h1>
+          </Link>
         </div>
         
         <Button 

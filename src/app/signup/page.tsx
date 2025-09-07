@@ -25,6 +25,7 @@ import {
   signInWithPopup,
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
+import Link from 'next/link';
 
 
 const formSchema = z.object({
@@ -32,7 +33,7 @@ const formSchema = z.object({
   password: z.string().min(6, { message: 'Le mot de passe doit contenir au moins 6 caractères.' }),
 });
 
-export default function LoginPage() {
+export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const router = useRouter();
@@ -51,8 +52,8 @@ export default function LoginPage() {
     try {
       await createUserWithEmailAndPassword(auth, values.email, values.password);
       toast({
-        title: 'Compte créé avec succès !',
-        description: "Vous allez être redirigé pour créer votre profil.",
+        title: 'Accès créé !',
+        description: "Passons maintenant à la création de votre profil.",
       });
       router.push('/create-profile');
     } catch (error) {
@@ -97,10 +98,12 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 mb-8 justify-center">
-          <Plane className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-bold font-headline text-primary">
-            WanderLink
-          </h1>
+            <Link href="/" className="flex items-center gap-2">
+                <Plane className="h-8 w-8 text-primary" />
+                <h1 className="text-3xl font-bold font-headline text-primary">
+                    WanderLink
+                </h1>
+            </Link>
         </div>
         <h2 className="text-2xl font-semibold text-center">Créez votre compte</h2>
         <p className="text-center text-muted-foreground mb-6">Rejoignez la communauté de voyageurs.</p>
@@ -160,7 +163,7 @@ export default function LoginPage() {
             />
             <Button type="submit" className="w-full" disabled={isLoading || isGoogleLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Créer un compte
+              Suivant
             </Button>
           </form>
         </Form>
