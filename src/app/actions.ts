@@ -1,8 +1,11 @@
 "use server";
 
 import { aiPoweredMatching, type AIPoweredMatchingInput, type AIPoweredMatchingOutput } from "@/ai/flows/ai-powered-matching";
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import { collection, addDoc, doc, getDoc, DocumentData } from "firebase/firestore";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { v4 as uuidv4 } from 'uuid';
+
 
 export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<AIPoweredMatchingOutput> {
   try {
@@ -16,7 +19,16 @@ export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<A
 
 export async function createUserProfile(profileData: any) {
   try {
-    const serializableProfileData = { ...profileData };
+    const photoURLs = await Promise.all(
+      profileData.photos.map(async (photoDataUri: string) => {
+        const storageRef = ref(storage, `profile_pictures/${uuidv4()}`);
+        const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
+        return getDownloadURL(uploadResult.ref);
+      })
+    );
+
+    const serializableProfileData = { ...profileData, photos: photoURLs };
+
     if (profileData.dates?.from && profileData.dates.from instanceof Date) {
       serializableProfileData.dates.from = profileData.dates.from.toISOString();
     }

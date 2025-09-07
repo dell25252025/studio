@@ -37,7 +37,7 @@ export default function ProfilePage() {
     if (profileId) {
       const fetchProfile = async () => {
         try {
-          const profileData = await getUserProfile(profileId);
+          const profileData = await getUserProfile(profileId as string);
           setProfile(profileData);
         } catch (error) {
           console.error("Failed to fetch profile:", error);
