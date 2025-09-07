@@ -1,3 +1,4 @@
+
 "use server";
 
 import { aiPoweredMatching, type AIPoweredMatchingInput, type AIPoweredMatchingOutput } from "@/ai/flows/ai-powered-matching";
@@ -25,13 +26,14 @@ export async function createUserProfile(userId: string, profileData: any) {
   try {
     const photoURLs = await Promise.all(
       profileData.photos.map(async (photoDataUri: string) => {
+        if (!photoDataUri) return null;
         const storageRef = ref(storage, `profile_pictures/${userId}/${uuidv4()}`);
         const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
         return getDownloadURL(uploadResult.ref);
       })
     );
 
-    const serializableProfileData = { ...profileData, photos: photoURLs, userId };
+    const serializableProfileData = { ...profileData, photos: photoURLs.filter(url => url !== null), userId };
 
     if (profileData.dates?.from && profileData.dates.from instanceof Date) {
       serializableProfileData.dates.from = profileData.dates.from.toISOString();
