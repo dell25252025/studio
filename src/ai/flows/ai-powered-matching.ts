@@ -68,7 +68,7 @@ Travel Intention: {{{userProfile.travelIntention}}}
 Interests: {{#each userProfile.interests}}{{{this}}}, {{/each}}
 Age: {{{userProfile.age}}}
 Sex: {{{userProfile.sex}}}
-Verified: {{{userProfile.verified}}}
+Verified: {{{user.Profile.verified}}}
 
 Possible Matches:
 {{#each possibleMatches}}
@@ -107,4 +107,3 @@ const aiPoweredMatchingFlow = ai.defineFlow(
     return output!;
   }
 );
-
