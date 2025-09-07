@@ -11,33 +11,28 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Plus, X } from 'lucide-react';
+import { Camera, X } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
 
 const Step1 = () => {
   const { control, watch, setValue } = useFormContext();
-  const photos = watch('photos') || [];
+  const profilePic = watch('profilePic');
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    const remainingSlots = 5 - photos.length;
-    const filesToUpload = files.slice(0, remainingSlots);
-
-    filesToUpload.forEach(file => {
+    const file = event.target.files?.[0];
+    if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setValue('photos', [...watch('photos'), reader.result as string]);
+        setValue('profilePic', reader.result as string);
       };
       reader.readAsDataURL(file);
-    });
+    }
   };
   
-  const removePhoto = (index: number) => {
-    const newPhotos = [...photos];
-    newPhotos.splice(index, 1);
-    setValue('photos', newPhotos);
+  const removePhoto = () => {
+    setValue('profilePic', null);
   };
 
 
@@ -118,38 +113,39 @@ const Step1 = () => {
         />
         <FormField
           control={control}
-          name="photos"
+          name="profilePic"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Ajoutez vos meilleures photos</FormLabel>
+              <FormLabel>Votre photo de profil</FormLabel>
               <FormControl>
-                 <div className="grid grid-cols-3 gap-4">
-                  {photos.map((photo: string, index: number) => (
-                    <div key={index} className="relative aspect-square">
-                      <Image src={photo} alt={`Photo ${index + 1}`} fill className="object-cover rounded-lg" />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-1 right-1 h-6 w-6"
-                        onClick={() => removePhoto(index)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  {photos.length < 5 && (
-                    <label className="aspect-square flex items-center justify-center border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted">
-                        <div className="text-center">
-                            <Plus className="mx-auto h-8 w-8 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">Ajouter</span>
-                        </div>
-                        <input type="file" className="sr-only" multiple accept="image/*" onChange={handlePhotoUpload} />
-                    </label>
-                  )}
+                 <div className="flex items-center gap-4">
+                  <div className="relative w-32 h-32">
+                  {profilePic ? (
+                      <div className="relative w-32 h-32">
+                        <Image src={profilePic} alt="Photo de profil" layout="fill" className="object-cover rounded-full" />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-0 right-0 h-7 w-7"
+                          onClick={removePhoto}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <label className="w-32 h-32 flex items-center justify-center border-2 border-dashed rounded-full cursor-pointer hover:bg-muted">
+                          <div className="text-center">
+                              <Camera className="mx-auto h-8 w-8 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground">Ajouter</span>
+                          </div>
+                          <input type="file" className="sr-only" accept="image/*" onChange={handlePhotoUpload} />
+                      </label>
+                    )}
+                  </div>
+                   <p className="text-sm text-muted-foreground">Montrez votre plus beau sourire ! C'est la première chose que les autres verront.</p>
                  </div>
               </FormControl>
-               <p className="text-sm text-muted-foreground">Votre première photo sera votre photo de profil principale. Montrez votre côté voyageur !</p>
               <FormMessage />
             </FormItem>
           )}

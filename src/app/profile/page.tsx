@@ -1,19 +1,22 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { getUserProfile } from '@/app/actions';
+import { useEffect, useState, useRef } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { getUserProfile, updateUserProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Utensils, Cigarette, Wine, Calendar, CheckCircle } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Utensils, Cigarette, Wine, Calendar, CheckCircle, Camera } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import BottomNav from '@/components/bottom-nav';
 import WanderlinkHeader from '@/components/wanderlink-header';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { auth } from '@/lib/firebase';
+import type { User } from 'firebase/auth';
 
 const activityMap = {
   hiking: 'Randonnée',
@@ -29,13 +32,33 @@ const activityMap = {
 
 export default function ProfilePage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const profileId = searchParams.get('id');
   const [profile, setProfile] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+        setCurrentUser(user);
+        if (user && user.uid === profileId) {
+            setIsOwner(true);
+        } else {
+            setIsOwner(false);
+        }
+    });
+    return () => unsubscribe();
+  }, [profileId]);
+
 
   useEffect(() => {
     if (profileId) {
       const fetchProfile = async () => {
+        setLoading(true);
         try {
           const profileData = await getUserProfile(profileId as string);
           setProfile(profileData);
@@ -50,6 +73,47 @@ export default function ProfilePage() {
       setLoading(false);
     }
   }, [profileId]);
+
+  const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !currentUser) return;
+
+    setIsUploading(true);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async () => {
+        const photoDataUri = reader.result as string;
+        try {
+            const result = await updateUserProfilePicture(currentUser.uid, photoDataUri);
+            if (result.success && result.url) {
+                setProfile(prev => prev ? { ...prev, profilePic: result.url } : null);
+                toast({
+                    title: "Photo de profil mise à jour !",
+                    description: "Votre nouvelle photo est maintenant visible.",
+                });
+            }
+        } catch (error) {
+            console.error("Failed to update profile picture:", error);
+            const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
+            toast({
+                variant: "destructive",
+                title: "Erreur de mise à jour",
+                description: errorMessage,
+            });
+        } finally {
+            setIsUploading(false);
+        }
+    };
+     reader.onerror = (error) => {
+        console.error("File reading error:", error);
+        setIsUploading(false);
+        toast({
+            variant: "destructive",
+            title: "Erreur de lecture du fichier",
+            description: "Impossible de lire la photo sélectionnée.",
+        });
+    };
+  };
 
   if (loading) {
     return (
@@ -85,24 +149,16 @@ export default function ProfilePage() {
         <WanderlinkHeader />
         <main className="flex-1 pb-24">
             <div className="relative h-96">
-                <Carousel className="w-full h-full">
-                    <CarouselContent>
-                        {profile.photos.map((photo: string, index: number) => (
-                        <CarouselItem key={index}>
-                            <div className="relative h-96 w-full">
-                            <Image
-                                src={photo}
-                                alt={`Photo de ${profile.firstName} ${index + 1}`}
-                                layout="fill"
-                                objectFit="cover"
-                                className="w-full h-full"
-                                data-ai-hint="person image"
-                            />
-                            </div>
-                        </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                </Carousel>
+                 <div className="relative h-96 w-full">
+                    <Image
+                        src={profile.profilePic || "https://picsum.photos/1200/800"}
+                        alt={`Photo de ${profile.firstName}`}
+                        layout="fill"
+                        objectFit="cover"
+                        className="w-full h-full"
+                        data-ai-hint="person image"
+                    />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                 <div className="absolute bottom-0 left-0 p-6 text-white">
                     <h1 className="text-4xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
@@ -111,6 +167,28 @@ export default function ProfilePage() {
                         <span>{profile.location}</span>
                     </div>
                 </div>
+                 {isOwner && (
+                    <div className="absolute bottom-4 right-4">
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            accept="image/*"
+                            onChange={handlePhotoChange}
+                        />
+                        <Button
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isUploading}
+                        >
+                            {isUploading ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <Camera className="mr-2 h-4 w-4" />
+                            )}
+                            Changer la photo
+                        </Button>
+                    </div>
+                )}
             </div>
 
             <div className="container mx-auto max-w-4xl py-8 grid grid-cols-1 md:grid-cols-3 gap-8">

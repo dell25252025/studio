@@ -24,7 +24,7 @@ const formSchema = z.object({
   firstName: z.string().min(1, 'Le prénom est obligatoire.'),
   age: z.number({ required_error: "L'âge est obligatoire." }).min(18, 'Vous devez avoir au moins 18 ans.'),
   gender: z.enum(['Homme', 'Femme', 'Non-binaire'], { required_error: "Le genre est obligatoire."}),
-  photos: z.array(z.string()).min(1, 'Veuillez ajouter au moins une photo.').max(5),
+  profilePic: z.string().optional(),
   bio: z.string().max(500, 'La description ne doit pas dépasser 500 caractères.').optional(),
   languages: z.array(z.string()).min(1, 'Veuillez sélectionner au moins une langue.'),
   location: z.string().min(1, 'La localisation est obligatoire.'),
@@ -45,7 +45,7 @@ const formSchema = z.object({
 export type FormData = z.infer<typeof formSchema>;
 
 const steps = [
-  { id: 1, title: 'Qui êtes-vous ?', component: Step1, fields: ['firstName', 'age', 'gender', 'photos', 'bio'] },
+  { id: 1, title: 'Qui êtes-vous ?', component: Step1, fields: ['firstName', 'age', 'gender', 'profilePic', 'bio'] },
   { id: 2, title: 'Votre profil voyageur', component: Step2, fields: ['languages', 'location', 'height'] },
   { id: 3, title: 'Style de vie', component: Step3, fields: ['tobacco', 'alcohol'] },
   { id: 4, title: 'Votre prochain voyage !', component: Step4, fields: ['destination', 'dates', 'flexibleDates', 'travelStyle', 'activities', 'financialArrangement'] },
@@ -77,7 +77,7 @@ export default function CreateProfilePage() {
       firstName: '',
       age: undefined,
       gender: undefined,
-      photos: [],
+      profilePic: '',
       bio: '',
       languages: [],
       location: '',
