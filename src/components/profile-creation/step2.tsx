@@ -100,7 +100,12 @@ const Step2 = () => {
             <FormItem>
               <FormLabel>Taille (en cm) <span className="text-muted-foreground">(optionnel)</span></FormLabel>
               <FormControl>
-                <Input type="number" placeholder="Ex: 175" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
+                <Input 
+                  type="number" 
+                  placeholder="Ex: 175" 
+                  {...field} 
+                  value={field.value ?? ''}
+                  onChange={e => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value))} />
               </FormControl>
               <FormMessage />
             </FormItem>

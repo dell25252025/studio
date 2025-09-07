@@ -72,6 +72,7 @@ const Step1 = () => {
                   type="number"
                   placeholder="Ex: 28"
                   {...field}
+                  value={field.value ?? ''}
                   onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value, 10))}
                 />
               </FormControl>
