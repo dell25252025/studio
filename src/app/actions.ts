@@ -2,7 +2,7 @@
 
 import { aiPoweredMatching, type AIPoweredMatchingInput, type AIPoweredMatchingOutput } from "@/ai/flows/ai-powered-matching";
 import { db } from "@/lib/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc, DocumentData } from "firebase/firestore";
 
 export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<AIPoweredMatchingOutput> {
   try {
@@ -16,8 +16,6 @@ export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<A
 
 export async function createUserProfile(profileData: any) {
   try {
-    // Firestore SDK on the server doesn't handle Date objects well when they come from the client.
-    // We need to convert them to a serializable format.
     const serializableProfileData = { ...profileData };
     if (profileData.dates?.from && profileData.dates.from instanceof Date) {
       serializableProfileData.dates.from = profileData.dates.from.toISOString();
@@ -32,5 +30,22 @@ export async function createUserProfile(profileData: any) {
   } catch (e) {
     console.error("Error adding document: ", e);
     throw new Error("Failed to create user profile.");
+  }
+}
+
+export async function getUserProfile(id: string): Promise<DocumentData | null> {
+  try {
+    const docRef = doc(db, "profiles", id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    throw new Error("Failed to retrieve user profile.");
   }
 }

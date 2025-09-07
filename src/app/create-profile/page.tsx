@@ -95,12 +95,12 @@ export default function CreateProfilePage() {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      await createUserProfile(data);
+      const {id} = await createUserProfile(data);
       toast({
         title: 'Profil créé avec succès !',
-        description: "Vous allez être redirigé vers la page d'accueil.",
+        description: "Vous allez être redirigé vers votre profil.",
       });
-      router.push('/');
+      router.push(`/profile?id=${id}`);
     } catch (error) {
       console.error('Failed to create profile:', error);
       toast({
