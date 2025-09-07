@@ -24,16 +24,22 @@ export async function createUserProfile(userId: string, profileData: any) {
   }
 
   try {
-    const photoURLs = await Promise.all(
-      (profileData.photos || []).map(async (photoDataUri: string) => {
-        if (!photoDataUri || !photoDataUri.startsWith('data:')) return photoDataUri; // Return URL if it's already one
-        const storageRef = ref(storage, `profile_pictures/${userId}/${uuidv4()}`);
-        const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
-        return getDownloadURL(uploadResult.ref);
-      })
-    );
+    let photoURLs: string[] = [];
+    if (profileData.photos && profileData.photos.length > 0) {
+        photoURLs = await Promise.all(
+          profileData.photos.map(async (photoDataUri: string) => {
+            if (!photoDataUri || !photoDataUri.startsWith('data:')) {
+                // If it's already a URL, just return it.
+                return photoDataUri;
+            }
+            const storageRef = ref(storage, `profile_pictures/${userId}/${uuidv4()}`);
+            const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
+            return getDownloadURL(uploadResult.ref);
+          })
+        );
+    }
 
-    const serializableProfileData = { ...profileData, photos: photoURLs.filter(url => url !== null) };
+    const serializableProfileData = { ...profileData, photos: photoURLs };
 
     if (serializableProfileData.dates?.from && typeof serializableProfileData.dates.from !== 'string') {
       serializableProfileData.dates.from = serializableProfileData.dates.from.toISOString();
