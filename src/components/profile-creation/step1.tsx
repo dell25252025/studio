@@ -26,8 +26,29 @@ import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
 
 const Step1 = () => {
-  const { control, watch } = useFormContext();
+  const { control, watch, setValue } = useFormContext();
   const photos = watch('photos') || [];
+
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    const remainingSlots = 5 - photos.length;
+    const filesToUpload = files.slice(0, remainingSlots);
+
+    filesToUpload.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setValue('photos', [...watch('photos'), reader.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+  
+  const removePhoto = (index: number) => {
+    const newPhotos = [...photos];
+    newPhotos.splice(index, 1);
+    setValue('photos', newPhotos);
+  };
+
 
   return (
     <div className="space-y-8">
@@ -136,13 +157,29 @@ const Step1 = () => {
               <FormLabel>Ajoutez vos meilleures photos</FormLabel>
               <FormControl>
                  <div className="grid grid-cols-3 gap-4">
-                    <label className="col-span-3 aspect-video flex items-center justify-center border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted">
+                  {photos.map((photo: string, index: number) => (
+                    <div key={index} className="relative aspect-square">
+                      <Image src={photo} alt={`Photo ${index + 1}`} fill className="object-cover rounded-lg" />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-1 right-1 h-6 w-6"
+                        onClick={() => removePhoto(index)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  {photos.length < 5 && (
+                    <label className="aspect-square flex items-center justify-center border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted">
                         <div className="text-center">
                             <Plus className="mx-auto h-8 w-8 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">Ajouter une photo</span>
+                            <span className="text-sm text-muted-foreground">Ajouter</span>
                         </div>
-                        <input type="file" className="sr-only" multiple accept="image/*" disabled />
+                        <input type="file" className="sr-only" multiple accept="image/*" onChange={handlePhotoUpload} />
                     </label>
+                  )}
                  </div>
               </FormControl>
                <p className="text-sm text-muted-foreground">Votre première photo sera votre photo de profil principale. Montrez votre côté voyageur !</p>
