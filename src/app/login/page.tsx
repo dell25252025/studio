@@ -17,8 +17,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Loader2, Plane } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { signInWithGoogle, signUpWithEmail } from '@/app/auth-actions';
 import { useToast } from '@/hooks/use-toast';
+import { auth } from '@/lib/firebase';
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
+
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Adresse e-mail invalide.' }),
@@ -42,7 +48,7 @@ export default function LoginPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      await signUpWithEmail(values);
+      await createUserWithEmailAndPassword(auth, values.email, values.password);
       toast({
         title: 'Inscription réussie !',
         description: "Vous allez être redirigé pour créer votre profil.",
@@ -62,8 +68,9 @@ export default function LoginPage() {
 
   async function handleGoogleSignIn() {
     setIsGoogleLoading(true);
+    const provider = new GoogleAuthProvider();
     try {
-      await signInWithGoogle();
+      await signInWithPopup(auth, provider);
       toast({
         title: 'Connexion réussie !',
         description: "Vous allez être redirigé pour créer votre profil.",
@@ -74,7 +81,7 @@ export default function LoginPage() {
        toast({
         variant: 'destructive',
         title: 'Erreur de connexion Google',
-        description: 'Veuillez réessayer.',
+        description: (error as Error).message,
       });
     } finally {
       setIsGoogleLoading(false);
