@@ -20,35 +20,38 @@ export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<A
 
 export async function createUserProfile(userId: string, profileData: any) {
   if (!userId) {
-    throw new Error("User ID is required to create a profile.");
+    return { success: false, error: "User ID is required to create a profile." };
   }
 
   try {
     let profilePicUrl: string | null = null;
     if (profileData.profilePic && profileData.profilePic.startsWith('data:')) {
-        const storageRef = ref(storage, `profile_pictures/${userId}/profile.jpg`);
-        const uploadResult = await uploadString(storageRef, profileData.profilePic, 'data_url');
-        profilePicUrl = await getDownloadURL(uploadResult.ref);
+      const storageRef = ref(storage, `profile_pictures/${userId}/profile.jpg`);
+      const uploadResult = await uploadString(storageRef, profileData.profilePic, 'data_url');
+      profilePicUrl = await getDownloadURL(uploadResult.ref);
     }
 
-    const serializableProfileData = { ...profileData, profilePic: profilePicUrl };
+    const dataToSave = {
+      ...profileData,
+      profilePic: profilePicUrl,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    if (serializableProfileData.dates?.from && typeof serializableProfileData.dates.from !== 'string') {
-      serializableProfileData.dates.from = serializableProfileData.dates.from.toISOString();
+    if (dataToSave.dates?.from) {
+      dataToSave.dates.from = new Date(dataToSave.dates.from).toISOString();
     }
-    if (serializableProfileData.dates?.to && typeof serializableProfileData.dates.to !== 'string') {
-      serializableProfileData.dates.to = serializableProfileData.dates.to.toISOString();
+    if (dataToSave.dates?.to) {
+      dataToSave.dates.to = new Date(dataToSave.dates.to).toISOString();
     }
-    
-    await setDoc(doc(db, "profiles", userId), serializableProfileData);
+
+    await setDoc(doc(db, "profiles", userId), dataToSave);
     console.log("Profile successfully created for user: ", userId);
     return { success: true, id: userId };
   } catch (e) {
     console.error("Error creating user profile in Firestore: ", e);
-    if (e instanceof Error) {
-       return { success: false, error: `Failed to create user profile: ${e.message}`};
-    }
-    return { success: false, error: "An unknown error occurred while creating the user profile."};
+    const errorMessage = e instanceof Error ? e.message : String(e);
+    return { success: false, error: `Failed to create user profile: ${errorMessage}` };
   }
 }
 
