@@ -19,11 +19,11 @@ export async function createUserProfile(profileData: any) {
     // Firestore SDK on the server doesn't handle Date objects well when they come from the client.
     // We need to convert them to a serializable format.
     const serializableProfileData = { ...profileData };
-    if (profileData.dates?.from) {
-      serializableProfileData.dates.from = new Date(profileData.dates.from).toISOString();
+    if (profileData.dates?.from && profileData.dates.from instanceof Date) {
+      serializableProfileData.dates.from = profileData.dates.from.toISOString();
     }
-    if (profileData.dates?.to) {
-      serializableProfileData.dates.to = new Date(profileData.dates.to).toISOString();
+    if (profileData.dates?.to && profileData.dates.to instanceof Date) {
+      serializableProfileData.dates.to = profileData.dates.to.toISOString();
     }
     
     const docRef = await addDoc(collection(db, "profiles"), serializableProfileData);
