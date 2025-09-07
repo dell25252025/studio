@@ -197,7 +197,7 @@ export default function CreateProfilePage() {
                       Création...
                     </>
                   ) : (
-                    'Terminer et voir mon profil !'
+                    "Terminer l'inscription"
                   )}
                 </Button>
               )}

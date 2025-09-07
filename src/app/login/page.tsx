@@ -51,7 +51,7 @@ export default function LoginPage() {
     try {
       await createUserWithEmailAndPassword(auth, values.email, values.password);
       toast({
-        title: 'Inscription réussie !',
+        title: 'Compte créé avec succès !',
         description: "Vous allez être redirigé pour créer votre profil.",
       });
       router.push('/create-profile');
@@ -63,7 +63,7 @@ export default function LoginPage() {
       }
       toast({
         variant: 'destructive',
-        title: 'Erreur d\'inscription',
+        title: 'Erreur de création de compte',
         description: description,
       });
     } finally {
@@ -160,7 +160,7 @@ export default function LoginPage() {
             />
             <Button type="submit" className="w-full" disabled={isLoading || isGoogleLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              S'inscrire
+              Créer un compte
             </Button>
           </form>
         </Form>
