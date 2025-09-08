@@ -29,21 +29,13 @@ export async function createUserProfile(userId: string, profileData: any) {
   }
 
   try {
-    let profilePicUrl: string | null = null;
-    if (profileData.profilePic && profileData.profilePic.startsWith('data:')) {
-        const storageRef = ref(storage, `profile_pictures/${userId}/profile.jpg`);
-        const uploadResult = await uploadString(storageRef, profileData.profilePic, 'data_url');
-        profilePicUrl = await getDownloadURL(uploadResult.ref);
-    }
-    
     const dataToSave = {
       ...profileData,
-      profilePic: profilePicUrl,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
     
-    await setDoc(doc(db, "profiles", userId), dataToSave);
+    await setDoc(doc(db, "users", userId), dataToSave);
     console.log("Profile successfully created for user: ", userId);
     return { success: true, id: userId };
   } catch (e) {
@@ -52,6 +44,30 @@ export async function createUserProfile(userId: string, profileData: any) {
     return { success: false, error: `Failed to create user profile: ${errorMessage}` };
   }
 }
+
+export async function uploadProfilePicture(userId: string, photoDataUri: string) {
+    if (!userId) {
+        throw new Error("User ID is required to upload a profile picture.");
+    }
+    if (!photoDataUri || !photoDataUri.startsWith('data:')) {
+        throw new Error("Invalid photo data provided.");
+    }
+
+    try {
+        const storageRef = ref(storage, `profilePictures/${userId}/profile.jpg`);
+        const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
+        const downloadURL = await getDownloadURL(uploadResult.ref);
+        
+        return { success: true, url: downloadURL };
+    } catch (e) {
+        console.error("Error uploading profile picture:", e);
+        if (e instanceof Error) {
+            throw new Error(`Failed to upload profile picture: ${e.message}`);
+        }
+        throw new Error("An unknown error occurred while uploading the profile picture.");
+    }
+}
+
 
 export async function updateUserProfilePicture(userId: string, photoDataUri: string) {
     if (!userId) {
@@ -62,17 +78,16 @@ export async function updateUserProfilePicture(userId: string, photoDataUri: str
     }
 
     try {
-        const storageRef = ref(storage, `profile_pictures/${userId}/profile.jpg`);
-        const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
-        const downloadURL = await getDownloadURL(uploadResult.ref);
+        const { url } = await uploadProfilePicture(userId, photoDataUri);
 
-        const profileRef = doc(db, "profiles", userId);
+        const profileRef = doc(db, "users", userId);
         await updateDoc(profileRef, {
-            profilePic: downloadURL
+            profilePic: url,
+            updatedAt: new Date().toISOString(),
         });
 
         console.log("Profile picture updated successfully for user:", userId);
-        return { success: true, url: downloadURL };
+        return { success: true, url: url };
     } catch (e) {
         console.error("Error updating profile picture:", e);
         if (e instanceof Error) {
@@ -85,7 +100,7 @@ export async function updateUserProfilePicture(userId: string, photoDataUri: str
 
 export async function getUserProfile(id: string): Promise<DocumentData | null> {
   try {
-    const docRef = doc(db, "profiles", id);
+    const docRef = doc(db, "users", id);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {

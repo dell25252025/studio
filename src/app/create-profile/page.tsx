@@ -13,7 +13,7 @@ import Step3 from '@/components/profile-creation/step3';
 import Step4 from '@/components/profile-creation/step4';
 import { Loader2, Plane, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { createUserProfile } from '@/app/actions';
+import { createUserProfile, uploadProfilePicture } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
@@ -120,14 +120,28 @@ export default function CreateProfilePage() {
 
     setIsSubmitting(true);
     try {
+      let profilePicUrl: string | null = null;
+      if (data.profilePic && data.profilePic.startsWith('data:')) {
+          const uploadResult = await uploadProfilePicture(currentUser.uid, data.profilePic);
+          if (uploadResult.success && uploadResult.url) {
+            profilePicUrl = uploadResult.url;
+          } else {
+            throw new Error('Échec de l\'envoi de la photo de profil.');
+          }
+      }
       
-      const profileData: any = { ...data };
+      const profileData: any = { ...data, profilePic: profilePicUrl };
+      delete profileData.profilePic;
       
       if (profileData.dates?.from) {
         profileData.dates.from = profileData.dates.from.toISOString();
       }
       if (profileData.dates?.to) {
         profileData.dates.to = profileData.dates.to.toISOString();
+      }
+
+      if (profilePicUrl) {
+          profileData.profilePic = profilePicUrl;
       }
 
       const result = await createUserProfile(currentUser.uid, profileData);
