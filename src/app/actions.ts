@@ -45,12 +45,12 @@ export async function createUserProfile(userId: string, profileData: any) {
   }
 }
 
-export async function uploadProfilePicture(userId: string, photoDataUri: string) {
+export async function uploadProfilePicture(userId: string, photoDataUri: string): Promise<{ success: boolean, url?: string, error?: string }> {
     if (!userId) {
-        throw new Error("User ID is required to upload a profile picture.");
+        return { success: false, error: "User ID is required to upload a profile picture." };
     }
     if (!photoDataUri || !photoDataUri.startsWith('data:')) {
-        throw new Error("Invalid photo data provided.");
+        return { success: false, error: "Invalid photo data provided." };
     }
 
     try {
@@ -61,10 +61,8 @@ export async function uploadProfilePicture(userId: string, photoDataUri: string)
         return { success: true, url: downloadURL };
     } catch (e) {
         console.error("Error uploading profile picture:", e);
-        if (e instanceof Error) {
-            throw new Error(`Failed to upload profile picture: ${e.message}`);
-        }
-        throw new Error("An unknown error occurred while uploading the profile picture.");
+        const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";
+        return { success: false, error: `Failed to upload profile picture: ${errorMessage}` };
     }
 }
 
@@ -78,16 +76,19 @@ export async function updateUserProfilePicture(userId: string, photoDataUri: str
     }
 
     try {
-        const { url } = await uploadProfilePicture(userId, photoDataUri);
+        const uploadResult = await uploadProfilePicture(userId, photoDataUri);
+        if (!uploadResult.success || !uploadResult.url) {
+          throw new Error(uploadResult.error || "Failed to upload profile picture.");
+        }
 
         const profileRef = doc(db, "users", userId);
         await updateDoc(profileRef, {
-            profilePic: url,
+            profilePic: uploadResult.url,
             updatedAt: new Date().toISOString(),
         });
 
         console.log("Profile picture updated successfully for user:", userId);
-        return { success: true, url: url };
+        return { success: true, url: uploadResult.url };
     } catch (e) {
         console.error("Error updating profile picture:", e);
         if (e instanceof Error) {
