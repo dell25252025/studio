@@ -158,6 +158,7 @@ export default function CreateProfilePage() {
         title: 'Erreur lors de la création du profil',
         description: errorMessage,
       });
+    } finally {
       setIsSubmitting(false);
     }
   };
