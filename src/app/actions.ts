@@ -5,12 +5,11 @@ import { aiPoweredMatching, type AIPoweredMatchingInput, type AIPoweredMatchingO
 import { db, storage } from "@/lib/firebase";
 import { collection, doc, getDoc, DocumentData, setDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
-import { getAuth } from "firebase/auth";
-import { getApp } from "firebase/app";
 
 async function getUserId(): Promise<string | null> {
-  const auth = getAuth(getApp());
-  return auth.currentUser?.uid || null;
+  // This function is problematic on the server as auth.currentUser is client-side.
+  // We will pass the userId directly to functions that need it.
+  return null;
 }
 
 
@@ -24,9 +23,7 @@ export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<A
   }
 }
 
-export async function createUserProfile(profileData: any) {
-  const userId = await getUserId();
-
+export async function createUserProfile(userId: string, profileData: any) {
   if (!userId) {
     return { success: false, error: "User is not authenticated." };
   }
@@ -102,5 +99,3 @@ export async function getUserProfile(id: string): Promise<DocumentData | null> {
     throw new Error("Failed to retrieve user profile.");
   }
 }
-
-    

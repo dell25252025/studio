@@ -130,7 +130,7 @@ export default function CreateProfilePage() {
         profileData.dates.to = profileData.dates.to.toISOString();
       }
 
-      const result = await createUserProfile(profileData);
+      const result = await createUserProfile(currentUser.uid, profileData);
       
       if (result.success && result.id) {
         toast({
@@ -223,5 +223,3 @@ export default function CreateProfilePage() {
     </div>
   );
 }
-
-    
