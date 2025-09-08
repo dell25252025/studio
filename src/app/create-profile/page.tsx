@@ -126,7 +126,7 @@ export default function CreateProfilePage() {
           if (uploadResult.success && uploadResult.url) {
             profilePicUrl = uploadResult.url;
           } else {
-            throw new Error('Échec de l\'envoi de la photo de profil.');
+            throw new Error(uploadResult.error || 'Échec de l\'envoi de la photo de profil.');
           }
       }
       
