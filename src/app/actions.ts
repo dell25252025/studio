@@ -50,7 +50,6 @@ export async function createUserProfile(userId: string, profileData: any) {
         if (uploadResult.success && uploadResult.url) {
           profilePicUrl = uploadResult.url;
         } else {
-          // Propagate the error from the upload function
           return { success: false, error: uploadResult.error || 'Failed to upload profile picture.' };
         }
     }
