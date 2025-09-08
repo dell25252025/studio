@@ -4,20 +4,13 @@
 import { aiPoweredMatching, type AIPoweredMatchingInput, type AIPoweredMatchingOutput } from "@/ai/flows/ai-powered-matching";
 import { db, storage } from "@/lib/firebase";
 import { collection, doc, getDoc, DocumentData, setDoc, updateDoc } from "firebase/firestore";
-import { ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
-import { v4 as uuidv4 } from 'uuid';
-import { auth } from 'firebase-admin';
-import { getAuth as getClientAuth } from "firebase/auth";
-import { headers } from "next/headers";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { getAuth } from "firebase/auth";
 import { getApp } from "firebase/app";
 
-
-async function getUserIdFromServer(): Promise<string | null> {
-  // This is a placeholder for a secure way to get the user ID on the server.
-  // In a real app, you would use a library like `next-auth` or handle Firebase Auth sessions.
-  // For this example, we'll assume the client sends the UID, but in production, this MUST be secured.
-  // A temporary solution might involve verifying an ID token sent from the client.
-  return getClientAuth(getApp()).currentUser?.uid || null;
+async function getUserId(): Promise<string | null> {
+  const auth = getAuth(getApp());
+  return auth.currentUser?.uid || null;
 }
 
 
@@ -32,15 +25,23 @@ export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<A
 }
 
 export async function createUserProfile(profileData: any) {
-  const userId = getClientAuth(getApp()).currentUser?.uid;
+  const userId = await getUserId();
 
   if (!userId) {
     return { success: false, error: "User is not authenticated." };
   }
 
   try {
+    let profilePicUrl: string | null = null;
+    if (profileData.profilePic && profileData.profilePic.startsWith('data:')) {
+        const storageRef = ref(storage, `profile_pictures/${userId}/profile.jpg`);
+        const uploadResult = await uploadString(storageRef, profileData.profilePic, 'data_url');
+        profilePicUrl = await getDownloadURL(uploadResult.ref);
+    }
+    
     const dataToSave = {
       ...profileData,
+      profilePic: profilePicUrl,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -101,3 +102,5 @@ export async function getUserProfile(id: string): Promise<DocumentData | null> {
     throw new Error("Failed to retrieve user profile.");
   }
 }
+
+    

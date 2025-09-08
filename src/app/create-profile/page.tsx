@@ -15,11 +15,9 @@ import { Loader2, Plane, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createUserProfile } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
-import { auth, storage } from '@/lib/firebase';
+import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import Link from 'next/link';
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
-
 
 const formSchema = z.object({
   firstName: z.string().min(1, 'Le prénom est obligatoire.'),
@@ -122,14 +120,8 @@ export default function CreateProfilePage() {
 
     setIsSubmitting(true);
     try {
-      let profilePicUrl: string | null = null;
-      if (data.profilePic && data.profilePic.startsWith('data:')) {
-        const storageRef = ref(storage, `profile_pictures/${currentUser.uid}/profile.jpg`);
-        const uploadResult = await uploadString(storageRef, data.profilePic, 'data_url');
-        profilePicUrl = await getDownloadURL(uploadResult.ref);
-      }
-
-      const profileData: any = { ...data, profilePic: profilePicUrl };
+      
+      const profileData: any = { ...data };
       
       if (profileData.dates?.from) {
         profileData.dates.from = profileData.dates.from.toISOString();
@@ -140,7 +132,7 @@ export default function CreateProfilePage() {
 
       const result = await createUserProfile(profileData);
       
-      if (result.success) {
+      if (result.success && result.id) {
         toast({
           title: 'Profil créé avec succès !',
           description: "Vous allez être redirigé vers votre profil.",
@@ -231,3 +223,5 @@ export default function CreateProfilePage() {
     </div>
   );
 }
+
+    
