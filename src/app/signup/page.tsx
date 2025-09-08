@@ -23,7 +23,6 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import Link from 'next/link';
@@ -58,35 +57,20 @@ export default function SignupPage() {
       });
       router.push('/create-profile');
     } catch (error) {
-      if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
-        try {
-          await signInWithEmailAndPassword(auth, values.email, values.password);
-          toast({
-            title: 'Connexion réussie !',
-            description: 'Finalisez votre profil pour commencer à voyager.',
-          });
-          router.push('/create-profile');
-        } catch (signInError) {
-          console.error('Sign in error after sign up failed', signInError);
-          let description = "Un compte existe déjà avec cette adresse e-mail, mais le mot de passe est incorrect.";
-          toast({
-            variant: 'destructive',
-            title: 'Erreur de connexion',
-            description: description,
-          });
-        }
-      } else {
-        console.error('Sign up error', error);
-        let description = "Une erreur inattendue s'est produite. Veuillez réessayer.";
-        if (error instanceof FirebaseError) {
-          description = error.message;
-        }
-        toast({
-          variant: 'destructive',
-          title: 'Erreur de création de compte',
-          description: description,
-        });
-      }
+       console.error('Sign up error', error);
+       let description = "Une erreur inattendue s'est produite. Veuillez réessayer.";
+       if (error instanceof FirebaseError) {
+           if (error.code === 'auth/email-already-in-use') {
+               description = "Un compte existe déjà avec cette adresse e-mail.";
+           } else {
+               description = error.message;
+           }
+       }
+       toast({
+        variant: 'destructive',
+        title: 'Erreur de création de compte',
+        description: description,
+      });
     } finally {
       setIsLoading(false);
     }
