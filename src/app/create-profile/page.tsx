@@ -138,8 +138,7 @@ export default function CreateProfilePage() {
         profileData.dates.to = profileData.dates.to.toISOString();
       }
 
-
-      const result = await createUserProfile(currentUser.uid, profileData);
+      const result = await createUserProfile(profileData);
       
       if (result.success) {
         toast({
