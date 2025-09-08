@@ -68,7 +68,7 @@ Travel Intention: {{{userProfile.travelIntention}}}
 Interests: {{#each userProfile.interests}}{{{this}}}, {{/each}}
 Age: {{{userProfile.age}}}
 Sex: {{{userProfile.sex}}}
-Verified: {{{user.Profile.verified}}}
+Verified: {{{userProfile.verified}}}
 
 Possible Matches:
 {{#each possibleMatches}}
