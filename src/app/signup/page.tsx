@@ -22,6 +22,7 @@ import { auth } from '@/lib/firebase';
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
+  signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
@@ -61,16 +62,37 @@ export default function SignupPage() {
        let description = "Une erreur inattendue s'est produite. Veuillez réessayer.";
        if (error instanceof FirebaseError) {
            if (error.code === 'auth/email-already-in-use') {
-               description = "Un compte existe déjà avec cette adresse e-mail.";
+               description = "Un compte existe déjà avec cette adresse e-mail. Tentative de connexion...";
+               toast({
+                   title: 'Compte existant',
+                   description: description,
+               });
+               try {
+                   await signInWithEmailAndPassword(auth, values.email, values.password);
+                   router.push('/create-profile');
+               } catch (signInError) {
+                   const signInErrorMessage = signInError instanceof Error ? signInError.message : String(signInError);
+                   toast({
+                       variant: 'destructive',
+                       title: 'Erreur de connexion',
+                       description: signInErrorMessage,
+                   });
+               }
            } else {
                description = error.message;
+               toast({
+                   variant: 'destructive',
+                   title: 'Erreur de création de compte',
+                   description: description,
+               });
            }
+       } else {
+            toast({
+                variant: 'destructive',
+                title: 'Erreur de création de compte',
+                description: description,
+            });
        }
-       toast({
-        variant: 'destructive',
-        title: 'Erreur de création de compte',
-        description: description,
-      });
     } finally {
       setIsLoading(false);
     }
@@ -84,10 +106,11 @@ export default function SignupPage() {
       router.push('/create-profile');
     } catch (error) {
        console.error('Google sign in error', error);
+        const errorMessage = error instanceof Error ? error.message : "Une erreur inattendue s'est produite.";
        toast({
         variant: 'destructive',
         title: 'Erreur de connexion Google',
-        description: (error as Error).message,
+        description: errorMessage,
       });
     } finally {
       setIsGoogleLoading(false);
