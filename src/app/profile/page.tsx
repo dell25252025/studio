@@ -42,7 +42,12 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
+   useEffect(() => {
+    if (!profileId) {
+      router.push('/');
+      return;
+    }
+
     const unsubscribe = auth.onAuthStateChanged(user => {
         setCurrentUser(user);
         if (user && user.uid === profileId) {
@@ -52,7 +57,7 @@ export default function ProfilePage() {
         }
     });
     return () => unsubscribe();
-  }, [profileId]);
+  }, [profileId, router]);
 
 
   useEffect(() => {
@@ -64,15 +69,18 @@ export default function ProfilePage() {
           setProfile(profileData);
         } catch (error) {
           console.error("Failed to fetch profile:", error);
+          toast({
+            variant: "destructive",
+            title: "Erreur de chargement",
+            description: "Impossible de récupérer les informations du profil."
+          })
         } finally {
           setLoading(false);
         }
       };
       fetchProfile();
-    } else {
-      setLoading(false);
     }
-  }, [profileId]);
+  }, [profileId, toast]);
 
   const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -91,6 +99,8 @@ export default function ProfilePage() {
                     title: "Photo de profil mise à jour !",
                     description: "Votre nouvelle photo est maintenant visible.",
                 });
+            } else {
+              throw new Error(result.error || "La mise à jour de la photo a échoué.")
             }
         } catch (error) {
             console.error("Failed to update profile picture:", error);
@@ -132,6 +142,7 @@ export default function ProfilePage() {
                 <div>
                     <h2 className="text-2xl font-bold">Profil non trouvé</h2>
                     <p className="text-muted-foreground">Impossible de charger les informations de ce profil.</p>
+                     <Button onClick={() => router.push('/')} className="mt-4">Retour à l'accueil</Button>
                 </div>
             </main>
             <BottomNav />
@@ -246,7 +257,9 @@ export default function ProfilePage() {
                             )}
                         </CardContent>
                     </Card>
-
+                    <div className="flex justify-center">
+                        <Button size="lg">Envoyer un message</Button>
+                    </div>
                 </div>
 
                 <div className="space-y-8">

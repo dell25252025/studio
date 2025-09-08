@@ -1,9 +1,23 @@
 
-import { Compass, Heart, MessageSquare, UserPlus, XCircle } from 'lucide-react';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Compass, Heart, MessageSquare, User, UserPlus, XCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import { auth } from '@/lib/firebase';
+import type { User as FirebaseUser } from 'firebase/auth';
 
 const BottomNav = () => {
+  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const navItemsLeft = [
     { icon: Compass, label: 'Discover', href: '/', active: true },
     { icon: Heart, label: 'Matches', href: '#' },
@@ -14,7 +28,9 @@ const BottomNav = () => {
     { icon: XCircle, label: 'Block', href: '#' },
   ];
   
-  const profileItem = { icon: UserPlus, label: 'Profile', href: '/signup' };
+  const profileItem = currentUser
+    ? { icon: User, label: 'Profile', href: `/profile?id=${currentUser.uid}` }
+    : { icon: UserPlus, label: 'Profile', href: '/signup' };
 
 
   return (
@@ -46,8 +62,7 @@ const BottomNav = () => {
                 className="inline-flex h-16 w-16 flex-col items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
                 >
                 <div>
-                    <profileItem.icon className="h-8 w-8 mx-auto" />
-                    <span className="text-xs font-body">{profileItem.label}</span>
+                    <profileItem.icon className="h-8 w-8 mx-auto p-1" />
                 </div>
                 </Button>
             </Link>
