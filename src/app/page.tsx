@@ -38,9 +38,6 @@ export default function Home() {
         {view === 'discover' && (
           <div className="flex-1 flex flex-col items-center justify-center space-y-8 relative">
             <MatchCarousel profiles={possibleMatches} />
-            <div className="py-8">
-              <MatchCarousel profiles={[...possibleMatches].reverse()} />
-            </div>
             <div className="fixed bottom-28 z-10 flex w-full justify-center p-4">
                 <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onFindMatches}>
                 <Sparkles className="mr-2 h-5 w-5" />
