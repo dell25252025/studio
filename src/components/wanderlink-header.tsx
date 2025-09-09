@@ -1,8 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const Logo = () => (
-  <svg 
+   <svg 
     width="320" 
     height="130" 
     viewBox="0 0 320 130" 
@@ -21,9 +22,12 @@ const Logo = () => (
 );
 
 
-const WanderlinkHeader = () => {
+const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) => {
   return (
-    <header className="sticky top-0 z-20 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={cn(
+        "sticky top-0 z-20 w-full",
+        !transparent && "border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+    )}>
       <div className="container flex h-20 items-center">
         <Link href="/" className="flex items-center gap-2 group">
           <Logo />
