@@ -39,9 +39,16 @@ const Logo = () => (
 const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) => {
   return (
     <header className={cn(
-      "fixed top-0 left-0 right-0 z-20 h-16 transition-colors duration-300 bg-background/95 backdrop-blur-sm border-b"
+      "fixed top-0 left-0 right-0 z-20 transition-all duration-300",
+      // Mobile styles: floating pill
+      "top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm h-14 rounded-full border bg-background/90 p-2 shadow-lg backdrop-blur-md",
+      // Desktop styles: full-width bar
+      "md:top-0 md:left-0 md:translate-x-0 md:w-full md:h-16 md:rounded-none md:border-b md:border-t-0 md:border-l-0 md:border-r-0 md:shadow-none"
     )}>
-      <div className="container mx-auto flex h-full items-center px-4">
+      <div className={cn(
+        "flex h-full items-center justify-center",
+        "md:container md:mx-auto md:justify-start md:px-4"
+        )}>
         <Link href="/" className="flex items-center gap-2 group">
             <Logo />
         </Link>

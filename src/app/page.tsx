@@ -31,7 +31,7 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen w-full flex-col bg-background overflow-hidden">
+    <div className="h-screen w-full flex-col bg-background overflow-hidden pt-20 md:pt-16">
       <WanderlinkHeader />
       
       <main className="flex-1 flex flex-col h-full">
