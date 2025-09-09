@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { Plane } from 'lucide-react';
 
 const Logo = () => (
   <svg 
@@ -39,7 +40,7 @@ const Logo = () => (
 const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) => {
   return (
     <header className={cn(
-      "fixed top-0 left-0 right-0 z-20 transition-all duration-300",
+      "fixed z-20 transition-all duration-300",
       // Mobile styles: floating pill
       "top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm h-14 rounded-full border bg-background/90 p-2 shadow-lg backdrop-blur-md",
       // Desktop styles: full-width bar
