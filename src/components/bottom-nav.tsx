@@ -29,8 +29,8 @@ const BottomNav = () => {
   ];
   
   const profileItem = currentUser
-    ? { icon: User, label: 'Profile', href: `/profile?id=${currentUser.uid}` }
-    : { icon: UserPlus, label: 'Profile', href: '/signup' };
+    ? { icon: User, label: 'Profile', href: `/profile?id=${currentUser.uid}`, animated: false }
+    : { icon: UserPlus, label: 'Profile', href: '/signup', animated: true };
 
 
   return (
@@ -61,8 +61,8 @@ const BottomNav = () => {
                 variant="ghost"
                 className="inline-flex h-20 w-20 flex-col items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
                 >
-                <div>
-                    <profileItem.icon className="h-16 w-16 mx-auto p-1" />
+                <div className={profileItem.animated ? 'animate-pulse-slow' : ''}>
+                    <profileItem.icon className="h-10 w-10 mx-auto" />
                 </div>
                 </Button>
             </Link>
