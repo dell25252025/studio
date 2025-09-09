@@ -37,11 +37,11 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <WanderlinkHeader transparent={view === 'discover'} />
+      <WanderlinkHeader />
       <main className="flex-1 pb-24">
         {view === 'discover' && (
-          <div className="relative">
-            <div className="absolute top-0 left-0 w-full">
+          <div className="relative h-screen">
+            <div className="absolute top-0 left-0 w-full h-full pt-16">
               <MatchCarousel profiles={possibleMatches} />
             </div>
             <div className="fixed bottom-24 left-0 z-10 flex w-full justify-center p-4 bg-gradient-to-t from-background via-background/90 to-transparent">

@@ -37,11 +37,10 @@ const Logo = () => (
 );
 
 
-const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) => {
+const WanderlinkHeader = () => {
   return (
     <header className={cn(
-        "fixed top-0 z-20 w-full transition-colors",
-        transparent ? "bg-transparent" : "border-b bg-background"
+        "fixed top-0 z-20 w-full transition-colors border-b bg-background/80 backdrop-blur-sm"
     )}>
       <div className="flex h-16 items-center px-4">
         <Link href="/" className="flex items-center gap-2 group">
