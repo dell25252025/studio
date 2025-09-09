@@ -45,11 +45,8 @@ export async function createUserProfile(userId: string, profileData: any) {
   }
 
   try {
-    // We will no longer upload the picture here.
-    // It will be handled by updateUserProfilePicture after profile creation.
     const { profilePic, ...dataToSave } = profileData;
 
-    // Ensure dates are converted to strings if they are Date objects
     if (dataToSave.dates?.from && dataToSave.dates.from instanceof Date) {
       dataToSave.dates.from = dataToSave.dates.from.toISOString();
     }
@@ -57,8 +54,7 @@ export async function createUserProfile(userId: string, profileData: any) {
       dataToSave.dates.to = dataToSave.dates.to.toISOString();
     }
 
-
-    dataToSave.profilePic = null; // Set to null initially
+    dataToSave.profilePic = null; 
     dataToSave.createdAt = new Date().toISOString();
     dataToSave.updatedAt = new Date().toISOString();
     
@@ -67,8 +63,9 @@ export async function createUserProfile(userId: string, profileData: any) {
     return { success: true, id: userId };
   } catch (e: any) {
     console.error("Error creating user profile in Firestore: ", e);
-    const errorMessage = e.code ? `Firestore: ${e.code}` : (e.message || String(e));
-    return { success: false, error: `Failed to create user profile: ${errorMessage}` };
+    // Provide a more generic but clear error message for the user.
+    const errorMessage = `An error occurred while creating the profile. Please check the console for details. Error: ${e.message || String(e)}`;
+    return { success: false, error: errorMessage };
   }
 }
 
