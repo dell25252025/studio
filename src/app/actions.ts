@@ -140,7 +140,17 @@ export async function getUserProfile(id: string): Promise<DocumentData | null> {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      return docSnap.data();
+      const data = docSnap.data();
+      // Convert Firestore Timestamps to serializable format (ISO strings)
+      if (data.dates) {
+        if (data.dates.from && typeof data.dates.from.toDate === 'function') {
+          data.dates.from = data.dates.from.toDate().toISOString();
+        }
+        if (data.dates.to && typeof data.dates.to.toDate === 'function') {
+          data.dates.to = data.dates.to.toDate().toISOString();
+        }
+      }
+      return data;
     } else {
       console.log("No such document!");
       return null;
