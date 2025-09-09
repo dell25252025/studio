@@ -62,7 +62,7 @@ const BottomNav = () => {
                 className="inline-flex h-20 w-20 flex-col items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
                 >
                 <div>
-                    <profileItem.icon className="h-10 w-10 mx-auto p-1" />
+                    <profileItem.icon className="h-16 w-16 mx-auto p-1" />
                 </div>
                 </Button>
             </Link>
