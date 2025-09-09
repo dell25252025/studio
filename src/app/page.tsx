@@ -31,12 +31,14 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-background">
+    <div className="h-screen w-full flex-col bg-background overflow-hidden">
       <WanderlinkHeader />
       
       {view === 'discover' && (
-        <div className="relative flex-1 w-full pt-24 md:pt-16">
-          <MatchCarousel profiles={possibleMatches} />
+        <div className="relative flex-1 w-full h-full">
+          <div className="absolute inset-0 flex items-center pt-16">
+            <MatchCarousel profiles={possibleMatches} />
+          </div>
           <div className="fixed bottom-28 z-10 flex w-full justify-center p-4">
               <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onFindMatches} disabled={true}>
               <Sparkles className="mr-2 h-5 w-5" />
@@ -47,7 +49,7 @@ export default function Home() {
       )}
       
       {view === 'results' && (
-        <main className="flex-1 pb-24">
+        <main className="flex-1 pb-24 h-full overflow-y-auto">
           <div className="container mx-auto max-w-4xl px-4 py-8 pt-24">
             {loading ? (
               <div className="flex flex-col items-center justify-center gap-4 text-center h-96">
