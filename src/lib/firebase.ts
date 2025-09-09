@@ -4,16 +4,15 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
-// VEUILLEZ REMPLACER CECI PAR LA CONFIGURATION DE VOTRE NOUVEAU PROJET FIREBASE
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "REMPLACER_PAR_VOTRE_API_KEY",
-  authDomain: "REMPLACER_PAR_VOTRE_AUTH_DOMAIN",
-  projectId: "REMPLACER_PAR_VOTRE_PROJECT_ID",
-  storageBucket: "REMPLACER_PAR_VOTRE_STORAGE_BUCKET",
-  messagingSenderId: "REMPLACER_PAR_VOTRE_MESSAGING_SENDER_ID",
-  appId: "REMPLACER_PAR_VOTRE_APP_ID"
+  apiKey: "AIzaSyCGC-3H86sqqgigM2H5bIE4e1bEmGnKJz0",
+  authDomain: "wanderlink-c1a35.firebaseapp.com",
+  projectId: "wanderlink-c1a35",
+  storageBucket: "wanderlink-c1a35.firebasestorage.app",
+  messagingSenderId: "186522309970",
+  appId: "1:186522309970:web:85d430fa8caa742a1b968b",
+  measurementId: "G-BSPSX9RKVL"
 };
 
 // Initialize Firebase
