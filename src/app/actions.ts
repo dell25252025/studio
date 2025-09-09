@@ -39,10 +39,10 @@ export async function createUserProfile(userId: string, profileData: any) {
   }
 
   try {
-    // We remove photo handling from the creation process.
+    const { gender, ...restOfProfileData } = profileData;
     const finalProfileData = {
-        ...profileData,
-        profilePic: null, // Set profile pic to null initially.
+        ...restOfProfileData,
+        sex: gender, // Rename gender to sex for consistency
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
     };
