@@ -27,6 +27,7 @@ import {
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import Link from 'next/link';
+import { Separator } from '@/components/ui/separator';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Adresse e-mail invalide.' }),
@@ -34,7 +35,7 @@ const formSchema = z.object({
 });
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const router = useRouter();
@@ -148,33 +149,10 @@ export default function AuthPage() {
             </Link>
         </div>
         <h2 className="text-2xl font-semibold text-center">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
-        <p className="text-center text-muted-foreground mb-6">Rejoignez la communauté de voyageurs.</p>
+        <p className="text-center text-muted-foreground mb-6">
+          {isLogin ? 'Heureux de vous revoir !' : 'Rejoignez la communauté de voyageurs.'}
+        </p>
         
-        <Button
-          variant="outline"
-          className="w-full mb-4"
-          onClick={handleGoogleSignIn}
-          disabled={isGoogleLoading || isLoading}
-        >
-          {isGoogleLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-             <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.2 76.2C322.3 103.6 289.4 88 248 88c-73.2 0-133.1 59.9-133.1 133.1s59.9 133.1 133.1 133.1c76.9 0 115.7-53.5 119.7-81.6H248V261.8h239.1c.9 21.9 1.9 43.7 1.9 66.2z"></path></svg>
-          )}
-          Continuer avec Google
-        </Button>
-        
-        <div className="relative my-4">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
-              Ou continuer avec
-            </span>
-          </div>
-        </div>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -209,16 +187,49 @@ export default function AuthPage() {
             </Button>
           </form>
         </Form>
-        <div className="mt-4 text-center text-sm">
-          <Button
-            variant="link"
-            className="text-muted-foreground"
-            onClick={() => setIsLogin(!isLogin)}
-          >
-            {isLogin
-              ? "Pas encore de compte ? Créez-en un"
-              : "Vous avez déjà un compte ? Connectez-vous"}
-          </Button>
+        
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Ou
+            </span>
+          </div>
+        </div>
+
+        <Button
+          variant="outline"
+          className="w-full mb-4"
+          onClick={handleGoogleSignIn}
+          disabled={isGoogleLoading || isLoading}
+        >
+          {isGoogleLoading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+             <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.2 76.2C322.3 103.6 289.4 88 248 88c-73.2 0-133.1 59.9-133.1 133.1s59.9 133.1 133.1 133.1c76.9 0 115.7-53.5 119.7-81.6H248V261.8h239.1c.9 21.9 1.9 43.7 1.9 66.2z"></path></svg>
+          )}
+          Continuer avec Google
+        </Button>
+        
+        <div className="mt-6 text-center">
+           {isLogin ? (
+                <Button 
+                    variant="default"
+                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+                    onClick={() => setIsLogin(false)}>
+                    Pas encore de compte ? Créez-en un
+                </Button>
+            ) : (
+                <Button
+                    variant="link"
+                    className="text-muted-foreground"
+                    onClick={() => setIsLogin(true)}
+                >
+                    Vous avez déjà un compte ? Connectez-vous
+                </Button>
+            )}
         </div>
       </div>
     </div>
