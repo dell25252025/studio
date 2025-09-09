@@ -32,7 +32,7 @@ const Logo = () => (
         <path d="M 10 20 L 8 12 L 10 10 L 12 12 Z" fill="hsl(var(--primary))" />
         <path d="M 0 10 L 8 12 L 10 10 L 8 8 Z" fill="hsl(var(--primary))" opacity="0.7"/>
     </g>
-    <text x="98" y="28" className="logo-text">m</text>
+    <text x="98" y="28" className="logo-text">me</text>
   </svg>
 );
 
