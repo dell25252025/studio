@@ -41,12 +41,12 @@ export async function createUserProfile(userId: string, profileData: any) {
   try {
     const { profilePic, ...dataToSave } = profileData;
 
-    // Convert dates if they exist
-    if (dataToSave.dates?.from) {
-      dataToSave.dates.from = new Date(dataToSave.dates.from).toISOString();
+    // Convert dates if they exist and are valid
+    if (dataToSave.dates?.from && dataToSave.dates.from instanceof Date) {
+      dataToSave.dates.from = dataToSave.dates.from.toISOString();
     }
-    if (dataToSave.dates?.to) {
-      dataToSave.dates.to = new Date(dataToSave.dates.to).toISOString();
+    if (dataToSave.dates?.to && dataToSave.dates.to instanceof Date) {
+      dataToSave.dates.to = dataToSave.dates.to.toISOString();
     }
     
     let photoUrl = null;
