@@ -193,7 +193,7 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
         <WanderlinkHeader transparent />
-        <main className="flex-1 pb-24 absolute top-0 left-0 right-0">
+        <main className="flex-1 pb-24">
             <div className="relative h-[60vh] w-full bg-muted text-white">
                 {profilePictures.length > 0 ? (
                     <Carousel
@@ -250,7 +250,7 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            <div className="container mx-auto max-w-4xl py-8 space-y-8 bg-secondary/30">
+            <div className="container mx-auto max-w-4xl py-8 space-y-8 bg-background">
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                      <div className="md:col-span-2 space-y-8">
                         <Card className="shadow-lg">
