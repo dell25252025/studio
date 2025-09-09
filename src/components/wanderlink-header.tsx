@@ -18,52 +18,35 @@ const Logo = () => (
       </linearGradient>
     </defs>
     
-    <g fill="url(#logoGradient)">
-      {/* <!-- Text: WanderLink --> */}
-      <text 
-        x="0" 
-        y="35" 
-        fontFamily="Arial, sans-serif" 
-        fontSize="28" 
-        fontWeight="bold"
-        fill="currentColor"
-      >
-        WanderLink
-      </text>
+    {/* Text part of the logo */}
+    <text 
+      x="0" 
+      y="30" 
+      fontFamily="Arial, sans-serif" 
+      fontSize="24" 
+      fontWeight="bold"
+      fill="currentColor"
+    >
+      WanderLin
+    </text>
 
-      {/* <!-- Airplane --> */}
-      <path 
-        d="M185,15 a5,5 0 0,1 0,10 l-20,0 l-10,15 l-5,-15 l5,-15 l10,15 l20,0 a5,5 0 0,1 0,-10"
-        transform="rotate(20 175 25) translate(5 -2)"
-      >
-        <animateTransform 
-          attributeName="transform" 
-          type="translate" 
-          values="0 0; 5 -2; 0 0" 
-          dur="3s" 
-          repeatCount="indefinite"
-        />
-      </path>
+    {/* Stylized 'k' as a diamond */}
+    <path d="M125 15 L135 27.5 L125 40 L115 27.5 Z" fill="url(#logoGradient)" />
+    
+    {/* Pink dot */}
+    <circle cx="145" cy="15" r="4" fill="hsl(var(--accent))" />
 
-      {/* <!-- Icons below text --> */}
-      <g transform="translate(135, 40)">
-        {/* <!-- Suitcase --> */}
-        <rect x="0" y="0" width="12" height="8" rx="2" ry="2" fill="currentColor" />
-        <rect x="4" y="-2" width="4" height="2" fill="currentColor" />
-        <line x1="6" y1="0" x2="6" y2="8" stroke="hsl(var(--background))" strokeWidth="0.5" />
-        
-        {/* <!-- Palm Tree --> */}
-        <g transform="translate(18, -2)">
-          <path d="M0,10 Q2,5 5,0 Q8,5 10,10" fill="none" stroke="currentColor" strokeWidth="1.2" />
-          <path d="M5,0 L5,10" stroke="currentColor" strokeWidth="1.2" />
-          <path d="M2,4 L8,4" stroke="currentColor" strokeWidth="1.2" />
-        </g>
-        
-        {/* <!-- Globe (simple) --> */}
-         <circle cx="40" cy="4" r="5" fill="none" stroke="currentColor" strokeWidth="1.2"/>
-         <path d="M35,4 a5,5 0 0,1 10,0" fill="none" stroke="currentColor" strokeWidth="1" />
-         <path d="M40, -1 V9" fill="none" stroke="currentColor" strokeWidth="1" />
-      </g>
+    {/* Icons below the logo */}
+    <g transform="translate(110, 38)" fill="currentColor">
+      {/* Suitcase Icon */}
+      <path d="M0,0 h10 v7 h-10 z M3,-2 v2 h4 v-2 z" transform="translate(0, 0) scale(0.8)" />
+      
+      {/* Tent/Tripod Icon */}
+      <path d="M15,7 l-4,-7 l-4,7 h8 z M11,7 v-4" transform="translate(0, 0) scale(0.8)" />
+
+      {/* Globe Icon */}
+      <circle cx="30" cy="3.5" r="4" stroke="currentColor" strokeWidth="1" fill="none" />
+      <line x1="26" y1="3.5" x2="34" y2="3.5" stroke="currentColor" strokeWidth="0.8" />
     </g>
   </svg>
 );
