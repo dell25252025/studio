@@ -40,7 +40,7 @@ const BottomNav = () => {
     { icon: Compass, label: 'Discover', href: '/', active: true },
     { icon: Bell, label: 'Notifications', href: '#' },
     { icon: MessageSquare, label: 'Messages', href: '#' },
-    { icon: Settings, label: 'Paramètres', href: '#' },
+    { icon: Settings, label: 'Paramètres', href: '/settings' },
   ];
   
   const getProfileContent = () => {
