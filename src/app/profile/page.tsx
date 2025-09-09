@@ -150,8 +150,22 @@ export default function ProfilePage() {
     );
   }
 
-   const travelDates = profile.dates?.from 
-    ? `${format(new Date(profile.dates.from), 'd LLL yyyy', { locale: fr })} au ${profile.dates.to ? format(new Date(profile.dates.to), 'd LLL yyyy', { locale: fr }) : ''}` 
+  const getJsDate = (timestamp: any): Date | null => {
+    if (!timestamp) return null;
+    if (typeof timestamp.toDate === 'function') {
+      return timestamp.toDate();
+    }
+    if (timestamp.seconds) {
+      return new Date(timestamp.seconds * 1000);
+    }
+    return new Date(timestamp);
+  }
+
+  const fromDate = getJsDate(profile.dates?.from);
+  const toDate = getJsDate(profile.dates?.to);
+
+  const travelDates = fromDate
+    ? `${format(fromDate, 'd LLL yyyy', { locale: fr })} au ${toDate ? format(toDate, 'd LLL yyyy', { locale: fr }) : ''}`
     : 'Dates flexibles';
 
 
