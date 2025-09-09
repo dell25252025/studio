@@ -122,7 +122,7 @@ const Step1 = () => {
                   <div className="relative w-32 h-32">
                   {profilePic ? (
                       <div className="relative w-32 h-32">
-                        <Image src={profilePic} alt="Photo de profil" fill objectFit="cover" className="rounded-full" />
+                        <Image src={profilePic} alt="Photo de profil" fill className="rounded-full object-cover" />
                         <Button
                           type="button"
                           variant="destructive"
