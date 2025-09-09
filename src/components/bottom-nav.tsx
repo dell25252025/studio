@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Compass, Bell, MessageSquare, User, UserPlus, XCircle } from 'lucide-react';
+import { Compass, Bell, MessageSquare, User, UserPlus, Settings } from 'lucide-react';
 import { Button } from './ui/button';
 import Link from 'next/link';
 import { auth } from '@/lib/firebase';
@@ -40,7 +40,7 @@ const BottomNav = () => {
     { icon: Compass, label: 'Discover', href: '/', active: true },
     { icon: Bell, label: 'Notifications', href: '#' },
     { icon: MessageSquare, label: 'Messages', href: '#' },
-    { icon: XCircle, label: 'Block', href: '#' },
+    { icon: Settings, label: 'Paramètres', href: '#' },
   ];
   
   const getProfileContent = () => {
