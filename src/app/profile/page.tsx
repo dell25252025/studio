@@ -104,7 +104,7 @@ export default function ProfilePage() {
             }
         } catch (error) {
             console.error("Failed to update profile picture:", error);
-            const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
+            const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue lors de la mise à jour de la photo.";
             toast({
                 variant: "destructive",
                 title: "Erreur de mise à jour",
