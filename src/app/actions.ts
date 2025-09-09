@@ -45,18 +45,9 @@ export async function createUserProfile(userId: string, profileData: any) {
   }
 
   try {
-    let profilePicUrl: string | null = null;
-    if (profileData.profilePic && profileData.profilePic.startsWith('data:')) {
-        const uploadResult = await uploadProfilePicture(userId, profileData.profilePic);
-        if (uploadResult.success && uploadResult.url) {
-          profilePicUrl = uploadResult.url;
-        } else {
-          // Propagate the specific error from uploadProfilePicture
-          return { success: false, error: uploadResult.error || 'Failed to upload profile picture.' };
-        }
-    }
-    
-    const dataToSave: { [key: string]: any } = { ...profileData };
+    // We will no longer upload the picture here.
+    // It will be handled by updateUserProfilePicture after profile creation.
+    const { profilePic, ...dataToSave } = profileData;
 
     if (dataToSave.dates?.from && dataToSave.dates.from instanceof Date) {
       dataToSave.dates.from = dataToSave.dates.from.toISOString();
@@ -65,7 +56,7 @@ export async function createUserProfile(userId: string, profileData: any) {
       dataToSave.dates.to = dataToSave.dates.to.toISOString();
     }
 
-    dataToSave.profilePic = profilePicUrl;
+    dataToSave.profilePic = null; // Set to null initially
     dataToSave.createdAt = new Date().toISOString();
     dataToSave.updatedAt = new Date().toISOString();
     
