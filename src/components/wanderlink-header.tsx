@@ -26,9 +26,9 @@ const Logo = () => (
     </defs>
     
     <text x="0" y="28" className="logo-text">travel</text>
-    <text x="100" y="28" className="logo-text">me</text>
+    <text x="115" y="28" className="logo-text">me</text>
     
-    <g transform="translate(78, 14) scale(0.9)">
+    <g transform="translate(87, 14) scale(0.9)">
         <path d="M 10 0 L 12 8 L 10 10 L 8 8 Z" fill="hsl(var(--accent))" />
         <path d="M 20 10 L 12 12 L 10 10 L 12 8 Z" fill="hsl(var(--accent))" opacity="0.7"/>
         <path d="M 10 20 L 8 12 L 10 10 L 12 12 Z" fill="hsl(var(--primary))" />
@@ -44,7 +44,7 @@ const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) =>
         "absolute top-0 z-20 w-full",
         !transparent && "sticky border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     )}>
-      <div className="flex h-8 items-center px-4">
+      <div className="flex h-16 items-center px-4">
         <Link href="/" className="flex items-center gap-2 group">
           <Logo />
         </Link>
