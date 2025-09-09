@@ -31,7 +31,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen w-full flex-col bg-background pt-20 md:pt-16 pb-48">
+    <div className="min-h-screen w-full flex-col bg-background pt-20 md:pt-16 pb-24">
       <WanderlinkHeader />
       
       <main className="flex-1 flex flex-col h-full">
