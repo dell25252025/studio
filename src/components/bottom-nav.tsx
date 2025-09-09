@@ -35,7 +35,7 @@ const BottomNav = () => {
 
   return (
     <nav className="fixed bottom-0 left-0 z-20 h-20 w-full border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
+      <div className="container grid h-full max-w-lg grid-cols-5 mx-auto font-medium relative">
         {navItemsLeft.map((item) => (
           <Link href={item.href} key={item.label} passHref>
             <Button
@@ -54,15 +54,15 @@ const BottomNav = () => {
         ))}
 
         {/* Profile Button in the middle */}
-        <div className="flex items-center justify-center">
+        <div className="absolute left-1/2 -translate-x-1/2 -top-8 flex items-center justify-center">
              <Link href={profileItem.href} passHref>
                 <Button
                 asChild
                 variant="ghost"
-                className="inline-flex h-16 w-16 flex-col items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
+                className="inline-flex h-20 w-20 flex-col items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
                 >
                 <div>
-                    <profileItem.icon className="h-8 w-8 mx-auto p-1" />
+                    <profileItem.icon className="h-10 w-10 mx-auto p-1" />
                 </div>
                 </Button>
             </Link>
