@@ -195,33 +195,7 @@ export default function ProfilePage() {
         <WanderlinkHeader transparent />
         <main className="flex-1 pb-24">
              <div className="w-full bg-background pt-8">
-                 <div className="p-6 flex justify-between items-center">
-                    <div>
-                        <h1 className="text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
-                        <div className="flex items-center gap-2 mt-2 text-shadow">
-                            <MapPin className="h-5 w-5" />
-                            <span>{profile.location}</span>
-                        </div>
-                    </div>
-                    {isOwner && (
-                        <div>
-                           <Button onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
-                                <Camera className="mr-2 h-4 w-4" />
-                                {isUploading ? 'Chargement...' : 'Ajouter photo'}
-                           </Button>
-                           <input
-                                type="file"
-                                ref={fileInputRef}
-                                className="hidden"
-                                accept="image/*"
-                                onChange={handlePhotoAdd}
-                                disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
-                            />
-                        </div>
-                    )}
-                </div>
-
-                 {profilePictures.length > 0 ? (
+                {profilePictures.length > 0 ? (
                     <Carousel
                         className="w-full max-w-4xl mx-auto"
                          opts={{
@@ -256,7 +230,31 @@ export default function ProfilePage() {
                          <Camera className="h-24 w-24 text-muted-foreground" />
                     </div>
                 )}
-
+                 <div className="p-6 flex justify-between items-center">
+                    <div>
+                        <h1 className="text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
+                        <div className="flex items-center gap-2 mt-2 text-shadow">
+                            <MapPin className="h-5 w-5" />
+                            <span>{profile.location}</span>
+                        </div>
+                    </div>
+                    {isOwner && (
+                        <div>
+                           <Button onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
+                                <Camera className="mr-2 h-4 w-4" />
+                                {isUploading ? 'Chargement...' : 'Ajouter photo'}
+                           </Button>
+                           <input
+                                type="file"
+                                ref={fileInputRef}
+                                className="hidden"
+                                accept="image/*"
+                                onChange={handlePhotoAdd}
+                                disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
+                            />
+                        </div>
+                    )}
+                </div>
             </div>
 
             <div className="container mx-auto max-w-4xl py-8 space-y-8 bg-background">
@@ -367,3 +365,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    
