@@ -34,5 +34,3 @@ const WanderlinkHeader = () => {
 };
 
 export default WanderlinkHeader;
-
-    
