@@ -40,7 +40,7 @@ const Logo = () => (
 const WanderlinkHeader = () => {
   return (
     <header className={cn(
-        "fixed top-0 z-20 w-full transition-colors border-b bg-background/80 backdrop-blur-sm"
+        "fixed top-0 z-20 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     )}>
       <div className="flex h-16 items-center px-4">
         <Link href="/" className="flex items-center gap-2 group">
