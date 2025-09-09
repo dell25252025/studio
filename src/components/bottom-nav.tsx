@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { auth } from '@/lib/firebase';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { getUserProfile } from '@/app/actions';
-import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 const BottomNav = () => {
@@ -40,7 +39,6 @@ const BottomNav = () => {
   const navItems = [
     { icon: Compass, label: 'Discover', href: '/', active: true },
     { icon: Heart, label: 'Matches', href: '#' },
-    { icon: 'placeholder', label: 'Profile', href: '#' }, 
     { icon: MessageSquare, label: 'Messages', href: '#' },
     { icon: XCircle, label: 'Block', href: '#' },
   ];
@@ -49,67 +47,76 @@ const BottomNav = () => {
     if (currentUser) {
       if (profilePicture) {
         return (
-          <Avatar className="h-16 w-16 border-4 border-background group-hover:border-secondary transition-colors">
+          <Avatar className="h-12 w-12 border-4 border-background group-hover:border-secondary transition-colors">
             <AvatarImage src={profilePicture} alt="User profile picture" className="object-cover" />
             <AvatarFallback>
-              <User className="h-8 w-8" />
+              <User className="h-6 w-6" />
             </AvatarFallback>
           </Avatar>
         );
       }
-      return <User className="h-10 w-10 mx-auto" />;
+      return <User className="h-8 w-8 mx-auto" />;
     }
-    return <UserPlus className="h-10 w-10 mx-auto" />;
+    return <UserPlus className="h-8 w-8 mx-auto" />;
   };
   
   const profileHref = currentUser ? `/profile?id=${currentUser.uid}` : '/signup';
   const isUserLoggedIn = !!currentUser;
 
-
   return (
-    <nav className="fixed bottom-0 left-0 z-20 h-20 w-full border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
-        {navItems.map((item, index) => {
-          if (index === 2) {
-            // Central Profile Button
-            return (
-              <div key="profile-button-container" className="relative flex items-center justify-center">
-                <div className="absolute -top-8 flex items-center justify-center">
-                   <Link href={profileHref} passHref className="group">
-                      <Button
-                        asChild
-                        variant="ghost"
-                        className="inline-flex h-20 w-20 flex-col items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all duration-300 ease-in-out"
-                      >
-                        <div className={!isUserLoggedIn ? 'animate-pulse-slow' : ''}>
-                          {getProfileContent()}
-                        </div>
-                      </Button>
-                  </Link>
-                </div>
-              </div>
-            );
-          }
-          
-          return (
+    <div className="fixed bottom-4 left-1/2 z-20 w-[calc(100%-2rem)] max-w-md -translate-x-1/2">
+      <nav className="h-16 w-full rounded-full border bg-background/90 p-2 shadow-lg backdrop-blur-md">
+        <div className="grid h-full grid-cols-5 items-center font-medium">
+          {/* Left Items */}
+          {navItems.slice(0, 2).map((item) => (
             <Link href={item.href} key={item.label} passHref>
               <Button
                 asChild
                 variant="ghost"
-                className={`inline-flex h-full w-full flex-col items-center justify-center px-5 rounded-none ${
+                className={`inline-flex h-full w-full flex-col items-center justify-center rounded-full px-2 ${
                   item.active ? 'text-primary' : 'text-muted-foreground'
                 } hover:bg-secondary/50`}
               >
                 <div>
-                  <item.icon className="h-6 w-6 mb-1 mx-auto" />
-                  <span className="text-xs font-body">{item.label}</span>
+                  <item.icon className="h-5 w-5 mb-0.5" />
+                  <span className="text-[10px] font-body">{item.label}</span>
                 </div>
               </Button>
             </Link>
-          );
-        })}
-      </div>
-    </nav>
+          ))}
+
+          {/* Central Profile Button */}
+          <div className="relative -mt-10 flex h-full items-start justify-center">
+            <Link href={profileHref} passHref className="group">
+              <div
+                className={`inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90 ${!isUserLoggedIn ? 'animate-pulse-slow' : ''}`}
+              >
+                {getProfileContent()}
+              </div>
+            </Link>
+          </div>
+
+          {/* Right Items */}
+          {navItems.slice(2, 4).map((item) => (
+            <Link href={item.href} key={item.label} passHref>
+              <Button
+                asChild
+                variant="ghost"
+                className={`inline-flex h-full w-full flex-col items-center justify-center rounded-full px-2 ${
+                  item.active ? 'text-primary' : 'text-muted-foreground'
+                } hover:bg-secondary/50`}
+              >
+                <div>
+                  <item.icon className="h-5 w-5 mb-0.5" />
+                  <span className="text-[10px] font-body">{item.label}</span>
+                </div>
+              </Button>
+            </Link>
+          ))}
+
+        </div>
+      </nav>
+    </div>
   );
 };
 

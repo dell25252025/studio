@@ -19,7 +19,7 @@ const intentionMap = {
 const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
     const intention = intentionMap[profile.travelIntention];
   return (
-    <Card className="relative aspect-[3/5] w-full overflow-hidden rounded-2xl border-0 shadow-xl group">
+    <Card className="relative aspect-[9/16] w-full overflow-hidden rounded-2xl border-0 shadow-xl group">
       <Image
         src={profile.image}
         alt={profile.name}

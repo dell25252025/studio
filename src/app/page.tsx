@@ -35,9 +35,9 @@ export default function Home() {
       <WanderlinkHeader />
       
       {view === 'discover' && (
-        <div className="relative flex-1 w-full pt-16 pb-24">
+        <div className="relative flex-1 w-full pt-16">
           <MatchCarousel profiles={possibleMatches} />
-          <div className="fixed bottom-24 left-0 z-10 flex w-full justify-center p-4 bg-gradient-to-t from-background via-background/90 to-transparent">
+          <div className="fixed bottom-28 z-10 flex w-full justify-center p-4">
               <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onFindMatches} disabled={true}>
               <Sparkles className="mr-2 h-5 w-5" />
               Find your AI Matches
