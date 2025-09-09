@@ -74,6 +74,38 @@ export async function createUserProfile(userId: string, profileData: any) {
     }
 }
 
+export async function updateUserProfile(userId: string, profileData: any) {
+    if (!userId) {
+        return { success: false, error: "User is not authenticated." };
+    }
+
+    try {
+        const { gender, profilePictures, ...restOfProfileData } = profileData;
+
+        const finalProfileData = {
+            ...restOfProfileData,
+            sex: gender,
+            profilePictures: profilePictures, // Assume pictures are already URLs or handled client-side
+            updatedAt: new Date().toISOString(),
+        };
+        
+        if (finalProfileData.dates?.from) {
+            finalProfileData.dates.from = new Date(finalProfileData.dates.from);
+        }
+        if (finalProfileData.dates?.to) {
+            finalProfileData.dates.to = new Date(finalProfileData.dates.to);
+        }
+
+        await updateDoc(doc(db, "users", userId), finalProfileData);
+        
+        return { success: true, id: userId };
+
+    } catch (e: any) {
+        console.error("Error in updateUserProfile:", e);
+        return { success: false, error: e.message || "An unknown error occurred." };
+    }
+}
+
 
 export async function addProfilePicture(userId: string, photoDataUri: string) {
     if (!userId) {

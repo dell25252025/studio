@@ -19,8 +19,8 @@ import { auth } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import Link from 'next/link';
 
 const activityMap = {
   hiking: 'Randonnée',
@@ -235,12 +235,6 @@ export default function ProfilePage() {
                             align: "center",
                             loop: false,
                         }}
-                        plugins={[
-                            Autoplay({
-                              delay: 5000,
-                              stopOnInteraction: true,
-                            }),
-                        ]}
                     >
                         <CarouselContent className="-ml-4">
                             {profilePictures.map((src: string, index: number) => (
@@ -324,9 +318,14 @@ export default function ProfilePage() {
                         <div className="flex items-center gap-3">
                             <h1 className="text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
                             {isOwner && (
-                                <Button variant="ghost" size="icon">
-                                    <Edit className="h-6 w-6" />
-                                </Button>
+                                <Link href={`/profile/edit?id=${profileId}`} passHref>
+                                    <Button variant="ghost" size="icon" asChild>
+                                        <div>
+                                            <Edit className="h-6 w-6" />
+                                            <span className="sr-only">Modifier le profil</span>
+                                        </div>
+                                    </Button>
+                                </Link>
                             )}
                         </div>
                         <div className="flex items-center gap-2 mt-2 text-shadow">
