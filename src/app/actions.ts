@@ -17,25 +17,19 @@ export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<A
   }
 }
 
-async function uploadProfilePicture(userId: string, photoDataUri: string): Promise<{ success: boolean, url?: string, error?: string }> {
-    if (!userId) {
-        return { success: false, error: "User ID is required to upload a profile picture." };
+async function uploadProfilePicture(userId: string, photoDataUri: string): Promise<string | null> {
+    if (!userId || !photoDataUri || !photoDataUri.startsWith('data:')) {
+        console.error("Invalid data for photo upload.");
+        return null;
     }
-    if (!photoDataUri || !photoDataUri.startsWith('data:')) {
-        return { success: false, error: "Invalid photo data provided." };
-    }
-
     try {
         const storageRef = ref(storage, `profilePictures/${userId}/profile.jpg`);
         const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
         const downloadURL = await getDownloadURL(uploadResult.ref);
-        
-        return { success: true, url: downloadURL };
-    } catch (e: any) {
+        return downloadURL;
+    } catch (e) {
         console.error("Error uploading profile picture:", e);
-        // Firebase Storage errors often have a 'code' property
-        const errorMessage = e.code ? `Firebase Storage: ${e.code}` : (e.message || "An unknown error occurred.");
-        return { success: false, error: `Failed to upload profile picture: ${errorMessage}` };
+        return null;
     }
 }
 
@@ -47,27 +41,38 @@ export async function createUserProfile(userId: string, profileData: any) {
   try {
     const { profilePic, ...dataToSave } = profileData;
 
-    if (dataToSave.dates?.from && dataToSave.dates.from instanceof Date) {
-      dataToSave.dates.from = dataToSave.dates.from.toISOString();
+    // Convert dates if they exist
+    if (dataToSave.dates?.from) {
+      dataToSave.dates.from = new Date(dataToSave.dates.from).toISOString();
     }
-    if (dataToSave.dates?.to && dataToSave.dates.to instanceof Date) {
-      dataToSave.dates.to = dataToSave.dates.to.toISOString();
+    if (dataToSave.dates?.to) {
+      dataToSave.dates.to = new Date(dataToSave.dates.to).toISOString();
     }
-
-    dataToSave.profilePic = null; 
-    dataToSave.createdAt = new Date().toISOString();
-    dataToSave.updatedAt = new Date().toISOString();
     
-    await setDoc(doc(db, "users", userId), dataToSave);
+    let photoUrl = null;
+    if (profilePic && profilePic.startsWith('data:')) {
+        photoUrl = await uploadProfilePicture(userId, profilePic);
+    }
+    
+    const finalProfileData = {
+        ...dataToSave,
+        profilePic: photoUrl,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+    };
+
+    await setDoc(doc(db, "users", userId), finalProfileData);
+    
     console.log("Profile successfully created for user: ", userId);
     return { success: true, id: userId };
+
   } catch (e: any) {
     console.error("Error creating user profile in Firestore: ", e);
-    // Provide a more generic but clear error message for the user.
-    const errorMessage = `An error occurred while creating the profile. Please check the console for details. Error: ${e.message || String(e)}`;
-    return { success: false, error: errorMessage };
+    const errorMessage = e.message || String(e);
+    return { success: false, error: `An error occurred while creating the profile. Error: ${errorMessage}` };
   }
 }
+
 
 export async function updateUserProfilePicture(userId: string, photoDataUri: string) {
     if (!userId) {
@@ -78,19 +83,19 @@ export async function updateUserProfilePicture(userId: string, photoDataUri: str
     }
 
     try {
-        const uploadResult = await uploadProfilePicture(userId, photoDataUri);
-        if (!uploadResult.success || !uploadResult.url) {
-          return { success: false, error: uploadResult.error || "Failed to upload profile picture." };
+        const photoUrl = await uploadProfilePicture(userId, photoDataUri);
+        if (!photoUrl) {
+          return { success: false, error: "Failed to upload profile picture." };
         }
 
         const profileRef = doc(db, "users", userId);
         await updateDoc(profileRef, {
-            profilePic: uploadResult.url,
+            profilePic: photoUrl,
             updatedAt: new Date().toISOString(),
         });
 
         console.log("Profile picture updated successfully for user:", userId);
-        return { success: true, url: uploadResult.url };
+        return { success: true, url: photoUrl };
     } catch (e) {
         console.error("Error updating profile picture:", e);
         const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";

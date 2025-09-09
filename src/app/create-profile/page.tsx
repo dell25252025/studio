@@ -13,7 +13,7 @@ import Step3 from '@/components/profile-creation/step3';
 import Step4 from '@/components/profile-creation/step4';
 import { Loader2, Plane, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { createUserProfile, updateUserProfilePicture } from '@/app/actions';
+import { createUserProfile } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
@@ -120,31 +120,17 @@ export default function CreateProfilePage() {
 
     setIsSubmitting(true);
     try {
-      // Step 1: Create profile with text data
-      const profileResult = await createUserProfile(currentUser.uid, data);
+      const result = await createUserProfile(currentUser.uid, data);
       
-      if (!profileResult.success || !profileResult.id) {
-        throw new Error(profileResult.error || "La création du profil a échoué.");
-      }
-
-      // Step 2: If profile creation is successful AND there's a picture, upload it
-      if (data.profilePic && data.profilePic.startsWith('data:')) {
-        const pictureResult = await updateUserProfilePicture(currentUser.uid, data.profilePic);
-        if (!pictureResult.success) {
-          // If picture fails, profile is still created. User can re-upload later.
-          toast({
-            variant: 'destructive',
-            title: 'Erreur d\'upload de la photo',
-            description: pictureResult.error || "Votre profil a été créé, mais la photo n'a pas pu être sauvegardée.",
-          });
-        }
+      if (!result.success || !result.id) {
+        throw new Error(result.error || "La création du profil a échoué.");
       }
       
       toast({
         title: 'Profil créé avec succès !',
         description: "Vous allez être redirigé vers votre profil.",
       });
-      router.push(`/profile?id=${profileResult.id}`);
+      router.push(`/profile?id=${result.id}`);
 
     } catch (error) {
       console.error('Failed to create profile:', error);
