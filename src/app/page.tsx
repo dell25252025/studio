@@ -39,12 +39,10 @@ export default function Home() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <WanderlinkHeader />
-      <main className="flex-1 pb-24">
+      <main className="flex-1 pb-24 pt-16">
         {view === 'discover' && (
-          <div className="relative h-screen">
-            <div className="absolute top-0 left-0 w-full h-full pt-16">
-              <MatchCarousel profiles={possibleMatches} />
-            </div>
+          <div className="relative">
+            <MatchCarousel profiles={possibleMatches} />
             <div className="fixed bottom-24 left-0 z-10 flex w-full justify-center p-4 bg-gradient-to-t from-background via-background/90 to-transparent">
                <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onFindMatches}>
                 <Sparkles className="mr-2 h-5 w-5" />
@@ -54,7 +52,7 @@ export default function Home() {
           </div>
         )}
         {view === 'results' && (
-          <div className="container mx-auto max-w-4xl px-4 py-8 pt-20">
+          <div className="container mx-auto max-w-4xl px-4 py-8">
             {loading ? (
               <div className="flex flex-col items-center justify-center gap-4 text-center h-96">
                 <Loader2 className="h-12 w-12 animate-spin text-primary" />

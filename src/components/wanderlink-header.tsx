@@ -26,13 +26,13 @@ const Logo = () => (
     </defs>
     
     <text x="0" y="28" className="logo-text">travel</text>
-    <g transform="translate(75, 14) scale(0.9)">
+    <g transform="translate(80, 14) scale(0.9)">
         <path d="M 10 0 L 12 8 L 10 10 L 8 8 Z" fill="hsl(var(--accent))" />
         <path d="M 20 10 L 12 12 L 10 10 L 12 8 Z" fill="hsl(var(--accent))" opacity="0.7"/>
         <path d="M 10 20 L 8 12 L 10 10 L 12 12 Z" fill="hsl(var(--primary))" />
         <path d="M 0 10 L 8 12 L 10 10 L 8 8 Z" fill="hsl(var(--primary))" opacity="0.7"/>
     </g>
-    <text x="94" y="28" className="logo-text">me</text>
+    <text x="98" y="28" className="logo-text">m</text>
   </svg>
 );
 
@@ -40,8 +40,7 @@ const Logo = () => (
 const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) => {
   return (
     <header className={cn(
-        "fixed top-0 z-20 w-full border-b",
-        transparent ? "border-transparent" : "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+        "fixed top-0 z-20 w-full border-b bg-background"
     )}>
       <div className="flex h-16 items-center px-4">
         <Link href="/" className="flex items-center gap-2 group">
