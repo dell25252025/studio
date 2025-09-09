@@ -25,14 +25,14 @@ const Step1 = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setValue('profilePic', reader.result as string);
+        setValue('profilePic', reader.result as string, { shouldValidate: true });
       };
       reader.readAsDataURL(file);
     }
   };
   
   const removePhoto = () => {
-    setValue('profilePic', null);
+    setValue('profilePic', '', { shouldValidate: true });
   };
 
 
@@ -122,7 +122,7 @@ const Step1 = () => {
                   <div className="relative w-32 h-32">
                   {profilePic ? (
                       <div className="relative w-32 h-32">
-                        <Image src={profilePic} alt="Photo de profil" layout="fill" className="object-cover rounded-full" />
+                        <Image src={profilePic} alt="Photo de profil" fill objectFit="cover" className="rounded-full" />
                         <Button
                           type="button"
                           variant="destructive"

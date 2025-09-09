@@ -164,7 +164,7 @@ export default function ProfilePage() {
                     <Image
                         src={profile.profilePic || "https://picsum.photos/1200/800"}
                         alt={`Photo de ${profile.firstName}`}
-                        layout="fill"
+                        fill
                         objectFit="cover"
                         className="w-full h-full"
                         data-ai-hint="person image"
