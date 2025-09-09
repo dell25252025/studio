@@ -10,21 +10,45 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
+import { MultiSelect } from '@/components/ui/multi-select';
+import { useState } from 'react';
 
-const languages = [
-    { id: 'fr', label: 'Français' },
-    { id: 'en', label: 'Anglais' },
-    { id: 'es', label: 'Espagnol' },
-    { id: 'th', label: 'Thaï' },
-    { id: 'ar', label: 'Arabe' },
-    { id: 'zh', label: 'Mandarin' },
-    { id: 'de', label: 'Allemand' },
-    { id: 'it', label: 'Italien' },
-]
+const allLanguages = [
+    { value: 'fr', label: 'Français' },
+    { value: 'en', label: 'Anglais' },
+    { value: 'es', label: 'Espagnol' },
+    { value: 'ar', label: 'Arabe' },
+    { value: 'zh', label: 'Mandarin' },
+    { value: 'hi', label: 'Hindi' },
+    { value: 'bn', label: 'Bengali' },
+    { value: 'pt', label: 'Portugais' },
+    { value: 'ru', label: 'Russe' },
+    { value: 'ja', label: 'Japonais' },
+    { value: 'de', label: 'Allemand' },
+    { value: 'jv', label: 'Javanais' },
+    { value: 'ko', label: 'Coréen' },
+    { value: 'te', label: 'Télougou' },
+    { value: 'mr', label: 'Marathi' },
+    { value: 'tr', label: 'Turc' },
+    { value: 'ta', label: 'Tamoul' },
+    { value: 'vi', label: 'Vietnamien' },
+    { value: 'ur', label: 'Ourdou' },
+    { value: 'it', label: 'Italien' },
+    { value: 'th', label: 'Thaï' },
+    { value: 'gu', label: 'Gujarati' },
+    { value: 'fa', label: 'Persan' },
+    { value: 'pl', label: 'Polonais' },
+    { value: 'uk', label: 'Ukrainien' },
+    { value: 'ro', label: 'Roumain' },
+    { value: 'nl', label: 'Néerlandais' },
+    { value: 'el', label: 'Grec' },
+    { value: 'sv', label: 'Suédois' },
+    { value: 'he', label: 'Hébreu' },
+];
+
 
 const Step2 = () => {
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
 
   return (
     <div className="space-y-8">
@@ -36,46 +60,15 @@ const Step2 = () => {
         <FormField
             control={control}
             name="languages"
-            render={() => (
+            render={({ field }) => (
                 <FormItem>
-                    <div className="mb-4">
-                    <FormLabel className="text-base">Langues que je parle</FormLabel>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        {languages.map((item) => (
-                        <FormField
-                            key={item.id}
-                            control={control}
-                            name="languages"
-                            render={({ field }) => {
-                            return (
-                                <FormItem
-                                key={item.id}
-                                className="flex flex-row items-start space-x-3 space-y-0"
-                                >
-                                <FormControl>
-                                    <Checkbox
-                                    checked={field.value?.includes(item.id)}
-                                    onCheckedChange={(checked) => {
-                                        return checked
-                                        ? field.onChange([...(field.value || []), item.id])
-                                        : field.onChange(
-                                            field.value?.filter(
-                                                (value: string) => value !== item.id
-                                            )
-                                            )
-                                    }}
-                                    />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                    {item.label}
-                                </FormLabel>
-                                </FormItem>
-                            )
-                            }}
-                        />
-                        ))}
-                    </div>
+                    <FormLabel>Langues que je parle</FormLabel>
+                     <MultiSelect
+                        options={allLanguages}
+                        selected={field.value || []}
+                        onChange={(selected) => setValue('languages', selected, { shouldValidate: true })}
+                        placeholder="Sélectionnez vos langues..."
+                    />
                     <FormMessage />
                 </FormItem>
             )}
