@@ -2,56 +2,25 @@ import React from 'react';
 import Link from 'next/link';
 
 const Logo = () => (
-  <svg
-    width="320"
-    height="130"
-    viewBox="0 0 320 130"
-    xmlns="http://www.w3.org/2000/svg"
+  <svg 
+    width="320" 
+    height="130" 
+    viewBox="0 0 320 130" 
+    xmlns="http://www.w3.org/2000/svg" 
     className="h-16 w-auto text-primary"
   >
-    <defs>
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap');
-          .logo-font { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 60px; fill: currentColor; }
-        `}
-      </style>
-    </defs>
-    
-    <g transform="translate(0, 20)">
-      <text x="5" y="60" className="logo-font">W</text>
+    <g fill="currentColor">
+      {/* Main Text */}
+      <path d="M11.9,82.8l10.3-25.1L32.6,82.8h8.5L28.1,50.3l12.1-32.5h-8.8L21.7,42.4L12.5,17.8H4.1l12,32.5L3.1,82.8H11.9z M57.8,47.4c-6.2,0-11.2,5-11.2,11.2s5,11.2,11.2,11.2s11.2-5,11.2-11.2S64,47.4,57.8,47.4z M57.8,63.4c-2.6,0-4.8-2.1-4.8-4.8s2.1-4.8,4.8-4.8s4.8,2.1,4.8,4.8S60.4,63.4,57.8,63.4z M85.2,48.1h-7.7v34.7h-6.4V48.1h-7.7v-5.6h21.8V48.1z M125.1,64.2L116.8,48h-1.6v34.8h-6.4V17.8h9.8c6.6,0,11,3.9,11,9.8c0,4.6-2.8,7.9-6.7,9.2l9.9,15.7H125.1z M115.2,23.4h-3.4v18.2h3.4c3.4,0,5.8-2.3,5.8-5.8v-6.5C121,25.7,118.6,23.4,115.2,23.4z M157.9,64.5c0,11.1-7.9,19.2-19,19.2s-19-8.1-19-19.2V17.8h6.4v46.7c0,7.6,5,12.8,12.6,12.8s12.6-5.2,12.6-12.8V17.8h6.4V64.5z M194,48.1h-13.8v-5.6h34v5.6h-13.8v34.7h-6.4V48.1z M221.7,42.5h6.4v40.3h-6.4V42.5z M224.9,32.3c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1s4.1-1.8,4.1-4.1S227.1,32.3,224.9,32.3z M257.6,64.2L249.2,48h-1.6v34.8h-6.4V36.2h9.8c6.6,0,11,3.9,11,9.8c0,4.6-2.8,7.9-6.7,9.2l9.9,15.7H257.6z M247.7,41.8h-3.4v18.2h3.4c3.4,0,5.8-2.3,5.8-5.8v-6.5C253.5,44.1,251.1,41.8,247.7,41.8z M294.9,47.5L281.1,83h-7.1l10.9-28.7l-9.9-10.7h7.6l6.2,7l6.2-7h7.6l-9.9,10.7L305.5,83h-7.1L294.9,47.5z"/>
       
-      {/* Backpack Icon replacing 'a' */}
-      <g transform="translate(68, 18)" stroke="currentColor" strokeWidth="6" fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="44" height="54" rx="10" />
-        <line x1="3" y1="25" x2="47" y2="25" />
-        <path d="M20 3 V -4 H 30 V 3" strokeWidth="5"/>
-      </g>
+      {/* Plane and Swoosh */}
+      <path d="M72.2,48.1c11.4-14,32.9-16.1,44.1-15.1l-2.6-6.1l11.1,4.7l-4.7-11.1l-6.1,2.6c-1-11.2-3.1-32.7-17.1-44.1c0,0,10.6,3.6,15.3,11.7c4.7,8.1,3.9,16.2-1.9,21.9s-13.8,6.7-21.9,1.9C80,7.1,72.2,6.3,72.2,48.1z"/>
+
+      {/* Globe */}
+      <path d="M192.8,85c-7.7,0-14,6.3-14,14s6.3,14,14,14s14-6.3,14-14S200.5,85,192.8,85z M197.4,99c0,1.2-0.2,2.3-0.5,3.4c-1.3-1.6-3.2-2.6-5.4-2.6c-2.8,0-5.1,1.5-6.3,3.7c-0.1-0.3-0.1-0.7-0.1-1.1c0-4.1,3.4-7.5,7.5-7.5C195.4,94.9,197.4,96.7,197.4,99z M189.7,99c0-1.7,1.4-3.1,3.1-3.1c1.2,0,2.3,0.7,2.8,1.8c-0.8,2.7-3.3,4.7-6.2,4.7c-0.6,0-1.1-0.1-1.6-0.2C188.5,100.9,189.7,100,189.7,99z M192.8,110.1c-6.1,0-11.1-5-11.1-11.1c0-0.9,0.1-1.8,0.4-2.6c1.5,2.1,4,3.5,6.8,3.5c3.5,0,6.5-2,7.9-4.9c0.2,0.2,0.3,0.4,0.5,0.6c0,0,0,0,0,0c0.6,0.6,1,1.3,1.1,2.1C202,104.9,197.9,110.1,192.8,110.1z"/>
       
-      <text x="125" y="60" className="logo-font">derLink</text>
-    </g>
-
-    {/* Globe */}
-    <g transform="translate(180, 85)">
-      <circle cx="12.5" cy="12.5" r="12.5" fill="currentColor" opacity="0.8" />
-      <path 
-        d="M12.5,0 A12.5,12.5 0 0,1 12.5,25 M12.5,0 A12.5,12.5 0 0,0 12.5,25 M2.5,12.5 H 22.5" 
-        fill="none" 
-        stroke="hsl(var(--background))"
-        strokeWidth="1.5"
-      />
-       <ellipse cx="12.5" cy="12.5" rx="6" ry="12" fill="none" stroke="hsl(var(--background))" strokeWidth="1.5" />
-    </g>
-
-    {/* Island and Palm Tree */}
-    <g transform="translate(220, 88)" fill="currentColor" opacity="0.8">
-        <path d="M0,15 C10,12, 25,12, 35,15 L35,18 L0,18 Z" />
-        <g transform="translate(20, -5)">
-            <path d="M0,20 C-5,5, 10,5, 5,20" stroke="currentColor" fill="none" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M3,5 C5,7 10,9 14,10" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" />
-            <path d="M-2,3 C-5,5 -8,8 -10,12" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" />
-            <path d="M-10,3 C-5,5 0,8 3,12" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" />
-        </g>
+      {/* Island and Palm Tree */}
+      <path d="M220.2,112.5c-6.2,0-11.7,0.7-16.2,2c-0.8,0.2-1.5,0.9-1.5,1.7v1.8h37.4v-1.8c0-0.8-0.7-1.5-1.5-1.7C231.9,113.2,226.4,112.5,220.2,112.5z M224.2,98.5c-3,0-5,2-5,5v9h1.8v-9c0-1.8,1.2-3.2,3.2-3.2s3.2,1.4,3.2,3.2v9h1.8v-9C229.2,100.5,227.2,98.5,224.2,98.5z M233,101.9c-2.3-1-5.1-1.5-8.8-1.5s-6.5,0.5-8.8,1.5c-0.7,0.3-1,1.1-0.7,1.8c0.3,0.7,1.1,1,1.8,0.7c1.9-0.8,4.3-1.3,7.8-1.3s5.8,0.4,7.8,1.3c0.7,0.3,1.5,0,1.8-0.7C234,103,233.7,102.2,233,101.9z M215.5,103.2c-2.1-1.3-4.3-2.1-6.8-2.2c-0.8,0-1.4,0.6-1.4,1.4s0.6,1.4,1.4,1.4c1.9,0.1,3.7,0.7,5.5,1.8c0.6,0.4,1.4,0.2,1.8-0.4C216.4,104.5,216.1,103.6,215.5,103.2z"/>
     </g>
   </svg>
 );
