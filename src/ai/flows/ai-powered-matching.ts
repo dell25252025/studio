@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -12,6 +13,41 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+
+const languageBenefitTool = ai.defineTool(
+  {
+    name: 'languageBenefit',
+    description: 'Determines if knowing a certain language provides a benefit in a specific country.',
+    inputSchema: z.object({
+      language: z.string().describe('The language to check.'),
+      country: z.string().describe('The country to check for language benefit.'),
+    }),
+    outputSchema: z.object({
+      benefit: z.boolean().describe('True if the language provides a significant benefit, false otherwise.'),
+      reason: z.string().describe('A brief explanation for the benefit (e.g., "Official language", "Widely spoken in tourist areas").'),
+    }),
+  },
+  async ({ language, country }) => {
+    // In a real application, this could be an API call to a knowledge base or a more complex logic.
+    // For this prototype, we'll use a simple hardcoded logic.
+    const languageCountryMap: Record<string, string[]> = {
+      'French': ['France', 'Monaco', 'Belgium'],
+      'Spanish': ['Spain', 'Mexico', 'Colombia', 'Argentina', 'Peru', 'Ecuador'],
+      'Italian': ['Italy'],
+      'Greek': ['Greece'],
+      'English': ['USA', 'UK', 'Australia', 'New Zealand', 'Canada'],
+      'Dutch': ['Netherlands'],
+    };
+    
+    const isBeneficial = (languageCountryMap[language] || []).includes(country);
+
+    return {
+      benefit: isBeneficial,
+      reason: isBeneficial ? `Spoken in ${country}` : `Not a primary language in ${country}`,
+    };
+  }
+);
+
 
 const AIPoweredMatchingInputSchema = z.object({
   userProfile: z.object({
@@ -56,6 +92,7 @@ export async function aiPoweredMatching(input: AIPoweredMatchingInput): Promise<
 
 const matchingPrompt = ai.definePrompt({
   name: 'matchingPrompt',
+  tools: [languageBenefitTool],
   input: {schema: AIPoweredMatchingInputSchema},
   output: {schema: AIPoweredMatchingOutputSchema},
   prompt: `You are a travel agent specializing in matching travel partners based on their profiles and travel intentions. Review the user profile and possible matches and generate an array of the best matches based on compatibility.
@@ -87,6 +124,7 @@ Consider the following when determining compatibility:
 - Shared travel styles and interests
 - Overlapping dream destinations
 - Compatibility of travel intentions (e.g., a "Sponsor" matching with a "Seeking Sponsorship" user)
+- Use the languageBenefit tool to determine if a match's language skills offer a practical advantage in any of the user's dream destinations. Highlight this as a key compatibility factor if a benefit is found.
 - Age and sex preferences
 - Verified profiles
 - Make sure to include the match index from the possibleMatches array in the output

@@ -3,7 +3,7 @@
 
 import { aiPoweredMatching, type AIPoweredMatchingInput, type AIPoweredMatchingOutput } from "@/ai/flows/ai-powered-matching";
 import { db, storage } from "@/lib/firebase";
-import { collection, doc, getDoc, DocumentData, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, DocumentData, setDoc, updateDoc, getDocs } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -41,11 +41,10 @@ export async function createUserProfile(userId: string, profileData: any) {
   try {
     const { profilePic, ...dataToSave } = profileData;
 
-    // Convert dates if they exist and are valid
-    if (dataToSave.dates?.from && typeof dataToSave.dates.from.toISOString === 'function') {
+    if (dataToSave.dates?.from) {
       dataToSave.dates.from = dataToSave.dates.from.toISOString();
     }
-    if (dataToSave.dates?.to && typeof dataToSave.dates.to.toISOString === 'function') {
+    if (dataToSave.dates?.to) {
       dataToSave.dates.to = dataToSave.dates.to.toISOString();
     }
     
@@ -118,5 +117,17 @@ export async function getUserProfile(id: string): Promise<DocumentData | null> {
   } catch (error) {
     console.error("Error getting document:", error);
     throw new Error("Failed to retrieve user profile.");
+  }
+}
+
+export async function getAllUsers() {
+  try {
+    const usersCollection = collection(db, "users");
+    const userSnapshot = await getDocs(usersCollection);
+    const userList = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return userList;
+  } catch (error) {
+    console.error("Error getting all users:", error);
+    throw new Error("Failed to retrieve user list.");
   }
 }
