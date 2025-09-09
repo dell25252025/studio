@@ -28,13 +28,13 @@ import {
 import { FirebaseError } from 'firebase/app';
 import Link from 'next/link';
 
-
 const formSchema = z.object({
   email: z.string().email({ message: 'Adresse e-mail invalide.' }),
   password: z.string().min(6, { message: 'Le mot de passe doit contenir au moins 6 caractères.' }),
 });
 
-export default function SignupPage() {
+export default function AuthPage() {
+  const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const router = useRouter();
@@ -50,51 +50,64 @@ export default function SignupPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    try {
-      await createUserWithEmailAndPassword(auth, values.email, values.password);
-      toast({
-        title: 'Compte créé avec succès !',
-        description: 'Vous pouvez maintenant compléter votre profil.',
-      });
-      router.push('/create-profile');
-    } catch (error) {
-       console.error('Sign up error', error);
-       let description = "Une erreur inattendue s'est produite. Veuillez réessayer.";
-       if (error instanceof FirebaseError) {
-           if (error.code === 'auth/email-already-in-use') {
-               description = "Un compte existe déjà avec cette adresse e-mail. Tentative de connexion...";
-               toast({
-                   title: 'Compte existant',
-                   description: description,
-               });
-               try {
-                   await signInWithEmailAndPassword(auth, values.email, values.password);
-                   router.push('/create-profile');
-               } catch (signInError) {
-                   const signInErrorMessage = signInError instanceof Error ? signInError.message : String(signInError);
-                   toast({
-                       variant: 'destructive',
-                       title: 'Erreur de connexion',
-                       description: signInErrorMessage,
-                   });
-               }
-           } else {
-               description = error.message;
-               toast({
-                   variant: 'destructive',
-                   title: 'Erreur de création de compte',
-                   description: description,
-               });
-           }
-       } else {
-            toast({
-                variant: 'destructive',
-                title: 'Erreur de création de compte',
-                description: description,
-            });
-       }
-    } finally {
-      setIsLoading(false);
+    if (isLogin) {
+      // Handle Login
+      try {
+        await signInWithEmailAndPassword(auth, values.email, values.password);
+        toast({
+          title: 'Connexion réussie !',
+          description: 'Heureux de vous revoir.',
+        });
+        router.push('/');
+      } catch (error) {
+        console.error('Login error', error);
+        const errorMessage = error instanceof FirebaseError ? error.message : "Email ou mot de passe incorrect.";
+        toast({
+          variant: 'destructive',
+          title: 'Erreur de connexion',
+          description: errorMessage,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      // Handle Sign Up
+      try {
+        await createUserWithEmailAndPassword(auth, values.email, values.password);
+        toast({
+          title: 'Compte créé avec succès !',
+          description: 'Vous pouvez maintenant compléter votre profil.',
+        });
+        router.push('/create-profile');
+      } catch (error) {
+         console.error('Sign up error', error);
+         let description = "Une erreur inattendue s'est produite. Veuillez réessayer.";
+         if (error instanceof FirebaseError) {
+             if (error.code === 'auth/email-already-in-use') {
+                 description = "Un compte existe déjà avec cette adresse e-mail. Veuillez vous connecter.";
+                 toast({
+                     variant: 'destructive',
+                     title: 'Compte existant',
+                     description: description,
+                 });
+             } else {
+                 description = error.message;
+                 toast({
+                     variant: 'destructive',
+                     title: 'Erreur de création de compte',
+                     description: description,
+                 });
+             }
+         } else {
+              toast({
+                  variant: 'destructive',
+                  title: 'Erreur de création de compte',
+                  description: description,
+              });
+         }
+      } finally {
+        setIsLoading(false);
+      }
     }
   }
 
@@ -103,6 +116,12 @@ export default function SignupPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
+       toast({
+        title: 'Connexion réussie !',
+        description: 'Bienvenue sur WanderLink.',
+      });
+      // Redirect to profile creation if they are a new user, or home if they exist.
+      // For simplicity, we'll always redirect to create-profile, Firestore rules will prevent overwriting.
       router.push('/create-profile');
     } catch (error) {
        console.error('Google sign in error', error);
@@ -128,7 +147,7 @@ export default function SignupPage() {
                 </h1>
             </Link>
         </div>
-        <h2 className="text-2xl font-semibold text-center">Créez votre compte</h2>
+        <h2 className="text-2xl font-semibold text-center">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
         <p className="text-center text-muted-foreground mb-6">Rejoignez la communauté de voyageurs.</p>
         
         <Button
@@ -186,10 +205,21 @@ export default function SignupPage() {
             />
             <Button type="submit" className="w-full" disabled={isLoading || isGoogleLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Suivant
+              {isLogin ? 'Se connecter' : "Créer un compte"}
             </Button>
           </form>
         </Form>
+        <div className="mt-4 text-center text-sm">
+          <Button
+            variant="link"
+            className="text-muted-foreground"
+            onClick={() => setIsLogin(!isLogin)}
+          >
+            {isLogin
+              ? "Pas encore de compte ? Créez-en un"
+              : "Vous avez déjà un compte ? Connectez-vous"}
+          </Button>
+        </div>
       </div>
     </div>
   );
