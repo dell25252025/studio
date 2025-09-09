@@ -4,11 +4,11 @@ import { cn } from '@/lib/utils';
 
 const Logo = () => (
   <svg 
-    width="300" 
+    width="250" 
     height="100" 
-    viewBox="0 0 350 100" 
+    viewBox="0 0 280 100" 
     xmlns="http://www.w3.org/2000/svg" 
-    className="h-14 w-auto"
+    className="h-12 w-auto"
     aria-label="travel.w.me Logo"
   >
     <defs>
@@ -23,24 +23,21 @@ const Logo = () => (
           }
         `}
       </style>
-      <linearGradient id="plane-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style={{stopColor: 'hsl(var(--accent))', stopOpacity: 1}} />
-        <stop offset="100%" style={{stopColor: 'hsl(var(--primary))', stopOpacity: 1}} />
-      </linearGradient>
     </defs>
 
     {/* Text */}
     <text x="0" y="65" className="logo-text">travel</text>
-    <text x="260" y="65" className="logo-text">me</text>
+    <text x="210" y="65" className="logo-text">.me</text>
     
-    {/* Stylized .w. with Plane */}
-    <g transform="translate(155, 25) scale(1.2)">
-       <path d="M22.5,12.96l-6.23-3.32L14.43,6,16,6.15,17.77,3.5,15.83,3.07,14.77,1,12.5,1.5l-1.9,4L8.35,5.15,6.5,7.5,8.27,8,6.43,11.32,4.5,11.75,2.23,9.5,0,10l1.9,4,2.25.35L6,18.07l-1.77.43L6.17,22l1.83.43L9.65,19.1l2.25.35,1.07,2.53,1.93-.43L13,18.75l3.32,1.83,1.83-1.83Z" fill="url(#plane-gradient)"/>
+    {/* Stylized W Icon */}
+    <g transform="translate(150, 42) scale(1.4)">
+      <g>
+        <path d="M 10 0 L 12 8 L 10 10 L 8 8 Z" fill="hsl(var(--accent))" />
+        <path d="M 20 10 L 12 12 L 10 10 L 12 8 Z" fill="hsl(var(--accent))" opacity="0.7"/>
+        <path d="M 10 20 L 8 12 L 10 10 L 12 12 Z" fill="hsl(var(--primary))" />
+        <path d="M 0 10 L 8 12 L 10 10 L 8 8 Z" fill="hsl(var(--primary))" opacity="0.7"/>
+      </g>
     </g>
-
-    {/* Dots */}
-    <circle cx="130" cy="60" r="3.5" fill="hsl(var(--foreground))" />
-    <circle cx="245" cy="60" r="3.5" fill="hsl(var(--foreground))" />
   </svg>
 );
 
