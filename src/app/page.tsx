@@ -34,7 +34,7 @@ export default function Home() {
     <div className="h-screen w-full flex-col bg-background overflow-hidden">
       <WanderlinkHeader />
       
-      <main className="h-full pt-16">
+      <div className="h-full pt-16">
         {view === 'discover' && (
           <div className="relative flex-1 w-full h-full">
             <div className="absolute inset-0 flex items-center">
@@ -64,7 +64,7 @@ export default function Home() {
             </div>
           </div>
         )}
-      </main>
+      </div>
       
       <BottomNav />
     </div>
