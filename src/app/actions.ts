@@ -39,36 +39,34 @@ export async function createUserProfile(userId: string, profileData: any) {
   }
 
   try {
-    const { profilePic, ...dataToSave } = profileData;
+    let photoUrl = profileData.profilePic || null;
 
-    if (dataToSave.dates?.from) {
-      dataToSave.dates.from = dataToSave.dates.from.toISOString();
-    }
-    if (dataToSave.dates?.to) {
-      dataToSave.dates.to = dataToSave.dates.to.toISOString();
-    }
-    
-    let photoUrl = null;
-    if (profilePic && profilePic.startsWith('data:')) {
-        photoUrl = await uploadProfilePicture(userId, profilePic);
+    if (profileData.profilePic && profileData.profilePic.startsWith('data:')) {
+      photoUrl = await uploadProfilePicture(userId, profileData.profilePic);
     }
     
     const finalProfileData = {
-        ...dataToSave,
+        ...profileData,
         profilePic: photoUrl,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
     };
-
-    await setDoc(doc(db, "users", userId), finalProfileData);
     
-    console.log("Profile successfully created for user: ", userId);
+    // Ensure dates are stringified if they exist
+    if (finalProfileData.dates?.from) {
+      finalProfileData.dates.from = finalProfileData.dates.from.toISOString();
+    }
+    if (finalProfileData.dates?.to) {
+      finalProfileData.dates.to = finalProfileData.dates.to.toISOString();
+    }
+
+    await setDoc(doc(db, "users", userId), finalProfileData, { merge: true });
+    
     return { success: true, id: userId };
 
   } catch (e: any) {
-    console.error("Error creating user profile in Firestore: ", e);
-    const errorMessage = e.message || String(e);
-    return { success: false, error: `An error occurred while creating the profile. Error: ${errorMessage}` };
+    console.error("Error in createUserProfile:", e);
+    return { success: false, error: e.message || "An unknown error occurred." };
   }
 }
 
