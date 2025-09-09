@@ -35,35 +35,43 @@ async function uploadProfilePicture(userId: string, photoDataUri: string): Promi
 }
 
 export async function createUserProfile(userId: string, profileData: any) {
-  if (!userId) {
-    return { success: false, error: "User is not authenticated." };
-  }
-
-  try {
-    const { gender, ...restOfProfileData } = profileData;
-    const finalProfileData = {
-        ...restOfProfileData,
-        sex: gender,
-        profilePictures: [], // Initialize with an empty array for photos
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-    };
-    
-    if (finalProfileData.dates?.from) {
-      finalProfileData.dates.from = new Date(finalProfileData.dates.from);
-    }
-    if (finalProfileData.dates?.to) {
-      finalProfileData.dates.to = new Date(finalProfileData.dates.to);
+    if (!userId) {
+        return { success: false, error: "User is not authenticated." };
     }
 
-    await setDoc(doc(db, "users", userId), finalProfileData);
-    
-    return { success: true, id: userId };
+    try {
+        const { gender, profilePictures: photoDataUris, ...restOfProfileData } = profileData;
 
-  } catch (e: any) {
-    console.error("Error in createUserProfile:", e);
-    return { success: false, error: e.message || "An unknown error occurred." };
-  }
+        let uploadedPhotoUrls: string[] = [];
+        if (photoDataUris && photoDataUris.length > 0) {
+            const uploadPromises = photoDataUris.map((uri: string) => uploadProfilePicture(userId, uri));
+            const results = await Promise.all(uploadPromises);
+            uploadedPhotoUrls = results.filter((url): url is string => url !== null);
+        }
+
+        const finalProfileData = {
+            ...restOfProfileData,
+            sex: gender,
+            profilePictures: uploadedPhotoUrls,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+        };
+        
+        if (finalProfileData.dates?.from) {
+          finalProfileData.dates.from = new Date(finalProfileData.dates.from);
+        }
+        if (finalProfileData.dates?.to) {
+          finalProfileData.dates.to = new Date(finalProfileData.dates.to);
+        }
+
+        await setDoc(doc(db, "users", userId), finalProfileData);
+        
+        return { success: true, id: userId };
+
+    } catch (e: any) {
+        console.error("Error in createUserProfile:", e);
+        return { success: false, error: e.message || "An unknown error occurred." };
+    }
 }
 
 
