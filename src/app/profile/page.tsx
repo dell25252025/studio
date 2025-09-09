@@ -18,6 +18,8 @@ import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import type { User } from 'firebase/auth';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
 
 const activityMap = {
   hiking: 'Randonnée',
@@ -88,39 +90,29 @@ export default function ProfilePage() {
     const file = event.target.files?.[0];
     if (!file || !currentUser) return;
 
-    // If no pictures exist, it's an add. If they exist, it's a replace of the first one.
-    const isReplacing = profile?.profilePictures && profile.profilePictures.length > 0;
-
     setIsUploading(true);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
         const photoDataUri = reader.result as string;
         try {
-            if (isReplacing) {
-                // We need to remove the old one first
-                const oldUrl = profile.profilePictures[0];
-                await removeProfilePicture(currentUser.uid, oldUrl);
-            }
             const result = await addProfilePicture(currentUser.uid, photoDataUri);
 
             if (result.success && result.url) {
                 setProfile(prev => {
                     if (!prev) return null;
-                    const newPictures = isReplacing 
-                        ? [result.url, ...prev.profilePictures.slice(1)]
-                        : [result.url];
+                    const newPictures = [...(prev.profilePictures || []), result.url];
                     return { ...prev, profilePictures: newPictures };
                 });
                 toast({
-                    title: "Photo mise à jour !",
+                    title: "Photo ajoutée !",
                     description: "Votre nouvelle photo est visible.",
                 });
             } else {
               throw new Error(result.error || "L'ajout de la photo a échoué.")
             }
         } catch (error) {
-            console.error("Failed to add/replace profile picture:", error);
+            console.error("Failed to add profile picture:", error);
             const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
             toast({
                 variant: "destructive",
@@ -196,21 +188,35 @@ export default function ProfilePage() {
       ? `${format(fromDate, 'd LLL yyyy', { locale: fr })}${toDate ? ` au ${format(toDate, 'd LLL yyyy', { locale: fr })}` : ''}`
       : 'Non spécifié';
 
-  const profilePicture = (profile.profilePictures && profile.profilePictures.length > 0) ? profile.profilePictures[0] : null;
+  const profilePictures = profile.profilePictures && profile.profilePictures.length > 0 ? profile.profilePictures : [];
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
         <WanderlinkHeader />
         <main className="flex-1 pb-24">
             <div className="relative h-[60vh] w-full bg-muted text-white">
-                {profilePicture ? (
-                    <Image 
-                        src={profilePicture}
-                        alt={`Photo de profil de ${profile.firstName}`}
-                        fill
-                        className="object-cover"
-                        priority
-                    />
+                {profilePictures.length > 0 ? (
+                    <Carousel
+                        className="w-full h-full"
+                        plugins={[Autoplay({ delay: 3000 })]}
+                        opts={{ loop: true }}
+                    >
+                        <CarouselContent>
+                            {profilePictures.map((src: string, index: number) => (
+                                <CarouselItem key={index}>
+                                    <div className="relative h-[60vh] w-full">
+                                        <Image 
+                                            src={src}
+                                            alt={`Photo de profil de ${profile.firstName} ${index + 1}`}
+                                            fill
+                                            className="object-cover"
+                                            priority={index === 0}
+                                        />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                    </Carousel>
                 ) : (
                     <div className="flex h-full w-full items-center justify-center bg-card">
                          <Camera className="h-24 w-24 text-muted-foreground" />
@@ -237,7 +243,7 @@ export default function ProfilePage() {
                                 className="hidden"
                                 accept="image/*"
                                 onChange={handlePhotoAdd}
-                                disabled={isUploading}
+                                disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
                             />
                         </div>
                     )}
