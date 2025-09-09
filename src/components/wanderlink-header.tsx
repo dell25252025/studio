@@ -13,33 +13,26 @@ const Logo = () => (
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap');
-          .logo-font { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 50px; fill: currentColor; }
+          .logo-font { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 60px; fill: currentColor; }
         `}
       </style>
     </defs>
     
     <g transform="translate(0, 20)">
-      {/* Plane */}
-      <path
-        d="M105.3,16.8c-1.3-1.3-3.4-1.3-4.7,0l-12.5,12.5c-1.3,1.3-1.3,3.4,0,4.7s3.4,1.3,4.7,0l4.4-4.4l-4.9,4.9c-1.3,1.3-1.3,3.4,0,4.7c1.3,1.3,3.4,1.3,4.7,0l4.9-4.9l4.4,4.4c1.3,1.3,3.4,1.3,4.7,0c1.3-1.3,1.3-3.4,0-4.7L105.3,16.8z M102.8,25.9l-2.2-2.2l8.8-8.8l2.2,2.2L102.8,25.9z"
-        fill="currentColor"
-      />
-      {/* Plane Trail from 'a' */}
-      <path
-        d="M93.5,52.5 C110,40, 120,25, 105,15"
-        stroke="currentColor"
-        strokeWidth="4"
-        fill="none"
-        strokeLinecap="round"
-      />
-
       <text x="5" y="60" className="logo-font">W</text>
-      {/* Custom 'a' is just the trail, the letter is omitted */}
-      <text x="85" y="60" className="logo-font">nderLink</text>
+      
+      {/* Backpack Icon replacing 'a' */}
+      <g transform="translate(70, 20)">
+        <path d="M15,5 C10,5 5,10 5,15 L5,45 C5,50 10,55 15,55 L35,55 C40,55 45,50 45,45 L45,15 C45,10 40,5 35,5 Z M25,2.5 L25,10" stroke="currentColor" strokeWidth="6" strokeLinecap="round" fill="none"/>
+        <path d="M15,25 L35,25" stroke="currentColor" strokeWidth="5" strokeLinecap="round"/>
+        <path d="M38,12 L48,18 C50,19 50,21 48,22 L38,28" fill="currentColor" />
+      </g>
+      
+      <text x="125" y="60" className="logo-font">derLink</text>
     </g>
 
     {/* Globe */}
-    <g transform="translate(130, 85)">
+    <g transform="translate(180, 85)">
       <circle cx="12.5" cy="12.5" r="12.5" fill="currentColor" opacity="0.8" />
       <path 
         d="M12.5,0 A12.5,12.5 0 0,1 12.5,25 M12.5,0 A12.5,12.5 0 0,0 12.5,25 M0,12.5 A12.5,12.5 0 0,0 25,12.5 M0,12.5 A12.5,12.5 0 0,1 25,12.5" 
@@ -56,7 +49,7 @@ const Logo = () => (
     </g>
 
     {/* Island and Palm Tree */}
-    <g transform="translate(170, 88)">
+    <g transform="translate(220, 88)">
       <path d="M0,15 C20,10, 40,10, 60,15 L60,18 L0,18 Z" fill="currentColor" opacity="0.8" />
       <path d="M45,15 C40,-5 20,-5 25,15" stroke="currentColor" fill="none" strokeWidth="2.5" strokeLinecap="round" />
       <path d="M42,2 C45,5 48,8 52,10" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" />
