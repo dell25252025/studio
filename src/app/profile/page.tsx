@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Upload } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +20,7 @@ import { signOut } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 const activityMap = {
   hiking: 'Randonnée',
@@ -43,6 +44,7 @@ export default function ProfilePage() {
   const [isOwner, setIsOwner] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -135,6 +137,37 @@ export default function ProfilePage() {
     };
   };
 
+  const handlePhotoRemove = async (photoUrl: string) => {
+    if (!currentUser) return;
+    setIsDeleting(photoUrl);
+    try {
+      const result = await removeProfilePicture(currentUser.uid, photoUrl);
+      if (result.success) {
+        setProfile(prev => {
+          if (!prev) return null;
+          const newPictures = (prev.profilePictures || []).filter((p: string) => p !== photoUrl);
+          return { ...prev, profilePictures: newPictures };
+        });
+        toast({
+          title: "Photo supprimée !",
+          description: "Votre photo a été retirée de votre profil.",
+        });
+      } else {
+        throw new Error(result.error || "La suppression de la photo a échoué.");
+      }
+    } catch (error) {
+      console.error("Failed to remove profile picture:", error);
+      const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
+      toast({
+        variant: "destructive",
+        title: "Erreur de suppression",
+        description: errorMessage,
+      });
+    } finally {
+      setIsDeleting(null);
+    }
+  }
+
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -200,7 +233,7 @@ export default function ProfilePage() {
                         className="w-full max-w-4xl mx-auto"
                          opts={{
                             align: "center",
-                            loop: true,
+                            loop: false,
                         }}
                         plugins={[
                             Autoplay({
@@ -212,7 +245,7 @@ export default function ProfilePage() {
                         <CarouselContent className="-ml-4">
                             {profilePictures.map((src: string, index: number) => (
                                 <CarouselItem key={index} className="pl-4 basis-3/4 md:basis-1/3">
-                                    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl">
+                                    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl group">
                                         <Image 
                                             src={src}
                                             alt={`Photo de profil de ${profile.firstName} ${index + 1}`}
@@ -220,40 +253,95 @@ export default function ProfilePage() {
                                             className="object-cover"
                                             priority={index === 0}
                                         />
+                                         {isOwner && (
+                                            <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="destructive" size="icon" className="h-8 w-8">
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                        <AlertDialogTitle>Supprimer cette photo ?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Cette action est irréversible. La photo sera définitivement supprimée de votre profil.
+                                                        </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                        <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                          onClick={() => handlePhotoRemove(src)}
+                                                          disabled={isDeleting === src}
+                                                        >
+                                                            {isDeleting === src ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                                                            Supprimer
+                                                        </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </div>
+                                        )}
                                     </div>
                                 </CarouselItem>
                             ))}
+                             {isOwner && profilePictures.length < MAX_PHOTOS && (
+                                <CarouselItem className="pl-4 basis-3/4 md:basis-1/3 flex items-center justify-center">
+                                    <div className="w-full aspect-[3/4] flex items-center justify-center">
+                                        <Button 
+                                            variant="outline" 
+                                            className="h-24 w-24 rounded-full border-dashed border-2 flex-col gap-2"
+                                            onClick={() => fileInputRef.current?.click()}
+                                            disabled={isUploading}
+                                        >
+                                            {isUploading ? <Loader2 className="h-8 w-8 animate-spin" /> : <PlusCircle className="h-8 w-8 text-muted-foreground" />}
+                                            <span className="text-xs text-muted-foreground">Ajouter</span>
+                                        </Button>
+                                    </div>
+                                </CarouselItem>
+                            )}
                         </CarouselContent>
                     </Carousel>
                 ) : (
-                    <div className="flex h-64 w-full items-center justify-center bg-card">
-                         <Camera className="h-24 w-24 text-muted-foreground" />
+                     <div className="flex h-64 w-full items-center justify-center bg-card">
+                         {isOwner ? (
+                             <Button 
+                                variant="outline" 
+                                className="h-32 w-32 rounded-full border-dashed border-2 flex-col gap-2"
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={isUploading}
+                            >
+                                {isUploading ? <Loader2 className="h-10 w-10 animate-spin" /> : <PlusCircle className="h-10 w-10 text-muted-foreground" />}
+                                <span className="text-sm text-muted-foreground mt-1">Ajouter une photo</span>
+                            </Button>
+                         ) : (
+                             <Camera className="h-24 w-24 text-muted-foreground" />
+                         )}
                     </div>
                 )}
                  <div className="p-6 flex justify-between items-center">
                     <div>
-                        <h1 className="text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
+                        <div className="flex items-center gap-3">
+                            <h1 className="text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
+                            {isOwner && (
+                                <Button variant="ghost" size="icon">
+                                    <Edit className="h-6 w-6" />
+                                </Button>
+                            )}
+                        </div>
                         <div className="flex items-center gap-2 mt-2 text-shadow">
                             <MapPin className="h-5 w-5" />
                             <span>{profile.location}</span>
                         </div>
                     </div>
-                    {isOwner && (
-                        <div>
-                           <Button onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
-                                <Upload className="mr-2 h-4 w-4" />
-                                {isUploading ? 'Chargement...' : 'Ajouter depuis le stockage'}
-                           </Button>
-                           <input
-                                type="file"
-                                ref={fileInputRef}
-                                className="hidden"
-                                accept="image/*"
-                                onChange={handlePhotoAdd}
-                                disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
-                            />
-                        </div>
-                    )}
+                     <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handlePhotoAdd}
+                        disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
+                    />
                 </div>
             </div>
 
@@ -365,3 +453,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    
