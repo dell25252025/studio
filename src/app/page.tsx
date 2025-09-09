@@ -11,7 +11,6 @@ import WanderlinkHeader from '@/components/wanderlink-header';
 import { Button } from '@/components/ui/button';
 import { currentUser, possibleMatches } from '@/lib/mock-data';
 import { Loader2, Sparkles } from 'lucide-react';
-import type { UserProfile } from '@/lib/types';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -33,7 +32,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <WanderlinkHeader />
+      <WanderlinkHeader transparent />
       <main className="flex-1 pb-24 pt-16">
         {view === 'discover' && (
           <div className="relative">
