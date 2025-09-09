@@ -42,10 +42,10 @@ export async function createUserProfile(userId: string, profileData: any) {
     const { profilePic, ...dataToSave } = profileData;
 
     // Convert dates if they exist and are valid
-    if (dataToSave.dates?.from && dataToSave.dates.from instanceof Date) {
+    if (dataToSave.dates?.from && typeof dataToSave.dates.from.toISOString === 'function') {
       dataToSave.dates.from = dataToSave.dates.from.toISOString();
     }
-    if (dataToSave.dates?.to && dataToSave.dates.to instanceof Date) {
+    if (dataToSave.dates?.to && typeof dataToSave.dates.to.toISOString === 'function') {
       dataToSave.dates.to = dataToSave.dates.to.toISOString();
     }
     
