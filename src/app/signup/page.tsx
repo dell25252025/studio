@@ -29,10 +29,20 @@ import { FirebaseError } from 'firebase/app';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 
-const formSchema = z.object({
+const loginSchema = z.object({
+  email: z.string().email({ message: 'Adresse e-mail invalide.' }),
+  password: z.string().min(1, { message: 'Le mot de passe est obligatoire.' }),
+});
+
+const signupSchema = z.object({
   email: z.string().email({ message: 'Adresse e-mail invalide.' }),
   password: z.string().min(6, { message: 'Le mot de passe doit contenir au moins 6 caractères.' }),
+  confirmPassword: z.string().min(6, { message: 'Le mot de passe doit contenir au moins 6 caractères.' }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Les mots de passe ne correspondent pas.",
+  path: ["confirmPassword"],
 });
+
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -41,20 +51,22 @@ export default function AuthPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm({
+    resolver: zodResolver(isLogin ? loginSchema : signupSchema),
     defaultValues: {
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof loginSchema | typeof signupSchema>) {
     setIsLoading(true);
     if (isLogin) {
       // Handle Login
       try {
-        await signInWithEmailAndPassword(auth, values.email, values.password);
+        const loginValues = values as z.infer<typeof loginSchema>;
+        await signInWithEmailAndPassword(auth, loginValues.email, loginValues.password);
         toast({
           title: 'Connexion réussie !',
           description: 'Heureux de vous revoir.',
@@ -74,7 +86,8 @@ export default function AuthPage() {
     } else {
       // Handle Sign Up
       try {
-        await createUserWithEmailAndPassword(auth, values.email, values.password);
+        const signupValues = values as z.infer<typeof signupSchema>;
+        await createUserWithEmailAndPassword(auth, signupValues.email, signupValues.password);
         toast({
           title: 'Compte créé avec succès !',
           description: 'Vous pouvez maintenant compléter votre profil.',
@@ -136,6 +149,11 @@ export default function AuthPage() {
       setIsGoogleLoading(false);
     }
   }
+  
+  const toggleForm = () => {
+    setIsLogin(!isLogin);
+    form.reset();
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
@@ -181,6 +199,21 @@ export default function AuthPage() {
                 </FormItem>
               )}
             />
+            {!isLogin && (
+               <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirmer le mot de passe</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="********" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <Button type="submit" className="w-full" disabled={isLoading || isGoogleLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLogin ? 'Se connecter' : "Créer un compte"}
@@ -208,7 +241,7 @@ export default function AuthPage() {
           {isGoogleLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-             <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.2 76.2C322.3 103.6 289.4 88 248 88c-73.2 0-133.1 59.9-133.1 133.1s59.9 133.1 133.1 133.1c76.9 0 115.7-53.5 119.7-81.6H248V261.8h239.1c.9 21.9 1.9 43.7 1.9 66.2z"></path></svg>
+             <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.2 76.2C322.3 103.6 289.4 88 248 88c-73.2 0-133.1 59.9-133.1 133.1s59.9 133.1 133.1 133.1c76.9 0 115.7-53.5 119.7-81.6H248V261.8h239.1c.9 21.9 1.9 43.7 1.9 66.2z"></path></svg>
           )}
           Continuer avec Google
         </Button>
@@ -218,14 +251,14 @@ export default function AuthPage() {
                 <Button 
                     variant="default"
                     className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
-                    onClick={() => setIsLogin(false)}>
+                    onClick={toggleForm}>
                     Pas encore de compte ? Créez-en un
                 </Button>
             ) : (
                 <Button
                     variant="link"
                     className="text-muted-foreground"
-                    onClick={() => setIsLogin(true)}
+                    onClick={toggleForm}
                 >
                     Vous avez déjà un compte ? Connectez-vous
                 </Button>
