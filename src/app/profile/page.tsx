@@ -195,7 +195,7 @@ export default function ProfilePage() {
         <WanderlinkHeader transparent />
         <main className="flex-1 pb-24">
              <div className="w-full bg-background pt-8">
-                 <div className="p-6 flex justify-between items-end">
+                 <div className="p-6 flex justify-between items-center">
                     <div>
                         <h1 className="text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
                         <div className="flex items-center gap-2 mt-2 text-shadow">
