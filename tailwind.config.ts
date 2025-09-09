@@ -19,6 +19,7 @@ export default {
       fontFamily: {
         body: ['PT Sans', 'sans-serif'],
         headline: ['Playfair Display', 'serif'],
+        logo: ['Poppins', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {

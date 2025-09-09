@@ -40,7 +40,7 @@ export default function Home() {
             <MatchCarousel profiles={possibleMatches} />
             <MatchCarousel profiles={[...possibleMatches].reverse()} />
             <div className="fixed bottom-28 z-10 flex w-full justify-center p-4">
-                <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onFindMatches} disabled={true}>
+                <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onFindMatches}>
                 <Sparkles className="mr-2 h-5 w-5" />
                 Find your AI Matches
               </Button>
