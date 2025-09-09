@@ -195,43 +195,7 @@ export default function ProfilePage() {
         <WanderlinkHeader transparent />
         <main className="flex-1 pb-24">
              <div className="w-full bg-background pt-8">
-                 {profilePictures.length > 0 ? (
-                    <Carousel
-                        className="w-full max-w-4xl mx-auto"
-                         opts={{
-                            align: "center",
-                            loop: true,
-                        }}
-                        plugins={[
-                            Autoplay({
-                              delay: 5000,
-                              stopOnInteraction: true,
-                            }),
-                        ]}
-                    >
-                        <CarouselContent className="-ml-4">
-                            {profilePictures.map((src: string, index: number) => (
-                                <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2">
-                                    <div className="relative aspect-video w-full overflow-hidden rounded-2xl">
-                                        <Image 
-                                            src={src}
-                                            alt={`Photo de profil de ${profile.firstName} ${index + 1}`}
-                                            fill
-                                            className="object-cover"
-                                            priority={index === 0}
-                                        />
-                                    </div>
-                                </CarouselItem>
-                            ))}
-                        </CarouselContent>
-                    </Carousel>
-                ) : (
-                    <div className="flex h-64 w-full items-center justify-center bg-card">
-                         <Camera className="h-24 w-24 text-muted-foreground" />
-                    </div>
-                )}
-
-                <div className="p-6 flex justify-between items-end">
+                 <div className="p-6 flex justify-between items-end">
                     <div>
                         <h1 className="text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
                         <div className="flex items-center gap-2 mt-2 text-shadow">
@@ -256,6 +220,43 @@ export default function ProfilePage() {
                         </div>
                     )}
                 </div>
+
+                 {profilePictures.length > 0 ? (
+                    <Carousel
+                        className="w-full max-w-4xl mx-auto"
+                         opts={{
+                            align: "center",
+                            loop: true,
+                        }}
+                        plugins={[
+                            Autoplay({
+                              delay: 5000,
+                              stopOnInteraction: true,
+                            }),
+                        ]}
+                    >
+                        <CarouselContent className="-ml-4">
+                            {profilePictures.map((src: string, index: number) => (
+                                <CarouselItem key={index} className="pl-4 basis-3/4 md:basis-1/3">
+                                    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl">
+                                        <Image 
+                                            src={src}
+                                            alt={`Photo de profil de ${profile.firstName} ${index + 1}`}
+                                            fill
+                                            className="object-cover"
+                                            priority={index === 0}
+                                        />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                    </Carousel>
+                ) : (
+                    <div className="flex h-64 w-full items-center justify-center bg-card">
+                         <Camera className="h-24 w-24 text-muted-foreground" />
+                    </div>
+                )}
+
             </div>
 
             <div className="container mx-auto max-w-4xl py-8 space-y-8 bg-background">
