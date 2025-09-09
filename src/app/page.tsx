@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <WanderlinkHeader />
-      <main className="flex-1 pb-24">
+      <main className="flex-1 pb-24 pt-4">
         {view === 'discover' && (
           <>
             <MatchCarousel profiles={possibleMatches} />
