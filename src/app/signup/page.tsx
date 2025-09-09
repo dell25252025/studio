@@ -158,7 +158,7 @@ export default function AuthPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm">
-        <div className="flex items-center gap-2 mb-8 justify-center">
+        <div className="flex items-center gap-2 mb-6 justify-center">
             <Link href="/" className="flex items-center gap-2">
                 <Plane className="h-8 w-8 text-primary" />
                 <h1 className="text-3xl font-bold font-headline text-primary">
@@ -166,13 +166,13 @@ export default function AuthPage() {
                 </h1>
             </Link>
         </div>
-        <h2 className="text-2xl font-semibold text-center">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
-        <p className="text-center text-muted-foreground mb-6">
+        <h2 className="text-xl font-semibold text-center">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
+        <p className="text-center text-sm text-muted-foreground mb-4">
           {isLogin ? 'Heureux de vous revoir !' : 'Rejoignez la communauté de voyageurs.'}
         </p>
         
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="email"
@@ -214,14 +214,14 @@ export default function AuthPage() {
                 )}
               />
             )}
-            <Button type="submit" className="w-full" disabled={isLoading || isGoogleLoading}>
+            <Button type="submit" className="w-full !mt-5" disabled={isLoading || isGoogleLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLogin ? 'Se connecter' : "Créer un compte"}
             </Button>
           </form>
         </Form>
         
-        <div className="relative my-6">
+        <div className="relative my-4">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
           </div>
@@ -234,7 +234,7 @@ export default function AuthPage() {
 
         <Button
           variant="outline"
-          className="w-full mb-4"
+          className="w-full"
           onClick={handleGoogleSignIn}
           disabled={isGoogleLoading || isLoading}
         >
@@ -246,7 +246,7 @@ export default function AuthPage() {
           Continuer avec Google
         </Button>
         
-        <div className="mt-6 text-center">
+        <div className="mt-4 text-center">
            {isLogin ? (
                 <Button 
                     variant="default"
