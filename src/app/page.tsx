@@ -32,7 +32,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <WanderlinkHeader transparent />
+      <WanderlinkHeader />
       
       {view === 'discover' && (
         <div className="relative flex-1 w-full pt-16 pb-24">
