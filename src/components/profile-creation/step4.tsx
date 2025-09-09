@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import {
   FormControl,
   FormDescription,
@@ -45,6 +45,10 @@ const activities = [
 
 const Step4 = () => {
   const { control } = useFormContext();
+  const areDatesFlexible = useWatch({
+    control,
+    name: 'flexibleDates',
+  });
 
   return (
     <div className="space-y-8">
@@ -79,11 +83,14 @@ const Step4 = () => {
                     variant={'outline'}
                     className={cn(
                       'w-full justify-start text-left font-normal',
-                      !field.value?.from && 'text-muted-foreground'
+                      !field.value?.from && !areDatesFlexible && 'text-muted-foreground'
                     )}
+                    disabled={areDatesFlexible}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {field.value?.from ? (
+                    {areDatesFlexible ? (
+                        'Dates flexibles'
+                    ) : field.value?.from ? (
                       field.value.to ? (
                         <>
                           {format(field.value.from, 'LLL dd, y', { locale: fr })} -{' '}
@@ -106,6 +113,7 @@ const Step4 = () => {
                     onSelect={field.onChange}
                     numberOfMonths={2}
                     locale={fr}
+                    disabled={areDatesFlexible}
                   />
                 </PopoverContent>
               </Popover>

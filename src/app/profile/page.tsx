@@ -209,7 +209,13 @@ export default function ProfilePage() {
       return new Date(timestamp.seconds * 1000);
     }
     if (typeof timestamp === 'string' || typeof timestamp === 'number') {
-      return new Date(timestamp);
+      try {
+        const date = new Date(timestamp);
+        if (isNaN(date.getTime())) return null;
+        return date;
+      } catch (e) {
+        return null;
+      }
     }
     return null;
   }
@@ -217,9 +223,11 @@ export default function ProfilePage() {
   const fromDate = getJsDate(profile.dates?.from);
   const toDate = getJsDate(profile.dates?.to);
 
-  const travelDates = fromDate
-    ? `${format(fromDate, 'd LLL yyyy', { locale: fr })}${toDate ? ` au ${format(toDate, 'd LLL yyyy', { locale: fr })}` : ''}`
-    : 'Dates flexibles';
+  const travelDates = profile.flexibleDates
+    ? 'Dates flexibles'
+    : fromDate
+      ? `${format(fromDate, 'd LLL yyyy', { locale: fr })}${toDate ? ` au ${format(toDate, 'd LLL yyyy', { locale: fr })}` : ''}`
+      : 'Non spécifié';
 
   const profilePictures = profile.profilePictures || [];
 
