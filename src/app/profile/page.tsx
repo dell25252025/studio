@@ -21,6 +21,7 @@ import type { User } from 'firebase/auth';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import Link from 'next/link';
+import Autoplay from "embla-carousel-autoplay"
 
 const activityMap = {
   hiking: 'Randonnée',
@@ -233,8 +234,14 @@ export default function ProfilePage() {
                         className="w-full max-w-4xl mx-auto"
                          opts={{
                             align: "center",
-                            loop: false,
+                            loop: true,
                         }}
+                        plugins={[
+                            Autoplay({
+                              delay: 5000,
+                              stopOnInteraction: true,
+                            }),
+                        ]}
                     >
                         <CarouselContent className="-ml-4">
                             {profilePictures.map((src: string, index: number) => (
@@ -247,53 +254,9 @@ export default function ProfilePage() {
                                             className="object-cover"
                                             priority={index === 0}
                                         />
-                                         {isOwner && (
-                                            <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant="destructive" size="icon" className="h-8 w-8">
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                        <AlertDialogTitle>Supprimer cette photo ?</AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            Cette action est irréversible. La photo sera définitivement supprimée de votre profil.
-                                                        </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                        <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                                        <AlertDialogAction
-                                                          onClick={() => handlePhotoRemove(src)}
-                                                          disabled={isDeleting === src}
-                                                        >
-                                                            {isDeleting === src ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                                            Supprimer
-                                                        </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </div>
-                                        )}
                                     </div>
                                 </CarouselItem>
                             ))}
-                             {isOwner && profilePictures.length < MAX_PHOTOS && (
-                                <CarouselItem className="pl-4 basis-3/4 md:basis-1/3 flex items-center justify-center">
-                                    <div className="w-full aspect-[3/4] flex items-center justify-center">
-                                        <Button 
-                                            variant="outline" 
-                                            className="h-24 w-24 rounded-full border-dashed border-2 flex-col gap-2"
-                                            onClick={() => fileInputRef.current?.click()}
-                                            disabled={isUploading}
-                                        >
-                                            {isUploading ? <Loader2 className="h-8 w-8 animate-spin" /> : <PlusCircle className="h-8 w-8 text-muted-foreground" />}
-                                            <span className="text-xs text-muted-foreground">Ajouter</span>
-                                        </Button>
-                                    </div>
-                                </CarouselItem>
-                            )}
                         </CarouselContent>
                     </Carousel>
                 ) : (
