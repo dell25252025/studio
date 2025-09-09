@@ -7,13 +7,32 @@ import { Button } from './ui/button';
 import Link from 'next/link';
 import { auth } from '@/lib/firebase';
 import type { User as FirebaseUser } from 'firebase/auth';
+import { getUserProfile } from '@/app/actions';
+import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 const BottomNav = () => {
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setCurrentUser(user);
+      if (user) {
+        try {
+          const profile = await getUserProfile(user.uid);
+          if (profile && profile.profilePictures && profile.profilePictures.length > 0) {
+            setProfilePicture(profile.profilePictures[0]);
+          } else {
+            setProfilePicture(null);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user profile for nav:", error);
+          setProfilePicture(null);
+        }
+      } else {
+        setProfilePicture(null);
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -21,15 +40,30 @@ const BottomNav = () => {
   const navItems = [
     { icon: Compass, label: 'Discover', href: '/', active: true },
     { icon: Heart, label: 'Matches', href: '#' },
-    // Placeholder for the central button
     { icon: 'placeholder', label: 'Profile', href: '#' }, 
     { icon: MessageSquare, label: 'Messages', href: '#' },
     { icon: XCircle, label: 'Block', href: '#' },
   ];
   
-  const profileItem = currentUser
-    ? { icon: User, label: 'Profile', href: `/profile?id=${currentUser.uid}`, animated: false }
-    : { icon: UserPlus, label: 'Profile', href: '/signup', animated: true };
+  const getProfileContent = () => {
+    if (currentUser) {
+      if (profilePicture) {
+        return (
+          <Avatar className="h-16 w-16 border-4 border-background group-hover:border-secondary transition-colors">
+            <AvatarImage src={profilePicture} alt="User profile picture" className="object-cover" />
+            <AvatarFallback>
+              <User className="h-8 w-8" />
+            </AvatarFallback>
+          </Avatar>
+        );
+      }
+      return <User className="h-10 w-10 mx-auto" />;
+    }
+    return <UserPlus className="h-10 w-10 mx-auto" />;
+  };
+  
+  const profileHref = currentUser ? `/profile?id=${currentUser.uid}` : '/signup';
+  const isUserLoggedIn = !!currentUser;
 
 
   return (
@@ -41,14 +75,14 @@ const BottomNav = () => {
             return (
               <div key="profile-button-container" className="relative flex items-center justify-center">
                 <div className="absolute -top-8 flex items-center justify-center">
-                   <Link href={profileItem.href} passHref>
+                   <Link href={profileHref} passHref className="group">
                       <Button
                         asChild
                         variant="ghost"
-                        className="inline-flex h-20 w-20 flex-col items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
+                        className="inline-flex h-20 w-20 flex-col items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all duration-300 ease-in-out"
                       >
-                        <div className={profileItem.animated ? 'animate-pulse-slow' : ''}>
-                          <profileItem.icon className="h-10 w-10 mx-auto" />
+                        <div className={!isUserLoggedIn ? 'animate-pulse-slow' : ''}>
+                          {getProfileContent()}
                         </div>
                       </Button>
                   </Link>
