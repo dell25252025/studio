@@ -9,7 +9,7 @@ const Logo = () => (
     viewBox="0 0 125 40" 
     xmlns="http://www.w3.org/2000/svg" 
     className="h-8 w-auto"
-    aria-label="travel.me Logo"
+    aria-label="travel.m Logo"
   >
     <defs>
       <style>
@@ -32,24 +32,19 @@ const Logo = () => (
         <path d="M 10 20 L 8 12 L 10 10 L 12 12 Z" fill="hsl(var(--primary))" />
         <path d="M 0 10 L 8 12 L 10 10 L 8 8 Z" fill="hsl(var(--primary))" opacity="0.7"/>
     </g>
-    <text x="98" y="28" className="logo-text">me</text>
+    <text x="98" y="28" className="logo-text">m</text>
   </svg>
 );
-
 
 const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) => {
   return (
     <header className={cn(
-        "fixed top-0 z-20 w-full p-0 md:bg-background/95 md:backdrop-blur md:supports-[backdrop-filter]:bg-background/60"
+      "fixed top-0 left-0 right-0 z-20 h-16 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b"
     )}>
-      <div className="md:flex md:h-16 md:items-center md:px-4">
-        <div className="absolute top-4 left-1/2 z-20 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 md:static md:w-auto md:transform-none">
-            <div className="h-16 w-full rounded-full border bg-background/90 p-2 shadow-lg backdrop-blur-md flex items-center justify-center md:shadow-none md:border-none md:bg-transparent md:p-0 md:backdrop-blur-none">
-                <Link href="/" className="flex items-center gap-2 group">
-                    <Logo />
-                </Link>
-            </div>
-        </div>
+      <div className="container mx-auto flex h-full items-center px-4">
+        <Link href="/" className="flex items-center gap-2 group">
+            <Logo />
+        </Link>
       </div>
     </header>
   );
