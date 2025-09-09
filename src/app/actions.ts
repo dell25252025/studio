@@ -43,6 +43,9 @@ export async function createUserProfile(userId: string, profileData: any) {
 
     if (profileData.profilePic && profileData.profilePic.startsWith('data:')) {
       photoUrl = await uploadProfilePicture(userId, profileData.profilePic);
+      if (!photoUrl) {
+        console.warn("Profile picture upload failed, continuing without it.");
+      }
     }
     
     const finalProfileData = {
@@ -51,8 +54,7 @@ export async function createUserProfile(userId: string, profileData: any) {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
     };
-    
-    // Ensure dates are stringified if they exist
+
     if (finalProfileData.dates?.from) {
       finalProfileData.dates.from = finalProfileData.dates.from.toISOString();
     }
@@ -60,7 +62,7 @@ export async function createUserProfile(userId: string, profileData: any) {
       finalProfileData.dates.to = finalProfileData.dates.to.toISOString();
     }
 
-    await setDoc(doc(db, "users", userId), finalProfileData, { merge: true });
+    await setDoc(doc(db, "users", userId), finalProfileData);
     
     return { success: true, id: userId };
 
