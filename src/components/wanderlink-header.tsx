@@ -3,8 +3,8 @@ import Link from 'next/link';
 
 const Logo = () => (
   <svg
-    width="240"
-    height="100"
+    width="320"
+    height="130"
     viewBox="0 0 320 130"
     xmlns="http://www.w3.org/2000/svg"
     className="h-16 w-auto text-primary"
@@ -22,10 +22,10 @@ const Logo = () => (
       <text x="5" y="60" className="logo-font">W</text>
       
       {/* Backpack Icon replacing 'a' */}
-      <g transform="translate(70, 20)">
-        <path d="M15,5 C10,5 5,10 5,15 L5,45 C5,50 10,55 15,55 L35,55 C40,55 45,50 45,45 L45,15 C45,10 40,5 35,5 Z M25,2.5 L25,10" stroke="currentColor" strokeWidth="6" strokeLinecap="round" fill="none"/>
-        <path d="M15,25 L35,25" stroke="currentColor" strokeWidth="5" strokeLinecap="round"/>
-        <path d="M38,12 L48,18 C50,19 50,21 48,22 L38,28" fill="currentColor" />
+      <g transform="translate(68, 18)" stroke="currentColor" strokeWidth="6" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="44" height="54" rx="10" />
+        <line x1="3" y1="25" x2="47" y2="25" />
+        <path d="M20 3 V -4 H 30 V 3" strokeWidth="5"/>
       </g>
       
       <text x="125" y="60" className="logo-font">derLink</text>
@@ -35,26 +35,23 @@ const Logo = () => (
     <g transform="translate(180, 85)">
       <circle cx="12.5" cy="12.5" r="12.5" fill="currentColor" opacity="0.8" />
       <path 
-        d="M12.5,0 A12.5,12.5 0 0,1 12.5,25 M12.5,0 A12.5,12.5 0 0,0 12.5,25 M0,12.5 A12.5,12.5 0 0,0 25,12.5 M0,12.5 A12.5,12.5 0 0,1 25,12.5" 
+        d="M12.5,0 A12.5,12.5 0 0,1 12.5,25 M12.5,0 A12.5,12.5 0 0,0 12.5,25 M2.5,12.5 H 22.5" 
         fill="none" 
         stroke="hsl(var(--background))"
-        strokeWidth="0.8"
+        strokeWidth="1.5"
       />
-      <path 
-        d="M5,10 a10,8 0 0,1 15,0 M7,15 a8,5 0 0,0 11,0"
-        fill="none" 
-        stroke="hsl(var(--background))"
-        strokeWidth="0.8"
-      />
+       <ellipse cx="12.5" cy="12.5" rx="6" ry="12" fill="none" stroke="hsl(var(--background))" strokeWidth="1.5" />
     </g>
 
     {/* Island and Palm Tree */}
-    <g transform="translate(220, 88)">
-      <path d="M0,15 C20,10, 40,10, 60,15 L60,18 L0,18 Z" fill="currentColor" opacity="0.8" />
-      <path d="M45,15 C40,-5 20,-5 25,15" stroke="currentColor" fill="none" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M42,2 C45,5 48,8 52,10" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" />
-      <path d="M40,0 C35,5 30,8 28,12" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" />
-      <path d="M30,0 C35,5 40,8 42,12" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" />
+    <g transform="translate(220, 88)" fill="currentColor" opacity="0.8">
+        <path d="M0,15 C10,12, 25,12, 35,15 L35,18 L0,18 Z" />
+        <g transform="translate(20, -5)">
+            <path d="M0,20 C-5,5, 10,5, 5,20" stroke="currentColor" fill="none" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M3,5 C5,7 10,9 14,10" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" />
+            <path d="M-2,3 C-5,5 -8,8 -10,12" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" />
+            <path d="M-10,3 C-5,5 0,8 3,12" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" />
+        </g>
     </g>
   </svg>
 );
