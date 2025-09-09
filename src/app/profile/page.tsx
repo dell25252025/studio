@@ -18,6 +18,9 @@ import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import type { User } from 'firebase/auth';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay";
+
 
 const activityMap = {
   hiking: 'Randonnée',
@@ -223,8 +226,61 @@ export default function ProfilePage() {
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
         <WanderlinkHeader />
         <main className="flex-1 pb-24">
-            <div className="container mx-auto max-w-4xl py-8">
-                 <div className="mb-8 p-6 bg-card rounded-lg shadow-sm text-center">
+            <div className="container mx-auto max-w-4xl py-8 space-y-8">
+                
+                {/* Photo Carousel */}
+                <div className="relative">
+                    <Carousel
+                        opts={{ loop: true }}
+                        plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
+                        className="w-full aspect-square md:aspect-[16/10] bg-muted rounded-xl overflow-hidden shadow-lg"
+                    >
+                        <CarouselContent>
+                            {profilePictures.length > 0 ? profilePictures.map((url: string, index: number) => (
+                                <CarouselItem key={index} className="relative">
+                                    <Image src={url} alt={`Photo de profil ${index+1}`} fill className="object-cover" />
+                                     {isOwner && (
+                                       <Button
+                                        variant="destructive"
+                                        size="icon"
+                                        className="absolute top-2 right-2 h-8 w-8 z-10"
+                                        onClick={() => handlePhotoRemove(url)}
+                                       >
+                                           <Trash2 className="h-4 w-4" />
+                                       </Button>
+                                   )}
+                                </CarouselItem>
+                            )) : (
+                                 <CarouselItem className="flex items-center justify-center bg-card">
+                                     <div className="text-center text-muted-foreground">
+                                        <Camera className="h-12 w-12 mx-auto" />
+                                        <p>Aucune photo</p>
+                                     </div>
+                                </CarouselItem>
+                            )}
+                        </CarouselContent>
+                    </Carousel>
+                    {isOwner && profilePictures.length < MAX_PHOTOS && (
+                       <Button
+                        size="icon"
+                        className="absolute bottom-4 right-4 h-12 w-12 rounded-full shadow-lg z-10"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploading}
+                       >
+                           {isUploading ? <Loader2 className="h-6 w-6 animate-spin" /> : <PlusCircle className="h-6 w-6" />}
+                       </Button>
+                   )}
+                   <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handlePhotoAdd}
+                        disabled={isUploading}
+                    />
+                </div>
+
+                 <div className="p-6 bg-card rounded-lg shadow-sm text-center">
                     <h1 className="text-4xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
                     <div className="flex items-center justify-center gap-2 mt-2 text-muted-foreground">
                         <MapPin className="h-5 w-5" />
@@ -232,50 +288,9 @@ export default function ProfilePage() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* Colonne de gauche: photos */}
-                    <div className="space-y-4">
-                        <h2 className="text-xl font-semibold">Photos</h2>
-                        <div className="grid grid-cols-2 gap-2">
-                           {profilePictures.map((url: string, index: number) => (
-                               <div key={index} className="relative aspect-square group">
-                                   <Image src={url} alt={`Photo de profil ${index+1}`} fill className="rounded-lg object-cover" />
-                                   {isOwner && (
-                                       <Button
-                                        variant="destructive"
-                                        size="icon"
-                                        className="absolute top-1 right-1 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                                        onClick={() => handlePhotoRemove(url)}
-                                       >
-                                           <Trash2 className="h-4 w-4" />
-                                       </Button>
-                                   )}
-                               </div>
-                           ))}
-                           {isOwner && profilePictures.length < MAX_PHOTOS && (
-                               <div 
-                                className="aspect-square flex items-center justify-center border-2 border-dashed rounded-lg cursor-pointer hover:bg-accent/50"
-                                onClick={() => fileInputRef.current?.click()}
-                               >
-                                   <div className="text-center text-muted-foreground">
-                                       {isUploading ? <Loader2 className="h-8 w-8 animate-spin" /> : <PlusCircle className="h-8 w-8 mx-auto" />}
-                                       <p className="text-sm mt-1">Ajouter</p>
-                                   </div>
-                               </div>
-                           )}
-                        </div>
-                         <input
-                            type="file"
-                            ref={fileInputRef}
-                            className="hidden"
-                            accept="image/*"
-                            onChange={handlePhotoAdd}
-                            disabled={isUploading}
-                        />
-                    </div>
-
-                    {/* Colonne du milieu: infos principales */}
-                    <div className="md:col-span-1 space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Colonne de gauche: infos principales */}
+                    <div className="space-y-8">
                         <Card>
                             <CardHeader>
                                 <CardTitle>Ma description</CardTitle>
@@ -331,7 +346,7 @@ export default function ProfilePage() {
                         </Card>
                     </div>
 
-                    {/* Colonne de droite: détails */}
+                    {/* Colonne de droite: détails & actions */}
                     <div className="space-y-8">
                         <Card>
                              <CardHeader>
@@ -382,5 +397,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-    
