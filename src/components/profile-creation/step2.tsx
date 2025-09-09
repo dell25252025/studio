@@ -10,45 +10,44 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { MultiSelect } from '@/components/ui/multi-select';
-import { useState } from 'react';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const allLanguages = [
-    { value: 'fr', label: 'Français' },
-    { value: 'en', label: 'Anglais' },
-    { value: 'es', label: 'Espagnol' },
-    { value: 'ar', label: 'Arabe' },
-    { value: 'zh', label: 'Mandarin' },
-    { value: 'hi', label: 'Hindi' },
-    { value: 'bn', label: 'Bengali' },
-    { value: 'pt', label: 'Portugais' },
-    { value: 'ru', label: 'Russe' },
-    { value: 'ja', label: 'Japonais' },
-    { value: 'de', label: 'Allemand' },
-    { value: 'jv', label: 'Javanais' },
-    { value: 'ko', label: 'Coréen' },
-    { value: 'te', label: 'Télougou' },
-    { value: 'mr', label: 'Marathi' },
-    { value: 'tr', label: 'Turc' },
-    { value: 'ta', label: 'Tamoul' },
-    { value: 'vi', label: 'Vietnamien' },
-    { value: 'ur', label: 'Ourdou' },
-    { value: 'it', label: 'Italien' },
-    { value: 'th', label: 'Thaï' },
-    { value: 'gu', label: 'Gujarati' },
-    { value: 'fa', label: 'Persan' },
-    { value: 'pl', label: 'Polonais' },
-    { value: 'uk', label: 'Ukrainien' },
-    { value: 'ro', label: 'Roumain' },
-    { value: 'nl', label: 'Néerlandais' },
-    { value: 'el', label: 'Grec' },
-    { value: 'sv', label: 'Suédois' },
-    { value: 'he', label: 'Hébreu' },
+    { id: 'fr', label: 'Français' },
+    { id: 'en', label: 'Anglais' },
+    { id: 'es', label: 'Espagnol' },
+    { id: 'ar', label: 'Arabe' },
+    { id: 'zh', label: 'Mandarin' },
+    { id: 'hi', label: 'Hindi' },
+    { id: 'bn', label: 'Bengali' },
+    { id: 'pt', label: 'Portugais' },
+    { id: 'ru', label: 'Russe' },
+    { id: 'ja', label: 'Japonais' },
+    { id: 'de', label: 'Allemand' },
+    { id: 'jv', label: 'Javanais' },
+    { id: 'ko', label: 'Coréen' },
+    { id: 'te', label: 'Télougou' },
+    { id: 'mr', label: 'Marathi' },
+    { id: 'tr', label: 'Turc' },
+    { id: 'ta', label: 'Tamoul' },
+    { id: 'vi', label: 'Vietnamien' },
+    { id: 'ur', label: 'Ourdou' },
+    { id: 'it', label: 'Italien' },
+    { id: 'th', label: 'Thaï' },
+    { id: 'gu', label: 'Gujarati' },
+    { id: 'fa', label: 'Persan' },
+    { id: 'pl', label: 'Polonais' },
+    { id: 'uk', label: 'Ukrainien' },
+    { id: 'ro', label: 'Roumain' },
+    { id: 'nl', label: 'Néerlandais' },
+    { id: 'el', label: 'Grec' },
+    { id: 'sv', label: 'Suédois' },
+    { id: 'he', label: 'Hébreu' },
 ];
 
 
 const Step2 = () => {
-  const { control, setValue } = useFormContext();
+  const { control } = useFormContext();
 
   return (
     <div className="space-y-8">
@@ -60,15 +59,46 @@ const Step2 = () => {
         <FormField
             control={control}
             name="languages"
-            render={({ field }) => (
+            render={() => (
                 <FormItem>
-                    <FormLabel>Langues que je parle</FormLabel>
-                     <MultiSelect
-                        options={allLanguages}
-                        selected={field.value || []}
-                        onChange={(selected) => setValue('languages', selected, { shouldValidate: true })}
-                        placeholder="Sélectionnez vos langues..."
-                    />
+                    <div className="mb-4">
+                    <FormLabel className="text-base">Langues que je parle</FormLabel>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-60 overflow-y-auto p-2 border rounded-md">
+                        {allLanguages.map((item) => (
+                        <FormField
+                            key={item.id}
+                            control={control}
+                            name="languages"
+                            render={({ field }) => {
+                            return (
+                                <FormItem
+                                key={item.id}
+                                className="flex flex-row items-start space-x-3 space-y-0"
+                                >
+                                <FormControl>
+                                    <Checkbox
+                                    checked={field.value?.includes(item.label)}
+                                    onCheckedChange={(checked) => {
+                                        return checked
+                                        ? field.onChange([...(field.value || []), item.label])
+                                        : field.onChange(
+                                            field.value?.filter(
+                                                (value: string) => value !== item.label
+                                            )
+                                            )
+                                    }}
+                                    />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                    {item.label}
+                                </FormLabel>
+                                </FormItem>
+                            )
+                            }}
+                        />
+                        ))}
+                    </div>
                     <FormMessage />
                 </FormItem>
             )}
