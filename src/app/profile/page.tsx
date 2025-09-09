@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Utensils, Cigarette, Wine, Calendar, CheckCircle, Camera, Trash2, PlusCircle } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Utensils, Cigarette, Wine, Calendar, CheckCircle, Camera, Trash2, PlusCircle, LogOut } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,6 +16,7 @@ import { fr } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 
 const activityMap = {
@@ -149,6 +150,26 @@ export default function ProfilePage() {
         });
     }
   }
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      toast({
+        title: "Déconnexion réussie",
+        description: "À bientôt !",
+      });
+      router.push('/');
+    } catch (error) {
+      console.error("Sign out error", error);
+      const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
+      toast({
+        variant: "destructive",
+        title: "Erreur de déconnexion",
+        description: errorMessage,
+      });
+    }
+  };
+
 
   if (loading) {
     return (
@@ -340,6 +361,14 @@ export default function ProfilePage() {
                                 </div>
                             </CardContent>
                         </Card>
+                        {isOwner && (
+                            <div className="flex justify-center">
+                                <Button size="lg" variant="outline" onClick={handleSignOut}>
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    Se déconnecter
+                                </Button>
+                            </div>
+                        )}
                         {!isOwner && (
                             <div className="flex justify-center">
                                 <Button size="lg">Envoyer un message</Button>
@@ -353,3 +382,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    
