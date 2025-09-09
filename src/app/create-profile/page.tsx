@@ -120,16 +120,7 @@ export default function CreateProfilePage() {
 
     setIsSubmitting(true);
     try {
-      const profileData: any = { ...data };
-
-      if (profileData.dates?.from) {
-        profileData.dates.from = profileData.dates.from.toISOString();
-      }
-      if (profileData.dates?.to) {
-        profileData.dates.to = profileData.dates.to.toISOString();
-      }
-
-      const result = await createUserProfile(currentUser.uid, profileData);
+      const result = await createUserProfile(currentUser.uid, data);
       
       if (result.success && result.id) {
         toast({

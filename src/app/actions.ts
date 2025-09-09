@@ -26,7 +26,6 @@ async function uploadProfilePicture(userId: string, photoDataUri: string): Promi
     }
 
     try {
-        // Temporary public path for debugging
         const storageRef = ref(storage, `publicProfilePictures/${userId}/profile.jpg`);
         const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
         const downloadURL = await getDownloadURL(uploadResult.ref);
@@ -55,12 +54,20 @@ export async function createUserProfile(userId: string, profileData: any) {
         }
     }
     
-    const dataToSave = {
-      ...profileData,
-      profilePic: profilePicUrl,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    // Create a serializable version of the data
+    const dataToSave: { [key: string]: any } = { ...profileData };
+
+    // Convert dates to ISO strings if they exist
+    if (dataToSave.dates?.from instanceof Date) {
+      dataToSave.dates.from = dataToSave.dates.from.toISOString();
+    }
+    if (dataToSave.dates?.to instanceof Date) {
+      dataToSave.dates.to = dataToSave.dates.to.toISOString();
+    }
+
+    dataToSave.profilePic = profilePicUrl;
+    dataToSave.createdAt = new Date().toISOString();
+    dataToSave.updatedAt = new Date().toISOString();
     
     await setDoc(doc(db, "users", userId), dataToSave);
     console.log("Profile successfully created for user: ", userId);
