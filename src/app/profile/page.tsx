@@ -3,9 +3,9 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { getUserProfile, updateUserProfilePicture } from '@/app/actions';
+import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Utensils, Cigarette, Wine, Calendar, CheckCircle, Camera } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Utensils, Cigarette, Wine, Calendar, CheckCircle, Camera, Trash2, PlusCircle } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,6 +29,7 @@ const activityMap = {
   yoga: 'Yoga / Méditation',
 };
 
+const MAX_PHOTOS = 4;
 
 export default function ProfilePage() {
   const searchParams = useSearchParams();
@@ -82,9 +83,9 @@ export default function ProfilePage() {
     }
   }, [profileId, toast]);
 
-  const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoAdd = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !currentUser) return;
+    if (!file || !currentUser || (profile?.profilePictures?.length ?? 0) >= MAX_PHOTOS) return;
 
     setIsUploading(true);
     const reader = new FileReader();
@@ -92,26 +93,27 @@ export default function ProfilePage() {
     reader.onload = async () => {
         const photoDataUri = reader.result as string;
         try {
-            const result = await updateUserProfilePicture(currentUser.uid, photoDataUri);
+            const result = await addProfilePicture(currentUser.uid, photoDataUri);
             if (result.success && result.url) {
-                setProfile(prev => prev ? { ...prev, profilePic: result.url } : null);
+                setProfile(prev => prev ? { ...prev, profilePictures: [...(prev.profilePictures || []), result.url] } : null);
                 toast({
-                    title: "Photo de profil mise à jour !",
-                    description: "Votre nouvelle photo est maintenant visible.",
+                    title: "Photo ajoutée !",
+                    description: "Votre nouvelle photo est visible.",
                 });
             } else {
-              throw new Error(result.error || "La mise à jour de la photo a échoué.")
+              throw new Error(result.error || "L'ajout de la photo a échoué.")
             }
         } catch (error) {
-            console.error("Failed to update profile picture:", error);
-            const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue lors de la mise à jour de la photo.";
+            console.error("Failed to add profile picture:", error);
+            const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
             toast({
                 variant: "destructive",
-                title: "Erreur de mise à jour",
+                title: "Erreur d'ajout",
                 description: errorMessage,
             });
         } finally {
             setIsUploading(false);
+            if(fileInputRef.current) fileInputRef.current.value = "";
         }
     };
      reader.onerror = (error) => {
@@ -124,6 +126,29 @@ export default function ProfilePage() {
         });
     };
   };
+
+  const handlePhotoRemove = async (photoUrl: string) => {
+    if (!currentUser) return;
+    try {
+        const result = await removeProfilePicture(currentUser.uid, photoUrl);
+        if (result.success) {
+            setProfile(prev => prev ? { ...prev, profilePictures: prev.profilePictures.filter((url: string) => url !== photoUrl)} : null);
+            toast({
+                title: "Photo supprimée !",
+            });
+        } else {
+            throw new Error(result.error || "La suppression a échoué.");
+        }
+    } catch (error) {
+        console.error("Failed to remove profile picture:", error);
+        const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
+        toast({
+            variant: "destructive",
+            title: "Erreur de suppression",
+            description: errorMessage,
+        });
+    }
+  }
 
   if (loading) {
     return (
@@ -158,152 +183,169 @@ export default function ProfilePage() {
     if (timestamp.seconds) {
       return new Date(timestamp.seconds * 1000);
     }
-    return new Date(timestamp);
+    if (typeof timestamp === 'string' || typeof timestamp === 'number') {
+      return new Date(timestamp);
+    }
+    return null;
   }
 
   const fromDate = getJsDate(profile.dates?.from);
   const toDate = getJsDate(profile.dates?.to);
 
   const travelDates = fromDate
-    ? `${format(fromDate, 'd LLL yyyy', { locale: fr })} au ${toDate ? format(toDate, 'd LLL yyyy', { locale: fr }) : ''}`
+    ? `${format(fromDate, 'd LLL yyyy', { locale: fr })}${toDate ? ` au ${format(toDate, 'd LLL yyyy', { locale: fr })}` : ''}`
     : 'Dates flexibles';
 
+  const profilePictures = profile.profilePictures || [];
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
         <WanderlinkHeader />
         <main className="flex-1 pb-24">
-            <div className="relative h-96">
-                 <div className="relative h-96 w-full">
-                    <Image
-                        src={profile.profilePic || "https://picsum.photos/1200/800"}
-                        alt={`Photo de ${profile.firstName}`}
-                        fill
-                        className="object-cover"
-                        data-ai-hint="person image"
-                    />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6 text-white">
+            <div className="container mx-auto max-w-4xl py-8">
+                 <div className="mb-8 p-6 bg-card rounded-lg shadow-sm text-center">
                     <h1 className="text-4xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center justify-center gap-2 mt-2 text-muted-foreground">
                         <MapPin className="h-5 w-5" />
                         <span>{profile.location}</span>
                     </div>
                 </div>
-                 {isOwner && (
-                    <div className="absolute bottom-4 right-4">
-                        <input
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* Colonne de gauche: photos */}
+                    <div className="space-y-4">
+                        <h2 className="text-xl font-semibold">Photos</h2>
+                        <div className="grid grid-cols-2 gap-2">
+                           {profilePictures.map((url: string, index: number) => (
+                               <div key={index} className="relative aspect-square group">
+                                   <Image src={url} alt={`Photo de profil ${index+1}`} fill className="rounded-lg object-cover" />
+                                   {isOwner && (
+                                       <Button
+                                        variant="destructive"
+                                        size="icon"
+                                        className="absolute top-1 right-1 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        onClick={() => handlePhotoRemove(url)}
+                                       >
+                                           <Trash2 className="h-4 w-4" />
+                                       </Button>
+                                   )}
+                               </div>
+                           ))}
+                           {isOwner && profilePictures.length < MAX_PHOTOS && (
+                               <div 
+                                className="aspect-square flex items-center justify-center border-2 border-dashed rounded-lg cursor-pointer hover:bg-accent/50"
+                                onClick={() => fileInputRef.current?.click()}
+                               >
+                                   <div className="text-center text-muted-foreground">
+                                       {isUploading ? <Loader2 className="h-8 w-8 animate-spin" /> : <PlusCircle className="h-8 w-8 mx-auto" />}
+                                       <p className="text-sm mt-1">Ajouter</p>
+                                   </div>
+                               </div>
+                           )}
+                        </div>
+                         <input
                             type="file"
                             ref={fileInputRef}
                             className="hidden"
                             accept="image/*"
-                            onChange={handlePhotoChange}
-                        />
-                        <Button
-                            onClick={() => fileInputRef.current?.click()}
+                            onChange={handlePhotoAdd}
                             disabled={isUploading}
-                        >
-                            {isUploading ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <Camera className="mr-2 h-4 w-4" />
-                            )}
-                            Changer la photo
-                        </Button>
+                        />
                     </div>
-                )}
-            </div>
 
-            <div className="container mx-auto max-w-4xl py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="md:col-span-2 space-y-8">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Ma description</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">{profile.bio || "Aucune description fournie."}</p>
-                        </CardContent>
-                    </Card>
-                     <Card>
-                        <CardHeader>
-                            <CardTitle>Mon Prochain Voyage</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                             <div className="flex items-center gap-3">
-                                <Plane className="h-5 w-5 text-primary" />
-                                <div>
-                                    <p className="font-semibold">Destination</p>
-                                    <p className="text-muted-foreground">{profile.destination}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <Calendar className="h-5 w-5 text-primary" />
-                                <div>
-                                    <p className="font-semibold">Dates</p>
-                                    <p className="text-muted-foreground">{travelDates}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <Backpack className="h-5 w-5 text-primary" />
-                                <div>
-                                    <p className="font-semibold">Style de voyage</p>
-                                    <p className="text-muted-foreground">{profile.travelStyle}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <HandCoins className="h-5 w-5 text-primary" />
-                                <div>
-                                    <p className="font-semibold">Intention</p>
-                                    <p className="text-muted-foreground">{profile.financialArrangement}</p>
-                                </div>
-                            </div>
-                            {profile.activities && profile.activities.length > 0 && (
-                                <div>
-                                    <p className="font-semibold mb-2">Activités prévues</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {profile.activities.map((activity: keyof typeof activityMap) => (
-                                            <Badge key={activity} variant="secondary">{activityMap[activity] || activity}</Badge>
-                                        ))}
+                    {/* Colonne du milieu: infos principales */}
+                    <div className="md:col-span-1 space-y-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Ma description</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-muted-foreground">{profile.bio || "Aucune description fournie."}</p>
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Mon Prochain Voyage</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <Plane className="h-5 w-5 text-primary" />
+                                    <div>
+                                        <p className="font-semibold">Destination</p>
+                                        <p className="text-muted-foreground">{profile.destination}</p>
                                     </div>
                                 </div>
-                            )}
-                        </CardContent>
-                    </Card>
-                    <div className="flex justify-center">
-                        <Button size="lg">Envoyer un message</Button>
+                                <div className="flex items-center gap-3">
+                                    <Calendar className="h-5 w-5 text-primary" />
+                                    <div>
+                                        <p className="font-semibold">Dates</p>
+                                        <p className="text-muted-foreground">{travelDates}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <Backpack className="h-5 w-5 text-primary" />
+                                    <div>
+                                        <p className="font-semibold">Style de voyage</p>
+                                        <p className="text-muted-foreground">{profile.travelStyle}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <HandCoins className="h-5 w-5 text-primary" />
+                                    <div>
+                                        <p className="font-semibold">Intention</p>
+                                        <p className="text-muted-foreground">{profile.financialArrangement}</p>
+                                    </div>
+                                </div>
+                                {profile.activities && profile.activities.length > 0 && (
+                                    <div>
+                                        <p className="font-semibold mb-2">Activités prévues</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {profile.activities.map((activity: keyof typeof activityMap) => (
+                                                <Badge key={activity} variant="secondary">{activityMap[activity] || activity}</Badge>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
                     </div>
-                </div>
 
-                <div className="space-y-8">
-                    <Card>
-                         <CardHeader>
-                            <CardTitle>Détails</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-center gap-3">
-                                <Languages className="h-5 w-5 text-primary" />
-                                <div>
-                                    <p className="font-semibold">Langues parlées</p>
-                                    <p className="text-muted-foreground">{profile.languages.join(', ')}</p>
+                    {/* Colonne de droite: détails */}
+                    <div className="space-y-8">
+                        <Card>
+                             <CardHeader>
+                                <CardTitle>Détails</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <Languages className="h-5 w-5 text-primary" />
+                                    <div>
+                                        <p className="font-semibold">Langues parlées</p>
+                                        <p className="text-muted-foreground">{profile.languages.join(', ')}</p>
+                                    </div>
                                 </div>
-                            </div>
-                             <div className="flex items-center gap-3">
-                                <Cigarette className="h-5 w-5 text-primary" />
-                                <div>
-                                    <p className="font-semibold">Tabac</p>
-                                    <p className="text-muted-foreground">{profile.tobacco || 'Non spécifié'}</p>
+                                 <div className="flex items-center gap-3">
+                                    <Cigarette className="h-5 w-5 text-primary" />
+                                    <div>
+                                        <p className="font-semibold">Tabac</p>
+                                        <p className="text-muted-foreground">{profile.tobacco || 'Non spécifié'}</p>
+                                    </div>
                                 </div>
-                            </div>
-                             <div className="flex items-center gap-3">
-                                <Wine className="h-5 w-5 text-primary" />
-                                <div>
-                                    <p className="font-semibold">Alcool</p>
-                                    <p className="text-muted-foreground">{profile.alcohol || 'Non spécifié'}</p>
+                                 <div className="flex items-center gap-3">
+                                    <Wine className="h-5 w-5 text-primary" />
+                                    <div>
+                                        <p className="font-semibold">Alcool</p>
+                                        <p className="text-muted-foreground">{profile.alcohol || 'Non spécifié'}</p>
+                                    </div>
                                 </div>
+                            </CardContent>
+                        </Card>
+                        {!isOwner && (
+                            <div className="flex justify-center">
+                                <Button size="lg">Envoyer un message</Button>
                             </div>
-                        </CardContent>
-                    </Card>
+                        )}
+                    </div>
                 </div>
             </div>
         </main>

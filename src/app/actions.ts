@@ -3,8 +3,8 @@
 
 import { aiPoweredMatching, type AIPoweredMatchingInput, type AIPoweredMatchingOutput } from "@/ai/flows/ai-powered-matching";
 import { db, storage } from "@/lib/firebase";
-import { collection, doc, getDoc, DocumentData, setDoc, updateDoc, getDocs } from "firebase/firestore";
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { collection, doc, getDoc, DocumentData, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove } from "firebase/firestore";
+import { ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
 export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<AIPoweredMatchingOutput> {
@@ -23,7 +23,8 @@ async function uploadProfilePicture(userId: string, photoDataUri: string): Promi
         return null;
     }
     try {
-        const storageRef = ref(storage, `profilePictures/${userId}/profile.jpg`);
+        const photoId = uuidv4();
+        const storageRef = ref(storage, `profilePictures/${userId}/${photoId}.jpg`);
         const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
         const downloadURL = await getDownloadURL(uploadResult.ref);
         return downloadURL;
@@ -42,14 +43,12 @@ export async function createUserProfile(userId: string, profileData: any) {
     const { gender, ...restOfProfileData } = profileData;
     const finalProfileData = {
         ...restOfProfileData,
-        sex: gender, // Rename gender to sex for consistency
+        sex: gender,
+        profilePictures: [], // Initialize with an empty array for photos
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
     };
     
-    // Remove profilePic from the data to be saved if it's empty
-    delete finalProfileData.profilePic;
-
     if (finalProfileData.dates?.from) {
       finalProfileData.dates.from = new Date(finalProfileData.dates.from);
     }
@@ -68,9 +67,9 @@ export async function createUserProfile(userId: string, profileData: any) {
 }
 
 
-export async function updateUserProfilePicture(userId: string, photoDataUri: string) {
+export async function addProfilePicture(userId: string, photoDataUri: string) {
     if (!userId) {
-        return { success: false, error: "User ID is required to update a profile picture." };
+        return { success: false, error: "User ID is required." };
     }
     if (!photoDataUri || !photoDataUri.startsWith('data:')) {
         return { success: false, error: "Invalid photo data provided." };
@@ -84,16 +83,45 @@ export async function updateUserProfilePicture(userId: string, photoDataUri: str
 
         const profileRef = doc(db, "users", userId);
         await updateDoc(profileRef, {
-            profilePic: photoUrl,
+            profilePictures: arrayUnion(photoUrl),
             updatedAt: new Date().toISOString(),
         });
 
-        console.log("Profile picture updated successfully for user:", userId);
+        console.log("Profile picture added successfully for user:", userId);
         return { success: true, url: photoUrl };
     } catch (e) {
-        console.error("Error updating profile picture:", e);
+        console.error("Error adding profile picture:", e);
         const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";
-        return { success: false, error: `Failed to update profile picture: ${errorMessage}` };
+        return { success: false, error: `Failed to add profile picture: ${errorMessage}` };
+    }
+}
+
+export async function removeProfilePicture(userId: string, photoUrl: string) {
+    if (!userId) {
+        return { success: false, error: "User ID is required." };
+    }
+     if (!photoUrl) {
+        return { success: false, error: "Photo URL is required." };
+    }
+
+    try {
+        // Delete from Firestore
+        const profileRef = doc(db, "users", userId);
+        await updateDoc(profileRef, {
+            profilePictures: arrayRemove(photoUrl),
+            updatedAt: new Date().toISOString(),
+        });
+
+        // Delete from Storage
+        const photoRef = ref(storage, photoUrl);
+        await deleteObject(photoRef);
+        
+        console.log("Profile picture removed successfully for user:", userId);
+        return { success: true };
+    } catch (e) {
+        console.error("Error removing profile picture:", e);
+        const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";
+        return { success: false, error: `Failed to remove profile picture: ${errorMessage}` };
     }
 }
 

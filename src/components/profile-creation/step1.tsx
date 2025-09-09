@@ -10,31 +10,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Camera, X } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
-import Image from 'next/image';
 
 const Step1 = () => {
-  const { control, watch, setValue } = useFormContext();
-  const profilePic = watch('profilePic');
-
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setValue('profilePic', reader.result as string, { shouldValidate: true });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  
-  const removePhoto = () => {
-    setValue('profilePic', '', { shouldValidate: true });
-  };
-
+  const { control } = useFormContext();
 
   return (
     <div className="space-y-8">
@@ -111,19 +91,10 @@ const Step1 = () => {
             </FormItem>
           )}
         />
-        <FormField
-          control={control}
-          name="profilePic"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Votre photo de profil</FormLabel>
-              <FormMessage />
-               <div className="flex items-center gap-4">
-                 <p className="text-sm text-muted-foreground">Vous pourrez ajouter une photo de profil une fois votre profil créé, depuis votre page de profil.</p>
-               </div>
-            </FormItem>
-          )}
-        />
+        <FormItem>
+            <FormLabel>Vos photos de profil</FormLabel>
+            <p className="text-sm text-muted-foreground">Vous pourrez ajouter jusqu'à 4 photos une fois votre profil créé, directement depuis votre page de profil.</p>
+        </FormItem>
          <FormField
           control={control}
           name="bio"
