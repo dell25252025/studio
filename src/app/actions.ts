@@ -26,14 +26,15 @@ async function uploadProfilePicture(userId: string, photoDataUri: string): Promi
     }
 
     try {
-        const storageRef = ref(storage, `publicProfilePictures/${userId}/profile.jpg`);
+        const storageRef = ref(storage, `profilePictures/${userId}/profile.jpg`);
         const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
         const downloadURL = await getDownloadURL(uploadResult.ref);
         
         return { success: true, url: downloadURL };
-    } catch (e) {
+    } catch (e: any) {
         console.error("Error uploading profile picture:", e);
-        const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";
+        // Firebase Storage errors often have a 'code' property
+        const errorMessage = e.code ? `Firebase Storage: ${e.code}` : (e.message || "An unknown error occurred.");
         return { success: false, error: `Failed to upload profile picture: ${errorMessage}` };
     }
 }
@@ -50,18 +51,17 @@ export async function createUserProfile(userId: string, profileData: any) {
         if (uploadResult.success && uploadResult.url) {
           profilePicUrl = uploadResult.url;
         } else {
+          // Propagate the specific error from uploadProfilePicture
           return { success: false, error: uploadResult.error || 'Failed to upload profile picture.' };
         }
     }
     
-    // Create a serializable version of the data
     const dataToSave: { [key: string]: any } = { ...profileData };
 
-    // Convert dates to ISO strings if they exist
-    if (dataToSave.dates?.from instanceof Date) {
+    if (dataToSave.dates?.from && dataToSave.dates.from instanceof Date) {
       dataToSave.dates.from = dataToSave.dates.from.toISOString();
     }
-    if (dataToSave.dates?.to instanceof Date) {
+    if (dataToSave.dates?.to && dataToSave.dates.to instanceof Date) {
       dataToSave.dates.to = dataToSave.dates.to.toISOString();
     }
 
@@ -72,9 +72,9 @@ export async function createUserProfile(userId: string, profileData: any) {
     await setDoc(doc(db, "users", userId), dataToSave);
     console.log("Profile successfully created for user: ", userId);
     return { success: true, id: userId };
-  } catch (e) {
+  } catch (e: any) {
     console.error("Error creating user profile in Firestore: ", e);
-    const errorMessage = e instanceof Error ? e.message : String(e);
+    const errorMessage = e.code ? `Firestore: ${e.code}` : (e.message || String(e));
     return { success: false, error: `Failed to create user profile: ${errorMessage}` };
   }
 }
