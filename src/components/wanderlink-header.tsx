@@ -4,9 +4,9 @@ import { cn } from '@/lib/utils';
 
 const Logo = () => (
   <svg 
-    width="280" 
+    width="250" 
     height="60" 
-    viewBox="0 0 280 60" 
+    viewBox="0 0 250 60" 
     xmlns="http://www.w3.org/2000/svg" 
     className="h-10 w-auto"
     aria-label="travel.w.me Logo"
@@ -26,9 +26,9 @@ const Logo = () => (
     </defs>
     
     <text x="0" y="45" className="logo-text">travel</text>
-    <text x="188" y="45" className="logo-text">.me</text>
+    <text x="175" y="45" className="logo-text">me</text>
     
-    <g transform="translate(158, 23) scale(1.4)">
+    <g transform="translate(147, 23) scale(1.4)">
         <path d="M 10 0 L 12 8 L 10 10 L 8 8 Z" fill="hsl(var(--accent))" />
         <path d="M 20 10 L 12 12 L 10 10 L 12 8 Z" fill="hsl(var(--accent))" opacity="0.7"/>
         <path d="M 10 20 L 8 12 L 10 10 L 12 12 Z" fill="hsl(var(--primary))" />
