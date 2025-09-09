@@ -15,7 +15,7 @@ import type { UserProfile } from '@/lib/types';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<AIPoweredMatchingOutput | null>(null);
+  const [setResults] = useState<AIPoweredMatchingOutput | null>(null);
   const [view, setView] = useState<'discover' | 'results'>('discover');
 
   const onFindMatches = async () => {
@@ -31,11 +31,6 @@ export default function Home() {
     }
   };
 
-  const resetView = () => {
-    setView('discover');
-    setResults(null);
-  };
-
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <WanderlinkHeader />
@@ -44,7 +39,7 @@ export default function Home() {
           <div className="relative">
             <MatchCarousel profiles={possibleMatches} />
             <div className="fixed bottom-24 left-0 z-10 flex w-full justify-center p-4 bg-gradient-to-t from-background via-background/90 to-transparent">
-               <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onFindMatches}>
+               <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onFindMatches} disabled>
                 <Sparkles className="mr-2 h-5 w-5" />
                 Find your AI Matches
               </Button>
@@ -60,7 +55,10 @@ export default function Home() {
                 <p className="text-muted-foreground">Our AI is analyzing profiles to find your perfect match.</p>
               </div>
             ) : (
-              results && <AiMatchResults results={results} profiles={possibleMatches} onReset={resetView} />
+             <div className="text-center">
+                <h2 className="text-2xl font-bold">AI Matching is not available yet.</h2>
+                <p>Please check back later.</p>
+             </div>
             )}
           </div>
         )}
