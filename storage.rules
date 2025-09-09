@@ -1,14 +1,8 @@
 rules_version = '2';
-
 service firebase.storage {
   match /b/{bucket}/o {
-    match /profilePictures/{userId}/profile.jpg {
-      // Allow public read access for profile pictures
-      allow read;
-      
-      // Allow write access (create, update, delete) only for the authenticated user
-      // who owns the profile.
-      allow write: if request.auth != null && request.auth.uid == userId;
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
     }
   }
 }
