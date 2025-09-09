@@ -194,17 +194,19 @@ export default function ProfilePage() {
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
         <WanderlinkHeader transparent />
         <main className="flex-1 pb-24">
-            <div className="relative h-[60vh] w-full bg-muted text-white">
-                {profilePictures.length > 0 ? (
+             <div className="w-full bg-background pt-8">
+                 {profilePictures.length > 0 ? (
                     <Carousel
-                        className="w-full h-full"
-                        plugins={[Autoplay({ delay: 3000 })]}
-                        opts={{ loop: true }}
+                        className="w-full"
+                         opts={{
+                            align: "center",
+                            loop: true,
+                        }}
                     >
-                        <CarouselContent>
+                        <CarouselContent className="-ml-1">
                             {profilePictures.map((src: string, index: number) => (
-                                <CarouselItem key={index}>
-                                    <div className="relative h-[60vh] w-full">
+                                <CarouselItem key={index} className="pl-4 basis-4/5 md:basis-2/5">
+                                    <div className="relative aspect-[9/16] w-full overflow-hidden rounded-2xl">
                                         <Image 
                                             src={src}
                                             alt={`Photo de profil de ${profile.firstName} ${index + 1}`}
@@ -218,12 +220,12 @@ export default function ProfilePage() {
                         </CarouselContent>
                     </Carousel>
                 ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-card">
+                    <div className="flex h-64 w-full items-center justify-center bg-card">
                          <Camera className="h-24 w-24 text-muted-foreground" />
                     </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 flex justify-between items-end">
+
+                <div className="p-6 flex justify-between items-end">
                     <div>
                         <h1 className="text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
                         <div className="flex items-center gap-2 mt-2 text-shadow">
@@ -235,7 +237,7 @@ export default function ProfilePage() {
                         <div>
                            <Button onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
                                 <Camera className="mr-2 h-4 w-4" />
-                                {isUploading ? 'Chargement...' : 'Changer la photo'}
+                                {isUploading ? 'Chargement...' : 'Ajouter photo'}
                            </Button>
                            <input
                                 type="file"
