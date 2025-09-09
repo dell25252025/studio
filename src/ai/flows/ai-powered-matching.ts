@@ -55,11 +55,11 @@ const AIPoweredMatchingInputSchema = z.object({
     dreamDestinations: z.array(z.string()).describe('A list of the user dream destinations.'),
     languagesSpoken: z.array(z.string()).describe('A list of languages the user speaks.'),
     travelIntention: z
-      .enum(['Sponsor', 'Seeking Sponsorship', '50/50', 'Group'])
+      .enum(['Sponsor', 'Seeking Sponsorship', '50/50', 'Group', 'Partager les frais (50/50)', 'Je peux sponsoriser le voyage', 'Je cherche un voyage sponsorisé', 'Organiser un voyage de groupe'])
       .describe('The user travel intention.'),
     interests: z.array(z.string()).describe('A list of the user interests.'),
     age: z.number().describe('The user age.'),
-    sex: z.string().describe('The user sex.'),
+    sex: z.enum(['Homme', 'Femme', 'Non-binaire', 'Male', 'Female', 'Other']).describe('The user sex.'),
     verified: z.boolean().describe('Whether the user profile is verified.'),
   }).describe('The user profile.'),
   possibleMatches: z.array(z.object({
@@ -67,11 +67,11 @@ const AIPoweredMatchingInputSchema = z.object({
     dreamDestinations: z.array(z.string()).describe('A list of the possible match dream destinations.'),
     languagesSpoken: z.array(z.string()).describe('A list of languages the possible match speaks.'),
     travelIntention: z
-      .enum(['Sponsor', 'Seeking Sponsorship', '50/50', 'Group'])
+      .enum(['Sponsor', 'Seeking Sponsorship', '50/50', 'Group', 'Partager les frais (50/50)', 'Je peux sponsoriser le voyage', 'Je cherche un voyage sponsorisé', 'Organiser un voyage de groupe'])
       .describe('The possible match travel intention.'),
     interests: z.array(z.string()).describe('A list of the possible match interests.'),
     age: z.number().describe('The possible match age.'),
-    sex: z.string().describe('The possible match sex.'),
+    sex: z.enum(['Homme', 'Femme', 'Non-binaire', 'Male', 'Female', 'Other']).describe('The possible match sex.'),
     verified: z.boolean().describe('Whether the possible match profile is verified.'),
   })).describe('An array of possible travel matches.'),
 });
