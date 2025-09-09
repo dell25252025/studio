@@ -23,7 +23,7 @@ const formSchema = z.object({
   firstName: z.string().min(1, 'Le prénom est obligatoire.'),
   age: z.number({ required_error: "L'âge est obligatoire." }).min(18, 'Vous devez avoir au moins 18 ans.'),
   gender: z.enum(['Homme', 'Femme', 'Non-binaire'], { required_error: "Le genre est obligatoire."}),
-  profilePic: z.string().optional(),
+  profilePic: z.string().optional(), // Photo is now optional here and handled separately
   bio: z.string().max(500, 'La description ne doit pas dépasser 500 caractères.').optional(),
   languages: z.array(z.string()).min(1, 'Veuillez sélectionner au moins une langue.'),
   location: z.string().min(1, 'La localisation est obligatoire.'),
@@ -128,9 +128,9 @@ export default function CreateProfilePage() {
       
       toast({
         title: 'Profil créé avec succès !',
-        description: "Vous allez être redirigé vers la page d'accueil.",
+        description: "Vous allez être redirigé vers votre page de profil.",
       });
-      router.push(`/`);
+      router.push(`/profile?id=${result.id}`);
 
     } catch (error) {
       console.error('Failed to create profile:', error);
@@ -167,15 +167,17 @@ export default function CreateProfilePage() {
           </Link>
         </div>
         
-        <Button 
-            variant="ghost" 
-            size="icon" 
-            className="absolute top-0 right-0"
-            onClick={() => router.push('/')}
-        >
-            <X className="h-6 w-6" />
-            <span className="sr-only">Annuler</span>
-        </Button>
+        <Link href="/" passHref>
+          <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute top-0 right-0"
+          >
+              <X className="h-6 w-6" />
+              <span className="sr-only">Annuler</span>
+          </Button>
+        </Link>
+        
 
         <Progress value={((currentStep + 1) / steps.length) * 100} className="mb-8" />
         

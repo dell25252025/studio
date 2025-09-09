@@ -117,36 +117,10 @@ const Step1 = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Votre photo de profil</FormLabel>
-              <FormControl>
-                 <div className="flex items-center gap-4">
-                  <div className="relative w-32 h-32">
-                  {profilePic ? (
-                      <div className="relative w-32 h-32">
-                        <Image src={profilePic} alt="Photo de profil" fill className="rounded-full object-cover" />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-0 right-0 h-7 w-7"
-                          onClick={removePhoto}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ) : (
-                      <label className="w-32 h-32 flex items-center justify-center border-2 border-dashed rounded-full cursor-pointer hover:bg-muted">
-                          <div className="text-center">
-                              <Camera className="mx-auto h-8 w-8 text-muted-foreground" />
-                              <span className="text-xs text-muted-foreground">Ajouter</span>
-                          </div>
-                          <input type="file" className="sr-only" accept="image/*" onChange={handlePhotoUpload} />
-                      </label>
-                    )}
-                  </div>
-                   <p className="text-sm text-muted-foreground">Montrez votre plus beau sourire ! C'est la première chose que les autres verront.</p>
-                 </div>
-              </FormControl>
               <FormMessage />
+               <div className="flex items-center gap-4">
+                 <p className="text-sm text-muted-foreground">Vous pourrez ajouter une photo de profil une fois votre profil créé, depuis votre page de profil.</p>
+               </div>
             </FormItem>
           )}
         />

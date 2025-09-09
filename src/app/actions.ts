@@ -39,27 +39,22 @@ export async function createUserProfile(userId: string, profileData: any) {
   }
 
   try {
-    let photoUrl = profileData.profilePic || null;
-
-    if (profileData.profilePic && profileData.profilePic.startsWith('data:')) {
-      photoUrl = await uploadProfilePicture(userId, profileData.profilePic);
-      if (!photoUrl) {
-        console.warn("Profile picture upload failed, continuing without it.");
-      }
-    }
-    
+    // We remove photo handling from the creation process.
     const finalProfileData = {
         ...profileData,
-        profilePic: photoUrl,
+        profilePic: null, // Set profile pic to null initially.
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
     };
+    
+    // Remove profilePic from the data to be saved if it's empty
+    delete finalProfileData.profilePic;
 
     if (finalProfileData.dates?.from) {
-      finalProfileData.dates.from = finalProfileData.dates.from.toISOString();
+      finalProfileData.dates.from = new Date(finalProfileData.dates.from);
     }
     if (finalProfileData.dates?.to) {
-      finalProfileData.dates.to = finalProfileData.dates.to.toISOString();
+      finalProfileData.dates.to = new Date(finalProfileData.dates.to);
     }
 
     await setDoc(doc(db, "users", userId), finalProfileData);
