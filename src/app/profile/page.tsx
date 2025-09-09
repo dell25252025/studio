@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Utensils, Cigarette, Wine, Calendar, CheckCircle, Camera, Trash2, PlusCircle, LogOut } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -239,36 +239,39 @@ export default function ProfilePage() {
                 
                 {/* Photo Carousel */}
                 <div className="relative">
-                    <Carousel
-                        opts={{ loop: true }}
-                        plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
-                        className="w-full aspect-square md:aspect-[16/10] bg-muted rounded-xl overflow-hidden shadow-lg"
-                    >
-                        <CarouselContent>
-                            {profilePictures.length > 0 ? profilePictures.map((url: string, index: number) => (
-                                <CarouselItem key={index} className="relative">
-                                    <Image src={url} alt={`Photo de profil ${index+1}`} fill className="object-cover" />
-                                     {isOwner && (
-                                       <Button
-                                        variant="destructive"
-                                        size="icon"
-                                        className="absolute top-2 right-2 h-8 w-8 z-10"
-                                        onClick={() => handlePhotoRemove(url)}
-                                       >
-                                           <Trash2 className="h-4 w-4" />
-                                       </Button>
-                                   )}
-                                </CarouselItem>
-                            )) : (
-                                 <CarouselItem className="flex items-center justify-center bg-card">
-                                     <div className="text-center text-muted-foreground">
-                                        <Camera className="h-12 w-12 mx-auto" />
-                                        <p>Aucune photo</p>
-                                     </div>
-                                </CarouselItem>
-                            )}
-                        </CarouselContent>
-                    </Carousel>
+                    {profilePictures.length > 0 && (
+                        <Carousel
+                            opts={{ loop: true }}
+                            plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
+                            className="w-full aspect-square md:aspect-[16/10] bg-muted rounded-xl overflow-hidden shadow-lg"
+                        >
+                            <CarouselContent>
+                                {profilePictures.map((url: string, index: number) => (
+                                    <CarouselItem key={index} className="relative">
+                                        <Image src={url} alt={`Photo de profil ${index+1}`} fill className="object-cover" />
+                                         {isOwner && (
+                                           <Button
+                                            variant="destructive"
+                                            size="icon"
+                                            className="absolute top-2 right-2 h-8 w-8 z-10"
+                                            onClick={() => handlePhotoRemove(url)}
+                                           >
+                                               <Trash2 className="h-4 w-4" />
+                                           </Button>
+                                       )}
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                        </Carousel>
+                    )}
+                     {profilePictures.length === 0 && (
+                        <div className="w-full aspect-square md:aspect-[16/10] bg-card rounded-xl overflow-hidden shadow-lg flex items-center justify-center">
+                            <div className="text-center text-muted-foreground">
+                                <Camera className="h-12 w-12 mx-auto" />
+                                <p>Aucune photo</p>
+                            </div>
+                        </div>
+                    )}
                     {isOwner && profilePictures.length < MAX_PHOTOS && (
                        <Button
                         size="icon"
