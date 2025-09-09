@@ -40,12 +40,16 @@ const Logo = () => (
 const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) => {
   return (
     <header className={cn(
-        "fixed top-0 z-20 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+        "fixed top-0 z-20 w-full p-0 md:bg-background/95 md:backdrop-blur md:supports-[backdrop-filter]:bg-background/60"
     )}>
-      <div className="flex h-16 items-center px-4">
-        <Link href="/" className="flex items-center gap-2 group">
-          <Logo />
-        </Link>
+      <div className="md:flex md:h-16 md:items-center md:px-4">
+        <div className="absolute top-4 left-1/2 z-20 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 md:static md:w-auto md:transform-none">
+            <div className="h-16 w-full rounded-full border bg-background/90 p-2 shadow-lg backdrop-blur-md flex items-center justify-center md:shadow-none md:border-none md:bg-transparent md:p-0 md:backdrop-blur-none">
+                <Link href="/" className="flex items-center gap-2 group">
+                    <Logo />
+                </Link>
+            </div>
+        </div>
       </div>
     </header>
   );

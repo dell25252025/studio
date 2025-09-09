@@ -35,7 +35,7 @@ export default function Home() {
       <WanderlinkHeader />
       
       {view === 'discover' && (
-        <div className="relative flex-1 w-full pt-16">
+        <div className="relative flex-1 w-full pt-24 md:pt-16">
           <MatchCarousel profiles={possibleMatches} />
           <div className="fixed bottom-28 z-10 flex w-full justify-center p-4">
               <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onFindMatches} disabled={true}>
