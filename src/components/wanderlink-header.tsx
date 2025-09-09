@@ -23,7 +23,7 @@ const Logo = () => (
           }
         `}
       </style>
-      <linearGradient id="sun-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <linearGradient id="plane-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" style={{stopColor: 'hsl(var(--accent))', stopOpacity: 1}} />
         <stop offset="100%" style={{stopColor: 'hsl(var(--primary))', stopOpacity: 1}} />
       </linearGradient>
@@ -33,12 +33,9 @@ const Logo = () => (
     <text x="0" y="65" className="logo-text">travel</text>
     <text x="260" y="65" className="logo-text">me</text>
     
-    {/* Stylized .w. */}
-    <g transform="translate(145, 18)">
-      {/* Sun */}
-      <circle cx="27.5" cy="27.5" r="10" fill="url(#sun-gradient)" />
-      {/* Mountains (w) */}
-      <path d="M 0 50 L 15 30 L 27.5 45 L 40 30 L 55 50" stroke="hsl(var(--foreground))" strokeWidth="5" fill="none" strokeLinejoin="round" strokeLinecap="round" />
+    {/* Stylized .w. with Plane */}
+    <g transform="translate(155, 25) scale(1.2)">
+       <path d="M22.5,12.96l-6.23-3.32L14.43,6,16,6.15,17.77,3.5,15.83,3.07,14.77,1,12.5,1.5l-1.9,4L8.35,5.15,6.5,7.5,8.27,8,6.43,11.32,4.5,11.75,2.23,9.5,0,10l1.9,4,2.25.35L6,18.07l-1.77.43L6.17,22l1.83.43L9.65,19.1l2.25.35,1.07,2.53,1.93-.43L13,18.75l3.32,1.83,1.83-1.83Z" fill="url(#plane-gradient)"/>
     </g>
 
     {/* Dots */}
