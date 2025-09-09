@@ -27,7 +27,7 @@ const SettingsPage = () => {
         {
           icon: User,
           label: 'Paramètres du compte',
-          href: '#',
+          href: '/settings/account',
           color: 'text-green-500',
           bgColor: 'bg-green-100',
         },
