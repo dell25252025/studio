@@ -197,16 +197,22 @@ export default function ProfilePage() {
              <div className="w-full bg-background pt-8">
                  {profilePictures.length > 0 ? (
                     <Carousel
-                        className="w-full"
+                        className="w-full max-w-4xl mx-auto"
                          opts={{
                             align: "center",
                             loop: true,
                         }}
+                        plugins={[
+                            Autoplay({
+                              delay: 5000,
+                              stopOnInteraction: true,
+                            }),
+                        ]}
                     >
-                        <CarouselContent className="-ml-1">
+                        <CarouselContent className="-ml-4">
                             {profilePictures.map((src: string, index: number) => (
-                                <CarouselItem key={index} className="pl-4 basis-4/5 md:basis-2/5">
-                                    <div className="relative aspect-[9/16] w-full overflow-hidden rounded-2xl">
+                                <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2">
+                                    <div className="relative aspect-video w-full overflow-hidden rounded-2xl">
                                         <Image 
                                             src={src}
                                             alt={`Photo de profil de ${profile.firstName} ${index + 1}`}
