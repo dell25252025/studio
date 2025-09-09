@@ -49,12 +49,14 @@ export async function createUserProfile(userId: string, profileData: any) {
     // It will be handled by updateUserProfilePicture after profile creation.
     const { profilePic, ...dataToSave } = profileData;
 
+    // Ensure dates are converted to strings if they are Date objects
     if (dataToSave.dates?.from && dataToSave.dates.from instanceof Date) {
       dataToSave.dates.from = dataToSave.dates.from.toISOString();
     }
     if (dataToSave.dates?.to && dataToSave.dates.to instanceof Date) {
       dataToSave.dates.to = dataToSave.dates.to.toISOString();
     }
+
 
     dataToSave.profilePic = null; // Set to null initially
     dataToSave.createdAt = new Date().toISOString();
