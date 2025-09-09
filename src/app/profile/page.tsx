@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Upload } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -241,8 +241,8 @@ export default function ProfilePage() {
                     {isOwner && (
                         <div>
                            <Button onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
-                                <Camera className="mr-2 h-4 w-4" />
-                                {isUploading ? 'Chargement...' : 'Ajouter photo'}
+                                <Upload className="mr-2 h-4 w-4" />
+                                {isUploading ? 'Chargement...' : 'Ajouter depuis le stockage'}
                            </Button>
                            <input
                                 type="file"
@@ -365,5 +365,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-    
