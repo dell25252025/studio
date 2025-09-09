@@ -48,7 +48,7 @@ export async function createUserProfile(userId: string, profileData: any) {
             const results = await Promise.all(uploadPromises);
             uploadedPhotoUrls = results.filter((url): url is string => url !== null);
         }
-
+        
         const finalProfileData = {
             ...restOfProfileData,
             sex: gender,
@@ -56,7 +56,7 @@ export async function createUserProfile(userId: string, profileData: any) {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
-        
+
         if (finalProfileData.dates?.from) {
           finalProfileData.dates.from = new Date(finalProfileData.dates.from);
         }

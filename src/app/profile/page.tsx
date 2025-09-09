@@ -237,9 +237,8 @@ export default function ProfilePage() {
         <main className="flex-1 pb-24">
             <div className="container mx-auto max-w-4xl py-8 space-y-8">
                 
-                {/* Photo Carousel */}
                 <div className="relative">
-                    {profilePictures.length > 0 && (
+                    {profilePictures.length > 0 ? (
                         <Carousel
                             opts={{ loop: true }}
                             plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
@@ -263,8 +262,7 @@ export default function ProfilePage() {
                                 ))}
                             </CarouselContent>
                         </Carousel>
-                    )}
-                     {profilePictures.length === 0 && (
+                    ) : (
                         <div className="w-full aspect-square md:aspect-[16/10] bg-card rounded-xl overflow-hidden shadow-lg flex items-center justify-center">
                             <div className="text-center text-muted-foreground">
                                 <Camera className="h-12 w-12 mx-auto" />
@@ -301,7 +299,6 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Colonne de gauche: infos principales */}
                     <div className="space-y-8">
                         <Card>
                             <CardHeader>
@@ -358,7 +355,6 @@ export default function ProfilePage() {
                         </Card>
                     </div>
 
-                    {/* Colonne de droite: détails & actions */}
                     <div className="space-y-8">
                         <Card>
                              <CardHeader>
