@@ -34,7 +34,7 @@ const formSchema = z.object({
   dates: z.object({
     from: z.date().optional(),
     to: z.date().optional(),
-  }),
+  }).optional(),
   flexibleDates: z.boolean().default(false),
   travelStyle: z.enum(['Aventure / Sac à dos', 'Luxe / Détente', 'Culturel / Historique', 'Festif / Événementiel', 'Religieux / Spirituel'], { required_error: "Le style de voyage est obligatoire."}),
   activities: z.array(z.string()).optional(),
