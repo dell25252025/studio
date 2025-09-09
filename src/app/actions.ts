@@ -26,7 +26,7 @@ async function uploadProfilePicture(userId: string, photoDataUri: string): Promi
     }
 
     try {
-        const storageRef = ref(storage, `profilePictures/${userId}/profile.jpg`);
+        const storageRef = ref(storage, `profilePictures/${userId}`);
         const uploadResult = await uploadString(storageRef, photoDataUri, 'data_url');
         const downloadURL = await getDownloadURL(uploadResult.ref);
         
