@@ -16,7 +16,7 @@ const WanderlinkHeader = () => {
         )}>
         <Link href="/" className="flex items-center gap-2 group">
              <Plane className="h-6 w-6 text-primary" />
-             <h1 className="text-xl font-bold font-logo text-primary">
+             <h1 className="text-xl font-bold font-logo bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               WanderLink
             </h1>
         </Link>
