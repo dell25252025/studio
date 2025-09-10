@@ -154,8 +154,8 @@ const SettingsPage = () => {
           {settingsItems.map((item) => {
             const content = (
               <div className="flex cursor-pointer items-center p-3 transition-colors hover:bg-muted/50">
-                <div className={`mr-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg ${item.bgColor}`}>
-                  <item.icon className={`h-3.5 w-3.5 ${item.color}`} />
+                <div className={`mr-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${item.bgColor}`}>
+                  <item.icon className={`h-4 w-4 ${item.color}`} />
                 </div>
                 <span className="flex-1 text-sm text-card-foreground">{item.label}</span>
                 <ChevronRight className="h-4 w-4 text-muted-foreground/50" />

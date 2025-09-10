@@ -39,7 +39,7 @@ export default function Home() {
           <div className="flex-1 flex flex-col items-center justify-center space-y-8 relative">
             <MatchCarousel profiles={possibleMatches} />
             <div className="fixed bottom-28 z-10 flex w-full justify-center p-4">
-                <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onFindMatches}>
+                <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground">
                 <Sparkles className="mr-2 h-5 w-5" />
                 Find your AI Matches
               </Button>
@@ -49,7 +49,7 @@ export default function Home() {
         
         {view === 'results' && (
           <div className="flex-1 overflow-y-auto">
-            <div className="container mx-auto max-w-4xl px-4 py-8">
+            <div className="container mx-auto max-w-4xl px-2 py-4 md:px-4 md:py-8">
               {loading ? (
                 <div className="flex flex-col items-center justify-center gap-4 text-center h-96">
                   <Loader2 className="h-12 w-12 animate-spin text-primary" />

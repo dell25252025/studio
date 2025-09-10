@@ -22,7 +22,7 @@ export default function TermsOfServicePage() {
       <main className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="space-y-6 px-2 py-4 md:px-4">
-            <div className="mx-auto max-w-2xl space-y-6">
+            <div className="mx-auto max-w-2xl space-y-4">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2"><FileText /> Conditions Générales d'Utilisation</CardTitle>

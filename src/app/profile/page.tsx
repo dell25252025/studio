@@ -382,9 +382,9 @@ export default function ProfilePage() {
                                 }),
                             ]}
                         >
-                            <CarouselContent className="-ml-4">
+                            <CarouselContent className="-ml-2 md:-ml-4">
                                 {profilePictures.map((src: string, index: number) => (
-                                    <CarouselItem key={index} className="pl-4 basis-3/4 md:basis-1/3">
+                                    <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/3">
                                         <DialogTrigger asChild>
                                             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl group cursor-pointer">
                                                 <Image 
@@ -461,7 +461,7 @@ export default function ProfilePage() {
             </div>
 
             <div className="container mx-auto max-w-4xl px-2 md:px-4 py-2 space-y-2 bg-background">
-                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
                      <div className="md:col-span-2 space-y-2">
                         <Card className="shadow-lg">
                             <CardHeader>

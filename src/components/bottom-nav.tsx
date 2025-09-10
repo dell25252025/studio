@@ -64,8 +64,8 @@ const BottomNav = () => {
   const isUserLoggedIn = !!currentUser;
 
   return (
-    <div className="fixed bottom-4 left-1/2 z-20 w-[calc(100%-2rem)] max-w-md -translate-x-1/2">
-      <nav className="h-16 w-full rounded-full border bg-background/90 p-2 shadow-lg backdrop-blur-md">
+    <div className="fixed bottom-2 left-1/2 z-20 w-[calc(100%-1rem)] max-w-md -translate-x-1/2 md:bottom-4 md:w-[calc(100%-2rem)]">
+      <nav className="h-14 w-full rounded-full border bg-background/90 p-1 shadow-lg backdrop-blur-md md:h-16 md:p-2">
         <div className="grid h-full grid-cols-5 items-center font-medium">
           {/* Left Items */}
           {navItems.slice(0, 2).map((item) => (
@@ -73,7 +73,7 @@ const BottomNav = () => {
               <Button
                 asChild
                 variant="ghost"
-                className={`inline-flex h-full w-full flex-col items-center justify-center rounded-full px-2 ${
+                className={`inline-flex h-full w-full flex-col items-center justify-center rounded-full px-1 md:px-2 ${
                   item.active ? 'text-primary' : 'text-muted-foreground'
                 } hover:bg-secondary/50`}
               >
@@ -89,7 +89,7 @@ const BottomNav = () => {
           <div className="relative -mt-8 flex h-full items-start justify-center">
             <Link href={profileHref} passHref className="group">
               <div
-                className={`inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90 ${!isUserLoggedIn ? 'animate-pulse-slow' : ''}`}
+                className={`inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90 md:h-14 md:w-14 ${!isUserLoggedIn ? 'animate-pulse-slow' : ''}`}
               >
                 {getProfileContent()}
               </div>
@@ -102,7 +102,7 @@ const BottomNav = () => {
               <Button
                 asChild
                 variant="ghost"
-                className={`inline-flex h-full w-full flex-col items-center justify-center rounded-full px-2 ${
+                className={`inline-flex h-full w-full flex-col items-center justify-center rounded-full px-1 md:px-2 ${
                   item.active ? 'text-primary' : 'text-muted-foreground'
                 } hover:bg-secondary/50`}
               >
@@ -121,5 +121,3 @@ const BottomNav = () => {
 };
 
 export default BottomNav;
-
-    

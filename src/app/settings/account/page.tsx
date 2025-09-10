@@ -153,7 +153,7 @@ export default function AccountSettingsPage() {
         </header>
 
         <main className="space-y-6 px-2 py-4 md:px-4">
-            <div className="mx-auto max-w-2xl space-y-6">
+            <div className="mx-auto max-w-2xl space-y-4">
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2"><Mail className="h-5 w-5" /> Adresse e-mail</CardTitle>
