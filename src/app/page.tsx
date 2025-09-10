@@ -11,11 +11,13 @@ import WanderlinkHeader from '@/components/wanderlink-header';
 import { Button } from '@/components/ui/button';
 import { currentUser, possibleMatches } from '@/lib/mock-data';
 import { Loader2, Sparkles } from 'lucide-react';
+import FilterSheet from '@/components/filter-sheet';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<AIPoweredMatchingOutput | null>(null);
   const [view, setView] = useState<'discover' | 'results'>('discover');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const onFindMatches = async () => {
     setLoading(true);
@@ -32,18 +34,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen w-full flex-col bg-background pt-10 pb-24">
-      <WanderlinkHeader />
+      <WanderlinkHeader onFilterClick={() => setIsFilterOpen(true)} showFilter />
       
       <main className="flex-1 flex flex-col h-full">
         {view === 'discover' && (
           <div className="flex-1 flex flex-col items-center justify-center space-y-8 relative">
             <MatchCarousel profiles={possibleMatches} />
-            {/* <div className="fixed bottom-28 z-10 flex w-full justify-center p-4">
-                <Button size="lg" className="rounded-full shadow-lg font-bold bg-accent hover:bg-accent/90 text-accent-foreground">
-                <Sparkles className="mr-2 h-5 w-5" />
-                Find your AI Matches
-              </Button>
-            </div> */}
           </div>
         )}
         
@@ -64,6 +60,8 @@ export default function Home() {
         )}
       </main>
       
+      <FilterSheet isOpen={isFilterOpen} onOpenChange={setIsFilterOpen} />
+
       <BottomNav />
     </div>
   );
