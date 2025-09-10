@@ -141,15 +141,15 @@ const SettingsPage = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-10 flex h-12 items-center justify-between border-b bg-background/95 px-2 py-1 backdrop-blur-sm md:px-4">
+      <header className="fixed top-0 z-20 w-full h-12 flex items-center justify-between border-b bg-background/95 px-2 py-1 backdrop-blur-sm md:px-4">
         <button onClick={() => router.back()} className="p-2 -ml-2">
           <ArrowLeft className="h-5 w-5" />
         </button>
         <h1 className="text-sm font-semibold">Préférences</h1>
-        <div className="w-5"></div>
+        <div className="w-8"></div>
       </header>
 
-      <main>
+      <main className="pt-12">
         <ul className="divide-y divide-border">
           {settingsItems.map((item) => {
             const content = (

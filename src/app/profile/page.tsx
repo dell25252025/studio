@@ -364,8 +364,8 @@ export default function ProfilePage() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
-        <WanderlinkHeader transparent />
-        <main className="flex-1 pb-24">
+        <WanderlinkHeader />
+        <main className="flex-1 pb-24 pt-10">
              <div className="w-full bg-background pt-8">
                 {profilePictures.length > 0 ? (
                     <Dialog>

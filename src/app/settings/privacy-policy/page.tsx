@@ -10,15 +10,7 @@ export default function PrivacyPolicyPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-secondary/30 flex flex-col">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 px-2 py-1 backdrop-blur-sm md:px-4">
-        <button onClick={() => router.back()} className="p-2 -ml-2">
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        <h1 className="text-sm font-semibold">Politique de confidentialité</h1>
-        <div className="w-5"></div>
-      </header>
-
+    <div className="min-h-screen bg-secondary/30 flex flex-col pt-12">
       <main className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="space-y-6 px-2 py-4 md:px-4">
