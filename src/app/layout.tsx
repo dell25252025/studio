@@ -5,7 +5,7 @@ import Footer from '@/components/footer';
 
 export const metadata: Metadata = {
   title: 'WanderLink',
-  description: 'Find your next travel partner.',
+  description: 'Connect. Explore. Discover.',
 };
 
 export default function RootLayout({
