@@ -276,7 +276,7 @@ export default function ProfilePage() {
                          )}
                     </div>
                 )}
-                 <div className="p-4 md:p-6 flex justify-between items-center">
+                 <div className="p-4 flex justify-between items-center">
                     <div>
                         <div className="flex items-center gap-3">
                             <h1 className="text-2xl md:text-3xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
@@ -307,9 +307,9 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            <div className="container mx-auto max-w-4xl py-6 space-y-6 bg-background">
-                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                     <div className="md:col-span-2 space-y-6">
+            <div className="container mx-auto max-w-4xl py-6 space-y-4 bg-background">
+                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                     <div className="md:col-span-2 space-y-4">
                         <Card className="shadow-lg">
                             <CardHeader>
                                 <CardTitle>Ma description</CardTitle>
@@ -322,7 +322,7 @@ export default function ProfilePage() {
                             <CardHeader>
                                 <CardTitle>Mon Prochain Voyage</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-2 text-sm">
+                            <CardContent className="space-y-1 text-sm">
                                 <div className="flex items-start gap-3">
                                     <Plane className="h-4 w-4 text-primary mt-0.5" />
                                     <div>
@@ -365,12 +365,12 @@ export default function ProfilePage() {
                         </Card>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                         <Card className="shadow-lg">
                              <CardHeader>
                                 <CardTitle>Détails</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-2 text-sm">
+                            <CardContent className="space-y-1 text-sm">
                                 <div className="flex items-start gap-3">
                                     <Languages className="h-4 w-4 text-primary mt-0.5" />
                                     <div>

@@ -151,8 +151,8 @@ export default function AccountSettingsPage() {
             <div className="w-5"></div>
         </header>
 
-        <main className="p-4 md:p-8">
-            <div className="mx-auto max-w-2xl space-y-8">
+        <main className="p-4">
+            <div className="mx-auto max-w-2xl space-y-6">
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2"><Mail /> Adresse e-mail</CardTitle>
