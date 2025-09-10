@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +22,8 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import Link from 'next/link';
 import Autoplay from "embla-carousel-autoplay"
+import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
 const activityMap = {
   hiking: 'Randonnée',
@@ -49,8 +51,128 @@ const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-
 const MAX_PHOTOS = 4;
+
+const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: number }) => {
+    const [currentIndex, setCurrentIndex] = useState(startIndex);
+    const [scale, setScale] = useState(1);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const imageRef = useRef<HTMLImageElement>(null);
+    const lastDist = useRef(0);
+
+    const resetZoom = () => {
+        setScale(1);
+        setPosition({ x: 0, y: 0 });
+        lastDist.current = 0;
+    };
+
+    const handleNext = () => {
+        setCurrentIndex((prev) => (prev + 1) % images.length);
+        resetZoom();
+    };
+
+    const handlePrev = () => {
+        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+        resetZoom();
+    };
+
+    const handleZoomIn = () => setScale(s => Math.min(s + 0.2, 3));
+    const handleZoomOut = () => setScale(s => Math.max(s - 0.2, 1));
+    
+    useEffect(() => {
+        const handleWheel = (e: WheelEvent) => {
+            e.preventDefault();
+            if (e.ctrlKey) {
+                setScale(s => Math.max(1, Math.min(3, s - e.deltaY * 0.01)));
+            } else {
+                setPosition(p => ({
+                    x: p.x - e.deltaX,
+                    y: p.y - e.deltaY
+                }));
+            }
+        };
+
+        const handleTouchStart = (e: TouchEvent) => {
+            if (e.touches.length === 2) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                lastDist.current = Math.sqrt(dx * dx + dy * dy);
+            }
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (e.touches.length === 2) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const change = dist - lastDist.current;
+                setScale(s => Math.max(1, Math.min(3, s + change * 0.01)));
+                lastDist.current = dist;
+            }
+        };
+
+        const imageEl = imageRef.current;
+        imageEl?.addEventListener('wheel', handleWheel);
+        imageEl?.addEventListener('touchstart', handleTouchStart);
+        imageEl?.addEventListener('touchmove', handleTouchMove);
+        return () => {
+            imageEl?.removeEventListener('wheel', handleWheel);
+            imageEl?.removeEventListener('touchstart', handleTouchStart);
+            imageEl?.removeEventListener('touchmove', handleTouchMove);
+        }
+    }, [currentIndex]);
+    
+    useEffect(() => {
+        if (scale === 1) {
+            setPosition({ x: 0, y: 0 });
+        }
+    }, [scale]);
+
+    return (
+        <DialogContent className="p-0 m-0 w-full h-full max-w-full max-h-screen bg-black/80 backdrop-blur-sm border-0 flex flex-col items-center justify-center">
+             <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+                <Image
+                    ref={imageRef}
+                    src={images[currentIndex]}
+                    alt={`Photo de profil ${currentIndex + 1}`}
+                    fill
+                    className="object-contain transition-transform duration-200"
+                    style={{
+                        transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                        cursor: scale > 1 ? 'grab' : 'auto',
+                    }}
+                    onMouseDown={(e) => {
+                        if (scale <= 1) return;
+                        const startPos = { x: e.clientX - position.x, y: e.clientY - position.y };
+                        const handleMouseMove = (me: MouseEvent) => {
+                            setPosition({ x: me.clientX - startPos.x, y: me.clientY - startPos.y });
+                        };
+                        const handleMouseUp = () => {
+                            window.removeEventListener('mousemove', handleMouseMove);
+                            window.removeEventListener('mouseup', handleMouseUp);
+                        };
+                        window.addEventListener('mousemove', handleMouseMove);
+                        window.addEventListener('mouseup', handleMouseUp);
+                    }}
+                />
+            </div>
+            {images.length > 1 && (
+                <>
+                    <Button onClick={handlePrev} variant="ghost" size="icon" className="absolute left-2 top-1/2 -translate-y-1/2 text-white bg-black/30 hover:bg-black/50 hover:text-white"><ArrowLeft /></Button>
+                    <Button onClick={handleNext} variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 text-white bg-black/30 hover:bg-black/50 hover:text-white"><ArrowRight /></Button>
+                </>
+            )}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 rounded-full bg-black/30 text-white">
+                <Button onClick={handleZoomOut} variant="ghost" size="icon" disabled={scale <= 1} className="hover:bg-black/50 hover:text-white"><ZoomOut /></Button>
+                <span className="min-w-[4ch] text-center font-mono">{(scale * 100).toFixed(0)}%</span>
+                <Button onClick={handleZoomIn} variant="ghost" size="icon" disabled={scale >= 3} className="hover:bg-black/50 hover:text-white"><ZoomIn /></Button>
+            </div>
+            <DialogClose className="absolute top-2 right-2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 hover:text-white">
+                <X className="h-6 w-6" />
+            </DialogClose>
+        </DialogContent>
+    )
+}
 
 export default function ProfilePage() {
   const searchParams = useSearchParams();
@@ -246,35 +368,40 @@ export default function ProfilePage() {
         <main className="flex-1 pb-24">
              <div className="w-full bg-background pt-8">
                 {profilePictures.length > 0 ? (
-                    <Carousel
-                        className="w-full max-w-4xl mx-auto"
-                         opts={{
-                            align: "center",
-                            loop: true,
-                        }}
-                        plugins={[
-                            Autoplay({
-                              delay: 5000,
-                              stopOnInteraction: true,
-                            }),
-                        ]}
-                    >
-                        <CarouselContent className="-ml-4">
-                            {profilePictures.map((src: string, index: number) => (
-                                <CarouselItem key={index} className="pl-4 basis-3/4 md:basis-1/3">
-                                    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl group">
-                                        <Image 
-                                            src={src}
-                                            alt={`Photo de profil de ${profile.firstName} ${index + 1}`}
-                                            fill
-                                            className="object-cover"
-                                            priority={index === 0}
-                                        />
-                                    </div>
-                                </CarouselItem>
-                            ))}
-                        </CarouselContent>
-                    </Carousel>
+                    <Dialog>
+                        <Carousel
+                            className="w-full max-w-4xl mx-auto"
+                             opts={{
+                                align: "center",
+                                loop: true,
+                            }}
+                            plugins={[
+                                Autoplay({
+                                  delay: 5000,
+                                  stopOnInteraction: true,
+                                }),
+                            ]}
+                        >
+                            <CarouselContent className="-ml-4">
+                                {profilePictures.map((src: string, index: number) => (
+                                    <CarouselItem key={index} className="pl-4 basis-3/4 md:basis-1/3">
+                                        <DialogTrigger asChild>
+                                            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl group cursor-pointer">
+                                                <Image 
+                                                    src={src}
+                                                    alt={`Photo de profil de ${profile.firstName} ${index + 1}`}
+                                                    fill
+                                                    className="object-cover"
+                                                    priority={index === 0}
+                                                />
+                                            </div>
+                                        </DialogTrigger>
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                        </Carousel>
+                        <PhotoViewer images={profilePictures} startIndex={0} />
+                    </Dialog>
                 ) : (
                      <div className="flex h-64 w-full items-center justify-center bg-card">
                          {isOwner ? (
