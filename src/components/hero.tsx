@@ -4,7 +4,7 @@ import placeholderImages from '@/lib/placeholder-images.json';
 
 const Hero = () => {
   return (
-    <div className="relative w-full h-[60vh] md:h-[50vh] bg-background">
+    <div className="relative w-full h-[30vh] md:h-[25vh] bg-background">
       <Image
         src={placeholderImages.heroBanner.url}
         alt={placeholderImages.heroBanner.alt}
