@@ -34,7 +34,7 @@ const SettingsPage = () => {
         {
           icon: Shield,
           label: 'Paramètres de confidentialité',
-          href: '#',
+          href: '/settings/privacy',
           color: 'text-yellow-500',
           bgColor: 'bg-yellow-100',
         },
