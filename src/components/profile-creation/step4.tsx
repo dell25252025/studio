@@ -41,6 +41,7 @@ const activities = [
     { id: 'nightlife', label: 'Sorties nocturnes' },
     { id: 'shopping', label: 'Shopping' },
     { id: 'yoga', label: 'Yoga / Méditation' },
+    { id: 'sport', label: 'Sport' },
 ]
 
 const Step4 = () => {
@@ -158,6 +159,8 @@ const Step4 = () => {
                   <SelectItem value="Culturel / Historique">Culturel / Historique</SelectItem>
                   <SelectItem value="Festif / Événementiel">Festif / Événementiel</SelectItem>
                   <SelectItem value="Religieux / Spirituel">Religieux / Spirituel</SelectItem>
+                  <SelectItem value="Road Trip / Van Life">Road Trip / Van Life</SelectItem>
+                  <SelectItem value="Humanitaire / Écovolontariat">Humanitaire / Écovolontariat</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
