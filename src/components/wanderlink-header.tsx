@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) => {
   return (
     <header className={cn(
-        "fixed top-0 left-0 z-20 w-full h-12 transition-all duration-300",
+        "fixed top-0 left-0 z-20 w-full h-10 transition-all duration-300",
         "bg-background/90 backdrop-blur-md border-b"
       )}>
       <div className={cn(
@@ -14,7 +14,7 @@ const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) =>
         "container mx-auto px-4"
         )}>
         <Link href="/" className="flex items-center gap-2 group">
-             <h1 className="text-2xl font-bold font-logo bg-gradient-to-r from-gradient-start to-gradient-end text-transparent bg-clip-text">
+             <h1 className="text-xl font-bold font-logo bg-gradient-to-r from-gradient-start to-gradient-end text-transparent bg-clip-text">
               WanderLink
             </h1>
         </Link>
