@@ -41,7 +41,7 @@ export default function BlockedUsersPage() {
             <div className="w-5"></div>
         </header>
 
-        <main className="p-4">
+        <main className="px-2 py-4 md:px-4">
             <div className="mx-auto max-w-2xl space-y-6">
                 <Card>
                     <CardHeader>
