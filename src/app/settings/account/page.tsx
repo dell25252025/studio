@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { auth } from '@/lib/firebase';
 import type { User } from 'firebase/auth';
 import { onAuthStateChanged, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
-import { ArrowLeft, Loader2, Save, Mail, KeyRound, CheckCircle, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, Mail, KeyRound, CheckCircle, AlertCircle, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -37,6 +37,7 @@ export default function AccountSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [isEmailSubmitting, setIsEmailSubmitting] = useState(false);
   const [isPasswordSubmitting, setIsPasswordSubmitting] = useState(false);
+  const [isPasswordFormVisible, setIsPasswordFormVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -103,10 +104,10 @@ export default function AccountSettingsPage() {
       const credential = EmailAuthProvider.credential(currentUser.email, data.oldPassword);
       await reauthenticateWithCredential(currentUser, credential);
       
-      // If reauthentication is successful, proceed to update the password.
       await updatePassword(currentUser, data.newPassword);
 
       passwordForm.reset();
+      setIsPasswordFormVisible(false);
       toast({
         title: 'Succès',
         description: 'Votre mot de passe a été mis à jour.',
@@ -143,19 +144,19 @@ export default function AccountSettingsPage() {
 
   return (
     <div className="min-h-screen bg-secondary/30">
-        <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 px-4 py-1 backdrop-blur-sm">
+        <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 px-2 py-1 backdrop-blur-sm md:px-4">
             <button onClick={() => router.back()} className="p-2 -ml-2">
             <ArrowLeft className="h-5 w-5" />
             </button>
-            <h1 className="font-semibold text-sm">Paramètres du compte</h1>
+            <h1 className="text-sm font-semibold">Paramètres du compte</h1>
             <div className="w-5"></div>
         </header>
 
-        <main className="px-2 py-4 md:px-4">
+        <main className="space-y-6 px-2 py-4 md:px-4">
             <div className="mx-auto max-w-2xl space-y-6">
                 <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Mail /> Adresse e-mail</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><Mail className="h-5 w-5" /> Adresse e-mail</CardTitle>
                         <CardDescription>Gérez l'adresse e-mail associée à votre compte.</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -185,10 +186,16 @@ export default function AccountSettingsPage() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><KeyRound /> Mot de passe</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><KeyRound className="h-5 w-5" /> Mot de passe</CardTitle>
                         <CardDescription>Modifiez votre mot de passe régulièrement pour plus de sécurité.</CardDescription>
                     </CardHeader>
                     <CardContent>
+                      {!isPasswordFormVisible ? (
+                        <Button onClick={() => setIsPasswordFormVisible(true)}>
+                          <Edit className="mr-2 h-4 w-4" />
+                          Changer le mot de passe
+                        </Button>
+                      ) : (
                         <Form {...passwordForm}>
                             <form onSubmit={passwordForm.handleSubmit(handlePasswordUpdate)} className="space-y-4">
                                 <FormField
@@ -224,12 +231,18 @@ export default function AccountSettingsPage() {
                                         </FormItem>
                                     )}
                                 />
-                                <Button type="submit" disabled={isPasswordSubmitting}>
-                                     {isPasswordSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Changer le mot de passe
-                                </Button>
+                                <div className="flex items-center gap-2">
+                                  <Button type="submit" disabled={isPasswordSubmitting}>
+                                      {isPasswordSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                      Enregistrer le mot de passe
+                                  </Button>
+                                   <Button variant="ghost" onClick={() => setIsPasswordFormVisible(false)} disabled={isPasswordSubmitting}>
+                                      Annuler
+                                   </Button>
+                                </div>
                             </form>
                         </Form>
+                      )}
                     </CardContent>
                 </Card>
 
