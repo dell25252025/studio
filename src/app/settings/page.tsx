@@ -103,12 +103,12 @@ const SettingsPage = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 px-4 py-3 backdrop-blur-sm">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 px-4 py-2 backdrop-blur-sm">
         <button onClick={() => router.back()} className="p-2 -ml-2">
-          <ArrowLeft className="h-6 w-6" />
+          <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-lg font-semibold">Préférences</h1>
-        <div className="w-6"></div>
+        <h1 className="font-semibold">Préférences</h1>
+        <div className="w-5"></div>
       </header>
 
       <main>

@@ -44,12 +44,12 @@ export default function PrivacySettingsPage() {
 
   return (
     <div className="min-h-screen bg-secondary/30">
-        <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 p-4 backdrop-blur-sm">
-            <button onClick={() => router.back()} className="p-2">
-            <ArrowLeft className="h-6 w-6" />
+        <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 p-4 py-2 backdrop-blur-sm">
+            <button onClick={() => router.back()} className="p-2 -ml-2">
+            <ArrowLeft className="h-5 w-5" />
             </button>
-            <h1 className="text-lg font-semibold">Paramètres de confidentialité</h1>
-            <div className="w-8"></div>
+            <h1 className="font-semibold">Paramètres de confidentialité</h1>
+            <div className="w-5"></div>
         </header>
 
         <main className="p-4 md:p-8">
