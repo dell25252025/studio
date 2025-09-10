@@ -568,8 +568,8 @@ export default function ProfilePage() {
                             </CardContent>
                         </Card>
                         {isOwner && (
-                            <div className="flex justify-center">
-                                <Button variant="outline" onClick={handleSignOut}>
+                            <div className="flex justify-center py-2">
+                                <Button variant="outline" size="sm" onClick={handleSignOut}>
                                     <LogOut className="mr-2 h-4 w-4" />
                                     Se déconnecter
                                 </Button>
