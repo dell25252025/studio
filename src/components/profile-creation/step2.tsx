@@ -134,6 +134,24 @@ const Step2 = () => {
             </FormItem>
           )}
         />
+        <FormField
+          control={control}
+          name="weight"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Poids (en kg) <span className="text-muted-foreground">(optionnel)</span></FormLabel>
+              <FormControl>
+                <Input 
+                  type="number" 
+                  placeholder="Ex: 70" 
+                  {...field} 
+                  value={field.value ?? ''}
+                  onChange={e => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value))} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
     </div>
   );

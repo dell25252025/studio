@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -384,6 +384,15 @@ export default function ProfilePage() {
                                     <div>
                                         <p className="font-semibold text-xs">Taille</p>
                                         <p className="text-muted-foreground text-sm">{profile.height} cm</p>
+                                    </div>
+                                </div>
+                                )}
+                                {profile.weight && (
+                                <div className="flex items-start gap-3">
+                                    <Scale className="h-4 w-4 text-primary mt-0.5" />
+                                    <div>
+                                        <p className="font-semibold text-xs">Poids</p>
+                                        <p className="text-muted-foreground text-sm">{profile.weight} kg</p>
                                     </div>
                                 </div>
                                 )}

@@ -185,7 +185,7 @@ export default function EditProfilePage() {
                         </Link>
                     </div>
 
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                         {/* Section Informations Personnelles */}
                         <div className="p-6 border rounded-lg space-y-4">
                             <h2 className="text-xl font-semibold">Informations Personnelles</h2>
@@ -193,6 +193,7 @@ export default function EditProfilePage() {
                             <FormField control={control} name="age" render={({ field }) => (<FormItem><FormLabel>Âge</FormLabel><FormControl><Input type="number" {...field} onChange={(e) => field.onChange(parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
                             <FormField control={control} name="gender" render={({ field }) => (<FormItem><FormLabel>Genre</FormLabel><RadioGroup onValueChange={field.onChange} value={field.value} className="flex space-x-4"><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Homme" /></FormControl><FormLabel>Homme</FormLabel></FormItem><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Femme" /></FormControl><FormLabel>Femme</FormLabel></FormItem><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Non-binaire" /></FormControl><FormLabel>Non-binaire</FormLabel></FormItem></RadioGroup><FormMessage /></FormItem>)} />
                             <FormField control={control} name="height" render={({ field }) => (<FormItem><FormLabel>Taille (cm)</FormLabel><FormControl><Input type="number" {...field} placeholder="Ex: 175" onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
+                            <FormField control={control} name="weight" render={({ field }) => (<FormItem><FormLabel>Poids (kg)</FormLabel><FormControl><Input type="number" {...field} placeholder="Ex: 70" onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
                             <FormField control={control} name="bio" render={({ field }) => (<FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>)} />
                         </div>
                         

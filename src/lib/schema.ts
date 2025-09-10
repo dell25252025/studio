@@ -10,6 +10,7 @@ export const formSchema = z.object({
   languages: z.array(z.string()).min(1, 'Veuillez sélectionner au moins une langue.'),
   location: z.string().min(1, 'La localisation est obligatoire.'),
   height: z.number().optional().nullable(),
+  weight: z.number().optional().nullable(),
   tobacco: z.enum(['Non-fumeur', 'Occasionnellement', 'Régulièrement']).optional(),
   alcohol: z.enum(['Jamais', 'Occasionnellement', 'Souvent']).optional(),
   destination: z.string().min(1, 'La destination est obligatoire.'),

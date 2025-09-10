@@ -21,7 +21,7 @@ import { formSchema, type FormData } from '@/lib/schema';
 
 const steps = [
   { id: 1, title: 'Qui êtes-vous ?', component: Step1, fields: ['firstName', 'age', 'gender', 'profilePictures', 'bio'] },
-  { id: 2, title: 'Votre profil voyageur', component: Step2, fields: ['languages', 'location', 'height'] },
+  { id: 2, title: 'Votre profil voyageur', component: Step2, fields: ['languages', 'location', 'height', 'weight'] },
   { id: 3, title: 'Style de vie', component: Step3, fields: ['tobacco', 'alcohol'] },
   { id: 4, title: 'Votre prochain voyage !', component: Step4, fields: ['destination', 'dates', 'flexibleDates', 'travelStyle', 'activities', 'financialArrangement'] },
 ];
@@ -57,6 +57,7 @@ export default function CreateProfilePage() {
       languages: [],
       location: '',
       height: undefined,
+      weight: undefined,
       tobacco: undefined,
       alcohol: undefined,
       destination: '',
