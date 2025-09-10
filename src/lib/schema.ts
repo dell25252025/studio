@@ -9,7 +9,7 @@ export const formSchema = z.object({
   bio: z.string().max(500, 'La description ne doit pas dépasser 500 caractères.').optional(),
   languages: z.array(z.string()).min(1, 'Veuillez sélectionner au moins une langue.'),
   location: z.string().min(1, 'La localisation est obligatoire.'),
-  height: z.number().optional(),
+  height: z.number().optional().nullable(),
   tobacco: z.enum(['Non-fumeur', 'Occasionnellement', 'Régulièrement']).optional(),
   alcohol: z.enum(['Jamais', 'Occasionnellement', 'Souvent']).optional(),
   destination: z.string().min(1, 'La destination est obligatoire.'),
