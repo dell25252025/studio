@@ -22,94 +22,74 @@ const SettingsPage = () => {
 
   const settingsItems = [
     {
-      section: 'Compte',
-      items: [
-        {
-          icon: User,
-          label: 'Paramètres du compte',
-          href: '/settings/account',
-          color: 'text-green-500',
-          bgColor: 'bg-green-100',
-        },
-        {
-          icon: Shield,
-          label: 'Paramètres de confidentialité',
-          href: '/settings/privacy',
-          color: 'text-yellow-500',
-          bgColor: 'bg-yellow-100',
-        },
-        {
-          icon: Bell,
-          label: 'Notifications',
-          href: '/settings/notifications',
-          color: 'text-pink-500',
-          bgColor: 'bg-pink-100',
-        },
-        {
-          icon: Ban,
-          label: 'Utilisateurs bloqués',
-          href: '/settings/blocked-users',
-          color: 'text-gray-600',
-          bgColor: 'bg-gray-200',
-        },
-      ],
+      icon: User,
+      label: 'Paramètres du compte',
+      href: '/settings/account',
+      color: 'text-green-500',
+      bgColor: 'bg-green-100',
     },
     {
-      section: 'Support',
-      items: [
-        {
-          icon: HelpCircle,
-          label: 'FAQ',
-          href: '#',
-          color: 'text-yellow-600',
-          bgColor: 'bg-yellow-100',
-        },
-        {
-          icon: Share2,
-          label: 'Partager avec tes amis',
-          href: '#',
-          color: 'text-blue-500',
-          bgColor: 'bg-blue-100',
-        },
-      ],
+      icon: Shield,
+      label: 'Paramètres de confidentialité',
+      href: '/settings/privacy',
+      color: 'text-yellow-500',
+      bgColor: 'bg-yellow-100',
     },
     {
-      section: 'À Propos',
-      items: [
-        {
-          icon: Shield,
-          label: 'Politique de confidentialité',
-          href: '#',
-          color: 'text-gray-500',
-          bgColor: 'bg-gray-200',
-        },
-        {
-          icon: FileText,
-          label: "Conditions d'utilisation",
-          href: '#',
-          color: 'text-gray-500',
-          bgColor: 'bg-gray-200',
-        },
-        {
-          icon: Heart,
-          label: 'Aimer WanderLink',
-          href: '#',
-          color: 'text-pink-500',
-          bgColor: 'bg-pink-100',
-        },
-      ],
+      icon: Bell,
+      label: 'Notifications',
+      href: '/settings/notifications',
+      color: 'text-pink-500',
+      bgColor: 'bg-pink-100',
     },
-     {
-      section: 'Action',
-      items: [
-        {
-          icon: LogOut,
-          label: 'Se déconnecter',
-          href: '#',
-          color: 'text-red-500',
-          bgColor: 'bg-red-100',
-        },
-      ],
+    {
+      icon: Ban,
+      label: 'Utilisateurs bloqués',
+      href: '/settings/blocked-users',
+      color: 'text-gray-600',
+      bgColor: 'bg-gray-200',
+    },
+    {
+      icon: HelpCircle,
+      label: 'FAQ',
+      href: '#',
+      color: 'text-yellow-600',
+      bgColor: 'bg-yellow-100',
+    },
+    {
+      icon: Share2,
+      label: 'Partager avec tes amis',
+      href: '#',
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-100',
+    },
+    {
+      icon: Shield,
+      label: 'Politique de confidentialité',
+      href: '#',
+      color: 'text-gray-500',
+      bgColor: 'bg-gray-200',
+    },
+    {
+      icon: FileText,
+      label: "Conditions d'utilisation",
+      href: '#',
+      color: 'text-gray-500',
+      bgColor: 'bg-gray-200',
+    },
+    {
+      icon: Heart,
+      label: 'Aimer WanderLink',
+      href: '#',
+      color: 'text-pink-500',
+      bgColor: 'bg-pink-100',
+    },
+    {
+      icon: LogOut,
+      label: 'Se déconnecter',
+      href: '#',
+      color: 'text-red-500',
+      bgColor: 'bg-red-100',
     },
   ];
 
@@ -124,27 +104,22 @@ const SettingsPage = () => {
       </header>
 
       <main className="p-4">
-        <div className="space-y-8">
-          {settingsItems.map((section) => (
-            <div key={section.section}>
-              <h2 className="px-4 text-sm font-semibold text-muted-foreground">
-                {section.section.toUpperCase()}
-              </h2>
-              <div className="mt-2 overflow-hidden rounded-lg border bg-card">
-                {section.items.map((item, index) => (
-                  <Link href={item.href} key={item.label} passHref>
-                    <div className={`flex cursor-pointer items-center p-4 transition-colors hover:bg-muted/50 ${index > 0 ? 'border-t' : ''}`}>
-                      <div className={`mr-4 flex h-8 w-8 items-center justify-center rounded-lg ${item.bgColor}`}>
-                        <item.icon className={`h-5 w-5 ${item.color}`} />
-                      </div>
-                      <span className="flex-1 text-card-foreground">{item.label}</span>
-                      <ChevronRight className="h-5 w-5 text-muted-foreground" />
+        <div className="overflow-hidden rounded-lg border bg-card">
+          <ul className="divide-y divide-border">
+            {settingsItems.map((item) => (
+              <li key={item.label}>
+                <Link href={item.href} passHref>
+                  <div className="flex cursor-pointer items-center p-4 transition-colors hover:bg-muted/50">
+                    <div className={`mr-4 flex h-8 w-8 items-center justify-center rounded-lg ${item.bgColor}`}>
+                      <item.icon className={`h-5 w-5 ${item.color}`} />
                     </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
+                    <span className="flex-1 text-card-foreground">{item.label}</span>
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </main>
     </div>
