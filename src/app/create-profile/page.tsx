@@ -138,7 +138,6 @@ export default function CreateProfilePage() {
        <div className="w-full max-w-2xl relative">
          <div className="flex items-center gap-2 mb-4 justify-center">
           <Link href="/" className="flex items-center gap-2">
-            <Plane className="h-8 w-8 text-primary" />
             <h1 className="text-3xl font-bold font-headline text-primary">
               WanderLink
             </h1>

@@ -160,7 +160,6 @@ export default function AuthPage() {
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 mb-6 justify-center">
             <Link href="/" className="flex items-center gap-2">
-                <Plane className="h-8 w-8 text-primary" />
                 <h1 className="text-3xl font-bold font-headline text-primary">
                     WanderLink
                 </h1>

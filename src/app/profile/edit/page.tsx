@@ -179,7 +179,6 @@ export default function EditProfilePage() {
                 <div className="max-w-4xl mx-auto">
                     <div className="flex justify-between items-center mb-8">
                         <div className="flex items-center gap-2">
-                             <Plane className="h-8 w-8 text-primary" />
                              <h1 className="text-3xl font-bold font-headline text-primary">Modifier le Profil</h1>
                         </div>
                         <Link href={`/profile?id=${profileId}`} passHref>
