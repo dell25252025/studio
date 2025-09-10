@@ -2,7 +2,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { Plane } from 'lucide-react';
 
 const WanderlinkHeader = () => {
   return (
@@ -11,8 +10,8 @@ const WanderlinkHeader = () => {
         "bg-background/90 backdrop-blur-sm border-b"
       )}>
       <div className={cn(
-        "flex h-full items-center justify-center",
-        "px-2"
+        "flex h-full items-center justify-start",
+        "px-4" 
         )}>
         <Link href="/" className="flex items-center gap-2 group">
              <h1 className="text-xl font-bold font-logo bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
