@@ -41,7 +41,7 @@ const SettingsPage = () => {
         {
           icon: Bell,
           label: 'Notifications',
-          href: '#',
+          href: '/settings/notifications',
           color: 'text-pink-500',
           bgColor: 'bg-pink-100',
         },
