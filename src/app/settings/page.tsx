@@ -48,7 +48,7 @@ const SettingsPage = () => {
         {
           icon: Ban,
           label: 'Utilisateurs bloqués',
-          href: '#',
+          href: '/settings/blocked-users',
           color: 'text-gray-600',
           bgColor: 'bg-gray-200',
         },
