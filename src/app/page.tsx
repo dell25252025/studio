@@ -63,10 +63,10 @@ export default function Home() {
         <div className="container mx-auto max-w-7xl px-4">
           {view === 'discover' && (
             <>
-              <div className="my-8">
+              <div className="mt-4">
                 <MatchCarousel profiles={possibleMatches} />
               </div>
-              <div className="text-center">
+              <div className="text-center mt-8">
                  <Button onClick={runAiMatching} disabled={loading} size="lg" className="rounded-full font-bold">
                   <Sparkles className="mr-2 h-5 w-5" />
                   Find my AI Match
