@@ -14,14 +14,12 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import FilterSheet from '@/components/filter-sheet';
 
 export default function Home() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState('discover');
   const [currentUserAuth, setCurrentUserAuth] = useState<User | null>(null);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const { toast } = useToast();
 
    useEffect(() => {
@@ -60,13 +58,19 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <WanderlinkHeader onFilterClick={() => setIsFilterOpen(true)} />
+      <WanderlinkHeader />
       <main className="flex-1 pb-24 pt-12">
         <div className="container mx-auto max-w-7xl px-4">
           {view === 'discover' && (
             <>
               <div className="my-8">
                 <MatchCarousel profiles={possibleMatches} />
+              </div>
+              <div className="text-center">
+                 <Button onClick={runAiMatching} disabled={loading} size="lg" className="rounded-full font-bold">
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Find my AI Match
+                </Button>
               </div>
             </>
           )}
@@ -85,7 +89,6 @@ export default function Home() {
         </div>
       </main>
       <BottomNav />
-      <FilterSheet isOpen={isFilterOpen} onOpenChange={setIsFilterOpen} />
     </div>
   );
 }
