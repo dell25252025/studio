@@ -30,21 +30,6 @@ const Footer = () => {
               <li><Link href="/signup" className="text-muted-foreground hover:text-primary">S'inscrire</Link></li>
             </ul>
           </div>
-          <div>
-            <h4 className="font-semibold mb-4">Légal</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Conditions d'utilisation</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Politique de confidentialité</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary">Politique sur les cookies</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Contactez-nous</h4>
-            <ul className="space-y-2 text-sm">
-              <li><a href="mailto:contact@wanderlink.app" className="text-muted-foreground hover:text-primary">contact@wanderlink.app</a></li>
-              <li><p className="text-muted-foreground">123 Rue du Voyage, 75001 Paris, France</p></li>
-            </ul>
-          </div>
         </div>
         <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} WanderLink. Tous droits réservés.</p>
