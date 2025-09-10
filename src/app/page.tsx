@@ -63,7 +63,7 @@ export default function Home() {
         <div className="container mx-auto max-w-7xl px-4">
           {view === 'discover' && (
             <>
-              <div className="mt-4">
+              <div>
                 <MatchCarousel profiles={possibleMatches} />
               </div>
               <div className="text-center mt-8">
