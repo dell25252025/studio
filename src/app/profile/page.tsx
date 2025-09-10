@@ -279,7 +279,7 @@ export default function ProfilePage() {
                  <div className="p-4 flex justify-between items-center">
                     <div>
                         <div className="flex items-center gap-3">
-                            <h1 className="text-2xl md:text-3xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
+                            <h1 className="text-2xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
                             {isOwner && (
                                 <Link href={`/profile/edit?id=${profileId}`} passHref>
                                     <Button variant="ghost" size="icon" asChild>
@@ -307,7 +307,7 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            <div className="container mx-auto max-w-4xl py-6 space-y-4 bg-background">
+            <div className="container mx-auto max-w-4xl py-2 space-y-4 bg-background">
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                      <div className="md:col-span-2 space-y-4">
                         <Card className="shadow-lg">
