@@ -14,7 +14,7 @@ const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) =>
         "container mx-auto px-4"
         )}>
         <Link href="/" className="flex items-center gap-2 group">
-             <h1 className="text-2xl font-bold font-logo text-primary">
+             <h1 className="text-2xl font-bold font-logo bg-gradient-to-r from-gradient-start to-gradient-end text-transparent bg-clip-text">
               WanderLink
             </h1>
         </Link>
