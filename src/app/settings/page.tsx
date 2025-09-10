@@ -98,7 +98,7 @@ const SettingsPage = () => {
      {
       icon: MessageSquare,
       label: 'Réaction',
-      href: '#',
+      href: 'mailto:contact@wanderlink.app',
       color: 'text-green-500',
       bgColor: 'bg-green-100',
     },
