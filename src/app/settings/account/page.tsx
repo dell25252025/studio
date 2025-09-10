@@ -97,11 +97,13 @@ export default function AccountSettingsPage() {
   };
 
   const handlePasswordUpdate = async (data: z.infer<typeof passwordSchema>) => {
-     if (!currentUser || !currentUser.email) return;
+    if (!currentUser || !currentUser.email) return;
     setIsPasswordSubmitting(true);
     try {
       const credential = EmailAuthProvider.credential(currentUser.email, data.oldPassword);
       await reauthenticateWithCredential(currentUser, credential);
+      
+      // If reauthentication is successful, proceed to update the password.
       await updatePassword(currentUser, data.newPassword);
 
       passwordForm.reset();
@@ -110,17 +112,19 @@ export default function AccountSettingsPage() {
         description: 'Votre mot de passe a été mis à jour.',
       });
     } catch (error: any) {
-      console.error(error);
-       let description = "Une erreur est survenue.";
+      console.error("Password update error:", error);
+      let description = "Une erreur est survenue lors de la mise à jour.";
+      
       if (error.code === 'auth/requires-recent-login') {
         description = "Cette action nécessite une reconnexion récente. Veuillez vous déconnecter et vous reconnecter.";
       } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
         description = "L'ancien mot de passe est incorrect. Veuillez réessayer.";
         passwordForm.setError('oldPassword', { type: 'manual', message: 'Mot de passe incorrect.' });
       }
+
       toast({
         variant: 'destructive',
-        title: 'Erreur',
+        title: 'Échec de la mise à jour du mot de passe',
         description,
       });
     } finally {
