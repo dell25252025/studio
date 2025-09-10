@@ -48,7 +48,8 @@ const activities = [
     { id: 'concerts', label: 'Concerts / Festivals' }, { id: 'food', label: 'Gastronomie' },
     { id: 'nightlife', label: 'Sorties nocturnes' }, { id: 'shopping', label: 'Shopping' },
     { id: 'yoga', label: 'Yoga / Méditation' }, { id: 'sport', label: 'Sport' },
-    { id: 'other', label: 'Autre' },
+    { id: 'pilgrimage', label: 'Pèlerinage' }, { id: 'lgbt', label: 'Événement LGBT+' },
+    { id: 'camping', label: 'Camping' }, { id: 'other', label: 'Autre' },
 ];
 
 export default function EditProfilePage() {

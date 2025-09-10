@@ -42,6 +42,9 @@ const activities = [
     { id: 'shopping', label: 'Shopping' },
     { id: 'yoga', label: 'Yoga / Méditation' },
     { id: 'sport', label: 'Sport' },
+    { id: 'pilgrimage', label: 'Pèlerinage' },
+    { id: 'lgbt', label: 'Événement LGBT+' },
+    { id: 'camping', label: 'Camping' },
     { id: 'other', label: 'Autre' },
 ]
 

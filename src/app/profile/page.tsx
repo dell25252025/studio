@@ -32,6 +32,11 @@ const activityMap = {
   nightlife: 'Sorties nocturnes',
   shopping: 'Shopping',
   yoga: 'Yoga / Méditation',
+  sport: 'Sport',
+  pilgrimage: 'Pèlerinage',
+  lgbt: 'Événement LGBT+',
+  camping: 'Camping',
+  other: 'Autre',
 };
 
 const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
