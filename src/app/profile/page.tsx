@@ -460,7 +460,7 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            <div className="container mx-auto max-w-4xl px-2 md:px-4 py-2 space-y-2 bg-background">
+            <div className="container mx-auto max-w-4xl px-2 md:px-4 space-y-2 bg-background">
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
                      <div className="md:col-span-2 space-y-2">
                         <Card className="shadow-lg">
@@ -569,7 +569,7 @@ export default function ProfilePage() {
                         </Card>
                         {isOwner && (
                             <div className="flex justify-center">
-                                <Button size="lg" variant="outline" onClick={handleSignOut}>
+                                <Button variant="outline" onClick={handleSignOut}>
                                     <LogOut className="mr-2 h-4 w-4" />
                                     Se déconnecter
                                 </Button>
