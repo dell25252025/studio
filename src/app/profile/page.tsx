@@ -279,7 +279,7 @@ export default function ProfilePage() {
                  <div className="p-6 flex justify-between items-center">
                     <div>
                         <div className="flex items-center gap-3">
-                            <h1 className="text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
+                            <h1 className="text-3xl md:text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
                             {isOwner && (
                                 <Link href={`/profile/edit?id=${profileId}`} passHref>
                                     <Button variant="ghost" size="icon" asChild>
@@ -415,3 +415,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    
