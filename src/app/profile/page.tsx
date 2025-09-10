@@ -287,34 +287,44 @@ export default function ProfilePage() {
                          )}
                     </div>
                 )}
-                 <div className="px-4 py-2 flex justify-between items-center">
-                    <div>
-                        <div className="flex items-center gap-3">
-                            <h1 className="text-2xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
-                            {isOwner && (
-                                <Link href={`/profile/edit?id=${profileId}`} passHref>
-                                    <Button variant="ghost" size="icon" asChild>
-                                        <div>
-                                            <Edit className="h-5 w-5" />
-                                            <span className="sr-only">Modifier le profil</span>
-                                        </div>
-                                    </Button>
-                                </Link>
-                            )}
+                 <div className="px-2 py-2 md:px-4">
+                     <div className="flex justify-between items-start">
+                        <div>
+                            <div className="flex items-center gap-3">
+                                <h1 className="text-2xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
+                                {isOwner && (
+                                    <Link href={`/profile/edit?id=${profileId}`} passHref>
+                                        <Button variant="ghost" size="icon" asChild>
+                                            <div>
+                                                <Edit className="h-5 w-5" />
+                                                <span className="sr-only">Modifier le profil</span>
+                                            </div>
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
+                            <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                                <MapPin className="h-4 w-4" />
+                                <span>{profile.location}</span>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-                            <MapPin className="h-4 w-4" />
-                            <span>{profile.location}</span>
-                        </div>
+                         <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            accept="image/*"
+                            onChange={handlePhotoAdd}
+                            disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
+                        />
                     </div>
-                     <input
-                        type="file"
-                        ref={fileInputRef}
-                        className="hidden"
-                        accept="image/*"
-                        onChange={handlePhotoAdd}
-                        disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
-                    />
+                     {profile.financialArrangement && (
+                        <div className="mt-2">
+                             <Badge>
+                                <HandCoins className="mr-2 h-4 w-4"/>
+                                {profile.financialArrangement}
+                            </Badge>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -353,13 +363,6 @@ export default function ProfilePage() {
                                     <div>
                                         <p className="font-semibold text-xs">Style de voyage</p>
                                         <p className="text-muted-foreground text-sm">{profile.travelStyle}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <HandCoins className="h-4 w-4 text-primary mt-0.5" />
-                                    <div>
-                                        <p className="font-semibold text-xs">Intention</p>
-                                        <p className="text-muted-foreground text-sm">{profile.financialArrangement}</p>
                                     </div>
                                 </div>
                                 {profile.activities && profile.activities.length > 0 && (
