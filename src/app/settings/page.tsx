@@ -105,14 +105,14 @@ const SettingsPage = () => {
     {
       icon: Shield,
       label: 'Politique de confidentialité',
-      href: '#',
+      href: '/settings/privacy-policy',
       color: 'text-gray-500',
       bgColor: 'bg-gray-200',
     },
     {
       icon: FileText,
       label: "Conditions d'utilisation",
-      href: '#',
+      href: '/settings/terms-of-service',
       color: 'text-gray-500',
       bgColor: 'bg-gray-200',
     },
