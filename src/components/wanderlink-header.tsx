@@ -2,23 +2,19 @@
 import React from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { SlidersHorizontal } from 'lucide-react';
-import { Button } from './ui/button';
 
 interface WanderlinkHeaderProps {
   transparent?: boolean;
-  showFilter?: boolean;
-  onFilterClick?: () => void;
 }
 
-const WanderlinkHeader = ({ transparent = false, showFilter = false, onFilterClick }: WanderlinkHeaderProps) => {
+const WanderlinkHeader = ({ transparent = false }: WanderlinkHeaderProps) => {
   return (
     <header className={cn(
         "fixed top-0 left-0 z-20 w-full h-12 transition-all duration-300",
         !transparent && "bg-background/90 backdrop-blur-sm"
       )}>
       <div className={cn(
-        "flex h-full items-center justify-between",
+        "flex h-full items-center justify-center",
         "px-2"
         )}>
         <Link href="/" className="flex items-center gap-2 group">
@@ -26,12 +22,6 @@ const WanderlinkHeader = ({ transparent = false, showFilter = false, onFilterCli
               WanderLink
             </h1>
         </Link>
-         {showFilter && (
-          <Button variant="ghost" size="icon" onClick={onFilterClick} className="h-8 w-8">
-            <SlidersHorizontal className="h-5 w-5" />
-            <span className="sr-only">Filtre</span>
-          </Button>
-        )}
       </div>
     </header>
   );
