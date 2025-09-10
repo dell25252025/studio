@@ -36,9 +36,9 @@ export default function FilterSheet({ isOpen, onOpenChange }: FilterSheetProps) 
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="h-full max-h-screen md:h-auto md:max-h-[90vh] flex flex-col rounded-t-2xl"
+        className="h-full max-h-screen md:h-auto md:max-h-[90vh] flex flex-col rounded-t-2xl p-0"
       >
-        <SheetHeader className="flex flex-row items-center justify-between text-center pb-4 border-b">
+        <SheetHeader className="flex flex-row items-center justify-between text-center p-4 border-b">
           <SheetClose asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8">
               <X className="h-5 w-5" />
