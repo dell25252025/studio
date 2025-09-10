@@ -51,6 +51,13 @@ const SettingsPage = () => {
       }
     }
   };
+  
+  const handleLike = () => {
+    toast({
+      title: 'Merci pour votre soutien !',
+      description: "Nous sommes ravis que l'application vous plaise.",
+    });
+  };
 
   const settingsItems = [
     {
@@ -119,7 +126,7 @@ const SettingsPage = () => {
     {
       icon: Heart,
       label: 'Aimer WanderLink',
-      href: '#',
+      onClick: handleLike,
       color: 'text-pink-500',
       bgColor: 'bg-pink-100',
     },
