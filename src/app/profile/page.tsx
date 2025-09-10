@@ -315,37 +315,37 @@ export default function ProfilePage() {
                                 <CardTitle>Ma description</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-muted-foreground">{profile.bio || "Aucune description fournie."}</p>
+                                <p className="text-sm text-muted-foreground">{profile.bio || "Aucune description fournie."}</p>
                             </CardContent>
                         </Card>
                          <Card className="shadow-lg">
                             <CardHeader>
                                 <CardTitle>Mon Prochain Voyage</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex items-center gap-3">
-                                    <Plane className="h-5 w-5 text-primary" />
+                            <CardContent className="space-y-2 text-sm">
+                                <div className="flex items-start gap-3">
+                                    <Plane className="h-4 w-4 text-primary mt-1" />
                                     <div>
                                         <p className="font-semibold">Destination</p>
                                         <p className="text-muted-foreground">{profile.destination}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <Calendar className="h-5 w-5 text-primary" />
+                                <div className="flex items-start gap-3">
+                                    <Calendar className="h-4 w-4 text-primary mt-1" />
                                     <div>
                                         <p className="font-semibold">Dates</p>
                                         <p className="text-muted-foreground">{travelDates}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <Backpack className="h-5 w-5 text-primary" />
+                                <div className="flex items-start gap-3">
+                                    <Backpack className="h-4 w-4 text-primary mt-1" />
                                     <div>
                                         <p className="font-semibold">Style de voyage</p>
                                         <p className="text-muted-foreground">{profile.travelStyle}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <HandCoins className="h-5 w-5 text-primary" />
+                                <div className="flex items-start gap-3">
+                                    <HandCoins className="h-4 w-4 text-primary mt-1" />
                                     <div>
                                         <p className="font-semibold">Intention</p>
                                         <p className="text-muted-foreground">{profile.financialArrangement}</p>
@@ -370,23 +370,23 @@ export default function ProfilePage() {
                              <CardHeader>
                                 <CardTitle>Détails</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex items-center gap-3">
-                                    <Languages className="h-5 w-5 text-primary" />
+                            <CardContent className="space-y-2 text-sm">
+                                <div className="flex items-start gap-3">
+                                    <Languages className="h-4 w-4 text-primary mt-1" />
                                     <div>
                                         <p className="font-semibold">Langues parlées</p>
                                         <p className="text-muted-foreground">{profile.languages.join(', ')}</p>
                                     </div>
                                 </div>
-                                 <div className="flex items-center gap-3">
-                                    <Cigarette className="h-5 w-5 text-primary" />
+                                 <div className="flex items-start gap-3">
+                                    <Cigarette className="h-4 w-4 text-primary mt-1" />
                                     <div>
                                         <p className="font-semibold">Tabac</p>
                                         <p className="text-muted-foreground">{profile.tobacco || 'Non spécifié'}</p>
                                     </div>
                                 </div>
-                                 <div className="flex items-center gap-3">
-                                    <Wine className="h-5 w-5 text-primary" />
+                                 <div className="flex items-start gap-3">
+                                    <Wine className="h-4 w-4 text-primary mt-1" />
                                     <div>
                                         <p className="font-semibold">Alcool</p>
                                         <p className="text-muted-foreground">{profile.alcohol || 'Non spécifié'}</p>
@@ -415,5 +415,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-    
