@@ -13,8 +13,8 @@ import {
   Share2,
   FileText,
   Heart,
-  LogOut,
   MessageSquare,
+  Trash2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -131,9 +131,9 @@ const SettingsPage = () => {
       bgColor: 'bg-pink-100',
     },
     {
-      icon: LogOut,
-      label: 'Se déconnecter',
-      href: '#',
+      icon: Trash2,
+      label: 'Supprimer le compte',
+      href: '/settings/delete-account',
       color: 'text-red-500',
       bgColor: 'bg-red-100',
     },
