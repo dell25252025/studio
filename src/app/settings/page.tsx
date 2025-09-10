@@ -53,7 +53,7 @@ const SettingsPage = () => {
     {
       icon: HelpCircle,
       label: 'FAQ',
-      href: '#',
+      href: '/settings/faq',
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-100',
     },
@@ -103,11 +103,11 @@ const SettingsPage = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 px-4 py-1 backdrop-blur-sm">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 px-2 py-1 backdrop-blur-sm md:px-4">
         <button onClick={() => router.back()} className="p-2 -ml-2">
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="font-semibold text-sm">Préférences</h1>
+        <h1 className="text-sm font-semibold">Préférences</h1>
         <div className="w-5"></div>
       </header>
 
@@ -117,10 +117,10 @@ const SettingsPage = () => {
             <li key={item.label}>
               <Link href={item.href} passHref>
                 <div className="flex cursor-pointer items-center p-3 transition-colors hover:bg-muted/50">
-                  <div className={`mr-3 flex h-6 w-6 items-center justify-center rounded-lg ${item.bgColor}`}>
+                  <div className={`mr-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg ${item.bgColor}`}>
                     <item.icon className={`h-3.5 w-3.5 ${item.color}`} />
                   </div>
-                  <span className="flex-1 text-card-foreground text-sm">{item.label}</span>
+                  <span className="flex-1 text-sm text-card-foreground">{item.label}</span>
                   <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
                 </div>
               </Link>
