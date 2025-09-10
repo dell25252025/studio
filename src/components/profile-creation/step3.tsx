@@ -71,6 +71,28 @@ const Step3 = () => {
             </FormItem>
           )}
         />
+        <FormField
+          control={control}
+          name="cannabis"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Cannabis</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionnez une option" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="Non-fumeur">Non-fumeur</SelectItem>
+                  <SelectItem value="Occasionnellement">Occasionnellement</SelectItem>
+                  <SelectItem value="Régulièrement">Régulièrement</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
     </div>
   );

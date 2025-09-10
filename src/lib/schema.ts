@@ -13,6 +13,7 @@ export const formSchema = z.object({
   weight: z.number().optional().nullable(),
   tobacco: z.enum(['Non-fumeur', 'Occasionnellement', 'Régulièrement']).optional(),
   alcohol: z.enum(['Jamais', 'Occasionnellement', 'Souvent']).optional(),
+  cannabis: z.enum(['Non-fumeur', 'Occasionnellement', 'Régulièrement']).optional(),
   destination: z.string().min(1, 'La destination est obligatoire.'),
   dates: z.object({
     from: z.date().optional(),

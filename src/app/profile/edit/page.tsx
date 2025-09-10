@@ -215,6 +215,14 @@ export default function EditProfilePage() {
                             </div>
                             <input type="file" ref={fileInputRef} className="hidden" accept="image/*" multiple onChange={handleFileSelect} disabled={isUploading} />
                         </div>
+                        
+                         {/* Section Style de Vie */}
+                        <div className="p-6 border rounded-lg space-y-4">
+                            <h2 className="text-xl font-semibold">Style de Vie</h2>
+                            <FormField control={control} name="tobacco" render={({ field }) => (<FormItem><FormLabel>Tabac</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez une option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Non-fumeur">Non-fumeur</SelectItem><SelectItem value="Occasionnellement">Occasionnellement</SelectItem><SelectItem value="Régulièrement">Régulièrement</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+                            <FormField control={control} name="alcohol" render={({ field }) => (<FormItem><FormLabel>Alcool</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez une option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Jamais">Jamais</SelectItem><SelectItem value="Occasionnellement">Occasionnellement</SelectItem><SelectItem value="Souvent">Souvent</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+                            <FormField control={control} name="cannabis" render={({ field }) => (<FormItem><FormLabel>Cannabis</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez une option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Non-fumeur">Non-fumeur</SelectItem><SelectItem value="Occasionnellement">Occasionnellement</SelectItem><SelectItem value="Régulièrement">Régulièrement</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+                        </div>
 
                          {/* Section Voyage */}
                          <div className="p-6 border rounded-lg space-y-4">

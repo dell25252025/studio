@@ -34,6 +34,17 @@ const activityMap = {
   yoga: 'Yoga / Méditation',
 };
 
+const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M12 22s8-4 8-10V7l-8-5-8 5v5c0 6 8 10 8 10z"></path>
+    <path d="m9 11 3 3 3-3"></path>
+    <path d="M12 14V8"></path>
+    <path d="M12 22v-6"></path>
+    <path d="M15.5 13.5c1.5-1.5 1.5-3.5 0-5s-3.5-1.5-5 0c-1.5 1.5-1.5 3.5 0 5"></path>
+  </svg>
+);
+
+
 const MAX_PHOTOS = 4;
 
 export default function ProfilePage() {
@@ -410,6 +421,15 @@ export default function ProfilePage() {
                                         <p className="text-muted-foreground text-sm">{profile.alcohol || 'Non spécifié'}</p>
                                     </div>
                                 </div>
+                                {profile.cannabis && (
+                                <div className="flex items-start gap-3">
+                                    <CannabisIcon className="h-4 w-4 text-primary mt-0.5" />
+                                    <div>
+                                        <p className="font-semibold text-xs">Cannabis</p>
+                                        <p className="text-muted-foreground text-sm">{profile.cannabis}</p>
+                                    </div>
+                                </div>
+                                )}
                             </CardContent>
                         </Card>
                         {isOwner && (
