@@ -23,7 +23,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { DateRange } from 'react-day-picker';
+import { type DateRange } from 'react-day-picker';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -48,6 +48,7 @@ const activities = [
     { id: 'concerts', label: 'Concerts / Festivals' }, { id: 'food', label: 'Gastronomie' },
     { id: 'nightlife', label: 'Sorties nocturnes' }, { id: 'shopping', label: 'Shopping' },
     { id: 'yoga', label: 'Yoga / Méditation' }, { id: 'sport', label: 'Sport' },
+    { id: 'other', label: 'Autre' },
 ];
 
 export default function EditProfilePage() {
