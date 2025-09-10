@@ -161,6 +161,7 @@ const Step4 = () => {
                   <SelectItem value="Religieux / Spirituel">Religieux / Spirituel</SelectItem>
                   <SelectItem value="Road Trip / Van Life">Road Trip / Van Life</SelectItem>
                   <SelectItem value="Humanitaire / Écovolontariat">Humanitaire / Écovolontariat</SelectItem>
+                  <SelectItem value="Autre">Autre</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
