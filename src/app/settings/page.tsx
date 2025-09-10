@@ -113,7 +113,7 @@ const SettingsPage = () => {
                     <div className={`mr-4 flex h-8 w-8 items-center justify-center rounded-lg ${item.bgColor}`}>
                       <item.icon className={`h-5 w-5 ${item.color}`} />
                     </div>
-                    <span className="flex-1 text-card-foreground">{item.label}</span>
+                    <span className="flex-1 text-card-foreground text-sm">{item.label}</span>
                     <ChevronRight className="h-5 w-5 text-muted-foreground" />
                   </div>
                 </Link>
