@@ -48,7 +48,7 @@ export default function PrivacySettingsPage() {
             <button onClick={() => router.back()} className="p-2 -ml-2">
             <ArrowLeft className="h-5 w-5" />
             </button>
-            <h1 className="font-semibold text-base">Paramètres de confidentialité</h1>
+            <h1 className="font-semibold text-sm">Paramètres de confidentialité</h1>
             <div className="w-5"></div>
         </header>
 
@@ -63,15 +63,15 @@ export default function PrivacySettingsPage() {
                         <RadioGroup value={profileVisibility} onValueChange={setProfileVisibility} className="space-y-2">
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="all" id="v-all" />
-                               <Label htmlFor="v-all">Visible par tout le monde</Label>
+                               <Label htmlFor="v-all" className="text-sm">Visible par tout le monde</Label>
                            </div>
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="members" id="v-members" />
-                               <Label htmlFor="v-members">Visible uniquement par les membres WanderLink</Label>
+                               <Label htmlFor="v-members" className="text-sm">Visible uniquement par les membres WanderLink</Label>
                            </div>
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="hidden" id="v-hidden" />
-                               <Label htmlFor="v-hidden">Cacher mon profil temporairement</Label>
+                               <Label htmlFor="v-hidden" className="text-sm">Cacher mon profil temporairement</Label>
                            </div>
                         </RadioGroup>
                     </CardContent>
@@ -84,11 +84,11 @@ export default function PrivacySettingsPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex items-center justify-between rounded-lg border p-3">
-                            <Label htmlFor="online-status">Afficher mon statut "En ligne"</Label>
+                            <Label htmlFor="online-status" className="text-sm">Afficher mon statut "En ligne"</Label>
                             <Switch id="online-status" checked={showOnlineStatus} onCheckedChange={setShowOnlineStatus} />
                         </div>
                          <div className="flex items-center justify-between rounded-lg border p-3">
-                            <Label htmlFor="recent-activity">Afficher mon activité récente (ex: likes)</Label>
+                            <Label htmlFor="recent-activity" className="text-sm">Afficher mon activité récente (ex: likes)</Label>
                             <Switch id="recent-activity" checked={showRecentActivity} onCheckedChange={setShowRecentActivity} />
                         </div>
                     </CardContent>
@@ -103,11 +103,11 @@ export default function PrivacySettingsPage() {
                         <RadioGroup value={messagingPolicy} onValueChange={setMessagingPolicy} className="space-y-2">
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="all" id="m-all" />
-                               <Label htmlFor="m-all">Tout le monde peut me contacter</Label>
+                               <Label htmlFor="m-all" className="text-sm">Tout le monde peut me contacter</Label>
                            </div>
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="matches" id="m-matches" />
-                               <Label htmlFor="m-matches">Seuls les profils avec qui j'ai "matché"</Label>
+                               <Label htmlFor="m-matches" className="text-sm">Seuls les profils avec qui j'ai "matché"</Label>
                            </div>
                         </RadioGroup>
                     </CardContent>

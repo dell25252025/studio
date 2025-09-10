@@ -147,7 +147,7 @@ export default function AccountSettingsPage() {
             <button onClick={() => router.back()} className="p-2 -ml-2">
             <ArrowLeft className="h-5 w-5" />
             </button>
-            <h1 className="font-semibold text-base">Paramètres du compte</h1>
+            <h1 className="font-semibold text-sm">Paramètres du compte</h1>
             <div className="w-5"></div>
         </header>
 

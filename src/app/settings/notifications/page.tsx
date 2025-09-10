@@ -49,7 +49,7 @@ export default function NotificationSettingsPage() {
             <button onClick={() => router.back()} className="p-2 -ml-2">
             <ArrowLeft className="h-5 w-5" />
             </button>
-            <h1 className="font-semibold text-base">Notifications</h1>
+            <h1 className="font-semibold text-sm">Notifications</h1>
             <div className="w-5"></div>
         </header>
 
@@ -62,15 +62,15 @@ export default function NotificationSettingsPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex items-center justify-between rounded-lg border p-3">
-                            <Label htmlFor="push-messages">Nouveaux messages</Label>
+                            <Label htmlFor="push-messages" className="text-sm">Nouveaux messages</Label>
                             <Switch id="push-messages" checked={pushNotifications.newMessages} onCheckedChange={(checked) => setPushNotifications(prev => ({...prev, newMessages: checked}))} />
                         </div>
                         <div className="flex items-center justify-between rounded-lg border p-3">
-                            <Label htmlFor="push-visits">Visites de profil</Label>
+                            <Label htmlFor="push-visits" className="text-sm">Visites de profil</Label>
                             <Switch id="push-visits" checked={pushNotifications.profileVisits} onCheckedChange={(checked) => setPushNotifications(prev => ({...prev, profileVisits: checked}))} />
                         </div>
                         <div className="flex items-center justify-between rounded-lg border p-3">
-                            <Label htmlFor="push-matches">Nouveaux matches</Label>
+                            <Label htmlFor="push-matches" className="text-sm">Nouveaux matches</Label>
                             <Switch id="push-matches" checked={pushNotifications.newMatches} onCheckedChange={(checked) => setPushNotifications(prev => ({...prev, newMatches: checked}))} />
                         </div>
                     </CardContent>
@@ -83,11 +83,11 @@ export default function NotificationSettingsPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex items-center justify-between rounded-lg border p-3">
-                            <Label htmlFor="email-news">Promotions & actualités</Label>
+                            <Label htmlFor="email-news" className="text-sm">Promotions & actualités</Label>
                             <Switch id="email-news" checked={emailNotifications.newsAndUpdates} onCheckedChange={(checked) => setEmailNotifications(prev => ({...prev, newsAndUpdates: checked}))} />
                         </div>
                          <div className="flex items-center justify-between rounded-lg border p-3">
-                            <Label htmlFor="email-digest">Résumé hebdomadaire</Label>
+                            <Label htmlFor="email-digest" className="text-sm">Résumé hebdomadaire</Label>
                             <Switch id="email-digest" checked={emailNotifications.weeklyDigest} onCheckedChange={(checked) => setEmailNotifications(prev => ({...prev, weeklyDigest: checked}))} />
                         </div>
                     </CardContent>

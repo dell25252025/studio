@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -9,7 +10,7 @@ const Logo = () => (
     height="40" 
     viewBox="0 0 145 40" 
     xmlns="http://www.w3.org/2000/svg" 
-    className="h-8 w-auto"
+    className="h-6 w-auto md:h-8"
     aria-label="travel.me Logo"
   >
     <defs>

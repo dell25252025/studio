@@ -276,23 +276,23 @@ export default function ProfilePage() {
                          )}
                     </div>
                 )}
-                 <div className="p-6 flex justify-between items-center">
+                 <div className="p-4 md:p-6 flex justify-between items-center">
                     <div>
                         <div className="flex items-center gap-3">
-                            <h1 className="text-3xl md:text-4xl font-bold font-headline text-shadow-lg">{profile.firstName}, {profile.age}</h1>
+                            <h1 className="text-2xl md:text-3xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
                             {isOwner && (
                                 <Link href={`/profile/edit?id=${profileId}`} passHref>
                                     <Button variant="ghost" size="icon" asChild>
                                         <div>
-                                            <Edit className="h-6 w-6" />
+                                            <Edit className="h-5 w-5" />
                                             <span className="sr-only">Modifier le profil</span>
                                         </div>
                                     </Button>
                                 </Link>
                             )}
                         </div>
-                        <div className="flex items-center gap-2 mt-2 text-shadow">
-                            <MapPin className="h-5 w-5" />
+                        <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                            <MapPin className="h-4 w-4" />
                             <span>{profile.location}</span>
                         </div>
                     </div>
@@ -307,9 +307,9 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            <div className="container mx-auto max-w-4xl py-8 space-y-8 bg-background">
-                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                     <div className="md:col-span-2 space-y-8">
+            <div className="container mx-auto max-w-4xl py-6 space-y-6 bg-background">
+                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                     <div className="md:col-span-2 space-y-6">
                         <Card className="shadow-lg">
                             <CardHeader>
                                 <CardTitle>Ma description</CardTitle>
@@ -324,36 +324,36 @@ export default function ProfilePage() {
                             </CardHeader>
                             <CardContent className="space-y-2 text-sm">
                                 <div className="flex items-start gap-3">
-                                    <Plane className="h-4 w-4 text-primary mt-1" />
+                                    <Plane className="h-4 w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold">Destination</p>
-                                        <p className="text-muted-foreground">{profile.destination}</p>
+                                        <p className="font-semibold text-xs">Destination</p>
+                                        <p className="text-muted-foreground text-sm">{profile.destination}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <Calendar className="h-4 w-4 text-primary mt-1" />
+                                    <Calendar className="h-4 w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold">Dates</p>
-                                        <p className="text-muted-foreground">{travelDates}</p>
+                                        <p className="font-semibold text-xs">Dates</p>
+                                        <p className="text-muted-foreground text-sm">{travelDates}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <Backpack className="h-4 w-4 text-primary mt-1" />
+                                    <Backpack className="h-4 w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold">Style de voyage</p>
-                                        <p className="text-muted-foreground">{profile.travelStyle}</p>
+                                        <p className="font-semibold text-xs">Style de voyage</p>
+                                        <p className="text-muted-foreground text-sm">{profile.travelStyle}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <HandCoins className="h-4 w-4 text-primary mt-1" />
+                                    <HandCoins className="h-4 w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold">Intention</p>
-                                        <p className="text-muted-foreground">{profile.financialArrangement}</p>
+                                        <p className="font-semibold text-xs">Intention</p>
+                                        <p className="text-muted-foreground text-sm">{profile.financialArrangement}</p>
                                     </div>
                                 </div>
                                 {profile.activities && profile.activities.length > 0 && (
                                     <div>
-                                        <p className="font-semibold mb-2">Activités prévues</p>
+                                        <p className="font-semibold text-xs mb-2">Activités prévues</p>
                                         <div className="flex flex-wrap gap-2">
                                             {profile.activities.map((activity: keyof typeof activityMap) => (
                                                 <Badge key={activity} variant="secondary">{activityMap[activity] || activity}</Badge>
@@ -365,31 +365,31 @@ export default function ProfilePage() {
                         </Card>
                     </div>
 
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                         <Card className="shadow-lg">
                              <CardHeader>
                                 <CardTitle>Détails</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2 text-sm">
                                 <div className="flex items-start gap-3">
-                                    <Languages className="h-4 w-4 text-primary mt-1" />
+                                    <Languages className="h-4 w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold">Langues parlées</p>
-                                        <p className="text-muted-foreground">{profile.languages.join(', ')}</p>
+                                        <p className="font-semibold text-xs">Langues parlées</p>
+                                        <p className="text-muted-foreground text-sm">{profile.languages.join(', ')}</p>
                                     </div>
                                 </div>
                                  <div className="flex items-start gap-3">
-                                    <Cigarette className="h-4 w-4 text-primary mt-1" />
+                                    <Cigarette className="h-4 w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold">Tabac</p>
-                                        <p className="text-muted-foreground">{profile.tobacco || 'Non spécifié'}</p>
+                                        <p className="font-semibold text-xs">Tabac</p>
+                                        <p className="text-muted-foreground text-sm">{profile.tobacco || 'Non spécifié'}</p>
                                     </div>
                                 </div>
                                  <div className="flex items-start gap-3">
-                                    <Wine className="h-4 w-4 text-primary mt-1" />
+                                    <Wine className="h-4 w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold">Alcool</p>
-                                        <p className="text-muted-foreground">{profile.alcohol || 'Non spécifié'}</p>
+                                        <p className="font-semibold text-xs">Alcool</p>
+                                        <p className="text-muted-foreground text-sm">{profile.alcohol || 'Non spécifié'}</p>
                                     </div>
                                 </div>
                             </CardContent>

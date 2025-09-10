@@ -37,7 +37,7 @@ export default function BlockedUsersPage() {
             <button onClick={() => router.back()} className="p-2 -ml-2">
             <ArrowLeft className="h-5 w-5" />
             </button>
-            <h1 className="font-semibold text-base">Utilisateurs bloqués</h1>
+            <h1 className="font-semibold text-sm">Utilisateurs bloqués</h1>
             <div className="w-5"></div>
         </header>
 
@@ -58,7 +58,7 @@ export default function BlockedUsersPage() {
                                                 <AvatarImage src={user.avatarUrl} alt={user.name} />
                                                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                                             </Avatar>
-                                            <span className="font-medium">{user.name}</span>
+                                            <span className="font-medium text-sm">{user.name}</span>
                                         </div>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
@@ -85,8 +85,8 @@ export default function BlockedUsersPage() {
                         ) : (
                            <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 text-center">
                                 <ShieldCheck className="h-12 w-12 text-muted-foreground" />
-                                <h3 className="mt-4 text-lg font-semibold">Aucun utilisateur bloqué</h3>
-                                <p className="mt-1 text-sm text-muted-foreground">Votre liste d'utilisateurs bloqués est vide.</p>
+                                <h3 className="mt-4 font-semibold text-base">Aucun utilisateur bloqué</h3>
+                                <p className="mt-1 text-xs text-muted-foreground">Votre liste d'utilisateurs bloqués est vide.</p>
                            </div>
                         )}
                     </CardContent>
