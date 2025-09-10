@@ -22,6 +22,7 @@ const emailSchema = z.object({
 });
 
 const passwordSchema = z.object({
+  oldPassword: z.string().min(1, 'L\'ancien mot de passe est requis.'),
   newPassword: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères.'),
   confirmPassword: z.string(),
 }).refine(data => data.newPassword === data.confirmPassword, {
@@ -58,6 +59,7 @@ export default function AccountSettingsPage() {
   const passwordForm = useForm<z.infer<typeof passwordSchema>>({
     resolver: zodResolver(passwordSchema),
     defaultValues: {
+      oldPassword: '',
       newPassword: '',
       confirmPassword: '',
     },
@@ -95,10 +97,13 @@ export default function AccountSettingsPage() {
   };
 
   const handlePasswordUpdate = async (data: z.infer<typeof passwordSchema>) => {
-     if (!currentUser) return;
+     if (!currentUser || !currentUser.email) return;
     setIsPasswordSubmitting(true);
     try {
+      const credential = EmailAuthProvider.credential(currentUser.email, data.oldPassword);
+      await reauthenticateWithCredential(currentUser, credential);
       await updatePassword(currentUser, data.newPassword);
+
       passwordForm.reset();
       toast({
         title: 'Succès',
@@ -109,6 +114,9 @@ export default function AccountSettingsPage() {
        let description = "Une erreur est survenue.";
       if (error.code === 'auth/requires-recent-login') {
         description = "Cette action nécessite une reconnexion récente. Veuillez vous déconnecter et vous reconnecter.";
+      } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+        description = "L'ancien mot de passe est incorrect. Veuillez réessayer.";
+        passwordForm.setError('oldPassword', { type: 'manual', message: 'Mot de passe incorrect.' });
       }
       toast({
         variant: 'destructive',
@@ -179,6 +187,17 @@ export default function AccountSettingsPage() {
                     <CardContent>
                         <Form {...passwordForm}>
                             <form onSubmit={passwordForm.handleSubmit(handlePasswordUpdate)} className="space-y-4">
+                                <FormField
+                                    control={passwordForm.control}
+                                    name="oldPassword"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Ancien mot de passe</FormLabel>
+                                            <FormControl><Input type="password" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                                 <FormField
                                     control={passwordForm.control}
                                     name="newPassword"
