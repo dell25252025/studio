@@ -163,7 +163,7 @@ export default function AccountSettingsPage() {
                                     )}
                                 />
                                 <Button type="submit" disabled={isEmailSubmitting}>
-                                    {isEmailSubmitting && <Loader2 className="animate-spin" />}
+                                    {isEmailSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     Enregistrer l'e-mail
                                 </Button>
                             </form>
@@ -202,7 +202,7 @@ export default function AccountSettingsPage() {
                                     )}
                                 />
                                 <Button type="submit" disabled={isPasswordSubmitting}>
-                                     {isPasswordSubmitting && <Loader2 className="animate-spin" />}
+                                     {isPasswordSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     Changer le mot de passe
                                 </Button>
                             </form>
