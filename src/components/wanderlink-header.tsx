@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 const WanderlinkHeader = ({ transparent = false }: { transparent?: boolean }) => {
   return (
     <header className={cn(
-        "fixed top-0 left-0 z-20 w-full h-16 transition-all duration-300",
+        "fixed top-0 left-0 z-20 w-full h-12 transition-all duration-300",
         "bg-background/90 backdrop-blur-md border-b"
       )}>
       <div className={cn(
