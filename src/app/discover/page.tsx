@@ -1,13 +1,13 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { CalendarIcon, ChevronRight, X } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { countries } from '@/lib/countries';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -16,8 +16,7 @@ import { type DateRange } from 'react-day-picker';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import BottomNav from '@/components/bottom-nav';
-import { useIsMobile } from '@/hooks/use-mobile';
+import WanderlinkHeader from '@/components/wanderlink-header';
 
 export default function DiscoverPage() {
     const router = useRouter();
@@ -25,31 +24,36 @@ export default function DiscoverPage() {
     const [nearby, setNearby] = useState(false);
     const [aroundMyAge, setAroundMyAge] = useState(false);
     const [country, setCountry] = useState('');
+    const [destination, setDestination] = useState('');
     const [intention, setIntention] = useState('Tous');
     const [travelStyle, setTravelStyle] = useState('Tous');
     const [activities, setActivities] = useState('Tous');
     const [dates, setDates] = useState<DateRange | undefined>(undefined);
     const [flexibleDates, setFlexibleDates] = useState(false);
-    const isMobile = useIsMobile();
+
+    const sortedCountries = [...countries].sort((a, b) => a.name.localeCompare(b.name));
+
+    const handleNearbyChange = (checked: boolean) => {
+        setNearby(checked);
+        if (checked) {
+            setCountry(''); // Reset country when nearby is checked
+            // Logic to get user's location would be triggered here
+            // For example: navigator.geolocation.getCurrentPosition(...)
+        }
+    };
+
+    const handleSearch = () => {
+        // Logic for the search will be implemented here
+        console.log("Recherche lancée avec les filtres :");
+        console.log({ showMe, nearby, country, destination, dates, flexibleDates, intention, travelStyle, activities, aroundMyAge });
+        // router.push('/results?...');
+    };
 
     return (
         <div className="min-h-screen bg-background text-foreground">
-            {/* Header */}
-            {isMobile && (
-              <header className="fixed top-0 z-10 w-full border-b bg-background/95 backdrop-blur-sm">
-                  <div className="container mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-                      <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                          <X className="h-5 w-5" />
-                      </Button>
-                      <h1 className="text-lg font-semibold">Filtre</h1>
-                      <Button variant="link" className="text-primary" onClick={() => router.back()}>
-                          Terminé
-                      </Button>
-                  </div>
-              </header>
-            )}
+            <WanderlinkHeader />
 
-            <main className="pt-14">
+            <main className="pt-6 pb-24">
                 <div className="container mx-auto max-w-4xl px-4 py-2">
                     <div className="space-y-1">
                         {/* Montre-moi Section */}
@@ -89,18 +93,35 @@ export default function DiscoverPage() {
                             <div className="rounded-lg border bg-card p-2">
                                 <div className="flex items-center justify-between py-1.5">
                                     <Label htmlFor="nearby" className="text-sm font-normal">Personnes à proximité</Label>
-                                    <Checkbox id="nearby" checked={nearby} onCheckedChange={(checked) => setNearby(Boolean(checked))} />
+                                    <Checkbox id="nearby" checked={nearby} onCheckedChange={handleNearbyChange} />
                                 </div>
                                 <Separator />
                                 <div className="flex items-center justify-between py-1.5 text-sm">
-                                    <span className="text-muted-foreground">Pays</span>
-                                    <Select value={country} onValueChange={setCountry}>
-                                        <SelectTrigger className="w-[180px] h-8">
-                                            <SelectValue placeholder="Sélectionnez un pays" />
+                                    <span className={cn('text-muted-foreground', nearby && 'text-slate-400 dark:text-slate-600')}>Pays</span>
+                                    <Select value={country} onValueChange={setCountry} disabled={nearby}>
+                                        <SelectTrigger className="w-[90px] h-8">
+                                            <SelectValue placeholder="Sélection" />
                                         </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Tous">Toutes les destinations</SelectItem>
-                                            {countries.map((country) => (
+                                        <SelectContent position="popper" side="bottom">
+                                            <SelectItem value="Tous">Tous</SelectItem>
+                                            {sortedCountries.map((country) => (
+                                                <SelectItem key={country.code} value={country.name}>
+                                                    {country.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <Separator />
+                                <div className="flex items-center justify-between py-1.5 text-sm">
+                                    <span className="text-muted-foreground">Destination</span>
+                                    <Select value={destination} onValueChange={setDestination}>
+                                        <SelectTrigger className="w-[90px] h-8">
+                                            <SelectValue placeholder="Sélection" />
+                                        </SelectTrigger>
+                                        <SelectContent position="popper" side="bottom">
+                                            <SelectItem value="Tous">Toutes</SelectItem>
+                                            {sortedCountries.map((country) => (
                                                 <SelectItem key={country.code} value={country.name}>
                                                     {country.name}
                                                 </SelectItem>
@@ -167,15 +188,15 @@ export default function DiscoverPage() {
                                 <div className="flex items-center justify-between py-1.5 text-sm">
                                     <span className="text-muted-foreground">Intention</span>
                                     <Select value={intention} onValueChange={setIntention}>
-                                        <SelectTrigger className="w-[180px] h-8">
-                                            <SelectValue placeholder="Sélectionnez" />
+                                        <SelectTrigger className="w-[90px] h-8">
+                                            <SelectValue placeholder="Sélection" />
                                         </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Tous">Toutes les intentions</SelectItem>
-                                            <SelectItem value="Partager les frais (50/50)">Partager les frais (50/50)</SelectItem>
-                                            <SelectItem value="Je peux sponsoriser le voyage">Je peux sponsoriser le voyage</SelectItem>
-                                            <SelectItem value="Je cherche un voyage sponsorisé">Je cherche un voyage sponsorisé</SelectItem>
-                                            <SelectItem value="Organiser un voyage de groupe">Organiser un voyage de groupe</SelectItem>
+                                        <SelectContent position="popper" side="bottom">
+                                            <SelectItem value="Tous">Toutes</SelectItem>
+                                            <SelectItem value="Partager les frais (50/50)">50/50</SelectItem>
+                                            <SelectItem value="Je peux sponsoriser le voyage">Sponsor</SelectItem>
+                                            <SelectItem value="Je cherche un voyage sponsorisé">Sponsorisé</SelectItem>
+                                            <SelectItem value="Organiser un voyage de groupe">Groupe</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -183,18 +204,18 @@ export default function DiscoverPage() {
                                 <div className="flex items-center justify-between py-1.5 text-sm">
                                     <span className="text-muted-foreground">Style de voyage</span>
                                     <Select value={travelStyle} onValueChange={setTravelStyle}>
-                                        <SelectTrigger className="w-[180px] h-8">
-                                            <SelectValue placeholder="Sélectionnez" />
+                                        <SelectTrigger className="w-[90px] h-8">
+                                            <SelectValue placeholder="Sélection" />
                                         </SelectTrigger>
-                                        <SelectContent>
-                                             <SelectItem value="Tous">Tous les styles</SelectItem>
-                                             <SelectItem value="Aventure / Sac à dos">Aventure / Sac à dos</SelectItem>
-                                             <SelectItem value="Luxe / Détente">Luxe / Détente</SelectItem>
-                                             <SelectItem value="Culturel / Historique">Culturel / Historique</SelectItem>
-                                             <SelectItem value="Festif / Événementiel">Festif / Événementiel</SelectItem>
-                                             <SelectItem value="Religieux / Spirituel">Religieux / Spirituel</SelectItem>
-                                             <SelectItem value="Road Trip / Van Life">Road Trip / Van Life</SelectItem>
-                                             <SelectItem value="Humanitaire / Écovolontariat">Humanitaire / Écovolontariat</SelectItem>
+                                        <SelectContent position="popper" side="bottom">
+                                             <SelectItem value="Tous">Tous</SelectItem>
+                                             <SelectItem value="Aventure / Sac à dos">Aventure</SelectItem>
+                                             <SelectItem value="Luxe / Détente">Luxe</SelectItem>
+                                             <SelectItem value="Culturel / Historique">Culturel</SelectItem>
+                                             <SelectItem value="Festif / Événementiel">Festif</SelectItem>
+                                             <SelectItem value="Religieux / Spirituel">Religieux</SelectItem>
+                                             <SelectItem value="Road Trip / Van Life">Road Trip</SelectItem>
+                                             <SelectItem value="Humanitaire / Écovolontariat">Humanitaire</SelectItem>
                                              <SelectItem value="Autre">Autre</SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -203,22 +224,22 @@ export default function DiscoverPage() {
                                 <div className="flex items-center justify-between py-1.5 text-sm">
                                     <span className="text-muted-foreground">Activités</span>
                                      <Select value={activities} onValueChange={setActivities}>
-                                        <SelectTrigger className="w-[180px] h-8">
-                                            <SelectValue placeholder="Sélectionnez" />
+                                        <SelectTrigger className="w-[90px] h-8">
+                                            <SelectValue placeholder="Sélection" />
                                         </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Tous">Toutes les activités</SelectItem>
+                                        <SelectContent position="popper" side="bottom">
+                                            <SelectItem value="Tous">Toutes</SelectItem>
                                             <SelectItem value="Randonnée">Randonnée</SelectItem>
                                             <SelectItem value="Plage">Plage</SelectItem>
                                             <SelectItem value="Musées">Musées</SelectItem>
-                                            <SelectItem value="Concerts / Festivals">Concerts / Festivals</SelectItem>
+                                            <SelectItem value="Concerts / Festivals">Festivals</SelectItem>
                                             <SelectItem value="Gastronomie">Gastronomie</SelectItem>
-                                            <SelectItem value="Sorties nocturnes">Sorties nocturnes</SelectItem>
+                                            <SelectItem value="Sorties nocturnes">Vie nocturne</SelectItem>
                                             <SelectItem value="Shopping">Shopping</SelectItem>
-                                            <SelectItem value="Yoga / Méditation">Yoga / Méditation</SelectItem>
+                                            <SelectItem value="Yoga / Méditation">Yoga</SelectItem>
                                             <SelectItem value="Sport">Sport</SelectItem>
                                             <SelectItem value="Pèlerinage">Pèlerinage</SelectItem>
-                                            <SelectItem value="Événement LGBT+">Événement LGBT+</SelectItem>
+                                            <SelectItem value="Événement LGBT+">LGBT+</SelectItem>
                                             <SelectItem value="Camping">Camping</SelectItem>
                                             <SelectItem value="Autre">Autre</SelectItem>
                                         </SelectContent>
@@ -226,7 +247,6 @@ export default function DiscoverPage() {
                                 </div>
                             </div>
                         </div>
-
 
                         {/* Filtrer par Section */}
                         <div className="space-y-1">
@@ -238,10 +258,14 @@ export default function DiscoverPage() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Search Button */}
+                        <div className="pt-4">
+                            <Button className="w-full" onClick={handleSearch}>Recherche</Button>
+                        </div>
                     </div>
                 </div>
             </main>
-            {isMobile && <BottomNav />}
         </div>
     );
 }
