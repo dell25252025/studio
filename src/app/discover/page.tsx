@@ -7,9 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { ChevronRight, X } from 'lucide-react';
+import { CalendarIcon, ChevronRight, X } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { countries } from '@/lib/countries';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { type DateRange } from 'react-day-picker';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
 
 export default function DiscoverPage() {
     const router = useRouter();
@@ -20,6 +26,8 @@ export default function DiscoverPage() {
     const [intention, setIntention] = useState('Tous');
     const [travelStyle, setTravelStyle] = useState('Tous');
     const [activities, setActivities] = useState('Tous');
+    const [dates, setDates] = useState<DateRange | undefined>(undefined);
+    const [flexibleDates, setFlexibleDates] = useState(false);
 
     return (
         <div className="min-h-screen bg-background text-foreground">
@@ -38,7 +46,7 @@ export default function DiscoverPage() {
 
             <main className="pt-14">
                 <div className="container mx-auto max-w-4xl px-4 py-2">
-                    <div className="space-y-3">
+                    <div className="space-y-1">
                         {/* Montre-moi Section */}
                         <div className="space-y-1">
                             <h2 className="font-semibold">Montre-moi</h2>
@@ -98,6 +106,55 @@ export default function DiscoverPage() {
                             </div>
                         </div>
 
+                        {/* Dates Section */}
+                        <div className="space-y-1">
+                            <h2 className="font-semibold">Dates de voyage</h2>
+                            <div className="rounded-lg border bg-card p-2 space-y-2">
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                      <Button
+                                        id="date"
+                                        variant={'outline'}
+                                        className={cn(
+                                          'w-full justify-start text-left font-normal h-8',
+                                          !dates && !flexibleDates && 'text-muted-foreground'
+                                        )}
+                                        disabled={flexibleDates}
+                                      >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {flexibleDates ? 'Dates flexibles' : dates?.from ? (
+                                          dates.to ? (
+                                            <>
+                                              {format(dates.from, 'd LLL', { locale: fr })} -{' '}
+                                              {format(dates.to, 'd LLL', { locale: fr })}
+                                            </>
+                                          ) : (
+                                            format(dates.from, 'd LLL y', { locale: fr })
+                                          )
+                                        ) : (
+                                          <span>Choisissez une période</span>
+                                        )}
+                                      </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                      <Calendar
+                                        initialFocus
+                                        mode="range"
+                                        defaultMonth={dates?.from}
+                                        selected={dates}
+                                        onSelect={setDates}
+                                        numberOfMonths={2}
+                                        locale={fr}
+                                      />
+                                    </PopoverContent>
+                                </Popover>
+                                <div className="flex items-center space-x-2 py-1.5">
+                                    <Checkbox id="flexible-dates" checked={flexibleDates} onCheckedChange={(checked) => setFlexibleDates(Boolean(checked))} />
+                                    <Label htmlFor="flexible-dates" className="text-sm font-normal">Mes dates sont flexibles</Label>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Voyage Section */}
                         <div className="space-y-1">
                             <h2 className="font-semibold">Voyage</h2>
@@ -106,7 +163,7 @@ export default function DiscoverPage() {
                                     <span className="text-muted-foreground">Intention</span>
                                     <Select value={intention} onValueChange={setIntention}>
                                         <SelectTrigger className="w-[180px] h-8">
-                                            <SelectValue placeholder="Sélectionnez une intention" />
+                                            <SelectValue placeholder="Sélectionnez" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="Tous">Toutes les intentions</SelectItem>
@@ -122,7 +179,7 @@ export default function DiscoverPage() {
                                     <span className="text-muted-foreground">Style de voyage</span>
                                     <Select value={travelStyle} onValueChange={setTravelStyle}>
                                         <SelectTrigger className="w-[180px] h-8">
-                                            <SelectValue placeholder="Sélectionnez un style" />
+                                            <SelectValue placeholder="Sélectionnez" />
                                         </SelectTrigger>
                                         <SelectContent>
                                              <SelectItem value="Tous">Tous les styles</SelectItem>
@@ -142,7 +199,7 @@ export default function DiscoverPage() {
                                     <span className="text-muted-foreground">Activités</span>
                                      <Select value={activities} onValueChange={setActivities}>
                                         <SelectTrigger className="w-[180px] h-8">
-                                            <SelectValue placeholder="Sélectionnez une activité" />
+                                            <SelectValue placeholder="Sélectionnez" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="Tous">Toutes les activités</SelectItem>
