@@ -48,10 +48,10 @@ export default function DiscoverPage() {
             </header>
 
             <main className="pt-14">
-                <div className="container mx-auto max-w-4xl px-4 py-6">
-                    <div className="space-y-6">
+                <div className="container mx-auto max-w-4xl px-4 py-4">
+                    <div className="space-y-4">
                         {/* Montre-moi Section */}
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                             <h2 className="font-semibold">Montre-moi</h2>
                             <div className="flex w-full rounded-lg bg-muted p-1">
                                 <button
@@ -82,15 +82,15 @@ export default function DiscoverPage() {
                         </div>
 
                         {/* Position Section */}
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                             <h2 className="font-semibold">Position</h2>
-                            <div className="rounded-lg border bg-card p-4">
+                            <div className="rounded-lg border bg-card p-3">
                                 <div className="flex items-center justify-between py-2">
                                     <Label htmlFor="nearby" className="text-sm font-normal">Personnes à proximité</Label>
                                     <Checkbox id="nearby" checked={nearby} onCheckedChange={(checked) => setNearby(Boolean(checked))} />
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-3 text-sm">
+                                <div className="flex items-center justify-between py-2 text-sm">
                                     <span className="text-muted-foreground">Pays</span>
                                     <Select value={country} onValueChange={setCountry}>
                                         <SelectTrigger className="w-[180px]">
@@ -110,10 +110,10 @@ export default function DiscoverPage() {
                         </div>
 
                         {/* Voyage Section */}
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                             <h2 className="font-semibold">Voyage</h2>
-                            <div className="rounded-lg border bg-card p-4">
-                                <div className="flex items-center justify-between py-3 text-sm">
+                            <div className="rounded-lg border bg-card p-3">
+                                <div className="flex items-center justify-between py-2 text-sm">
                                     <span className="text-muted-foreground">Intention</span>
                                     <Select value={intention} onValueChange={setIntention}>
                                         <SelectTrigger className="w-[220px]">
@@ -129,7 +129,7 @@ export default function DiscoverPage() {
                                     </Select>
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-3 text-sm">
+                                <div className="flex items-center justify-between py-2 text-sm">
                                     <span className="text-muted-foreground">Style de voyage</span>
                                     <Select value={travelStyle} onValueChange={setTravelStyle}>
                                         <SelectTrigger className="w-[220px]">
@@ -149,7 +149,7 @@ export default function DiscoverPage() {
                                     </Select>
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-3 text-sm">
+                                <div className="flex items-center justify-between py-2 text-sm">
                                     <span className="text-muted-foreground">Activités</span>
                                      <Select value={activities} onValueChange={setActivities}>
                                         <SelectTrigger className="w-[220px]">
@@ -178,9 +178,9 @@ export default function DiscoverPage() {
 
 
                         {/* Filtrer par Section */}
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                             <h2 className="font-semibold">Filtrer par</h2>
-                             <div className="rounded-lg border bg-card p-4">
+                             <div className="rounded-lg border bg-card p-3">
                                 <div className="flex items-center justify-between py-2">
                                     <Label htmlFor="around-my-age" className="text-sm font-normal">Environ mon âge</Label>
                                     <Checkbox id="around-my-age" checked={aroundMyAge} onCheckedChange={(checked) => setAroundMyAge(Boolean(checked))} />
