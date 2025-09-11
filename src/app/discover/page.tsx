@@ -8,8 +8,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { ChevronRight, X } from 'lucide-react';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import CountryPicker from '@/components/country-picker';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { countries } from '@/lib/countries';
 
 const FilterPill = ({ label, value, onClick }: { label: string; value: string; onClick: () => void }) => (
     <div className="flex items-center justify-between py-3 text-sm" onClick={onClick}>
@@ -32,7 +32,6 @@ export default function DiscoverPage() {
     const [intention, setIntention] = useState('Tous');
     const [travelStyle, setTravelStyle] = useState('Tous');
     const [activities, setActivities] = useState('Tous');
-    const [isCountryPickerOpen, setIsCountryPickerOpen] = useState(false);
 
     return (
         <div className="min-h-screen bg-background text-foreground">
@@ -92,23 +91,21 @@ export default function DiscoverPage() {
                                     <Checkbox id="nearby" checked={nearby} onCheckedChange={(checked) => setNearby(Boolean(checked))} />
                                 </div>
                                 <Separator />
-                                <Dialog open={isCountryPickerOpen} onOpenChange={setIsCountryPickerOpen}>
-                                    <DialogTrigger asChild>
-                                        <div className="flex items-center justify-between py-3 text-sm cursor-pointer">
-                                            <span className="text-muted-foreground">Pays</span>
-                                            <div className="flex items-center gap-2 text-primary">
-                                                <span>{country}</span>
-                                                <ChevronRight className="h-4 w-4" />
-                                            </div>
-                                        </div>
-                                    </DialogTrigger>
-                                    <CountryPicker
-                                        onSelect={(selectedCountry) => {
-                                            setCountry(selectedCountry);
-                                            setIsCountryPickerOpen(false);
-                                        }}
-                                    />
-                                </Dialog>
+                                <div className="flex items-center justify-between py-3 text-sm">
+                                    <span className="text-muted-foreground">Pays</span>
+                                    <Select value={country} onValueChange={setCountry}>
+                                        <SelectTrigger className="w-[180px]">
+                                            <SelectValue placeholder="Sélectionnez un pays" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {countries.map((country) => (
+                                                <SelectItem key={country.code} value={country.name}>
+                                                    {country.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                                 <Separator />
                                 <FilterPill label="Ville/État" value={city} onClick={() => console.log('Open City Picker')} />
                             </div>
