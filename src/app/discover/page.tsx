@@ -1,15 +1,13 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { CalendarIcon } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { countries } from '@/lib/countries';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { type DateRange } from 'react-day-picker';
@@ -17,6 +15,8 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import WanderlinkHeader from '@/components/wanderlink-header';
+import { CountrySelect } from '@/components/country-select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function DiscoverPage() {
     const router = useRouter();
@@ -30,8 +30,6 @@ export default function DiscoverPage() {
     const [activities, setActivities] = useState('Tous');
     const [dates, setDates] = useState<DateRange | undefined>(undefined);
     const [flexibleDates, setFlexibleDates] = useState(false);
-
-    const sortedCountries = [...countries].sort((a, b) => a.name.localeCompare(b.name));
 
     const handleNearbyChange = (checked: boolean) => {
         setNearby(checked);
@@ -53,16 +51,16 @@ export default function DiscoverPage() {
         <div className="min-h-screen bg-background text-foreground">
             <WanderlinkHeader />
 
-            <main className="pt-6 pb-24">
+            <main className="pt-16 pb-24">
                 <div className="container mx-auto max-w-4xl px-4 py-2">
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                         {/* Montre-moi Section */}
                         <div className="space-y-1">
                             <h2 className="font-semibold">Montre-moi</h2>
                             <div className="flex w-full rounded-lg bg-muted p-1">
                                 <button
                                     onClick={() => setShowMe('Homme')}
-                                    className={`w-1/3 rounded-md py-1.5 text-sm font-medium transition-colors ${
+                                    className={`w-1/3 rounded-md py-1 text-sm font-medium transition-colors ${
                                         showMe === 'Homme' ? 'bg-background text-primary shadow-sm' : 'text-muted-foreground'
                                     }`}
                                 >
@@ -70,7 +68,7 @@ export default function DiscoverPage() {
                                 </button>
                                 <button
                                     onClick={() => setShowMe('Femme')}
-                                    className={`w-1/3 rounded-md py-1.5 text-sm font-medium transition-colors ${
+                                    className={`w-1/3 rounded-md py-1 text-sm font-medium transition-colors ${
                                         showMe === 'Femme' ? 'bg-background text-primary shadow-sm' : 'text-muted-foreground'
                                     }`}
                                 >
@@ -78,7 +76,7 @@ export default function DiscoverPage() {
                                 </button>
                                 <button
                                     onClick={() => setShowMe('Non-binaire')}
-                                    className={`w-1/3 rounded-md py-1.5 text-sm font-medium transition-colors ${
+                                    className={`w-1/3 rounded-md py-1 text-sm font-medium transition-colors ${
                                         showMe === 'Non-binaire' ? 'bg-background text-primary shadow-sm' : 'text-muted-foreground'
                                     }`}
                                 >
@@ -90,44 +88,24 @@ export default function DiscoverPage() {
                         {/* Position Section */}
                         <div className="space-y-1">
                             <h2 className="font-semibold">Position</h2>
-                            <div className="rounded-lg border bg-card p-2">
-                                <div className="flex items-center justify-between py-1.5">
+                            <div className="rounded-lg border bg-card p-2 space-y-2">
+                                <div className="flex items-center justify-between py-1">
                                     <Label htmlFor="nearby" className="text-sm font-normal">Personnes à proximité</Label>
                                     <Checkbox id="nearby" checked={nearby} onCheckedChange={handleNearbyChange} />
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-1.5 text-sm">
+                                <div className="flex items-center justify-between py-1 text-sm">
                                     <span className={cn('text-muted-foreground', nearby && 'text-slate-400 dark:text-slate-600')}>Pays</span>
-                                    <Select value={country} onValueChange={setCountry} disabled={nearby}>
-                                        <SelectTrigger className="w-[90px] h-8">
-                                            <SelectValue placeholder="Sélection" />
-                                        </SelectTrigger>
-                                        <SelectContent position="popper" side="bottom">
-                                            <SelectItem value="Tous">Tous</SelectItem>
-                                            {sortedCountries.map((country) => (
-                                                <SelectItem key={country.code} value={country.name}>
-                                                    {country.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <div className="w-[150px]">
+                                        <CountrySelect value={country} onValueChange={setCountry} disabled={nearby} />
+                                    </div>
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-1.5 text-sm">
+                                <div className="flex items-center justify-between py-1 text-sm">
                                     <span className="text-muted-foreground">Destination</span>
-                                    <Select value={destination} onValueChange={setDestination}>
-                                        <SelectTrigger className="w-[90px] h-8">
-                                            <SelectValue placeholder="Sélection" />
-                                        </SelectTrigger>
-                                        <SelectContent position="popper" side="bottom">
-                                            <SelectItem value="Tous">Toutes</SelectItem>
-                                            {sortedCountries.map((country) => (
-                                                <SelectItem key={country.code} value={country.name}>
-                                                    {country.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <div className="w-[150px]">
+                                        <CountrySelect value={destination} onValueChange={setDestination} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +152,7 @@ export default function DiscoverPage() {
                                       />
                                     </PopoverContent>
                                 </Popover>
-                                <div className="flex items-center space-x-2 py-1.5">
+                                <div className="flex items-center space-x-2 py-1">
                                     <Checkbox id="flexible-dates" checked={flexibleDates} onCheckedChange={(checked) => setFlexibleDates(Boolean(checked))} />
                                     <Label htmlFor="flexible-dates" className="text-sm font-normal">Mes dates sont flexibles</Label>
                                 </div>
@@ -184,11 +162,11 @@ export default function DiscoverPage() {
                         {/* Voyage Section */}
                         <div className="space-y-1">
                             <h2 className="font-semibold">Voyage</h2>
-                            <div className="rounded-lg border bg-card p-2">
-                                <div className="flex items-center justify-between py-1.5 text-sm">
+                            <div className="rounded-lg border bg-card p-2 space-y-2">
+                                <div className="flex items-center justify-between py-1 text-sm">
                                     <span className="text-muted-foreground">Intention</span>
                                     <Select value={intention} onValueChange={setIntention}>
-                                        <SelectTrigger className="w-[90px] h-8">
+                                        <SelectTrigger className="w-[110px] h-8">
                                             <SelectValue placeholder="Sélection" />
                                         </SelectTrigger>
                                         <SelectContent position="popper" side="bottom">
@@ -201,10 +179,10 @@ export default function DiscoverPage() {
                                     </Select>
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-1.5 text-sm">
+                                <div className="flex items-center justify-between py-1 text-sm">
                                     <span className="text-muted-foreground">Style de voyage</span>
                                     <Select value={travelStyle} onValueChange={setTravelStyle}>
-                                        <SelectTrigger className="w-[90px] h-8">
+                                        <SelectTrigger className="w-[110px] h-8">
                                             <SelectValue placeholder="Sélection" />
                                         </SelectTrigger>
                                         <SelectContent position="popper" side="bottom">
@@ -221,10 +199,10 @@ export default function DiscoverPage() {
                                     </Select>
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-1.5 text-sm">
+                                <div className="flex items-center justify-between py-1 text-sm">
                                     <span className="text-muted-foreground">Activités</span>
                                      <Select value={activities} onValueChange={setActivities}>
-                                        <SelectTrigger className="w-[90px] h-8">
+                                        <SelectTrigger className="w-[110px] h-8">
                                             <SelectValue placeholder="Sélection" />
                                         </SelectTrigger>
                                         <SelectContent position="popper" side="bottom">
@@ -252,7 +230,7 @@ export default function DiscoverPage() {
                         <div className="space-y-1">
                             <h2 className="font-semibold">Filtrer par</h2>
                              <div className="rounded-lg border bg-card p-2">
-                                <div className="flex items-center justify-between py-1.5">
+                                <div className="flex items-center justify-between py-1">
                                     <Label htmlFor="around-my-age" className="text-sm font-normal">Environ mon âge</Label>
                                     <Checkbox id="around-my-age" checked={aroundMyAge} onCheckedChange={(checked) => setAroundMyAge(Boolean(checked))} />
                                 </div>
