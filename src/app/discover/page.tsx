@@ -148,7 +148,30 @@ export default function DiscoverPage() {
                                     </Select>
                                 </div>
                                 <Separator />
-                                <FilterPill label="Activités" value={activities} onClick={() => console.log('Open Activities Picker')} />
+                                <div className="flex items-center justify-between py-3 text-sm">
+                                    <span className="text-muted-foreground">Activités</span>
+                                     <Select value={activities} onValueChange={setActivities}>
+                                        <SelectTrigger className="w-[220px]">
+                                            <SelectValue placeholder="Sélectionnez une activité" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Tous">Toutes les activités</SelectItem>
+                                            <SelectItem value="Randonnée">Randonnée</SelectItem>
+                                            <SelectItem value="Plage">Plage</SelectItem>
+                                            <SelectItem value="Musées">Musées</SelectItem>
+                                            <SelectItem value="Concerts / Festivals">Concerts / Festivals</SelectItem>
+                                            <SelectItem value="Gastronomie">Gastronomie</SelectItem>
+                                            <SelectItem value="Sorties nocturnes">Sorties nocturnes</SelectItem>
+                                            <SelectItem value="Shopping">Shopping</SelectItem>
+                                            <SelectItem value="Yoga / Méditation">Yoga / Méditation</SelectItem>
+                                            <SelectItem value="Sport">Sport</SelectItem>
+                                            <SelectItem value="Pèlerinage">Pèlerinage</SelectItem>
+                                            <SelectItem value="Événement LGBT+">Événement LGBT+</SelectItem>
+                                            <SelectItem value="Camping">Camping</SelectItem>
+                                            <SelectItem value="Autre">Autre</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </div>
                         </div>
 
