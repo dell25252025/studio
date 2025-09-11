@@ -97,6 +97,7 @@ export default function DiscoverPage() {
                                             <SelectValue placeholder="Sélectionnez un pays" />
                                         </SelectTrigger>
                                         <SelectContent>
+                                            <SelectItem value="Tous">Toutes les destinations</SelectItem>
                                             {countries.map((country) => (
                                                 <SelectItem key={country.code} value={country.name}>
                                                     {country.name}
