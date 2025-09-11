@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function Home() {
   const [results, setResults] = useState<any[]>([]);
@@ -21,6 +22,7 @@ export default function Home() {
   const [view, setView] = useState('discover');
   const [currentUserAuth, setCurrentUserAuth] = useState<User | null>(null);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
    useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -59,7 +61,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <WanderlinkHeader />
-      <main className="flex-1 pb-24 pt-6">
+      <main className="flex-1 pb-24 pt-16">
         <div className="container mx-auto max-w-7xl px-4">
           <div className="text-center">
             {view === 'discover' && (
