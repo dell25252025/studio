@@ -22,7 +22,7 @@ const FilterPill = ({ label, value, onClick }: { label: string; value: string; o
 
 export default function DiscoverPage() {
     const router = useRouter();
-    const [showMe, setShowMe] = useState('Femme'); // 'Homme' or 'Femme'
+    const [showMe, setShowMe] = useState('Femme'); // 'Homme', 'Femme', or 'Non-binaire'
     const [nearby, setNearby] = useState(false);
     const [aroundMyAge, setAroundMyAge] = useState(false);
     const [country, setCountry] = useState('Algeria');
@@ -55,7 +55,7 @@ export default function DiscoverPage() {
                             <div className="flex w-full rounded-lg bg-muted p-1">
                                 <button
                                     onClick={() => setShowMe('Homme')}
-                                    className={`w-1/2 rounded-md py-2 text-sm font-medium transition-colors ${
+                                    className={`w-1/3 rounded-md py-2 text-sm font-medium transition-colors ${
                                         showMe === 'Homme' ? 'bg-background text-primary shadow-sm' : 'text-muted-foreground'
                                     }`}
                                 >
@@ -63,11 +63,19 @@ export default function DiscoverPage() {
                                 </button>
                                 <button
                                     onClick={() => setShowMe('Femme')}
-                                    className={`w-1/2 rounded-md py-2 text-sm font-medium transition-colors ${
+                                    className={`w-1/3 rounded-md py-2 text-sm font-medium transition-colors ${
                                         showMe === 'Femme' ? 'bg-background text-primary shadow-sm' : 'text-muted-foreground'
                                     }`}
                                 >
                                     Femme
+                                </button>
+                                <button
+                                    onClick={() => setShowMe('Non-binaire')}
+                                    className={`w-1/3 rounded-md py-2 text-sm font-medium transition-colors ${
+                                        showMe === 'Non-binaire' ? 'bg-background text-primary shadow-sm' : 'text-muted-foreground'
+                                    }`}
+                                >
+                                    Non-binaire
                                 </button>
                             </div>
                         </div>
