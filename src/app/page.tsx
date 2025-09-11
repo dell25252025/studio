@@ -14,8 +14,6 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import DiscoverFilters from '@/components/discover-filters';
 
 export default function Home() {
   const [results, setResults] = useState<any[]>([]);
@@ -66,19 +64,6 @@ export default function Home() {
           <div className="text-center">
             {view === 'discover' && (
               <>
-                 <div className="flex justify-end mb-4">
-                   <Sheet>
-                    <SheetTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        <SlidersHorizontal className="mr-2 h-4 w-4" />
-                        Filtrer
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent>
-                      <DiscoverFilters />
-                    </SheetContent>
-                  </Sheet>
-                </div>
                 <div>
                   <MatchCarousel profiles={possibleMatches} />
                 </div>

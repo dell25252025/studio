@@ -37,7 +37,7 @@ const BottomNav = () => {
   }, []);
 
   const navItems = [
-    { icon: Compass, label: 'Discover', href: '/', active: true },
+    { icon: Compass, label: 'Discover', href: '/discover', active: true },
     { icon: Bell, label: 'Notifications', href: '#' },
     { icon: MessageSquare, label: 'Messages', href: '#' },
     { icon: Settings, label: 'Paramètres', href: '/settings' },
