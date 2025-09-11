@@ -1,5 +1,22 @@
 # Résumé du Projet : WanderLink
 
+> **Note :** Ce document est la source de vérité pour le projet WanderLink. Il est destiné à guider le développement et à fournir un contexte complet à tout développeur ou assistant IA travaillant sur ce code.
+
+---
+
+## 0. Instructions pour l'Assistant IA
+
+Bonjour ! Pour m'aider efficacement, merci de suivre ces directives :
+
+1.  **Lisez ce document en entier** avant de proposer des modifications. Il contient le concept, la pile technique, l'état actuel et les prochaines étapes du projet.
+2.  **Analysez les fichiers existants** avant d'écrire du code. Le projet a une structure bien définie (Next.js App Router, Server Actions, shadcn/ui, etc.). Respectez les conventions en place.
+3.  **Ne supprimez pas les fonctionnalités clés** décrites ci-dessous sans instruction explicite.
+4.  **Basez-vous sur la pile technique définie** (Next.js, TypeScript, Tailwind CSS, shadcn/ui, Firebase, Genkit). Ne proposez pas de technologies alternatives.
+5.  **Utilisez les `Server Actions`** dans `src/app/actions.ts` pour toutes les interactions avec la base de données (Firestore) et l'IA (Genkit).
+6.  **Réutilisez les composants existants** de `src/components/ui` et `src/components` autant que possible.
+
+---
+
 ## 1. Concept de l'Application
 
 **WanderLink** est une application web conçue pour connecter des voyageurs ayant des intérêts et des styles de voyage similaires. L'objectif est de permettre aux utilisateurs de trouver des partenaires de voyage compatibles pour leurs prochaines aventures, en se basant sur une analyse détaillée de leurs profils.
