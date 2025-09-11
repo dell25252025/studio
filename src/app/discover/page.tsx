@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -10,7 +10,6 @@ import { Separator } from '@/components/ui/separator';
 import { ChevronRight, X } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { countries } from '@/lib/countries';
-import { citiesByCountry } from '@/lib/cities';
 
 const FilterPill = ({ label, value, onClick }: { label: string; value: string; onClick: () => void }) => (
     <div className="flex items-center justify-between py-3 text-sm" onClick={onClick}>
@@ -29,20 +28,9 @@ export default function DiscoverPage() {
     const [nearby, setNearby] = useState(false);
     const [aroundMyAge, setAroundMyAge] = useState(false);
     const [country, setCountry] = useState('');
-    const [availableCities, setAvailableCities] = useState<string[]>([]);
-    const [city, setCity] = useState('Tous');
     const [intention, setIntention] = useState('Tous');
     const [travelStyle, setTravelStyle] = useState('Tous');
     const [activities, setActivities] = useState('Tous');
-
-    useEffect(() => {
-        if (country && citiesByCountry[country]) {
-            setAvailableCities(citiesByCountry[country]);
-        } else {
-            setAvailableCities([]);
-        }
-        setCity('Tous'); // Reset city when country changes
-    }, [country]);
 
     return (
         <div className="min-h-screen bg-background text-foreground">
@@ -112,23 +100,6 @@ export default function DiscoverPage() {
                                             {countries.map((country) => (
                                                 <SelectItem key={country.code} value={country.name}>
                                                     {country.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <Separator />
-                                <div className="flex items-center justify-between py-3 text-sm">
-                                     <span className="text-muted-foreground">Ville/État</span>
-                                     <Select value={city} onValueChange={setCity} disabled={!country || availableCities.length === 0}>
-                                        <SelectTrigger className="w-[180px]">
-                                            <SelectValue placeholder="Sélectionnez une ville" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Tous">Toutes les villes</SelectItem>
-                                            {availableCities.map((cityName) => (
-                                                <SelectItem key={cityName} value={cityName}>
-                                                    {cityName}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
