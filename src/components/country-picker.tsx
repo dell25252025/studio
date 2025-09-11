@@ -15,7 +15,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { countries } from '@/lib/countries';
-import { ScrollArea } from './ui/scroll-area';
 
 interface CountryPickerProps {
   onSelect: (country: string) => void;
@@ -29,8 +28,7 @@ export default function CountryPicker({ onSelect }: CountryPickerProps) {
       </DialogHeader>
       <Command>
         <CommandInput placeholder="Rechercher un pays..." />
-        <ScrollArea className="h-72">
-          <CommandList>
+        <CommandList className="max-h-[300px] overflow-y-auto p-1">
             <CommandEmpty>Aucun pays trouvé.</CommandEmpty>
             <CommandGroup>
               {countries.map((country) => (
@@ -43,8 +41,7 @@ export default function CountryPicker({ onSelect }: CountryPickerProps) {
                 </CommandItem>
               ))}
             </CommandGroup>
-          </CommandList>
-        </ScrollArea>
+        </CommandList>
       </Command>
     </DialogContent>
   );
