@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -57,7 +58,10 @@ export function CountrySelect({ value, onValueChange, disabled }: CountrySelectP
                     key={country.code}
                     value={country.name}
                     onSelect={(currentValue) => {
-                      onValueChange(currentValue === value ? "" : country.name);
+                      const selected = countries.find(c => c.name.toLowerCase() === currentValue.toLowerCase());
+                      if (selected) {
+                        onValueChange(value === selected.name ? '' : selected.name);
+                      }
                       setOpen(false);
                     }}
                   >
