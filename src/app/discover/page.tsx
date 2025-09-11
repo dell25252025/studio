@@ -27,6 +27,9 @@ export default function DiscoverPage() {
     const [aroundMyAge, setAroundMyAge] = useState(false);
     const [country, setCountry] = useState('Algeria');
     const [city, setCity] = useState('Tous');
+    const [intention, setIntention] = useState('Tous');
+    const [travelStyle, setTravelStyle] = useState('Tous');
+    const [activities, setActivities] = useState('Tous');
 
     return (
         <div className="min-h-screen bg-background text-foreground">
@@ -83,6 +86,19 @@ export default function DiscoverPage() {
                                 <FilterPill label="Ville/État" value={city} onClick={() => console.log('Open City Picker')} />
                             </div>
                         </div>
+
+                        {/* Voyage Section */}
+                        <div className="space-y-3">
+                            <h2 className="font-semibold">Voyage</h2>
+                            <div className="rounded-lg border bg-card p-4">
+                                <FilterPill label="Intention" value={intention} onClick={() => console.log('Open Intention Picker')} />
+                                <Separator />
+                                <FilterPill label="Style de voyage" value={travelStyle} onClick={() => console.log('Open Style Picker')} />
+                                <Separator />
+                                <FilterPill label="Activités" value={activities} onClick={() => console.log('Open Activities Picker')} />
+                            </div>
+                        </div>
+
 
                         {/* Filtrer par Section */}
                         <div className="space-y-3">
