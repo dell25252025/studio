@@ -59,7 +59,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <WanderlinkHeader />
-      <main className="flex-1 pb-24 pt-10">
+      <main className="flex-1 pb-24 pt-5">
         <div className="container mx-auto max-w-7xl px-4">
           <div className="text-center">
             {view === 'discover' && (
