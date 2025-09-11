@@ -128,7 +128,25 @@ export default function DiscoverPage() {
                                     </Select>
                                 </div>
                                 <Separator />
-                                <FilterPill label="Style de voyage" value={travelStyle} onClick={() => console.log('Open Style Picker')} />
+                                <div className="flex items-center justify-between py-3 text-sm">
+                                    <span className="text-muted-foreground">Style de voyage</span>
+                                    <Select value={travelStyle} onValueChange={setTravelStyle}>
+                                        <SelectTrigger className="w-[220px]">
+                                            <SelectValue placeholder="Sélectionnez un style" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                             <SelectItem value="Tous">Tous les styles</SelectItem>
+                                             <SelectItem value="Aventure / Sac à dos">Aventure / Sac à dos</SelectItem>
+                                             <SelectItem value="Luxe / Détente">Luxe / Détente</SelectItem>
+                                             <SelectItem value="Culturel / Historique">Culturel / Historique</SelectItem>
+                                             <SelectItem value="Festif / Événementiel">Festif / Événementiel</SelectItem>
+                                             <SelectItem value="Religieux / Spirituel">Religieux / Spirituel</SelectItem>
+                                             <SelectItem value="Road Trip / Van Life">Road Trip / Van Life</SelectItem>
+                                             <SelectItem value="Humanitaire / Écovolontariat">Humanitaire / Écovolontariat</SelectItem>
+                                             <SelectItem value="Autre">Autre</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                                 <Separator />
                                 <FilterPill label="Activités" value={activities} onClick={() => console.log('Open Activities Picker')} />
                             </div>
