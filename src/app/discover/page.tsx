@@ -112,7 +112,21 @@ export default function DiscoverPage() {
                         <div className="space-y-3">
                             <h2 className="font-semibold">Voyage</h2>
                             <div className="rounded-lg border bg-card p-4">
-                                <FilterPill label="Intention" value={intention} onClick={() => console.log('Open Intention Picker')} />
+                                <div className="flex items-center justify-between py-3 text-sm">
+                                    <span className="text-muted-foreground">Intention</span>
+                                    <Select value={intention} onValueChange={setIntention}>
+                                        <SelectTrigger className="w-[220px]">
+                                            <SelectValue placeholder="Sélectionnez une intention" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Tous">Toutes les intentions</SelectItem>
+                                            <SelectItem value="Partager les frais (50/50)">Partager les frais (50/50)</SelectItem>
+                                            <SelectItem value="Je peux sponsoriser le voyage">Je peux sponsoriser le voyage</SelectItem>
+                                            <SelectItem value="Je cherche un voyage sponsorisé">Je cherche un voyage sponsorisé</SelectItem>
+                                            <SelectItem value="Organiser un voyage de groupe">Organiser un voyage de groupe</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                                 <Separator />
                                 <FilterPill label="Style de voyage" value={travelStyle} onClick={() => console.log('Open Style Picker')} />
                                 <Separator />
