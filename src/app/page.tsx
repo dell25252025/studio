@@ -61,31 +61,33 @@ export default function Home() {
       <WanderlinkHeader />
       <main className="flex-1 pb-24 pt-12">
         <div className="container mx-auto max-w-7xl px-4">
-          {view === 'discover' && (
-            <>
-              <div>
-                <MatchCarousel profiles={possibleMatches} />
-              </div>
-              <div className="text-center mt-8">
-                 <Button onClick={runAiMatching} disabled={loading} size="lg" className="rounded-full font-bold">
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  Find my AI Match
-                </Button>
-              </div>
-            </>
-          )}
+          <div className="text-center">
+            {view === 'discover' && (
+              <>
+                <div>
+                  <MatchCarousel profiles={possibleMatches} />
+                </div>
+                <div className="mt-8">
+                   <Button onClick={runAiMatching} disabled={loading} size="lg" className="rounded-full font-bold">
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Find my AI Match
+                  </Button>
+                </div>
+              </>
+            )}
 
-          {view === 'results' && loading && (
-            <div className="flex flex-col items-center justify-center text-center h-96">
-                <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                <h2 className="mt-6 text-2xl font-semibold">Finding your perfect match...</h2>
-                <p className="mt-2 text-muted-foreground">Our AI is analyzing profiles to find the best travel partners for you.</p>
-            </div>
-          )}
+            {view === 'results' && loading && (
+              <div className="flex flex-col items-center justify-center text-center h-96">
+                  <Loader2 className="h-16 w-16 animate-spin text-primary" />
+                  <h2 className="mt-6 text-2xl font-semibold">Finding your perfect match...</h2>
+                  <p className="mt-2 text-muted-foreground">Our AI is analyzing profiles to find the best travel partners for you.</p>
+              </div>
+            )}
 
-          {view === 'results' && !loading && results.length > 0 && (
-            <AiMatchResults results={results} profiles={possibleMatches} onReset={resetView} />
-          )}
+            {view === 'results' && !loading && results.length > 0 && (
+              <AiMatchResults results={results} profiles={possibleMatches} onReset={resetView} />
+            )}
+          </div>
         </div>
       </main>
       <BottomNav />
