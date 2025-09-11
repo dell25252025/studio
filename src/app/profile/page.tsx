@@ -339,7 +339,7 @@ export default function ProfilePage() {
     return (
         <div className="flex min-h-screen flex-col">
             <WanderlinkHeader />
-            <main className="flex-1 flex items-center justify-center text-center">
+            <main className="flex-1 flex items-center justify-center text-center pt-16">
                 <div>
                     <h2 className="text-2xl font-bold">Profil non trouvé</h2>
                     <p className="text-muted-foreground">Impossible de charger les informations de ce profil.</p>
@@ -365,7 +365,7 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
         <WanderlinkHeader />
-        <main className="flex-1 pb-24 pt-10">
+        <main className="flex-1 pb-24 pt-16">
              <div className="w-full bg-background">
                 {profilePictures.length > 0 ? (
                     <Dialog>

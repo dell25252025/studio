@@ -16,6 +16,8 @@ import { type DateRange } from 'react-day-picker';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import BottomNav from '@/components/bottom-nav';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function DiscoverPage() {
     const router = useRouter();
@@ -28,21 +30,24 @@ export default function DiscoverPage() {
     const [activities, setActivities] = useState('Tous');
     const [dates, setDates] = useState<DateRange | undefined>(undefined);
     const [flexibleDates, setFlexibleDates] = useState(false);
+    const isMobile = useIsMobile();
 
     return (
         <div className="min-h-screen bg-background text-foreground">
             {/* Header */}
-            <header className="fixed top-0 z-10 w-full border-b bg-background/95 backdrop-blur-sm">
-                <div className="container mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-                    <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                        <X className="h-5 w-5" />
-                    </Button>
-                    <h1 className="text-lg font-semibold">Filtre</h1>
-                    <Button variant="link" className="text-primary" onClick={() => router.back()}>
-                        Terminé
-                    </Button>
-                </div>
-            </header>
+            {isMobile && (
+              <header className="fixed top-0 z-10 w-full border-b bg-background/95 backdrop-blur-sm">
+                  <div className="container mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
+                      <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                          <X className="h-5 w-5" />
+                      </Button>
+                      <h1 className="text-lg font-semibold">Filtre</h1>
+                      <Button variant="link" className="text-primary" onClick={() => router.back()}>
+                          Terminé
+                      </Button>
+                  </div>
+              </header>
+            )}
 
             <main className="pt-14">
                 <div className="container mx-auto max-w-4xl px-4 py-2">
@@ -236,6 +241,7 @@ export default function DiscoverPage() {
                     </div>
                 </div>
             </main>
+            {isMobile && <BottomNav />}
         </div>
     );
 }
