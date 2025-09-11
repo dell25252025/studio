@@ -6,7 +6,7 @@ import { type AIPoweredMatchingInput } from '@/ai/flows/ai-powered-matching';
 import { handleAiMatching } from '@/app/actions';
 import { currentUser, possibleMatches } from '@/lib/mock-data';
 import AiMatchResults from '@/components/ai-match-results';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles, SlidersHorizontal } from 'lucide-react';
 import MatchCarousel from '@/components/match-carousel';
 import BottomNav from '@/components/bottom-nav';
 import WanderlinkHeader from '@/components/wanderlink-header';
@@ -14,6 +14,8 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import DiscoverFilters from '@/components/discover-filters';
 
 export default function Home() {
   const [results, setResults] = useState<any[]>([]);
@@ -64,6 +66,19 @@ export default function Home() {
           <div className="text-center">
             {view === 'discover' && (
               <>
+                 <div className="flex justify-end mb-4">
+                   <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <SlidersHorizontal className="mr-2 h-4 w-4" />
+                        Filtrer
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                      <DiscoverFilters />
+                    </SheetContent>
+                  </Sheet>
+                </div>
                 <div>
                   <MatchCarousel profiles={possibleMatches} />
                 </div>
