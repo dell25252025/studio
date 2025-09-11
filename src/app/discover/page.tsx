@@ -116,7 +116,7 @@ export default function DiscoverPage() {
                                 <div className="flex items-center justify-between py-2 text-sm">
                                     <span className="text-muted-foreground">Intention</span>
                                     <Select value={intention} onValueChange={setIntention}>
-                                        <SelectTrigger className="w-[220px]">
+                                        <SelectTrigger className="w-[180px]">
                                             <SelectValue placeholder="Sélectionnez une intention" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -132,7 +132,7 @@ export default function DiscoverPage() {
                                 <div className="flex items-center justify-between py-2 text-sm">
                                     <span className="text-muted-foreground">Style de voyage</span>
                                     <Select value={travelStyle} onValueChange={setTravelStyle}>
-                                        <SelectTrigger className="w-[220px]">
+                                        <SelectTrigger className="w-[180px]">
                                             <SelectValue placeholder="Sélectionnez un style" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -152,7 +152,7 @@ export default function DiscoverPage() {
                                 <div className="flex items-center justify-between py-2 text-sm">
                                     <span className="text-muted-foreground">Activités</span>
                                      <Select value={activities} onValueChange={setActivities}>
-                                        <SelectTrigger className="w-[220px]">
+                                        <SelectTrigger className="w-[180px]">
                                             <SelectValue placeholder="Sélectionnez une activité" />
                                         </SelectTrigger>
                                         <SelectContent>
