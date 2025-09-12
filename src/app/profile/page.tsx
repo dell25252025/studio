@@ -377,7 +377,7 @@ export default function ProfilePage() {
                         >
                             <CarouselContent className="-ml-2 md:-ml-4">
                                 {profilePictures.map((src: string, index: number) => (
-                                    <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/3">
+                                    <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3">
                                         <DialogTrigger asChild>
                                             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl group cursor-pointer">
                                                 <Image 
