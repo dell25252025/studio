@@ -24,6 +24,9 @@ import Link from 'next/link';
 import Autoplay from "embla-carousel-autoplay"
 import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { countries } from '@/lib/countries';
+import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
+
 
 const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -345,6 +348,12 @@ export default function ProfilePage() {
       : 'Non spécifié';
 
   const profilePictures = profile.profilePictures && profile.profilePictures.length > 0 ? profile.profilePictures : [];
+  
+  const destinationCountry = countries.find(c => c.name === profile.destination);
+  const travelStyleOption = travelStyles.find(s => s.value === profile.travelStyle);
+  const travelActivityOption = travelActivities.find(a => a.value === profile.activities);
+  const intentionOption = travelIntentions.find(i => i.value === profile.intention);
+
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
@@ -436,7 +445,7 @@ export default function ProfilePage() {
                     {profile.intention && profile.intention !== 'Toutes' && (
                         <div className="mt-2">
                              <Badge>
-                                <HandCoins className="mr-2 h-4 w-4"/>
+                                {intentionOption?.icon && <span className="mr-2">{intentionOption.icon}</span>}
                                 {profile.intention}
                             </Badge>
                         </div>
@@ -464,7 +473,10 @@ export default function ProfilePage() {
                                     <Plane className="h-4 w-4 text-primary mt-0.5" />
                                     <div>
                                         <p className="font-semibold text-xs">Destination</p>
-                                        <p className="text-muted-foreground text-sm">{profile.destination}</p>
+                                        <p className="text-muted-foreground text-sm flex items-center gap-2">
+                                            {destinationCountry && <span className={`fi fi-${destinationCountry.code.toLowerCase()}`}></span>}
+                                            {profile.destination}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
@@ -478,7 +490,10 @@ export default function ProfilePage() {
                                     <Backpack className="h-4 w-4 text-primary mt-0.5" />
                                     <div>
                                         <p className="font-semibold text-xs">Style de voyage</p>
-                                        <p className="text-muted-foreground text-sm">{profile.travelStyle}</p>
+                                        <p className="text-muted-foreground text-sm flex items-center gap-2">
+                                           {travelStyleOption?.icon && <span>{travelStyleOption.icon}</span>}
+                                           {profile.travelStyle}
+                                        </p>
                                     </div>
                                 </div>
                                 {profile.activities && profile.activities !== 'Toutes' && (
@@ -486,7 +501,10 @@ export default function ProfilePage() {
                                         <Sparkles className="h-4 w-4 text-primary mt-0.5" />
                                         <div>
                                             <p className="font-semibold text-xs">Activités prévues</p>
-                                            <p className="text-muted-foreground text-sm">{profile.activities}</p>
+                                            <p className="text-muted-foreground text-sm flex items-center gap-2">
+                                                {travelActivityOption?.icon && <span>{travelActivityOption.icon}</span>}
+                                                {profile.activities}
+                                            </p>
                                         </div>
                                     </div>
                                 )}
