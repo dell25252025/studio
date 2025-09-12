@@ -6,64 +6,73 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { countries } from '@/lib/countries';
 import { cn } from '@/lib/utils';
 
-// Interface des props
-interface CountrySelectProps {
+// --- Interfaces --- //
+export interface Option {
+  value: string;
+  label: string;
+  icon?: string;
+}
+
+interface GenericSelectProps {
   value: string;
   onValueChange: (value: string) => void;
+  options: Option[];
+  placeholder?: string;
   disabled?: boolean;
   className?: string;
 }
 
-// Le composant qui affiche la liste des pays (maintenant indépendant de CMDK)
-function CountryList({
+// --- Sous-composant : La liste des options --- //
+function OptionList({
   value,
   setOpen,
   onValueChange,
+  options,
 }: {
   value: string;
   setOpen: (open: boolean) => void;
   onValueChange: (value: string) => void;
+  options: Option[];
 }) {
   const [search, setSearch] = React.useState('');
 
-  const filteredCountries = React.useMemo(
+  const filteredOptions = React.useMemo(
     () =>
-      countries.filter((country) =>
-        country.name.toLowerCase().includes(search.toLowerCase())
+      options.filter((option) =>
+        option.label.toLowerCase().includes(search.toLowerCase())
       ),
-    [search]
+    [search, options]
   );
 
   return (
     <div className="flex flex-col">
       <div className="p-2 border-b">
         <Input
-          placeholder="Filtrer les pays..."
+          placeholder="Filtrer..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       <div className="max-h-[300px] overflow-y-auto p-1">
-        {filteredCountries.length === 0 ? (
+        {filteredOptions.length === 0 ? (
           <p className="p-4 text-sm text-center text-muted-foreground">Aucun résultat.</p>
         ) : (
-          filteredCountries.map((country) => (
+          filteredOptions.map((option) => (
             <button
-              key={country.code}
+              key={option.value}
               onClick={() => {
-                onValueChange(country.name === value ? '' : country.name);
+                onValueChange(option.value === value ? '' : option.value);
                 setOpen(false);
               }}
               className={cn(
                 'w-full text-left p-2 text-sm flex items-center gap-2 rounded-md hover:bg-accent',
-                value === country.name && 'bg-orange-200 dark:bg-orange-800'
+                value === option.value && 'bg-orange-200 dark:bg-orange-800'
               )}
             >
-              <span className={`fi fi-${country.code.toLowerCase()}`}></span>
-              <span>{country.name}</span>
+              {option.icon && <span className="text-lg">{option.icon}</span>}
+              <span>{option.label}</span>
             </button>
           ))
         )}
@@ -72,21 +81,30 @@ function CountryList({
   );
 }
 
-// Le composant principal qui gère l'affichage responsive
-export function CountrySelect({ value, onValueChange, disabled, className }: CountrySelectProps) {
+// --- Composant Principal : Le sélecteur responsive --- //
+export function GenericSelect({
+  value,
+  onValueChange,
+  options,
+  placeholder = 'Sélectionner une option',
+  disabled,
+  className,
+}: GenericSelectProps) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const selectedCountry = countries.find((country) => country.name === value);
+  const selectedOption = options.find((option) => option.value === value);
 
   const triggerContent = (
     <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
-      {selectedCountry ? (
+      {selectedOption ? (
         <>
-          <span className={`fi fi-${selectedCountry.code.toLowerCase()} shrink-0`}></span>
-          <span className="overflow-hidden text-ellipsis whitespace-nowrap">{selectedCountry.name}</span>
+          {selectedOption.icon && <span className="text-lg">{selectedOption.icon}</span>}
+          <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+            {selectedOption.label}
+          </span>
         </>
       ) : (
-        <span className="text-muted-foreground">Sélectionner un pays</span>
+        <span className="text-muted-foreground">{placeholder}</span>
       )}
     </div>
   );
@@ -106,7 +124,7 @@ export function CountrySelect({ value, onValueChange, disabled, className }: Cou
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-          <CountryList value={value} setOpen={setOpen} onValueChange={onValueChange} />
+          <OptionList value={value} setOpen={setOpen} onValueChange={onValueChange} options={options} />
         </PopoverContent>
       </Popover>
     );
@@ -127,9 +145,9 @@ export function CountrySelect({ value, onValueChange, disabled, className }: Cou
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="sr-only">
-          <DrawerTitle>Sélectionner un pays</DrawerTitle>
+          <DrawerTitle>{placeholder}</DrawerTitle>
         </DrawerHeader>
-        <CountryList value={value} setOpen={setOpen} onValueChange={onValueChange} />
+        <OptionList value={value} setOpen={setOpen} onValueChange={onValueChange} options={options} />
       </DrawerContent>
     </Drawer>
   );

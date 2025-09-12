@@ -8,8 +8,9 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import WanderlinkHeader from '@/components/wanderlink-header';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CountrySelect } from '@/components/country-select';
+import { GenericSelect } from '@/components/generic-select';
+import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
 
 export default function DiscoverPage() {
     const router = useRouter();
@@ -18,9 +19,9 @@ export default function DiscoverPage() {
     const [aroundMyAge, setAroundMyAge] = useState(false);
     const [country, setCountry] = useState('');
     const [destination, setDestination] = useState('');
-    const [intention, setIntention] = useState('Tous');
+    const [intention, setIntention] = useState('Toutes');
     const [travelStyle, setTravelStyle] = useState('Tous');
-    const [activities, setActivities] = useState('Tous');
+    const [activities, setActivities] = useState('Toutes');
 
     const handleNearbyChange = (checked: boolean) => {
         setNearby(checked);
@@ -52,12 +53,12 @@ export default function DiscoverPage() {
                                 <Separator />
                                 <div className="flex items-center justify-between py-1 text-sm">
                                     <span className={cn('text-muted-foreground', nearby && 'text-slate-400 dark:text-slate-600')}>Pays</span>
-                                    <CountrySelect value={country} onValueChange={setCountry} disabled={nearby} />
+                                    <CountrySelect className="md:w-1/3" value={country} onValueChange={setCountry} disabled={nearby} />
                                 </div>
                                 <Separator />
                                 <div className="flex items-center justify-between py-1 text-sm">
                                     <span className="text-muted-foreground">Destination</span>
-                                    <CountrySelect value={destination} onValueChange={setDestination} />
+                                    <CountrySelect className="md:w-1/3" value={destination} onValueChange={setDestination} />
                                 </div>
                             </div>
                         </div>
@@ -68,63 +69,35 @@ export default function DiscoverPage() {
                             <div className="rounded-lg border bg-card p-2 space-y-2">
                                 <div className="flex items-center justify-between py-1 text-sm">
                                     <span className="text-muted-foreground">Intention</span>
-                                    <Select value={intention} onValueChange={setIntention}>
-                                        <SelectTrigger className="w-[110px] h-8">
-                                            <SelectValue placeholder="Sélection" />
-                                        </SelectTrigger>
-                                        <SelectContent position="popper" side="bottom">
-                                            <SelectItem value="Tous">Toutes</SelectItem>
-                                            <SelectItem value="Partager les frais (50/50)">50/50</SelectItem>
-                                            <SelectItem value="Je peux sponsoriser le voyage">Sponsor</SelectItem>
-                                            <SelectItem value="Je cherche un voyage sponsorisé">Sponsorisé</SelectItem>
-                                            <SelectItem value="Organiser un voyage de groupe">Groupe</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    <GenericSelect 
+                                        className="md:w-1/2"
+                                        value={intention} 
+                                        onValueChange={setIntention} 
+                                        options={travelIntentions} 
+                                        placeholder="Toutes"
+                                    />
                                 </div>
                                 <Separator />
                                 <div className="flex items-center justify-between py-1 text-sm">
                                     <span className="text-muted-foreground">Style de voyage</span>
-                                    <Select value={travelStyle} onValueChange={setTravelStyle}>
-                                        <SelectTrigger className="w-[110px] h-8">
-                                            <SelectValue placeholder="Sélection" />
-                                        </SelectTrigger>
-                                        <SelectContent position="popper" side="bottom">
-                                             <SelectItem value="Tous">Tous</SelectItem>
-                                             <SelectItem value="Aventure / Sac à dos">Aventure</SelectItem>
-                                             <SelectItem value="Luxe / Détente">Luxe</SelectItem>
-                                             <SelectItem value="Culturel / Historique">Culturel</SelectItem>
-                                             <SelectItem value="Festif / Événementiel">Festif</SelectItem>
-                                             <SelectItem value="Religieux / Spirituel">Religieux</SelectItem>
-                                             <SelectItem value="Road Trip / Van Life">Road Trip</SelectItem>
-                                             <SelectItem value="Humanitaire / Écovolontariat">Humanitaire</SelectItem>
-                                             <SelectItem value="Autre">Autre</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    <GenericSelect 
+                                        className="md:w-1/2"
+                                        value={travelStyle} 
+                                        onValueChange={setTravelStyle} 
+                                        options={travelStyles} 
+                                        placeholder="Tous"
+                                    />
                                 </div>
                                 <Separator />
                                 <div className="flex items-center justify-between py-1 text-sm">
                                     <span className="text-muted-foreground">Activités</span>
-                                     <Select value={activities} onValueChange={setActivities}>
-                                        <SelectTrigger className="w-[110px] h-8">
-                                            <SelectValue placeholder="Sélection" />
-                                        </SelectTrigger>
-                                        <SelectContent position="popper" side="bottom">
-                                            <SelectItem value="Tous">Toutes</SelectItem>
-                                            <SelectItem value="Randonnée">Randonnée</SelectItem>
-                                            <SelectItem value="Plage">Plage</SelectItem>
-                                            <SelectItem value="Musées">Musées</SelectItem>
-                                            <SelectItem value="Concerts / Festivals">Festivals</SelectItem>
-                                            <SelectItem value="Gastronomie">Gastronomie</SelectItem>
-                                            <SelectItem value="Sorties nocturnes">Vie nocturne</SelectItem>
-                                            <SelectItem value="Shopping">Shopping</SelectItem>
-                                            <SelectItem value="Yoga / Méditation">Yoga</SelectItem>
-                                            <SelectItem value="Sport">Sport</SelectItem>
-                                            <SelectItem value="Pèlerinage">Pèlerinage</SelectItem>
-                                            <SelectItem value="Événement LGBT+">LGBT+</SelectItem>
-                                            <SelectItem value="Camping">Camping</SelectItem>
-                                            <SelectItem value="Autre">Autre</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    <GenericSelect 
+                                        className="md:w-1/2"
+                                        value={activities} 
+                                        onValueChange={setActivities} 
+                                        options={travelActivities} 
+                                        placeholder="Toutes"
+                                    />
                                 </div>
                             </div>
                         </div>
