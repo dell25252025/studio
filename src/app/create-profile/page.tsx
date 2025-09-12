@@ -68,6 +68,7 @@ export default function CreateProfilePage() {
       travelStyle: 'Tous',
       intention: 'Toutes',
     },
+    mode: 'onChange' // Validate on change for better user experience
   });
 
   const { trigger, handleSubmit } = methods;
