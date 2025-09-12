@@ -160,7 +160,7 @@ export default function CreateProfilePage() {
         <Progress value={((currentStep + 1) / steps.length) * 100} className="mb-8" />
         
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <CurrentStepComponent />
 
             <div className="mt-8 flex justify-between items-center">
@@ -176,7 +176,7 @@ export default function CreateProfilePage() {
                   Suivant
                 </Button>
               ) : (
-                <Button type="submit" disabled={isSubmitting}>
+                <Button type="button" onClick={handleSubmit(onSubmit)} disabled={isSubmitting}>
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
