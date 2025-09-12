@@ -103,9 +103,8 @@ function CountryList({
               value={country.name}
               onSelect={(currentValue) => {
                 // Find the country object based on the case-insensitive name from cmdk
-                const selectedCountry = countries.find(c => c.name.toLowerCase() === currentValue);
-                // Use the actual country name with correct casing
-                onValueChange(selectedCountry ? selectedCountry.name : '');
+                const selectedCountryName = countries.find(c => c.name.toLowerCase() === currentValue)?.name || '';
+                onValueChange(selectedCountryName);
                 setOpen(false);
               }}
             >
