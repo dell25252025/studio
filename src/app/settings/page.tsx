@@ -15,9 +15,11 @@ import {
   Heart,
   MessageSquare,
   Trash2,
+  Moon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const SettingsPage = () => {
   const router = useRouter();
@@ -81,7 +83,7 @@ const SettingsPage = () => {
       color: 'text-pink-500',
       bgColor: 'bg-pink-100',
     },
-    {
+     {
       icon: Ban,
       label: 'Utilisateurs bloqués',
       href: '/settings/blocked-users',
@@ -151,6 +153,15 @@ const SettingsPage = () => {
 
       <main className="pt-12">
         <ul className="divide-y divide-border">
+            {/* Dark Mode Toggle */}
+            <li className="flex cursor-pointer items-center p-3 transition-colors hover:bg-muted/50">
+                <div className="mr-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-100">
+                    <Moon className="h-4 w-4 text-indigo-500" />
+                </div>
+                <span className="flex-1 text-sm text-card-foreground">Mode Sombre</span>
+                <ThemeToggle />
+            </li>
+
           {settingsItems.map((item) => {
             const content = (
               <div className="flex cursor-pointer items-center p-3 transition-colors hover:bg-muted/50">
