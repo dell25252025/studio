@@ -73,7 +73,6 @@ export default function AuthPage() {
         });
         router.push('/');
       } catch (error) {
-        console.error('Login error', error);
         const errorMessage = error instanceof FirebaseError ? error.message : "Email ou mot de passe incorrect.";
         toast({
           variant: 'destructive',
@@ -94,14 +93,13 @@ export default function AuthPage() {
         });
         router.push('/create-profile');
       } catch (error) {
-         console.error('Sign up error', error);
          let description = "Une erreur inattendue s'est produite. Veuillez réessayer.";
          if (error instanceof FirebaseError) {
              if (error.code === 'auth/email-already-in-use') {
                  description = "Un compte existe déjà avec cette adresse e-mail. Veuillez vous connecter.";
                  toast({
                      variant: 'destructive',
-                     title: 'Compte existant',
+                     title: 'Cet e-mail est déjà utilisé',
                      description: description,
                  });
              } else {
@@ -138,7 +136,6 @@ export default function AuthPage() {
       // For simplicity, we'll always redirect to create-profile, Firestore rules will prevent overwriting.
       router.push('/create-profile');
     } catch (error) {
-       console.error('Google sign in error', error);
         const errorMessage = error instanceof Error ? error.message : "Une erreur inattendue s'est produite.";
        toast({
         variant: 'destructive',
