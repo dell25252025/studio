@@ -20,9 +20,9 @@ export const formSchema = z.object({
     to: z.date().optional(),
   }).optional(),
   flexibleDates: z.boolean().default(false),
-  travelStyle: z.enum(['Aventure / Sac à dos', 'Luxe / Détente', 'Culturel / Historique', 'Festif / Événementiel', 'Religieux / Spirituel', 'Road Trip / Van Life', 'Humanitaire / Écovolontariat', 'Autre'], { required_error: "Le style de voyage est obligatoire."}),
-  activities: z.array(z.string()).optional(),
-  financialArrangement: z.enum(['Partager les frais (50/50)', 'Je peux sponsoriser le voyage', 'Je cherche un voyage sponsorisé', 'Organiser un voyage de groupe'], { required_error: "L'arrangement financier est obligatoire."}),
+  travelStyle: z.string().optional(),
+  activities: z.string().optional(),
+  intention: z.string().optional(),
 });
 
 export type FormData = z.infer<typeof formSchema>;

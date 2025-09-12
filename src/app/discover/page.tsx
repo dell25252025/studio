@@ -24,7 +24,7 @@ export default function DiscoverPage() {
     const [flexibleDates, setFlexibleDates] = useState(false);
     const [nearby, setNearby] = useState(false);
     const [country, setCountry] = useState('');
-    const [destination, setDestination] = useState('');
+    const [destination, setDestination] = useState('Toutes');
     const [intention, setIntention] = useState('Toutes');
     const [travelStyle, setTravelStyle] = useState('Tous');
     const [activities, setActivities] = useState('Toutes');
@@ -59,7 +59,10 @@ export default function DiscoverPage() {
 
                         {/* Montre-moi Section */}
                         <div className="space-y-2">
-                          <h2 className="font-semibold">Montre-moi</h2>
+                          <div className="flex items-center justify-between">
+                            <h2 className="font-semibold">Montre-moi</h2>
+                            <Button onClick={handleSearch} variant="ghost">Terminé</Button>
+                          </div>
                           <div className="flex justify-center">
                             <ToggleGroup
                               type="single"
@@ -99,7 +102,12 @@ export default function DiscoverPage() {
                                 <Separator />
                                 <div className="flex items-center justify-between py-1 text-sm">
                                     <span className="text-muted-foreground">Destination</span>
-                                    <CountrySelect className={uniformSelectClass} value={destination} onValueChange={setDestination} />
+                                    <CountrySelect 
+                                        className={uniformSelectClass} 
+                                        value={destination} 
+                                        onValueChange={setDestination} 
+                                        placeholder="Toutes"
+                                    />
                                 </div>
                             </div>
                         </div>

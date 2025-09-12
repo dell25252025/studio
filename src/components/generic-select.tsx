@@ -61,6 +61,7 @@ function OptionList({
         ) : (
           filteredOptions.map((option) => (
             <button
+              type="button" // Correction: Ajout de type="button"
               key={option.value}
               onClick={() => {
                 onValueChange(option.value === value ? '' : option.value);
