@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,22 +24,6 @@ import Link from 'next/link';
 import Autoplay from "embla-carousel-autoplay"
 import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-
-const activityMap = {
-  hiking: 'Randonnée',
-  beach: 'Plage',
-  museums: 'Musées',
-  concerts: 'Concerts / Festivals',
-  food: 'Gastronomie',
-  nightlife: 'Sorties nocturnes',
-  shopping: 'Shopping',
-  yoga: 'Yoga / Méditation',
-  sport: 'Sport',
-  pilgrimage: 'Pèlerinage',
-  lgbt: 'Événement LGBT+',
-  camping: 'Camping',
-  other: 'Autre',
-};
 
 const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -449,11 +433,11 @@ export default function ProfilePage() {
                             disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
                         />
                     </div>
-                     {profile.financialArrangement && (
+                    {profile.intention && profile.intention !== 'Toutes' && (
                         <div className="mt-2">
                              <Badge>
                                 <HandCoins className="mr-2 h-4 w-4"/>
-                                {profile.financialArrangement}
+                                {profile.intention}
                             </Badge>
                         </div>
                     )}
@@ -497,13 +481,12 @@ export default function ProfilePage() {
                                         <p className="text-muted-foreground text-sm">{profile.travelStyle}</p>
                                     </div>
                                 </div>
-                                {profile.activities && profile.activities.length > 0 && (
-                                    <div>
-                                        <p className="font-semibold text-xs mb-2">Activités prévues</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {profile.activities.map((activity: keyof typeof activityMap) => (
-                                                <Badge key={activity} variant="secondary">{activityMap[activity] || activity}</Badge>
-                                            ))}
+                                {profile.activities && profile.activities !== 'Toutes' && (
+                                    <div className="flex items-start gap-3">
+                                        <Sparkles className="h-4 w-4 text-primary mt-0.5" />
+                                        <div>
+                                            <p className="font-semibold text-xs">Activités prévues</p>
+                                            <p className="text-muted-foreground text-sm">{profile.activities}</p>
                                         </div>
                                     </div>
                                 )}

@@ -97,8 +97,8 @@ export function DateRangePicker({ className, date, onDateChange, disabled }: Dat
             locale={fr}
           />
           <div className="flex justify-end space-x-2 p-2 border-t">
-            <Button variant="ghost" size="sm" onClick={handleCancel}>Annuler</Button>
-            <Button size="sm" onClick={handleApply}>OK</Button>
+            <Button type="button" variant="ghost" size="sm" onClick={handleCancel}>Annuler</Button>
+            <Button type="button" size="sm" onClick={handleApply}>OK</Button>
           </div>
         </PopoverContent>
       </Popover>

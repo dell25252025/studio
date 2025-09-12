@@ -23,7 +23,7 @@ const steps = [
   { id: 1, title: 'Qui êtes-vous ?', component: Step1, fields: ['firstName', 'age', 'gender', 'profilePictures', 'bio'] },
   { id: 2, title: 'Votre profil voyageur', component: Step2, fields: ['languages', 'location', 'height', 'weight'] },
   { id: 3, title: 'Style de vie', component: Step3, fields: ['tobacco', 'alcohol', 'cannabis'] },
-  { id: 4, title: 'Votre prochain voyage !', component: Step4, fields: ['destination', 'dates', 'flexibleDates', 'travelStyle', 'activities', 'financialArrangement'] },
+  { id: 4, title: 'Votre prochain voyage !', component: Step4, fields: ['destination', 'dates', 'flexibleDates', 'travelStyle', 'activities', 'intention'] },
 ];
 
 export default function CreateProfilePage() {
@@ -61,12 +61,12 @@ export default function CreateProfilePage() {
       tobacco: undefined,
       alcohol: undefined,
       cannabis: undefined,
-      destination: '',
+      destination: 'Toutes',
       dates: { from: undefined, to: undefined },
-      activities: [],
+      activities: 'Toutes',
       flexibleDates: false,
-      travelStyle: undefined,
-      financialArrangement: undefined,
+      travelStyle: 'Tous',
+      intention: 'Toutes',
     },
   });
 
