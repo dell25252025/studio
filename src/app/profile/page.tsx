@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, HandCoins, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -37,6 +37,13 @@ const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <path d="M15.5 13.5c1.5-1.5 1.5-3.5 0-5s-3.5-1.5-5 0c-1.5 1.5-1.5 3.5 0 5"></path>
   </svg>
 );
+
+const intentionMap = {
+  'Je peux sponsoriser': { icon: BriefcaseBusiness, color: 'bg-green-500', text: 'Sponsor' },
+  'Je cherche un voyage sponsorisé': { icon: Coins, color: 'bg-yellow-500', text: 'Seeking Sponsor' },
+  'Partager les frais (50/50)': { icon: Users, color: 'bg-blue-500', text: '50/50' },
+  'Voyage de groupe': { icon: Users, color: 'bg-red-500', text: 'Group' },
+};
 
 const MAX_PHOTOS = 4;
 
@@ -350,9 +357,10 @@ export default function ProfilePage() {
   const profilePictures = profile.profilePictures && profile.profilePictures.length > 0 ? profile.profilePictures : [];
   
   const destinationCountry = countries.find(c => c.name === profile.destination);
+  const locationCountry = countries.find(c => c.name === profile.location);
   const travelStyleOption = travelStyles.find(s => s.value === profile.travelStyle);
   const travelActivityOption = travelActivities.find(a => a.value === profile.activities);
-  const intentionOption = travelIntentions.find(i => i.value === profile.intention);
+  const intention = profile.intention ? intentionMap[profile.intention] : null;
 
 
   return (
@@ -430,6 +438,7 @@ export default function ProfilePage() {
                             </div>
                             <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
                                 <MapPin className="h-4 w-4" />
+                                {locationCountry && <span className={`fi fi-${locationCountry.code.toLowerCase()} mr-2`}></span>}
                                 <span>{profile.location}</span>
                             </div>
                         </div>
@@ -442,11 +451,11 @@ export default function ProfilePage() {
                             disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
                         />
                     </div>
-                    {profile.intention && profile.intention !== 'Toutes' && (
+                    {intention && profile.intention !== 'Toutes' && (
                         <div className="mt-2">
-                             <Badge>
-                                {intentionOption?.icon && <span className="mr-2">{intentionOption.icon}</span>}
-                                {profile.intention}
+                            <Badge variant="default" className={cn("border-none text-white", intention.color)}>
+                                <intention.icon className="mr-1 h-4 w-4" />
+                                {intention.text}
                             </Badge>
                         </div>
                     )}

@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import type { UserProfile } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,10 +10,10 @@ interface ProfileCardProps {
 }
 
 const intentionMap = {
-  'Sponsor': { icon: BriefcaseBusiness, color: 'bg-green-500', text: 'Sponsor' },
-  'Seeking Sponsorship': { icon: Coins, color: 'bg-yellow-500', text: 'Seeking Sponsor' },
-  '50/50': { icon: Users, color: 'bg-blue-500', text: '50/50' },
-  'Group': { icon: Users, color: 'bg-purple-500', text: 'Group Travel' },
+  'Je peux sponsoriser': { icon: BriefcaseBusiness, color: 'bg-green-500', text: 'Sponsor' },
+  'Je cherche un voyage sponsorisé': { icon: Coins, color: 'bg-yellow-500', text: 'Seeking Sponsor' },
+  'Partager les frais (50/50)': { icon: Users, color: 'bg-blue-500', text: '50/50' },
+  'Voyage de groupe': { icon: Users, color: 'bg-red-500', text: 'Group' },
 };
 
 
