@@ -205,6 +205,11 @@ function AuthPage() {
     form.reset();
   }
 
+  const resetAuthState = () => {
+    setIsEmailFormVisible(false);
+    form.reset();
+  }
+
   return (
     <div className="relative min-h-screen bg-background">
       {/* Background Video & Overlay */}
@@ -238,22 +243,29 @@ function AuthPage() {
 
         {/* Right Side: Auth Form */}
         <div className="flex items-center justify-center p-4">
-          <div className="w-full max-w-sm rounded-lg bg-transparent p-4 md:bg-background/80 md:p-6 md:shadow-2xl md:backdrop-blur-sm">
-            <div className="mb-6 flex items-center justify-center gap-2 md:hidden">
-                <Link href="/" className="flex items-center gap-2">
-                    <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-3xl font-bold font-logo text-transparent">
+          <div className="w-full max-w-sm rounded-lg bg-transparent md:p-6 md:bg-background/80 md:shadow-2xl md:backdrop-blur-sm">
+            {/* --- Mobile Header --- */}
+            <div className="text-center md:hidden mb-12 px-4 pt-6">
+                <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
+                    <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-4xl font-bold font-logo text-transparent">
                         WanderLink
                     </h1>
-                </Link>
+                </button>
+                <p className="mt-2 text-md text-white/80">
+                    Trouvez des compagnons de voyage qui partagent votre passion.
+                </p>
             </div>
-            <h2 className="text-center text-xl font-semibold">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
-            <p className="text-center text-sm text-muted-foreground mb-4">
-            {isLogin ? 'Heureux de vous revoir !' : 'Rejoignez la communauté de voyageurs.'}
-            </p>
-            
-            <div className="flex flex-col">
-                {/* Bouton Google : order-1 sur mobile, order-3 sur desktop */}
-                <div className="order-1 md:order-3">
+
+            {/* --- Desktop Header --- */}
+            <div className="hidden md:block text-center">
+                 <h2 className="text-xl font-semibold">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
+                 <p className="text-sm text-muted-foreground mb-4">
+                 {isLogin ? 'Heureux de vous revoir !' : 'Rejoignez la communauté de voyageurs.'}
+                 </p>
+            </div>
+
+            <div className={`flex flex-col gap-4 px-4 ${isEmailFormVisible ? 'hidden' : 'block'}`}>
+                <div className="text-center">
                     <Button variant="outline" className="w-full bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading}>
                         {isGoogleLoading ? (<Loader2 className="mr-2 h-4 w-4 animate-spin" />) : (
                             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="mr-2 h-5 w-5">
@@ -266,49 +278,47 @@ function AuthPage() {
                         )}
                         Continuer avec Google
                     </Button>
+                    <p className="mt-2 text-xs text-white/60 md:hidden">
+                        Nous ne publierons jamais sur vos réseaux sociaux.
+                    </p>
                 </div>
+
+                <div className="relative hidden md:flex items-center"><div className="w-full border-t" /><div className="px-2 text-xs uppercase text-muted-foreground">Ou</div><div className="w-full border-t" /></div>
                 
-                {/* Séparateur : order-2 sur mobile et desktop */}
-                <div className="order-2 md:order-2">
-                    <div className="relative my-4"><div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div><div className="relative flex justify-center text-xs uppercase"><span className="bg-transparent px-2 text-muted-foreground">Ou</span></div></div>
-                </div>
-
-                {/* Formulaire Email/Mdp : order-3 sur mobile, order-1 sur desktop */}
-                <div className="order-3 md:order-1">
-                    {/* Affiche le formulaire sur desktop, ou sur mobile si isEmailFormVisible est true */}
-                    <div className={`w-full ${isEmailFormVisible ? 'block' : 'hidden'} md:block`}>
-                        <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-                            <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="nom@exemple.com" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                            <FormField control={form.control} name="password" render={({ field }) => (<FormItem><FormLabel>Mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                            {!isLogin && (<FormField control={form.control} name="confirmPassword" render={({ field }) => (<FormItem><FormLabel>Confirmer le mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />)}
-                            <Button type="submit" className="w-full !mt-5" disabled={isLoading || isGoogleLoading}>
-                            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {isLogin ? 'Se connecter' : "Créer un compte"}
-                            </Button>
-                        </form>
-                        </Form>
-                    </div>
-                    {/* Affiche le bouton "S'inscrire" uniquement sur mobile si le formulaire est caché */}
-                    <div className={`w-full flex justify-center ${isEmailFormVisible ? 'hidden' : 'block'} md:hidden`}>
-                        <Button variant="outline" size="icon" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }}>
-                            <Mail className="h-4 w-4" />
-                        </Button>
-                    </div>
-                </div>
-            </div>
-
-            <div className="mt-4 text-center">
-                 {/* Affiche le toggle normal sur desktop ou si le formulaire est visible sur mobile*/}
-                <div className={`w-full ${isEmailFormVisible ? 'block' : 'hidden'} md:block`}>
-                    {isLogin ? (<Button variant="default" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" onClick={toggleForm}>Pas encore de compte ? Créez-en un</Button>) : (<Button variant="link" className="text-muted-foreground" onClick={toggleForm}>Vous avez déjà un compte ? Connectez-vous</Button>)}
-                </div>
-                {/* Affiche le lien "Se connecter" uniquement sur mobile si le formulaire est caché */}
-                <div className={`w-full ${isEmailFormVisible ? 'hidden' : 'block'} md:hidden`}>
-                     <Button variant="link" className="text-muted-foreground" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
+                <div className="flex flex-col items-center gap-2">
+                    <Button variant="outline" size="icon" aria-label="S'inscrire avec un e-mail" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }}>
+                        <Mail className="h-5 w-5" />
+                    </Button>
+                    <Button variant="link" className="text-muted-foreground h-auto p-0 text-sm" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
                         Connexion
                     </Button>
                 </div>
+            </div>
+
+            <div className={`w-full px-4 ${isEmailFormVisible ? 'block' : 'hidden'}`}>
+                <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+                    <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="nom@exemple.com" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name="password" render={({ field }) => (<FormItem><FormLabel>Mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    {!isLogin && (<FormField control={form.control} name="confirmPassword" render={({ field }) => (<FormItem><FormLabel>Confirmer le mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />)}
+                    <Button type="submit" className="w-full !mt-5" disabled={isLoading || isGoogleLoading}>
+                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isLogin ? 'Se connecter' : "Créer un compte"}
+                    </Button>
+                </form>
+                </Form>
+                <div className="mt-4 text-center">
+                    <Button variant="link" className="text-muted-foreground" onClick={toggleForm}>
+                        {isLogin ? "Pas encore de compte ? Créez-en un" : "Vous avez déjà un compte ? Connectez-vous"}
+                    </Button>
+                </div>
+            </div>
+
+            {/* --- Mobile Footer --- */}
+            <div className="mt-12 px-4 pb-6 text-center md:hidden">
+                <p className="text-xs text-white/60">
+                    En vous inscrivant, vous acceptez notre <Link href="/settings/privacy-policy" className="underline">Politique de confidentialité</Link>.
+                </p>
             </div>
           </div>
         </div>
