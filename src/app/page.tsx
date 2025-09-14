@@ -290,10 +290,9 @@ function AuthPage() {
                         </Form>
                     </div>
                     {/* Affiche le bouton "S'inscrire" uniquement sur mobile si le formulaire est caché */}
-                    <div className={`w-full ${isEmailFormVisible ? 'hidden' : 'block'} md:hidden`}>
-                        <Button variant="outline" className="w-full" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }}>
-                            <Mail className="mr-2 h-4 w-4" />
-                            S'inscrire avec E-mail
+                    <div className={`w-full flex justify-center ${isEmailFormVisible ? 'hidden' : 'block'} md:hidden`}>
+                        <Button variant="outline" size="icon" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }}>
+                            <Mail className="h-4 w-4" />
                         </Button>
                     </div>
                 </div>
@@ -307,7 +306,7 @@ function AuthPage() {
                 {/* Affiche le lien "Se connecter" uniquement sur mobile si le formulaire est caché */}
                 <div className={`w-full ${isEmailFormVisible ? 'hidden' : 'block'} md:hidden`}>
                      <Button variant="link" className="text-muted-foreground" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
-                        Déjà un compte ? Connectez-vous
+                        Connexion
                     </Button>
                 </div>
             </div>
