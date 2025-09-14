@@ -138,7 +138,7 @@ function DiscoverPage({ user }: { user: User }) {
 }
 
 
-// --- Sub-component for Unauthenticated Users --- //
+// --- Sub-component for Unauthenticated Users (with Responsive Layout) --- //
 
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -159,7 +159,7 @@ function AuthPage() {
         const loginValues = values as z.infer<typeof loginSchema>;
         await signInWithEmailAndPassword(auth, loginValues.email, loginValues.password);
         toast({ title: 'Connexion réussie !', description: 'Heureux de vous revoir.' });
-        router.push('/'); // Will re-render and show DiscoverPage
+        router.push('/');
       } catch (error) {
         const errorMessage = error instanceof FirebaseError ? error.message : "Email ou mot de passe incorrect.";
         toast({ variant: 'destructive', title: 'Erreur de connexion', description: errorMessage });
@@ -190,9 +190,6 @@ function AuthPage() {
     try {
       await signInWithPopup(auth, provider);
        toast({ title: 'Connexion réussie !', description: 'Bienvenue sur WanderLink.' });
-       // After login, the main component will redirect to the correct page.
-       // We might just need to force a re-render or redirect to '/', 
-       // which will then show the discover page.
        router.push('/'); 
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : "Une erreur inattendue s'est produite.";
@@ -208,37 +205,70 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-      <div className="w-full max-w-sm">
-        <div className="flex items-center gap-2 mb-6 justify-center">
-            <Link href="/" className="flex items-center gap-2">
-                <h1 className="text-3xl font-bold font-logo bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                    WanderLink
-                </h1>
-            </Link>
+    <div className="relative min-h-screen bg-background">
+      {/* Background Video & Overlay */}
+      <div className="absolute top-0 left-0 h-full w-full overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="h-full w-full object-cover"
+        >
+          <source
+            src="https://ik.imagekit.io/fip3ktm2p/545556555_24610768548534823_5832326088093088554_n.mp4?updatedAt=1757753813634"
+            type="video/mp4"
+          />
+        </video>
+        <div className="absolute top-0 left-0 h-full w-full bg-black/60" />
+      </div>
+
+      {/* Content Grid */}
+      <div className="relative z-10 grid min-h-screen md:grid-cols-2">
+        {/* Left Side: Brand & Slogan (Desktop Only) */}
+        <div className="hidden md:flex flex-col justify-center p-12 lg:p-16">
+           <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-6xl font-bold font-logo text-transparent mb-4">
+              WanderLink
+           </h1>
+           <p className="text-xl text-white/80">
+              Trouvez des compagnons de voyage qui partagent votre passion. Votre prochaine grande aventure commence ici.
+           </p>
         </div>
-        <h2 className="text-xl font-semibold text-center">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
-        <p className="text-center text-sm text-muted-foreground mb-4">
-          {isLogin ? 'Heureux de vous revoir !' : 'Rejoignez la communauté de voyageurs.'}
-        </p>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="nom@exemple.com" {...field} /></FormControl><FormMessage /></FormItem>)} />
-            <FormField control={form.control} name="password" render={({ field }) => (<FormItem><FormLabel>Mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />
-            {!isLogin && (<FormField control={form.control} name="confirmPassword" render={({ field }) => (<FormItem><FormLabel>Confirmer le mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />)}
-            <Button type="submit" className="w-full !mt-5" disabled={isLoading || isGoogleLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLogin ? 'Se connecter' : "Créer un compte"}
+
+        {/* Right Side: Auth Form */}
+        <div className="flex items-center justify-center p-4">
+          <div className="w-full max-w-sm rounded-lg bg-transparent p-4 md:bg-background/80 md:p-6 md:shadow-2xl md:backdrop-blur-sm">
+            <div className="mb-6 flex items-center justify-center gap-2 md:hidden">
+                <Link href="/" className="flex items-center gap-2">
+                    <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-3xl font-bold font-logo text-transparent">
+                        WanderLink
+                    </h1>
+                </Link>
+            </div>
+            <h2 className="text-center text-xl font-semibold">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
+            <p className="text-center text-sm text-muted-foreground mb-4">
+            {isLogin ? 'Heureux de vous revoir !' : 'Rejoignez la communauté de voyageurs.'}
+            </p>
+            <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+                <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="nom@exemple.com" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="password" render={({ field }) => (<FormItem><FormLabel>Mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                {!isLogin && (<FormField control={form.control} name="confirmPassword" render={({ field }) => (<FormItem><FormLabel>Confirmer le mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />)}
+                <Button type="submit" className="w-full !mt-5" disabled={isLoading || isGoogleLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLogin ? 'Se connecter' : "Créer un compte"}
+                </Button>
+            </form>
+            </Form>
+            <div className="relative my-4"><div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div><div className="relative flex justify-center text-xs uppercase"><span className="bg-transparent px-2 text-muted-foreground">Ou</span></div></div>
+            <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading}>
+            {isGoogleLoading ? (<Loader2 className="mr-2 h-4 w-4 animate-spin" />) : (<svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.2 76.2C322.3 103.6 289.4 88 248 88c-73.2 0-133.1 59.9-133.1 133.1s59.9 133.1 133.1 133.1c76.9 0 115.7-53.5 119.7-81.6H248V261.8h239.1c.9 21.9 1.9 43.7 1.9 66.2z"></path></svg>)}
+            Continuer avec Google
             </Button>
-          </form>
-        </Form>
-        <div className="relative my-4"><div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div><div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">Ou</span></div></div>
-        <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading}>
-          {isGoogleLoading ? (<Loader2 className="mr-2 h-4 w-4 animate-spin" />) : (<svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.2 76.2C322.3 103.6 289.4 88 248 88c-73.2 0-133.1 59.9-133.1 133.1s59.9 133.1 133.1 133.1c76.9 0 115.7-53.5 119.7-81.6H248V261.8h239.1c.9 21.9 1.9 43.7 1.9 66.2z"></path></svg>)}
-          Continuer avec Google
-        </Button>
-        <div className="mt-4 text-center">
-           {isLogin ? (<Button variant="default" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" onClick={toggleForm}>Pas encore de compte ? Créez-en un</Button>) : (<Button variant="link" className="text-muted-foreground" onClick={toggleForm}>Vous avez déjà un compte ? Connectez-vous</Button>)}
+            <div className="mt-4 text-center">
+            {isLogin ? (<Button variant="default" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" onClick={toggleForm}>Pas encore de compte ? Créez-en un</Button>) : (<Button variant="link" className="text-muted-foreground" onClick={toggleForm}>Vous avez déjà un compte ? Connectez-vous</Button>)}
+            </div>
+          </div>
         </div>
       </div>
     </div>
