@@ -230,7 +230,7 @@ function AuthPage() {
       </div>
 
       {/* Content Grid */}
-      <div className="relative z-10 grid min-h-screen md:grid-cols-2">
+      <div className="relative z-10 grid min-h-screen items-start md:items-center md:grid-cols-2">
         {/* Left Side: Brand & Slogan (Desktop Only) */}
         <div className="hidden md:flex flex-col justify-center p-12 lg:p-16">
            <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-6xl font-bold font-logo text-transparent mb-4">
@@ -247,7 +247,7 @@ function AuthPage() {
             {/* --- Mobile Header --- */}
             <div className="text-center md:hidden mb-12 px-4 pt-6">
                 <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
-                    <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-4xl font-bold font-logo text-transparent">
+                    <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-2xl font-bold font-logo text-transparent">
                         WanderLink
                     </h1>
                 </button>
@@ -315,8 +315,8 @@ function AuthPage() {
             </div>
 
             {/* --- Mobile Footer --- */}
-            <div className="mt-12 px-4 pb-6 text-center md:hidden">
-                <p className="text-xs text-white/60">
+            <div className="fixed bottom-4 left-0 right-0 px-4 text-center md:hidden">
+                <p className="text-[9px] text-white/60">
                     En vous inscrivant, vous acceptez notre <Link href="/settings/privacy-policy" className="underline">Politique de confidentialité</Link>.
                 </p>
             </div>
