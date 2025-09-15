@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -41,34 +42,6 @@ const signupSchema = z.object({
   path: ["confirmPassword"],
 });
 
-// --- Main Component --- //
-
-export default function ConditionalHome() {
-  const [currentUserAuth, setCurrentUserAuth] = useState<User | null>(null);
-  const [loadingAuth, setLoadingAuth] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUserAuth(user);
-      setLoadingAuth(false);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  if (loadingAuth) {
-    return (
-      <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
-        <Loader2 className="h-16 w-16 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (currentUserAuth) {
-    return <DiscoverPage user={currentUserAuth} />;
-  }
-
-  return <AuthPage />;
-}
 
 // --- Sub-component for Authenticated Users --- //
 
@@ -326,3 +299,34 @@ function AuthPage() {
     </div>
   );
 }
+
+
+// --- Main Component --- //
+
+export default function ConditionalHome() {
+  const [currentUserAuth, setCurrentUserAuth] = useState<User | null>(null);
+  const [loadingAuth, setLoadingAuth] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUserAuth(user);
+      setLoadingAuth(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  if (loadingAuth) {
+    return (
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
+        <Loader2 className="h-16 w-16 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (currentUserAuth) {
+    return <DiscoverPage user={currentUserAuth} />;
+  }
+
+  return <AuthPage />;
+}
+
