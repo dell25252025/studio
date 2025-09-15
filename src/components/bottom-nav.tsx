@@ -60,7 +60,7 @@ const BottomNav = () => {
     return <UserPlus className="h-6 w-6 mx-auto" />;
   };
   
-  const profileHref = currentUser ? `/profile?id=${currentUser.uid}` : '/signup';
+  const profileHref = currentUser ? `/profile?id=${currentUser.uid}` : '/login';
   const isUserLoggedIn = !!currentUser;
 
   return (
