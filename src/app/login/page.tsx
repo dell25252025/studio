@@ -155,15 +155,12 @@ export default function AuthPage() {
                             WanderLink
                         </h1>
                     </button>
+                    <p className="text-sm text-white px-4 leading-tight text-center md:hidden mt-2">
+                        Trouvez des compagnons de voyage qui partagent votre passion.
+                    </p>
                 </div>
             
-                <div className="flex-1 flex flex-col justify-between w-full max-w-sm mx-auto">
-                    <div className="flex-grow flex flex-col justify-center">
-                        <p className="text-[0.8rem] text-white px-4 leading-tight text-center md:hidden mb-2">
-                            Trouvez des compagnons de voyage qui partagent votre passion.
-                        </p>
-                    </div>
-
+                <div className="flex-1 flex flex-col justify-end w-full max-w-sm mx-auto">
                     <div className="w-full pb-8">
                         <div className="hidden md:block text-center mb-4">
                             <h2 className="text-xl font-semibold text-white">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
@@ -172,7 +169,7 @@ export default function AuthPage() {
                             </p>
                         </div>
 
-                        <div className={`flex flex-col gap-4 ${isEmailFormVisible ? 'hidden' : 'block'} mt-auto mb-10`}>
+                        <div className={`flex flex-col gap-4 ${isEmailFormVisible ? 'hidden' : 'block'} mb-10`}>
                             <div className="text-center">
                                 <Button variant="outline" className="w-full bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading}>
                                     {isGoogleLoading ? (<Loader2 className="mr-2 h-4 w-4 animate-spin" />) : (
