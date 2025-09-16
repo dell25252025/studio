@@ -221,7 +221,7 @@ export default function AuthPage() {
                     </div>
                 </div>
 
-                <div className="absolute bottom-0 left-0 right-0 text-center md:hidden pb-4 flex-shrink-0">
+                <div className="absolute bottom-0 left-0 right-0 text-center md:hidden pb-2 flex-shrink-0">
                     <p className="text-[9px] text-white px-4">
                         En vous inscrivant, vous acceptez notre <Link href="/settings/privacy-policy" className="underline">Politique de confidentialité</Link>.
                     </p>
