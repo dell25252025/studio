@@ -118,10 +118,6 @@ export default function AuthPage() {
     form.reset();
   }
 
-  const textStrokeStyle = {
-    WebkitTextStroke: '0.75px black',
-  };
-
   return (
     <div className="relative min-h-screen bg-background">
       <div className="absolute top-0 left-0 h-full w-full overflow-hidden">
