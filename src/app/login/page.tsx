@@ -139,13 +139,13 @@ export default function AuthPage() {
 
       <div className="relative z-10">
         {/* Mobile Header */}
-        <div className="absolute top-0 left-0 right-0 pt-4 text-center md:hidden">
+        <div className="absolute top-4 left-0 right-0 text-center md:hidden">
             <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
                 <h1 className="text-2xl font-bold font-logo text-white">
                     WanderLink
                 </h1>
             </button>
-            <p className="mt-2 text-md text-white px-4 leading-tight">
+            <p className="mt-2 text-sm text-white px-4 leading-tight">
                 Trouvez des compagnons de voyage qui partagent votre passion.
             </p>
         </div>
