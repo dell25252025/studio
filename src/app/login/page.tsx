@@ -149,19 +149,18 @@ export default function AuthPage() {
             </div>
 
             <div className="flex flex-col h-screen p-4 md:items-center md:justify-center md:h-auto">
-                {/* Mobile Header */}
                 <div className="text-center md:hidden pt-2">
                     <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
                         <h1 className="text-2xl font-bold font-logo text-white">
                             WanderLink
                         </h1>
                     </button>
-                    <p className="mt-1 text-[0.8rem] text-white px-4 leading-tight">
-                        Trouvez des compagnons de voyage qui partagent votre passion.
-                    </p>
                 </div>
             
                 <div className="flex-1 flex flex-col justify-center w-full max-w-sm mx-auto">
+                    <p className="mt-1 text-[0.8rem] text-white px-4 leading-tight text-center md:hidden mb-20">
+                        Trouvez des compagnons de voyage qui partagent votre passion.
+                    </p>
                     <div className="w-full">
                         <div className="hidden md:block text-center mb-4">
                             <h2 className="text-xl font-semibold text-white">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
@@ -195,7 +194,7 @@ export default function AuthPage() {
                                 <Button variant="outline" size="icon" aria-label="S'inscrire avec un e-mail" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }} className="bg-white border-white text-black hover:bg-slate-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
                                 </Button>
-                                <Button variant="link" className="text-white h-auto p-0 text-sm mt-12" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
+                                <Button variant="link" className="text-white h-auto p-0 text-sm mt-10" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
                                     Connexion
                                 </Button>
                             </div>
@@ -222,7 +221,7 @@ export default function AuthPage() {
                     </div>
                 </div>
 
-                <div className="pb-2 text-center md:hidden">
+                <div className="pb-1 text-center md:hidden">
                     <p className="text-[9px] text-white">
                         En vous inscrivant, vous acceptez notre <Link href="/settings/privacy-policy" className="underline">Politique de confidentialité</Link>.
                     </p>
