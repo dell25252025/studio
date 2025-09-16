@@ -155,8 +155,8 @@ export default function AuthPage() {
                             WanderLink
                         </h1>
                     </button>
-                    <p className="text-sm text-white px-4 leading-tight text-center md:hidden mt-2">
-                        Trouvez des compagnons de voyage qui partagent votre passion.
+                    <p className="text-sm text-white px-4 leading-tight text-center md:hidden mt-2 max-w-[80%] mx-auto">
+                        Trouvez des compagnons de voyage qui partagent votre passion
                     </p>
                 </div>
             
