@@ -160,7 +160,7 @@ export default function AuthPage() {
             </p>
             </div>
 
-            <div className="flex items-center justify-center p-4">
+            <div className="flex items-end md:items-center justify-center p-4 pb-20 md:pb-4">
             <div className="w-full max-w-sm rounded-lg bg-transparent md:p-6 md:bg-background/80 md:shadow-2xl md:backdrop-blur-sm">
                 <div className="hidden md:block text-center">
                     <h2 className="text-xl font-semibold text-white">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
