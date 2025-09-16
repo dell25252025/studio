@@ -159,21 +159,21 @@ export default function AuthPage() {
         {/* Mobile Header */}
         <div className="absolute top-0 left-0 right-0 pt-12 text-center md:hidden">
             <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
-                <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-2xl font-bold font-logo text-transparent" style={mobileTextStrokeStyle}>
+                <h1 className="text-2xl font-bold font-logo text-white" style={mobileTextStrokeStyle}>
                     WanderLink
                 </h1>
             </button>
-            <p className="mt-2 text-md text-white/80 px-4" style={mobileTaglineStyle}>
+            <p className="mt-2 text-md text-white px-4" style={mobileTaglineStyle}>
                 Trouvez des compagnons de voyage qui partagent votre passion.
             </p>
         </div>
 
         <div className="grid min-h-screen items-center md:grid-cols-2">
             <div className="hidden md:flex flex-col justify-center p-12 lg:p-16">
-            <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-6xl font-bold font-logo text-transparent mb-4" style={textStrokeStyle}>
+            <h1 className="text-6xl font-bold font-logo text-white mb-4" style={textStrokeStyle}>
                 WanderLink
             </h1>
-            <p className="text-xl text-white/80" style={desktopTaglineStyle}>
+            <p className="text-xl text-white" style={desktopTaglineStyle}>
                 Trouvez des compagnons de voyage qui partagent votre passion. Votre prochaine grande aventure commence ici.
             </p>
             </div>
@@ -201,7 +201,7 @@ export default function AuthPage() {
                             )}
                             Continuer avec Google
                         </Button>
-                        <p className="mt-2 text-xs text-white/60 md:hidden">
+                        <p className="mt-2 text-xs text-white md:hidden">
                             Nous ne publierons jamais sur vos réseaux sociaux.
                         </p>
                     </div>
@@ -209,10 +209,10 @@ export default function AuthPage() {
                     <div className="relative hidden md:flex items-center"><div className="w-full border-t" /><div className="px-2 text-xs uppercase text-muted-foreground">Ou</div><div className="w-full border-t" /></div>
                     
                     <div className="flex flex-col items-center gap-2">
-                        <Button variant="outline" size="icon" aria-label="S'inscrire avec un e-mail" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }}>
+                        <Button variant="outline" size="icon" aria-label="S'inscrire avec un e-mail" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }} className="bg-transparent border-white text-white hover:bg-white/10 hover:text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
                         </Button>
-                        <Button variant="link" className="text-muted-foreground h-auto p-0 text-sm" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
+                        <Button variant="link" className="text-white h-auto p-0 text-sm" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
                             Connexion
                         </Button>
                     </div>
@@ -238,7 +238,7 @@ export default function AuthPage() {
                 </div>
 
                 <div className="fixed bottom-4 left-0 right-0 px-4 text-center md:hidden">
-                    <p className="text-[9px] text-white/60">
+                    <p className="text-[9px] text-white">
                         En vous inscrivant, vous acceptez notre <Link href="/settings/privacy-policy" className="underline">Politique de confidentialité</Link>.
                     </p>
                 </div>
