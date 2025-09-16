@@ -170,11 +170,11 @@ export default function AuthPage() {
                             </p>
                         </div>
 
-                        <div className={`flex flex-col gap-4 ${isEmailFormVisible ? 'hidden' : 'block'}`}>
+                        <div className={`flex flex-col gap-4 mt-8 ${isEmailFormVisible ? 'hidden' : 'block'}`}>
                             <div className="text-center">
                                 <Button variant="outline" className="w-full bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading}>
                                     {isGoogleLoading ? (<Loader2 className="mr-2 h-4 w-4 animate-spin" />) : (
-                                        <svg version="1.1" xmlns="http://www.w.org/2000/svg" viewBox="0 0 48 48" className="mr-2 h-5 w-5">
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="mr-2 h-5 w-5">
                                             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
                                             <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
                                             <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
@@ -195,7 +195,7 @@ export default function AuthPage() {
                                 <Button variant="outline" size="icon" aria-label="S'inscrire avec un e-mail" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }} className="bg-white border-white text-black hover:bg-slate-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
                                 </Button>
-                                <Button variant="link" className="text-white h-auto p-0 text-sm mt-8" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
+                                <Button variant="link" className="text-white h-auto p-0 text-sm mt-12" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
                                     Connexion
                                 </Button>
                             </div>
