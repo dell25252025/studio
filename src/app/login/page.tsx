@@ -181,8 +181,8 @@ export default function AuthPage() {
             <div className="flex items-center justify-center p-4">
             <div className="w-full max-w-sm rounded-lg bg-transparent md:p-6 md:bg-background/80 md:shadow-2xl md:backdrop-blur-sm">
                 <div className="hidden md:block text-center">
-                    <h2 className="text-xl font-semibold">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
-                    <p className="text-sm text-muted-foreground mb-4">
+                    <h2 className="text-xl font-semibold text-white">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
+                    <p className="text-sm text-white/90 mb-4">
                     {isLogin ? 'Heureux de vous revoir !' : 'Rejoignez la communauté de voyageurs.'}
                     </p>
                 </div>
@@ -206,7 +206,7 @@ export default function AuthPage() {
                         </p>
                     </div>
 
-                    <div className="relative hidden md:flex items-center"><div className="w-full border-t" /><div className="px-2 text-xs uppercase text-muted-foreground">Ou</div><div className="w-full border-t" /></div>
+                    <div className="relative hidden md:flex items-center"><div className="w-full border-t border-white/30" /><div className="px-2 text-xs uppercase text-white/70">Ou</div><div className="w-full border-t border-white/30" /></div>
                     
                     <div className="flex flex-col items-center gap-2">
                         <Button variant="outline" size="icon" aria-label="S'inscrire avec un e-mail" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }} className="bg-transparent border-white text-white hover:bg-white/10 hover:text-white">
@@ -221,9 +221,9 @@ export default function AuthPage() {
                 <div className={`w-full px-4 ${isEmailFormVisible ? 'block' : 'hidden'}`}>
                     <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-                        <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="nom@exemple.com" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                        <FormField control={form.control} name="password" render={({ field }) => (<FormItem><FormLabel>Mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                        {!isLogin && (<FormField control={form.control} name="confirmPassword" render={({ field }) => (<FormItem><FormLabel>Confirmer le mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />)}
+                        <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Email</FormLabel><FormControl><Input placeholder="nom@exemple.com" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />
+                        <FormField control={form.control} name="password" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />
+                        {!isLogin && (<FormField control={form.control} name="confirmPassword" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Confirmer le mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />)}
                         <Button type="submit" className="w-full !mt-5" disabled={isLoading || isGoogleLoading}>
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         {isLogin ? 'Se connecter' : "Créer un compte"}
@@ -231,7 +231,7 @@ export default function AuthPage() {
                     </form>
                     </Form>
                     <div className="mt-4 text-center">
-                        <Button variant="link" className="text-muted-foreground" onClick={toggleForm}>
+                        <Button variant="link" className="text-white/80 hover:text-white" onClick={toggleForm}>
                             {isLogin ? "Pas encore de compte ? Créez-en un" : "Vous avez déjà un compte ? Connectez-vous"}
                         </Button>
                     </div>
