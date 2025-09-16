@@ -137,9 +137,9 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
       <div className={`w-full ${isEmailFormVisible ? 'block' : 'hidden'}`}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Email</FormLabel><FormControl><Input placeholder="nom@exemple.com" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />
-            <FormField control={form.control} name="password" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />
-            {!isLogin && (<FormField control={form.control} name="confirmPassword" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Confirmer le mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />)}
+            <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="nom@exemple.com" {...field} /></FormControl><FormMessage /></FormItem>)} />
+            <FormField control={form.control} name="password" render={({ field }) => (<FormItem><FormLabel>Mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />
+            {!isLogin && (<FormField control={form.control} name="confirmPassword" render={({ field }) => (<FormItem><FormLabel>Confirmer le mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} /></FormControl><FormMessage /></FormItem>)} />)}
             <Button type="submit" className="w-full !mt-10" disabled={isLoading || isGoogleLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLogin ? 'Se connecter' : "Créer un compte"}
@@ -147,8 +147,8 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
           </form>
         </Form>
         <div className="mt-4 text-center">
-          <Button variant="link" className="text-white/80 hover:text-white" onClick={toggleForm}>
-            {isLogin ? "Pas encore de compte ? Créez-en un" : "Vous avez déjà un compte ? Connectez-vous"}
+          <Button variant="link" className="text-foreground/80 hover:text-foreground" onClick={toggleForm}>
+            {isLogin ? "Créer un compte" : "Connectez-vous"}
           </Button>
         </div>
       </div>

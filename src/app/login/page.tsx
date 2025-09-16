@@ -20,6 +20,34 @@ export default function AuthPage() {
     setIsEmailFormVisible(false);
   };
 
+  if (isMobile && isEmailFormVisible) {
+    return (
+      <div className="flex h-screen flex-col bg-background p-4">
+        <div className="flex-shrink-0">
+          <button onClick={resetAuthState} aria-label="Retour">
+            <svg className="h-6 w-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+        </div>
+        <div className="flex flex-1 flex-col justify-center text-center">
+            <h1 className="text-2xl font-bold text-foreground mb-6 text-center">
+                {isLogin ? 'Connexion' : 'Créer un compte'}
+            </h1>
+            <div className="w-full">
+                <AuthForm
+                    isLogin={isLogin}
+                    setIsLogin={setIsLogin}
+                    isEmailFormVisible={isEmailFormVisible}
+                    setIsEmailFormVisible={setIsEmailFormVisible}
+                    onSuccess={() => router.push(isLogin ? '/' : '/create-profile')}
+                />
+            </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen bg-background">
       <div className="absolute top-0 left-0 h-full w-full overflow-hidden">
@@ -51,28 +79,28 @@ export default function AuthPage() {
             </div>
 
             <div className="flex flex-col h-screen p-4 md:items-center md:justify-center md:h-auto">
-                <div className="text-center md:hidden pt-2 flex-shrink-0">
-                    <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
+                <div className={`text-center md:hidden pt-2 flex-shrink-0 ${isEmailFormVisible ? 'hidden' : ''}`}>
+                    <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l\'accueil de l\'authentification">
                         <h1 className="text-2xl font-bold font-logo text-white">
                             WanderLink
                         </h1>
                     </button>
-                    <p className="text-sm text-white px-1 leading-tight text-center md:hidden mt-1 w-full mx-auto">
+                    <p className={`text-sm text-white px-1 leading-tight text-center md:hidden mt-1 w-full mx-auto ${isEmailFormVisible ? 'hidden' : ''}`}>
                         Trouvez des compagnons de voyage qui partagent votre passion
                     </p>
                 </div>
             
-                <div className="flex-1 flex flex-col justify-end w-full max-w-sm mx-auto pb-4">
+                <div className='flex-1 flex flex-col w-full max-w-sm mx-auto justify-end pb-4 md:justify-center'>
                   <AuthForm
-                    isLogin={isLogin}
-                    setIsLogin={setIsLogin}
-                    isEmailFormVisible={isEmailFormVisible}
-                    setIsEmailFormVisible={setIsEmailFormVisible}
-                    onSuccess={() => router.push(isLogin ? '/' : '/create-profile')}
+                      isLogin={isLogin}
+                      setIsLogin={setIsLogin}
+                      isEmailFormVisible={isEmailFormVisible}
+                      setIsEmailFormVisible={setIsEmailFormVisible}
+                      onSuccess={() => router.push(isLogin ? '/' : '/create-profile')}
                   />
                 </div>
 
-                <div className="absolute bottom-0 left-0 right-0 text-center md:hidden pb-2 flex-shrink-0">
+                <div className={`absolute bottom-0 left-0 right-0 text-center md:hidden pb-2 flex-shrink-0 ${isEmailFormVisible ? 'hidden' : ''}`}>
                     <p className="text-[9px] text-white px-4">
                         En vous inscrivant, vous acceptez notre <Link href="/settings/privacy-policy" className="underline">Politique de confidentialité</Link>.
                     </p>
