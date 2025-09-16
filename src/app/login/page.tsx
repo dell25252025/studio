@@ -169,7 +169,7 @@ export default function AuthPage() {
                             </p>
                         </div>
 
-                        <div className={`flex flex-col gap-4 ${isEmailFormVisible ? 'hidden' : 'block'} mb-4`}>
+                        <div className={`flex flex-col gap-4 ${isEmailFormVisible ? 'hidden' : 'block'} mb-4 md:mt-0 mt-[20vh]`}>
                             <div className="text-center">
                                 <Button variant="outline" className="w-full bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading}>
                                     {isGoogleLoading ? (<Loader2 className="mr-2 h-4 w-4 animate-spin" />) : (
