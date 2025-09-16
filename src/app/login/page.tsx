@@ -194,7 +194,7 @@ export default function AuthPage() {
                                 <Button variant="outline" size="icon" aria-label="S'inscrire avec un e-mail" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }} className="bg-white border-white text-black hover:bg-slate-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
                                 </Button>
-                                <Button variant="link" className="text-white h-auto p-0 text-sm mt-[20vh] mb-2" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
+                                <Button variant="link" className="text-white h-auto p-0 text-sm mt-[17vh] mb-2" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
                                     Connexion
                                 </Button>
                             </div>
