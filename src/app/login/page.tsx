@@ -139,7 +139,7 @@ export default function AuthPage() {
 
       <div className="relative z-10">
         {/* Mobile Header */}
-        <div className="absolute top-8 left-0 right-0 text-center md:hidden">
+        <div className="absolute top-4 left-0 right-0 text-center md:hidden">
             <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
                 <h1 className="text-2xl font-bold font-logo text-white">
                     WanderLink
@@ -219,7 +219,7 @@ export default function AuthPage() {
                     </div>
                 </div>
 
-                <div className="fixed bottom-4 left-0 right-0 px-4 text-center md:hidden">
+                <div className="fixed bottom-2 left-0 right-0 px-4 text-center md:hidden">
                     <p className="text-[9px] text-white">
                         En vous inscrivant, vous acceptez notre <Link href="/settings/privacy-policy" className="underline">Politique de confidentialité</Link>.
                     </p>
