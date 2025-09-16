@@ -138,18 +138,6 @@ export default function AuthPage() {
       </div>
 
       <div className="relative z-10">
-        {/* Mobile Header */}
-        <div className="absolute top-4 left-0 right-0 text-center md:hidden">
-            <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
-                <h1 className="text-2xl font-bold font-logo text-white">
-                    WanderLink
-                </h1>
-            </button>
-            <p className="mt-1 text-[0.8rem] text-white px-4 leading-tight">
-                Trouvez des compagnons de voyage qui partagent votre passion.
-            </p>
-        </div>
-
         <div className="grid min-h-screen items-center md:grid-cols-2">
             <div className="hidden md:flex flex-col justify-center p-12 lg:p-16">
             <h1 className="text-6xl font-bold font-logo text-white mb-4">
@@ -160,71 +148,85 @@ export default function AuthPage() {
             </p>
             </div>
 
-            <div className="flex items-end md:items-center justify-center p-4 pb-20 md:pb-4">
-            <div className="w-full max-w-sm rounded-lg bg-transparent md:p-6 md:bg-background/80 md:shadow-2xl md:backdrop-blur-sm">
-                <div className="hidden md:block text-center">
-                    <h2 className="text-xl font-semibold text-white">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
-                    <p className="text-sm text-white/90 mb-4">
-                    {isLogin ? 'Heureux de vous revoir !' : 'Rejoignez la communauté de voyageurs.'}
+            <div className="flex flex-col h-screen p-4 md:items-center md:justify-center md:h-auto">
+                {/* Mobile Header */}
+                <div className="text-center md:hidden pt-2">
+                    <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
+                        <h1 className="text-2xl font-bold font-logo text-white">
+                            WanderLink
+                        </h1>
+                    </button>
+                    <p className="mt-1 text-[0.8rem] text-white px-4 leading-tight">
+                        Trouvez des compagnons de voyage qui partagent votre passion.
                     </p>
                 </div>
+            
+                <div className="flex-1 flex flex-col justify-center w-full max-w-sm mx-auto">
+                    <div className="w-full">
+                        <div className="hidden md:block text-center mb-4">
+                            <h2 className="text-xl font-semibold text-white">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
+                            <p className="text-sm text-white/90">
+                            {isLogin ? 'Heureux de vous revoir !' : 'Rejoignez la communauté de voyageurs.'}
+                            </p>
+                        </div>
 
-                <div className={`flex flex-col gap-4 px-4 ${isEmailFormVisible ? 'hidden' : 'block'}`}>
-                    <div className="text-center mt-[10rem]">
-                        <Button variant="outline" className="w-full bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading}>
-                            {isGoogleLoading ? (<Loader2 className="mr-2 h-4 w-4 animate-spin" />) : (
-                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="mr-2 h-5 w-5">
-                                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-                                    <path fill="none" d="M0 0h48v48H0z"></path>
-                                </svg>
-                            )}
-                            Continuer avec Google
-                        </Button>
-                        <p className="mt-1 text-[9px] text-white md:hidden">
-                            Nous ne publions jamais rien sur vos comptes de réseaux sociaux
-                        </p>
-                    </div>
+                        <div className={`flex flex-col gap-4 ${isEmailFormVisible ? 'hidden' : 'block'}`}>
+                            <div className="text-center">
+                                <Button variant="outline" className="w-full bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading}>
+                                    {isGoogleLoading ? (<Loader2 className="mr-2 h-4 w-4 animate-spin" />) : (
+                                        <svg version="1.1" xmlns="http://www.w.org/2000/svg" viewBox="0 0 48 48" className="mr-2 h-5 w-5">
+                                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                                            <path fill="none" d="M0 0h48v48H0z"></path>
+                                        </svg>
+                                    )}
+                                    Continuer avec Google
+                                </Button>
+                                <p className="mt-1 text-[9px] text-white md:hidden">
+                                    Nous ne publions jamais rien sur vos comptes de réseaux sociaux
+                                </p>
+                            </div>
 
-                    <div className="relative hidden md:flex items-center"><div className="w-full border-t border-white/30" /><div className="px-2 text-xs uppercase text-white/70">Ou</div><div className="w-full border-t border-white/30" /></div>
-                    
-                    <div className="flex flex-col items-center">
-                        <Button variant="outline" size="icon" aria-label="S'inscrire avec un e-mail" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }} className="bg-white border-white text-black hover:bg-slate-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
-                        </Button>
-                        <Button variant="link" className="text-white h-auto p-0 text-sm mt-[3rem]" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
-                            Connexion
-                        </Button>
+                            <div className="relative hidden md:flex items-center"><div className="w-full border-t border-white/30" /><div className="px-2 text-xs uppercase text-white/70">Ou</div><div className="w-full border-t border-white/30" /></div>
+                            
+                            <div className="flex flex-col items-center">
+                                <Button variant="outline" size="icon" aria-label="S'inscrire avec un e-mail" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }} className="bg-white border-white text-black hover:bg-slate-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                                </Button>
+                                <Button variant="link" className="text-white h-auto p-0 text-sm mt-8" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
+                                    Connexion
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div className={`w-full ${isEmailFormVisible ? 'block' : 'hidden'}`}>
+                            <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+                                <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Email</FormLabel><FormControl><Input placeholder="nom@exemple.com" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={form.control} name="password" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />
+                                {!isLogin && (<FormField control={form.control} name="confirmPassword" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Confirmer le mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />)}
+                                <Button type="submit" className="w-full !mt-5" disabled={isLoading || isGoogleLoading}>
+                                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                {isLogin ? 'Se connecter' : "Créer un compte"}
+                                </Button>
+                            </form>
+                            </Form>
+                            <div className="mt-4 text-center">
+                                <Button variant="link" className="text-white/80 hover:text-white" onClick={toggleForm}>
+                                    {isLogin ? "Pas encore de compte ? Créez-en un" : "Vous avez déjà un compte ? Connectez-vous"}
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className={`w-full px-4 ${isEmailFormVisible ? 'block' : 'hidden'}`}>
-                    <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-                        <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Email</FormLabel><FormControl><Input placeholder="nom@exemple.com" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />
-                        <FormField control={form.control} name="password" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />
-                        {!isLogin && (<FormField control={form.control} name="confirmPassword" render={({ field }) => (<FormItem><FormLabel className="text-white/90">Confirmer le mot de passe</FormLabel><FormControl><Input type="password" placeholder="********" {...field} className="bg-white/10 border-white/30 text-white placeholder:text-white/50" /></FormControl><FormMessage /></FormItem>)} />)}
-                        <Button type="submit" className="w-full !mt-5" disabled={isLoading || isGoogleLoading}>
-                        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        {isLogin ? 'Se connecter' : "Créer un compte"}
-                        </Button>
-                    </form>
-                    </Form>
-                    <div className="mt-4 text-center">
-                        <Button variant="link" className="text-white/80 hover:text-white" onClick={toggleForm}>
-                            {isLogin ? "Pas encore de compte ? Créez-en un" : "Vous avez déjà un compte ? Connectez-vous"}
-                        </Button>
-                    </div>
-                </div>
-
-                <div className="fixed bottom-2 left-0 right-0 px-4 text-center md:hidden">
+                <div className="pb-2 text-center md:hidden">
                     <p className="text-[9px] text-white">
                         En vous inscrivant, vous acceptez notre <Link href="/settings/privacy-policy" className="underline">Politique de confidentialité</Link>.
                     </p>
                 </div>
-            </div>
             </div>
         </div>
       </div>
