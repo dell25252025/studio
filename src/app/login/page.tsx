@@ -149,7 +149,7 @@ export default function AuthPage() {
             </div>
 
             <div className="flex flex-col h-screen p-4 md:items-center md:justify-center md:h-auto">
-                <div className="text-center md:hidden pt-2">
+                <div className="text-center md:hidden pt-2 flex-shrink-0">
                     <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
                         <h1 className="text-2xl font-bold font-logo text-white">
                             WanderLink
@@ -158,7 +158,7 @@ export default function AuthPage() {
                 </div>
             
                 <div className="flex-1 flex flex-col justify-center w-full max-w-sm mx-auto">
-                    <p className="mt-1 text-[0.8rem] text-white px-4 leading-tight text-center md:hidden mb-20">
+                    <p className="mt-1 text-[0.8rem] text-white px-4 leading-tight text-center md:hidden mb-12">
                         Trouvez des compagnons de voyage qui partagent votre passion.
                     </p>
                     <div className="w-full">
@@ -169,7 +169,7 @@ export default function AuthPage() {
                             </p>
                         </div>
 
-                        <div className={`flex flex-col gap-4 mt-12 ${isEmailFormVisible ? 'hidden' : 'block'}`}>
+                        <div className={`flex flex-col gap-4 ${isEmailFormVisible ? 'hidden' : 'block'} mt-auto mb-20`}>
                             <div className="text-center">
                                 <Button variant="outline" className="w-full bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading}>
                                     {isGoogleLoading ? (<Loader2 className="mr-2 h-4 w-4 animate-spin" />) : (
@@ -194,7 +194,7 @@ export default function AuthPage() {
                                 <Button variant="outline" size="icon" aria-label="S'inscrire avec un e-mail" onClick={() => { setIsEmailFormVisible(true); setIsLogin(false); form.reset(); }} className="bg-white border-white text-black hover:bg-slate-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
                                 </Button>
-                                <Button variant="link" className="text-white h-auto p-0 text-sm mt-4" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
+                                <Button variant="link" className="text-white h-auto p-0 text-sm mt-32" onClick={() => { setIsEmailFormVisible(true); setIsLogin(true); form.reset(); }}>
                                     Connexion
                                 </Button>
                             </div>
@@ -221,7 +221,7 @@ export default function AuthPage() {
                     </div>
                 </div>
 
-                <div className="pb-4 text-center md:hidden">
+                <div className="text-center md:hidden pb-4 flex-shrink-0">
                     <p className="text-[9px] text-white">
                         En vous inscrivant, vous acceptez notre <Link href="/settings/privacy-policy" className="underline">Politique de confidentialité</Link>.
                     </p>
