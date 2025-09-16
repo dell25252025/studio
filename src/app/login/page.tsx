@@ -155,12 +155,12 @@ export default function AuthPage() {
                             WanderLink
                         </h1>
                     </button>
-                    <p className="text-sm text-white px-4 leading-tight text-center md:hidden mt-1 w-full mx-auto">
+                    <p className="text-sm text-white px-1 leading-tight text-center md:hidden mt-1 w-full mx-auto">
                         Trouvez des compagnons de voyage qui partagent votre passion
                     </p>
                 </div>
             
-                <div className="flex-1 flex flex-col justify-end w-full max-w-sm mx-auto">
+                <div className="flex-1 flex flex-col justify-end w-full max-w-sm mx-auto pb-4">
                     <div className="w-full pb-8">
                         <div className="hidden md:block text-center mb-4">
                             <h2 className="text-xl font-semibold text-white">{isLogin ? 'Connectez-vous' : 'Créez votre compte'}</h2>
@@ -221,8 +221,8 @@ export default function AuthPage() {
                     </div>
                 </div>
 
-                <div className="text-center md:hidden pb-4 mb-4 flex-shrink-0">
-                    <p className="text-[9px] text-white">
+                <div className="text-center md:hidden pb-4 flex-shrink-0">
+                    <p className="text-[9px] text-white px-12">
                         En vous inscrivant, vous acceptez notre <Link href="/settings/privacy-policy" className="underline">Politique de confidentialité</Link>.
                     </p>
                 </div>
