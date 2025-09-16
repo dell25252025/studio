@@ -122,20 +122,6 @@ export default function AuthPage() {
     WebkitTextStroke: '0.75px black',
   };
 
-  const mobileTextStrokeStyle = {
-    WebkitTextStroke: '0.5px black',
-  };
-
-  const mobileTaglineStyle = {
-    WebkitTextStroke: '0.3px black',
-    letterSpacing: '-0.025em'
-  };
-
-  const desktopTaglineStyle = {
-    WebkitTextStroke: '0.4px black',
-    letterSpacing: '-0.025em'
-  };
-
   return (
     <div className="relative min-h-screen bg-background">
       <div className="absolute top-0 left-0 h-full w-full overflow-hidden">
@@ -159,21 +145,21 @@ export default function AuthPage() {
         {/* Mobile Header */}
         <div className="absolute top-0 left-0 right-0 pt-12 text-center md:hidden">
             <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
-                <h1 className="text-2xl font-bold font-logo text-white" style={mobileTextStrokeStyle}>
+                <h1 className="text-2xl font-bold font-logo text-white">
                     WanderLink
                 </h1>
             </button>
-            <p className="mt-2 text-md text-white px-4" style={mobileTaglineStyle}>
+            <p className="mt-2 text-md text-white px-4">
                 Trouvez des compagnons de voyage qui partagent votre passion.
             </p>
         </div>
 
         <div className="grid min-h-screen items-center md:grid-cols-2">
             <div className="hidden md:flex flex-col justify-center p-12 lg:p-16">
-            <h1 className="text-6xl font-bold font-logo text-white mb-4" style={textStrokeStyle}>
+            <h1 className="text-6xl font-bold font-logo text-white mb-4">
                 WanderLink
             </h1>
-            <p className="text-xl text-white" style={desktopTaglineStyle}>
+            <p className="text-xl text-white">
                 Trouvez des compagnons de voyage qui partagent votre passion. Votre prochaine grande aventure commence ici.
             </p>
             </div>
