@@ -5,13 +5,22 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, FileText } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
 
 export default function TermsOfServicePage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-secondary/30 flex flex-col pt-12">
-      <main className="flex-1 overflow-hidden">
+    <div className="min-h-screen bg-secondary/30 flex flex-col">
+       <header className="fixed top-0 z-20 w-full h-12 flex items-center justify-between border-b bg-background/95 px-2 py-1 backdrop-blur-sm md:px-4">
+        <Button onClick={() => router.back()} variant="ghost" size="icon" className="h-8 w-8">
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Retour</span>
+        </Button>
+        <h1 className="text-sm font-semibold">Conditions d'utilisation</h1>
+        <div className="w-8"></div>
+      </header>
+      <main className="flex-1 overflow-hidden pt-12">
         <ScrollArea className="h-full">
           <div className="space-y-6 px-2 py-4 md:px-4">
             <div className="mx-auto max-w-2xl space-y-4">
