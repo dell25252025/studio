@@ -5,17 +5,16 @@ import { Suspense, useEffect, useState } from 'react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { type AIPoweredMatchingInput } from '@/ai/flows/ai-powered-matching';
 import { handleAiMatching, getAllUsers, getUserProfile } from '@/app/actions';
 import AiMatchResults from '@/components/ai-match-results';
-import MatchCarousel from '@/components/match-carousel';
 import BottomNav from '@/components/bottom-nav';
 import WanderlinkHeader from '@/components/wanderlink-header';
 import { useToast } from '@/hooks/use-toast';
 import type { DocumentData } from 'firebase/firestore';
 import type { UserProfile } from '@/lib/types';
+import ProfileCard from '@/components/profile-card';
 
 
 // --- Sub-component for Authenticated Users --- //
@@ -174,7 +173,7 @@ function DiscoverPage({ user }: { user: User }) {
     <div className="flex min-h-screen w-full flex-col">
       <WanderlinkHeader />
       <main className="flex-1 pb-24 pt-16">
-        <div className="container mx-auto max-w-7xl px-4">
+        <div className="container mx-auto max-w-7xl px-2">
           <div className="text-center">
             {profilesLoading ? (
               <div className="flex flex-col items-center justify-center text-center h-96">
@@ -185,7 +184,11 @@ function DiscoverPage({ user }: { user: User }) {
               <>
                 <div>
                   {displayMatches.length > 0 ? (
-                    <MatchCarousel profiles={getMappedProfiles(displayMatches)} />
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                      {getMappedProfiles(displayMatches).map((profile) => (
+                        <ProfileCard key={profile.id} profile={profile} />
+                      ))}
+                    </div>
                   ) : (
                     <p className="text-muted-foreground mt-8">No profiles match your criteria.</p>
                   )}
