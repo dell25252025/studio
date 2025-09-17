@@ -15,6 +15,11 @@ export const travelStyles = [
   { value: 'Religieux / Spirituel', label: 'Religieux / Spirituel', icon: '🕉️' },
   { value: 'Road Trip / Van Life', label: 'Road Trip / Van Life', icon: '🚐' },
   { value: 'Humanitaire / Écovolontariat', label: 'Humanitaire / Écovolontariat', icon: '❤️' },
+  { value: 'Entre femmes', label: 'Entre femmes', icon: '🙋‍♀️' },
+  { value: 'Entre hommes', label: 'Entre hommes', icon: '🙋‍♂️' },
+  { value: 'Entre LGBT+', label: 'Entre LGBT+', icon: '🏳️‍🌈' },
+  { value: 'Entre séniors', label: 'Entre séniors', icon: '👴👵' },
+  { value: 'Entre jeunes', label: 'Entre jeunes', icon: '🤙' },
   { value: 'Autre', label: 'Autre', icon: '✨' },
 ];
 
