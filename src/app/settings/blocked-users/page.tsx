@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { SettingsHeader } from '@/components/settings/settings-header';
 
 // Mock data for blocked users
 const initialBlockedUsers = [
@@ -32,8 +33,9 @@ export default function BlockedUsersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary/30 pt-12">
-        <main className="px-2 py-4 md:px-4">
+    <div className="min-h-screen bg-secondary/30">
+      <SettingsHeader title="Utilisateurs bloqués" />
+      <main className="px-2 py-4 md:px-4 pt-16">
             <div className="mx-auto max-w-2xl space-y-4">
                 <Card>
                     <CardHeader>
