@@ -3,7 +3,7 @@ import Image from 'next/image';
 import type { UserProfile } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Backpack, Coins, Globe, Languages, ShieldCheck, Star, Users, BriefcaseBusiness, UserPlus, Send } from 'lucide-react';
+import { Backpack, Coins, Globe, MapPin, ShieldCheck, Star, Users, BriefcaseBusiness, UserPlus, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 
@@ -44,19 +44,29 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
       </div>
 
       <CardContent className="absolute bottom-0 left-0 right-0 p-4 text-white">
-        <h3 className="text-2xl font-bold font-headline drop-shadow-md">{profile.name}, {profile.age}</h3>
-        
-        {intention && (
-            <Badge variant="default" className={cn("border-none text-white mt-1.5", intention.color)}>
-                <intention.icon className="mr-1 h-3 w-3" />
-                {intention.text}
-            </Badge>
-        )}
+        <div>
+          <h3 className="text-2xl font-bold font-headline drop-shadow-md">{profile.name}, {profile.age}</h3>
+          
+          {intention && (
+              <Badge variant="default" className={cn("border-none text-white mt-1.5", intention.color)}>
+                  <intention.icon className="mr-1 h-3 w-3" />
+                  {intention.text}
+              </Badge>
+          )}
+        </div>
         
         <div className="mt-2 space-y-1.5 text-sm font-light">
             <div className="flex items-center gap-2 drop-shadow-sm">
+                <MapPin className="h-4 w-4 text-neutral-300" />
+                <span className="truncate">Habite à {profile.location}</span>
+            </div>
+            <div className="flex items-center gap-2 drop-shadow-sm">
                 <Globe className="h-4 w-4 text-neutral-300" />
                 <span className="truncate">Destination: {profile.dreamDestinations.join(', ')}</span>
+            </div>
+             <div className="flex items-center gap-2 drop-shadow-sm">
+                <Backpack className="h-4 w-4 text-neutral-300" />
+                <span className="truncate">Style: {profile.travelStyle}</span>
             </div>
              <div className="flex items-center gap-2 drop-shadow-sm">
                 <Star className="h-4 w-4 text-neutral-300" />
