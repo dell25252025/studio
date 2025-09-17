@@ -43,6 +43,7 @@ const intentionMap: { [key: string]: { icon: React.ElementType, color: string, t
   'Sponsorisé': { icon: Coins, color: 'bg-yellow-500', text: 'Sponsorisé' },
   '50/50': { icon: Users, color: 'bg-blue-500', text: '50/50' },
   'Groupe': { icon: Users, color: 'bg-red-500', text: 'Groupe' },
+  'Toutes': { icon: Users, color: 'bg-gray-500', text: 'Toutes' },
 };
 
 const MAX_PHOTOS = 4;
