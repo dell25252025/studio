@@ -4,6 +4,7 @@ import type { UserProfile } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Backpack, Coins, Globe, Languages, ShieldCheck, Star, Users, BriefcaseBusiness } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ProfileCardProps {
   profile: UserProfile;
@@ -38,7 +39,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
         
         <div className="mt-4 flex flex-wrap gap-2">
             {intention && (
-                <Badge variant="default" className={`border-none text-white ${intention.color}`}>
+                <Badge variant="default" className={cn("border-none text-white", intention.color)}>
                     <intention.icon className="mr-1 h-3 w-3" />
                     {intention.text}
                 </Badge>

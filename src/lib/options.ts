@@ -1,9 +1,9 @@
 export const travelIntentions = [
-  { value: 'Toutes', label: 'Toutes', icon: '🌐' },
-  { value: '50/50', label: '50/50', icon: '⚖️' },
-  { value: 'Sponsor', label: 'Sponsor', icon: '💰' },
-  { value: 'Sponsorisé', label: 'Sponsorisé', icon: '🙏' },
-  { value: 'Groupe', label: 'Groupe', icon: '👥' },
+  { value: 'Toutes', label: 'Toutes', icon: '🌐', color: 'bg-gray-500' },
+  { value: '50/50', label: '50/50', icon: '⚖️', color: 'bg-blue-500' },
+  { value: 'Sponsor', label: 'Sponsor', icon: '💰', color: 'bg-green-500' },
+  { value: 'Sponsorisé', label: 'Sponsorisé', icon: '🙏', color: 'bg-yellow-500' },
+  { value: 'Groupe', label: 'Groupe', icon: '👥', color: 'bg-red-500' },
 ];
 
 export const travelStyles = [
