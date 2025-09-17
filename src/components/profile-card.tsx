@@ -27,60 +27,60 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
         {/* Icons at the top */}
-        <div className="absolute top-3 left-3">
-            <div className="h-8 w-8 rounded-full bg-black/30 flex items-center justify-center text-white backdrop-blur-sm">
-                <UserPlus className="h-4 w-4" />
+        <div className="absolute top-2 left-2 md:top-3 md:left-3">
+            <div className="h-6 w-6 md:h-8 md:w-8 rounded-full bg-black/30 flex items-center justify-center text-white backdrop-blur-sm">
+                <UserPlus className="h-3 w-3 md:h-4 md:w-4" />
             </div>
         </div>
         {profile.verified && (
-            <div className="absolute top-3 right-3">
-                <div className="h-8 w-8 rounded-full bg-green-500/80 flex items-center justify-center text-white backdrop-blur-sm">
-                    <ShieldCheck className="h-4 w-4" />
+            <div className="absolute top-2 right-2 md:top-3 md:right-3">
+                <div className="h-6 w-6 md:h-8 md:w-8 rounded-full bg-green-500/80 flex items-center justify-center text-white backdrop-blur-sm">
+                    <ShieldCheck className="h-3 w-3 md:h-4 md:w-4" />
                 </div>
             </div>
         )}
 
         {/* Content at the bottom */}
-        <div className="absolute bottom-0 left-0 right-0 p-3 text-white flex flex-col justify-end h-full">
-            <div className="space-y-2">
+        <div className="absolute bottom-0 left-0 right-0 p-2 md:p-3 text-white flex flex-col justify-end h-full">
+            <div className="space-y-1 md:space-y-2">
                  <div>
-                    <h3 className="text-2xl md:text-3xl font-bold font-headline">{profile.name}, {profile.age}</h3>
+                    <h3 className="text-xl md:text-3xl font-bold font-headline">{profile.name}, {profile.age}</h3>
                 </div>
-                <div className="space-y-1 text-xs md:text-sm font-light">
+                <div className="space-y-0.5 md:space-y-1 text-[10px] md:text-sm font-light">
                     {profile.location && (
-                        <div className="flex items-center gap-2">
-                            <MapPin className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                        <div className="flex items-center gap-1.5 md:gap-2">
+                            <MapPin className="h-2.5 w-2.5 md:h-4 md:w-4 flex-shrink-0" />
                             <span>Habite à {profile.location}</span>
                         </div>
                     )}
                     {profile.dreamDestinations?.[0] && (
-                         <div className="flex items-center gap-2">
-                            <Globe className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                         <div className="flex items-center gap-1.5 md:gap-2">
+                            <Globe className="h-2.5 w-2.5 md:h-4 md:w-4 flex-shrink-0" />
                             <span>Destination: {profile.dreamDestinations[0]}</span>
                         </div>
                     )}
                     {profile.travelStyle && (
-                        <div className="flex items-center gap-2">
-                            <Briefcase className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                        <div className="flex items-center gap-1.5 md:gap-2">
+                            <Briefcase className="h-2.5 w-2.5 md:h-4 md:w-4 flex-shrink-0" />
                             <span>Style: {profile.travelStyle}</span>
                         </div>
                     )}
                     {profile.interests?.[0] && (
-                        <div className="flex items-center gap-2">
-                            <Star className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                        <div className="flex items-center gap-1.5 md:gap-2">
+                            <Star className="h-2.5 w-2.5 md:h-4 md:w-4 flex-shrink-0" />
                             <span>Activités: {profile.interests[0]}</span>
                         </div>
                     )}
                 </div>
                  <Button 
-                    className="w-full mt-2 h-9 text-xs md:text-sm md:h-auto bg-white/90 text-black hover:bg-white backdrop-blur-sm"
+                    className="w-full mt-1.5 md:mt-2 h-7 text-[10px] md:text-sm md:h-auto bg-white/90 text-black hover:bg-white backdrop-blur-sm"
                     onClick={(e) => {
                         e.preventDefault();
                         // Add messaging logic here
                         console.log(`Messaging ${profile.name}`);
                     }}
                 >
-                    <Send className="mr-2 h-4 w-4" />
+                    <Send className="mr-1 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
                     Envoyer un message
                 </Button>
             </div>
