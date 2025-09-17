@@ -44,16 +44,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
             </div>
         )}
 
-        <div className="absolute bottom-4 left-4 right-4 text-white">
+        <div className="absolute bottom-0 left-0 p-2 md:p-4 text-white w-full flex flex-col items-start">
           {intention && (
-            <div className="flex justify-center mb-2">
-              <Badge variant="default" className={cn("border-none text-white text-xs px-2 py-0.5 h-auto", intention.color)}>
+            <div className="mb-1 md:mb-2">
+              <Badge variant="default" className={cn("border-none text-white text-[10px] md:text-xs px-2 py-0.5 h-auto", intention.color)}>
                 {intention.text}
               </Badge>
             </div>
           )}
-          <div className="text-center">
-            <h3 className="font-bold text-lg drop-shadow-md">{profile.name}, {profile.age}</h3>
+          <div className="text-left">
+            <h3 className="font-bold text-sm md:text-lg drop-shadow-md">{profile.name}, {profile.age}</h3>
           </div>
         </div>
       </Card>
