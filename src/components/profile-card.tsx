@@ -2,15 +2,26 @@
 import Image from 'next/image';
 import type { UserProfile } from '@/lib/types';
 import { Card } from '@/components/ui/card';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, BriefcaseBusiness, Coins, Users } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 interface ProfileCardProps {
   profile: UserProfile;
 }
 
+const intentionMap: { [key: string]: { icon: React.ElementType, color: string, text: string } } = {
+  'Sponsor': { icon: BriefcaseBusiness, color: 'bg-green-500', text: 'Sponsor' },
+  'Sponsorisé': { icon: Coins, color: 'bg-yellow-500', text: 'Sponsorisé' },
+  '50/50': { icon: Users, color: 'bg-blue-500', text: '50/50' },
+  'Groupe': { icon: Users, color: 'bg-red-500', text: 'Groupe' },
+  'Toutes': { icon: Users, color: 'bg-gray-500', text: 'Toutes' },
+};
+
 const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
+  const intention = profile.travelIntention ? intentionMap[profile.travelIntention] : null;
+
   return (
     <Link href={`/profile?id=${profile.id}`} passHref>
       <Card className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border-0 shadow-lg group cursor-pointer">
@@ -23,18 +34,27 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
           priority
         />
         
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
         {profile.verified && (
             <div className="absolute top-2 right-2">
-                <div className="h-6 w-6 rounded-full bg-green-500/80 flex items-center justify-center text-white backdrop-blur-sm">
+                <div className="h-6 w-6 rounded-full bg-green-500/90 flex items-center justify-center text-white backdrop-blur-sm">
                     <ShieldCheck className="h-3 w-3" />
                 </div>
             </div>
         )}
 
-        <div className="absolute bottom-4 left-0 right-0 text-center text-white">
+        <div className="absolute bottom-4 left-4 right-4 text-white">
+          {intention && (
+            <div className="flex justify-center mb-2">
+              <Badge variant="default" className={cn("border-none text-white text-xs px-2 py-0.5 h-auto", intention.color)}>
+                {intention.text}
+              </Badge>
+            </div>
+          )}
+          <div className="text-center">
             <h3 className="font-bold text-lg drop-shadow-md">{profile.name}, {profile.age}</h3>
+          </div>
         </div>
       </Card>
     </Link>
