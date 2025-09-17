@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -31,7 +32,7 @@ const MatchCarousel: React.FC<MatchCarouselProps> = ({ profiles }) => {
     >
       <CarouselContent className="-ml-1">
         {profiles.map((profile, index) => (
-          <CarouselItem key={index} className="pl-4 basis-4/5 md:basis-1/3">
+          <CarouselItem key={index} className="pl-4 basis-11/12 md:basis-1/3">
             <div className="p-1">
               <ProfileCard profile={profile} />
             </div>
