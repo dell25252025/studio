@@ -38,11 +38,11 @@ const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const intentionMap = {
-  'Je peux sponsoriser': { icon: BriefcaseBusiness, color: 'bg-green-500', text: 'Sponsor' },
-  'Je cherche un voyage sponsorisé': { icon: Coins, color: 'bg-yellow-500', text: 'Seeking Sponsor' },
-  'Partager les frais (50/50)': { icon: Users, color: 'bg-blue-500', text: '50/50' },
-  'Voyage de groupe': { icon: Users, color: 'bg-red-500', text: 'Group' },
+const intentionMap: { [key: string]: { icon: React.ElementType, color: string, text: string } } = {
+  'Sponsor': { icon: BriefcaseBusiness, color: 'bg-green-500', text: 'Sponsor' },
+  'Sponsorisé': { icon: Coins, color: 'bg-yellow-500', text: 'Sponsorisé' },
+  '50/50': { icon: Users, color: 'bg-blue-500', text: '50/50' },
+  'Groupe': { icon: Users, color: 'bg-red-500', text: 'Groupe' },
 };
 
 const MAX_PHOTOS = 4;

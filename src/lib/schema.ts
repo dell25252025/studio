@@ -23,6 +23,7 @@ export const formSchema = z.object({
   travelStyle: z.string().optional(),
   activities: z.string().optional(),
   intention: z.string().optional(),
+  financialArrangement: z.enum(['50/50', 'Sponsor', 'Sponsorisé', 'Groupe']).optional(),
 });
 
 export type FormData = z.infer<typeof formSchema>;

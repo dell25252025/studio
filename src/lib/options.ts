@@ -1,9 +1,9 @@
 export const travelIntentions = [
   { value: 'Toutes', label: 'Toutes', icon: '🌐' },
-  { value: 'Partager les frais (50/50)', label: 'Partager les frais (50/50)', icon: '⚖️' },
-  { value: 'Je peux sponsoriser le voyage', label: 'Je peux sponsoriser', icon: '💰' },
-  { value: 'Je cherche un voyage sponsorisé', label: 'Je cherche un voyage sponsorisé', icon: '🙏' },
-  { value: 'Organiser un voyage de groupe', label: 'Voyage de groupe', icon: '👥' },
+  { value: '50/50', label: '50/50', icon: '⚖️' },
+  { value: 'Sponsor', label: 'Sponsor', icon: '💰' },
+  { value: 'Sponsorisé', label: 'Sponsorisé', icon: '🙏' },
+  { value: 'Groupe', label: 'Groupe', icon: '👥' },
 ];
 
 export const travelStyles = [
