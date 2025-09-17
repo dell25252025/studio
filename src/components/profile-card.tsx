@@ -44,18 +44,29 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
       </div>
 
       <CardContent className="absolute bottom-0 left-0 right-0 p-4 text-white">
-        <div>
-          <h3 className="text-2xl font-bold font-headline drop-shadow-md">{profile.name}, {profile.age}</h3>
+        <div className='md:hidden'>
+          <h3 className="text-lg font-bold font-headline drop-shadow-md text-center">{profile.name}, {profile.age}</h3>
           
           {intention && (
-              <Badge variant="default" className={cn("border-none text-white mt-1.5", intention.color)}>
-                  <intention.icon className="mr-1 h-3 w-3" />
-                  {intention.text}
-              </Badge>
+              <div className="flex justify-center mt-1">
+                <Badge variant="default" className={cn("border-none text-white", intention.color)}>
+                    <intention.icon className="mr-1 h-3 w-3" />
+                    {intention.text}
+                </Badge>
+              </div>
           )}
         </div>
+        <div className="hidden md:block mb-2">
+            <h3 className="text-2xl font-bold font-headline drop-shadow-md">{profile.name}, {profile.age}</h3>
+            {intention && (
+                <Badge variant="default" className={cn("border-none text-white mt-1.5", intention.color)}>
+                    <intention.icon className="mr-1 h-3 w-3" />
+                    {intention.text}
+                </Badge>
+            )}
+        </div>
         
-        <div className="mt-2 space-y-1.5 text-sm font-light">
+        <div className="mt-2 space-y-1 text-[11px] md:text-sm font-light">
             <div className="flex items-center gap-2 drop-shadow-sm">
                 <MapPin className="h-4 w-4 text-neutral-300" />
                 <span className="truncate">Habite à {profile.location}</span>
@@ -74,7 +85,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
             </div>
         </div>
 
-        <Button className="w-full mt-4 bg-white/90 text-black hover:bg-white backdrop-blur-sm">
+        <Button className="w-full mt-3 md:mt-4 bg-white/90 text-black hover:bg-white backdrop-blur-sm text-xs md:text-sm h-9 md:h-10">
             <Send className="mr-2 h-4 w-4"/>
             Envoyer un message
         </Button>

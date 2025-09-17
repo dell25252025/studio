@@ -30,9 +30,9 @@ const MatchCarousel: React.FC<MatchCarouselProps> = ({ profiles }) => {
         }),
       ]}
     >
-      <CarouselContent className="-ml-1">
+      <CarouselContent className="-ml-2">
         {profiles.map((profile, index) => (
-          <CarouselItem key={index} className="pl-4 basis-11/12 md:basis-1/3">
+          <CarouselItem key={index} className="pl-2 basis-full md:basis-1/3">
             <div className="p-1">
               <ProfileCard profile={profile} />
             </div>
