@@ -18,7 +18,7 @@ export const travelStyles = [
   { value: 'Entre femmes', label: 'Entre femmes', icon: '🙋‍♀️' },
   { value: 'Entre hommes', label: 'Entre hommes', icon: '🙋‍♂️' },
   { value: 'Entre LGBT+', label: 'Entre LGBT+', icon: '🏳️‍🌈' },
-  { value: 'Entre séniors', label: 'Entre séniors', icon: '👴👵' },
+  { value: 'Entre séniors', label: 'Entre séniors', icon: '👵' },
   { value: 'Entre jeunes', label: 'Entre jeunes', icon: '🤙' },
   { value: 'Autre', label: 'Autre', icon: '✨' },
 ];
