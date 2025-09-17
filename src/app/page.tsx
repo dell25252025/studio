@@ -9,13 +9,14 @@ import { Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { type AIPoweredMatchingInput } from '@/ai/flows/ai-powered-matching';
 import { handleAiMatching, getAllUsers, getUserProfile } from '@/app/actions';
-import { currentUser as mockCurrentUser } from '@/lib/mock-data';
 import AiMatchResults from '@/components/ai-match-results';
 import MatchCarousel from '@/components/match-carousel';
 import BottomNav from '@/components/bottom-nav';
 import WanderlinkHeader from '@/components/wanderlink-header';
 import { useToast } from '@/hooks/use-toast';
 import type { DocumentData } from 'firebase/firestore';
+import type { UserProfile } from '@/lib/types';
+
 
 // --- Sub-component for Authenticated Users --- //
 
@@ -72,22 +73,22 @@ function DiscoverPage({ user }: { user: User }) {
       }
 
       const destination = searchParams.get('destination');
-      if (destination) {
+      if (destination && destination !== 'Toutes') {
         filtered = filtered.filter(p => p.destination === destination);
       }
 
       const intention = searchParams.get('intention');
-      if (intention) {
+      if (intention && intention !== 'Toutes') {
         filtered = filtered.filter(p => p.intention === intention);
       }
       
       const travelStyle = searchParams.get('travelStyle');
-      if (travelStyle) {
+      if (travelStyle && travelStyle !== 'Tous') {
         filtered = filtered.filter(p => p.travelStyle === travelStyle);
       }
 
       const activities = searchParams.get('activities');
-      if (activities) {
+      if (activities && activities !== 'Toutes') {
         filtered = filtered.filter(p => p.activities === activities);
       }
       
@@ -150,35 +151,18 @@ function DiscoverPage({ user }: { user: User }) {
     setResults([]);
   };
 
-  const getMappedProfilesForResults = () => {
-    return displayMatches.map(p => ({
-        id: p.id,
-        name: p.firstName,
-        age: p.age,
-        sex: p.sex,
-        bio: p.bio,
-        travelStyle: p.travelStyle,
-        dreamDestinations: [p.destination],
-        languagesSpoken: p.languages,
-        travelIntention: p.intention,
-        interests: [p.activities],
-        verified: true,
-        image: p.profilePictures?.[0] || 'https://picsum.photos/800/1200'
-    }));
-  }
-
-  const getMappedProfilesForCarousel = (profiles: DocumentData[]) => {
+  const getMappedProfiles = (profiles: DocumentData[]): UserProfile[] => {
       return profiles.map(p => ({
         id: p.id,
         name: p.firstName,
         age: p.age,
         sex: p.sex,
         bio: p.bio,
-        travelStyle: p.travelStyle,
-        dreamDestinations: [p.destination],
-        languagesSpoken: p.languages,
-        travelIntention: p.intention,
-        interests: [p.activities],
+        travelStyle: p.travelStyle || 'Tous',
+        dreamDestinations: [p.destination] || ['Toutes'],
+        languagesSpoken: p.languages || [],
+        travelIntention: p.intention || 'Toutes',
+        interests: [p.activities] || ['Toutes'],
         verified: true,
         image: p.profilePictures?.[0] || 'https://picsum.photos/800/1200'
     }));
@@ -200,7 +184,7 @@ function DiscoverPage({ user }: { user: User }) {
               <>
                 <div>
                   {displayMatches.length > 0 ? (
-                    <MatchCarousel profiles={getMappedProfilesForCarousel(displayMatches)} />
+                    <MatchCarousel profiles={getMappedProfiles(displayMatches)} />
                   ) : (
                     <p className="text-muted-foreground mt-8">No profiles match your criteria.</p>
                   )}
@@ -223,7 +207,7 @@ function DiscoverPage({ user }: { user: User }) {
             )}
 
             {view === 'results' && !loading && results.length > 0 && (
-              <AiMatchResults results={results} profiles={getMappedProfilesForResults()} onReset={resetView} />
+              <AiMatchResults results={results} profiles={getMappedProfiles(displayMatches)} onReset={resetView} />
             )}
              {view === 'results' && !loading && results.length === 0 && (
                 <div className="flex flex-col items-center justify-center text-center h-96">
