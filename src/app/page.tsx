@@ -14,7 +14,7 @@ import WanderlinkHeader from '@/components/wanderlink-header';
 import { useToast } from '@/hooks/use-toast';
 import type { DocumentData } from 'firebase/firestore';
 import type { UserProfile } from '@/lib/types';
-import ProfileCard from '@/components/profile-card';
+import MatchCarousel from '@/components/match-carousel';
 
 
 // --- Sub-component for Authenticated Users --- //
@@ -184,11 +184,7 @@ function DiscoverPage({ user }: { user: User }) {
               <>
                 <div>
                   {displayMatches.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                      {getMappedProfiles(displayMatches).map((profile) => (
-                        <ProfileCard key={profile.id} profile={profile} />
-                      ))}
-                    </div>
+                    <MatchCarousel profiles={getMappedProfiles(displayMatches)} />
                   ) : (
                     <p className="text-muted-foreground mt-8">No profiles match your criteria.</p>
                   )}
