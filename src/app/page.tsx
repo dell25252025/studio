@@ -190,12 +190,6 @@ function DiscoverPage({ user }: { user: User }) {
                     <p className="text-muted-foreground mt-8">No profiles match your criteria.</p>
                   )}
                 </div>
-                <div className="mt-8">
-                   <Button onClick={runAiMatching} disabled={loading || displayMatches.length === 0} size="lg" className="rounded-full font-bold">
-                    <Sparkles className="mr-2 h-5 w-5" />
-                    Find my AI Match
-                  </Button>
-                </div>
               </>
             ) : null}
 
