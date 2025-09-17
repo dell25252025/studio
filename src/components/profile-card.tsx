@@ -3,15 +3,28 @@ import Image from 'next/image';
 import type { UserProfile } from '@/lib/types';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShieldCheck, UserPlus, MapPin, Globe, Briefcase, Star, Send } from 'lucide-react';
+import { ShieldCheck, UserPlus, MapPin, Globe, BriefcaseBusiness, Coins, Users, Star, Send } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+
 
 interface ProfileCardProps {
   profile: UserProfile;
 }
 
+const intentionMap: { [key: string]: { icon: React.ElementType, color: string, text: string } } = {
+  'Sponsor': { icon: BriefcaseBusiness, color: 'bg-green-500', text: 'Sponsor' },
+  'Sponsorisé': { icon: Coins, color: 'bg-yellow-500', text: 'Sponsorisé' },
+  '50/50': { icon: Users, color: 'bg-blue-500', text: '50/50' },
+  'Groupe': { icon: Users, color: 'bg-red-500', text: 'Groupe' },
+  'Toutes': { icon: Users, color: 'bg-gray-500', text: 'Toutes' },
+};
+
 const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
+  
+  const intention = profile.travelIntention ? intentionMap[profile.travelIntention] : null;
+
   return (
     <Link href={`/profile?id=${profile.id}`} passHref>
       <Card className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border-0 shadow-lg group cursor-pointer">
@@ -41,48 +54,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
         )}
 
         {/* Content at the bottom */}
-        <div className="absolute bottom-0 left-0 right-0 p-2 md:p-3 text-white flex flex-col justify-end h-full">
+        <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 text-white flex flex-col justify-end h-full">
             <div className="space-y-1 md:space-y-2">
                  <div>
                     <h3 className="text-xl md:text-3xl font-bold font-headline">{profile.name}, {profile.age}</h3>
                 </div>
-                <div className="space-y-0.5 md:space-y-1 text-[10px] md:text-sm font-light">
-                    {profile.location && (
-                        <div className="flex items-center gap-1.5 md:gap-2">
-                            <MapPin className="h-2.5 w-2.5 md:h-4 md:w-4 flex-shrink-0" />
-                            <span>Habite à {profile.location}</span>
-                        </div>
-                    )}
-                    {profile.dreamDestinations?.[0] && (
-                         <div className="flex items-center gap-1.5 md:gap-2">
-                            <Globe className="h-2.5 w-2.5 md:h-4 md:w-4 flex-shrink-0" />
-                            <span>Destination: {profile.dreamDestinations[0]}</span>
-                        </div>
-                    )}
-                    {profile.travelStyle && (
-                        <div className="flex items-center gap-1.5 md:gap-2">
-                            <Briefcase className="h-2.5 w-2.5 md:h-4 md:w-4 flex-shrink-0" />
-                            <span>Style: {profile.travelStyle}</span>
-                        </div>
-                    )}
-                    {profile.interests?.[0] && (
-                        <div className="flex items-center gap-1.5 md:gap-2">
-                            <Star className="h-2.5 w-2.5 md:h-4 md:w-4 flex-shrink-0" />
-                            <span>Activités: {profile.interests[0]}</span>
-                        </div>
-                    )}
-                </div>
-                 <Button 
-                    className="w-full mt-1.5 md:mt-2 h-7 text-[10px] md:text-sm md:h-auto bg-white/90 text-black hover:bg-white backdrop-blur-sm"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        // Add messaging logic here
-                        console.log(`Messaging ${profile.name}`);
-                    }}
-                >
-                    <Send className="mr-1 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
-                    Envoyer un message
-                </Button>
+                {intention && (
+                    <div className="mt-1">
+                        <Badge variant="default" className={cn("border-none text-white text-xs md:text-sm", intention.color)}>
+                            <intention.icon className="mr-1 h-3 w-3 md:h-4 md:w-4" />
+                            {intention.text}
+                        </Badge>
+                    </div>
+                )}
             </div>
         </div>
       </Card>
