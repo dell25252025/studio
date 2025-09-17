@@ -44,9 +44,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
             </div>
         )}
 
-        <div className="absolute bottom-0 left-0 right-0 p-2 text-white">
-            <div className="flex items-center justify-between">
-                <div className="flex-1 overflow-hidden">
+        <div className="absolute bottom-2 left-2 right-2">
+             <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 flex items-center justify-start text-black">
+                <div className="flex-1 overflow-hidden text-left">
                     <h3 className="text-sm font-bold truncate">{profile.name}, {profile.age}</h3>
                 </div>
                 {intention && (
