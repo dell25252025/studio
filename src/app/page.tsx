@@ -158,6 +158,7 @@ function DiscoverPage({ user }: { user: User }) {
         age: p.age,
         sex: p.sex,
         bio: p.bio,
+        location: p.location || 'N/A',
         travelStyle: p.travelStyle || 'Tous',
         dreamDestinations: [p.destination] || ['Toutes'],
         languagesSpoken: p.languages || [],
