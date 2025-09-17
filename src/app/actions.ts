@@ -197,7 +197,19 @@ export async function getAllUsers() {
   try {
     const usersCollection = collection(db, "users");
     const userSnapshot = await getDocs(usersCollection);
-    const userList = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const userList = userSnapshot.docs.map(doc => {
+      const data = doc.data();
+      // Convert Firestore Timestamps to serializable format (ISO strings)
+      if (data.dates) {
+        if (data.dates.from && typeof data.dates.from.toDate === 'function') {
+          data.dates.from = data.dates.from.toDate().toISOString();
+        }
+        if (data.dates.to && typeof data.dates.to.toDate === 'function') {
+          data.dates.to = data.dates.to.toDate().toISOString();
+        }
+      }
+      return { id: doc.id, ...data };
+    });
     return userList;
   } catch (error) {
     console.error("Error getting all users:", error);

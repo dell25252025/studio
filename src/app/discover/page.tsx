@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -44,8 +45,24 @@ export default function DiscoverPage() {
     };
 
     const handleSearch = () => {
-        console.log("Recherche lancée avec les filtres :");
-        console.log({ showMe, ageRange, date, flexibleDates, nearby, country, destination, intention, travelStyle, activities });
+        const params = new URLSearchParams();
+        
+        if (showMe) params.set('showMe', showMe);
+        if (ageRange) {
+            params.set('minAge', ageRange[0].toString());
+            params.set('maxAge', ageRange[1].toString());
+        }
+        if (date?.from) params.set('dateFrom', date.from.toISOString());
+        if (date?.to) params.set('dateTo', date.to.toISOString());
+        if (flexibleDates) params.set('flexibleDates', 'true');
+        if (nearby) params.set('nearby', 'true');
+        if (country && !nearby) params.set('country', country);
+        if (destination && destination !== 'Toutes') params.set('destination', destination);
+        if (intention && intention !== 'Toutes') params.set('intention', intention);
+        if (travelStyle && travelStyle !== 'Tous') params.set('travelStyle', travelStyle);
+        if (activities && activities !== 'Toutes') params.set('activities', activities);
+        
+        router.push(`/?${params.toString()}`);
     };
 
     const uniformSelectClass = "w-3/5 md:w-[45%]";
