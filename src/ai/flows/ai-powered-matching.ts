@@ -55,7 +55,7 @@ const AIPoweredMatchingInputSchema = z.object({
     dreamDestinations: z.array(z.string()).describe('A list of the user dream destinations.'),
     languagesSpoken: z.array(z.string()).describe('A list of languages the user speaks.'),
     travelIntention: z
-      .enum(['Sponsor', 'Seeking Sponsorship', '50/50', 'Group', 'Partager les frais (50/50)', 'Je peux sponsoriser le voyage', 'Je cherche un voyage sponsorisé', 'Organiser un voyage de groupe'])
+      .enum(['Sponsor', 'Sponsorisé', '50/50', 'Groupe'])
       .describe('The user travel intention.'),
     interests: z.array(z.string()).describe('A list of the user interests.'),
     age: z.number().describe('The user age.'),
@@ -67,7 +67,7 @@ const AIPoweredMatchingInputSchema = z.object({
     dreamDestinations: z.array(z.string()).describe('A list of the possible match dream destinations.'),
     languagesSpoken: z.array(z.string()).describe('A list of languages the possible match speaks.'),
     travelIntention: z
-      .enum(['Sponsor', 'Seeking Sponsorship', '50/50', 'Group', 'Partager les frais (50/50)', 'Je peux sponsoriser le voyage', 'Je cherche un voyage sponsorisé', 'Organiser un voyage de groupe'])
+       .enum(['Sponsor', 'Sponsorisé', '50/50', 'Groupe'])
       .describe('The possible match travel intention.'),
     interests: z.array(z.string()).describe('A list of the possible match interests.'),
     age: z.number().describe('The possible match age.'),
@@ -123,7 +123,7 @@ Verified: {{{this.verified}}}
 Consider the following when determining compatibility:
 - Shared travel styles and interests
 - Overlapping dream destinations
-- Compatibility of travel intentions (e.g., a "Sponsor" matching with a "Seeking Sponsorship" user)
+- Compatibility of travel intentions (e.g., a "Sponsor" matching with a "Sponsorisé" user)
 - Use the languageBenefit tool to determine if a match's language skills offer a practical advantage in any of the user's dream destinations. Highlight this as a key compatibility factor if a benefit is found.
 - Age and sex preferences
 - Verified profiles
