@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Plane, Trash2, UploadCloud, X, Save } from 'lucide-react';
+import { Loader2, Plane, Trash2, UploadCloud, X, Save, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
@@ -175,75 +175,79 @@ export default function EditProfilePage() {
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="min-h-screen bg-background text-foreground p-4 md:p-8">
-                <div className="max-w-4xl mx-auto">
-                    <div className="flex justify-between items-center mb-8">
-                        <div className="flex items-center gap-2">
-                             <h1 className="text-3xl font-bold font-headline text-primary">Modifier le Profil</h1>
-                        </div>
-                        <Link href={`/profile?id=${profileId}`} passHref>
-                            <Button variant="ghost" size="icon"><X className="h-6 w-6" /><span className="sr-only">Annuler</span></Button>
-                        </Link>
-                    </div>
+             <header className="fixed top-0 z-20 w-full h-12 flex items-center justify-between border-b bg-background/95 px-2 py-1 backdrop-blur-sm md:px-4">
+                <Button onClick={() => router.back()} variant="ghost" size="icon" className="h-8 w-8 -ml-2">
+                    <ArrowLeft className="h-5 w-5" />
+                    <span className="sr-only">Retour</span>
+                </Button>
+                <h1 className="text-sm font-semibold">Modifier le profil</h1>
+                <div className="w-8"></div>
+            </header>
+            <main className="pt-12">
+                <form onSubmit={handleSubmit(onSubmit)} className="min-h-screen bg-background text-foreground">
+                    <div className="max-w-4xl mx-auto p-4">
 
-                    <div className="space-y-6">
-                        {/* Section Informations Personnelles */}
-                        <div className="p-6 border rounded-lg space-y-4">
-                            <h2 className="text-xl font-semibold">Informations Personnelles</h2>
-                            <FormField control={control} name="firstName" render={({ field }) => (<FormItem><FormLabel>Prénom</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                            <FormField control={control} name="age" render={({ field }) => (<FormItem><FormLabel>Âge</FormLabel><FormControl><Input type="number" {...field} onChange={(e) => field.onChange(parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
-                            <FormField control={control} name="gender" render={({ field }) => (<FormItem><FormLabel>Genre</FormLabel><RadioGroup onValueChange={field.onChange} value={field.value} className="flex space-x-4"><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Homme" /></FormControl><FormLabel>Homme</FormLabel></FormItem><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Femme" /></FormControl><FormLabel>Femme</FormLabel></FormItem><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Non-binaire" /></FormControl><FormLabel>Non-binaire</FormLabel></FormItem></RadioGroup><FormMessage /></FormItem>)} />
-                            <FormField control={control} name="height" render={({ field }) => (<FormItem><FormLabel>Taille (cm)</FormLabel><FormControl><Input type="number" {...field} placeholder="Ex: 175" onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
-                            <FormField control={control} name="weight" render={({ field }) => (<FormItem><FormLabel>Poids (kg)</FormLabel><FormControl><Input type="number" {...field} placeholder="Ex: 70" onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
-                            <FormField control={control} name="bio" render={({ field }) => (<FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>)} />
-                        </div>
-                        
-                        {/* Section Photos */}
-                        <div className="p-6 border rounded-lg space-y-4">
-                            <h2 className="text-xl font-semibold">Mes Photos</h2>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                {profilePictures.map((src, index) => (
-                                    <div key={index} className="relative aspect-square">
-                                        <Image src={src} alt={`Photo ${index + 1}`} fill className="object-cover rounded-md" />
-                                        <Button type="button" variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6" onClick={() => removePicture(src)}><Trash2 className="h-4 w-4" /></Button>
-                                    </div>
-                                ))}
-                                {profilePictures.length < MAX_PHOTOS && (
-                                    <div className="aspect-square flex items-center justify-center border-2 border-dashed rounded-md cursor-pointer hover:bg-muted" onClick={() => fileInputRef.current?.click()}>
-                                        <div className="text-center text-muted-foreground">{isUploading ? <Loader2 className="h-8 w-8 animate-spin mx-auto" /> : <><UploadCloud className="h-8 w-8 mx-auto" /><span className="text-sm mt-2">Ajouter</span></>}</div>
-                                    </div>
-                                )}
+                        <div className="space-y-6">
+                            {/* Section Informations Personnelles */}
+                            <div className="p-4 md:p-6 border rounded-lg space-y-4">
+                                <h2 className="text-xl font-semibold">Informations Personnelles</h2>
+                                <FormField control={control} name="firstName" render={({ field }) => (<FormItem><FormLabel>Prénom</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={control} name="age" render={({ field }) => (<FormItem><FormLabel>Âge</FormLabel><FormControl><Input type="number" {...field} onChange={(e) => field.onChange(parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={control} name="gender" render={({ field }) => (<FormItem><FormLabel>Genre</FormLabel><RadioGroup onValueChange={field.onChange} value={field.value} className="flex space-x-4"><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Homme" /></FormControl><FormLabel>Homme</FormLabel></FormItem><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Femme" /></FormControl><FormLabel>Femme</FormLabel></FormItem><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Non-binaire" /></FormControl><FormLabel>Non-binaire</FormLabel></FormItem></RadioGroup><FormMessage /></FormItem>)} />
+                                <FormField control={control} name="height" render={({ field }) => (<FormItem><FormLabel>Taille (cm)</FormLabel><FormControl><Input type="number" {...field} placeholder="Ex: 175" onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={control} name="weight" render={({ field }) => (<FormItem><FormLabel>Poids (kg)</FormLabel><FormControl><Input type="number" {...field} placeholder="Ex: 70" onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={control} name="bio" render={({ field }) => (<FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>)} />
                             </div>
-                            <input type="file" ref={fileInputRef} className="hidden" accept="image/*" multiple onChange={handleFileSelect} disabled={isUploading} />
-                        </div>
-                        
-                         {/* Section Style de Vie */}
-                        <div className="p-6 border rounded-lg space-y-4">
-                            <h2 className="text-xl font-semibold">Style de Vie</h2>
-                            <FormField control={control} name="tobacco" render={({ field }) => (<FormItem><FormLabel>Tabac</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez une option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Non-fumeur">Non-fumeur</SelectItem><SelectItem value="Occasionnellement">Occasionnellement</SelectItem><SelectItem value="Régulièrement">Régulièrement</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
-                            <FormField control={control} name="alcohol" render={({ field }) => (<FormItem><FormLabel>Alcool</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez une option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Jamais">Jamais</SelectItem><SelectItem value="Occasionnellement">Occasionnellement</SelectItem><SelectItem value="Souvent">Souvent</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
-                            <FormField control={control} name="cannabis" render={({ field }) => (<FormItem><FormLabel>Cannabis</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez une option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Non-fumeur">Non-fumeur</SelectItem><SelectItem value="Occasionnellement">Occasionnellement</SelectItem><SelectItem value="Régulièrement">Régulièrement</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
-                        </div>
+                            
+                            {/* Section Photos */}
+                            <div className="p-4 md:p-6 border rounded-lg space-y-4">
+                                <h2 className="text-xl font-semibold">Mes Photos</h2>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    {profilePictures.map((src, index) => (
+                                        <div key={index} className="relative aspect-square">
+                                            <Image src={src} alt={`Photo ${index + 1}`} fill className="object-cover rounded-md" />
+                                            <Button type="button" variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6" onClick={() => removePicture(src)}><Trash2 className="h-4 w-4" /></Button>
+                                        </div>
+                                    ))}
+                                    {profilePictures.length < MAX_PHOTOS && (
+                                        <div className="aspect-square flex items-center justify-center border-2 border-dashed rounded-md cursor-pointer hover:bg-muted" onClick={() => fileInputRef.current?.click()}>
+                                            <div className="text-center text-muted-foreground">{isUploading ? <Loader2 className="h-8 w-8 animate-spin mx-auto" /> : <><UploadCloud className="h-8 w-8 mx-auto" /><span className="text-sm mt-2">Ajouter</span></>}</div>
+                                        </div>
+                                    )}
+                                </div>
+                                <input type="file" ref={fileInputRef} className="hidden" accept="image/*" multiple onChange={handleFileSelect} disabled={isUploading} />
+                            </div>
+                            
+                             {/* Section Style de Vie */}
+                            <div className="p-4 md:p-6 border rounded-lg space-y-4">
+                                <h2 className="text-xl font-semibold">Style de Vie</h2>
+                                <FormField control={control} name="tobacco" render={({ field }) => (<FormItem><FormLabel>Tabac</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez une option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Non-fumeur">Non-fumeur</SelectItem><SelectItem value="Occasionnellement">Occasionnellement</SelectItem><SelectItem value="Régulièrement">Régulièrement</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+                                <FormField control={control} name="alcohol" render={({ field }) => (<FormItem><FormLabel>Alcool</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez une option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Jamais">Jamais</SelectItem><SelectItem value="Occasionnellement">Occasionnellement</SelectItem><SelectItem value="Souvent">Souvent</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+                                <FormField control={control} name="cannabis" render={({ field }) => (<FormItem><FormLabel>Cannabis</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez une option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Non-fumeur">Non-fumeur</SelectItem><SelectItem value="Occasionnellement">Occasionnellement</SelectItem><SelectItem value="Régulièrement">Régulièrement</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+                            </div>
 
-                         {/* Section Voyage */}
-                         <div className="p-6 border rounded-lg space-y-4">
-                             <h2 className="text-xl font-semibold">Mon Prochain Voyage</h2>
-                             <FormField control={control} name="destination" render={({ field }) => (<FormItem><FormLabel>Destination</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                             <FormField control={control} name="dates" render={({ field }) => ( <FormItem className="flex flex-col"><FormLabel>Dates</FormLabel><Popover><PopoverTrigger asChild><Button variant="outline" className={cn(!field.value?.from && !areDatesFlexible && "text-muted-foreground")} disabled={areDatesFlexible}><CalendarIcon className="mr-2 h-4 w-4" />{areDatesFlexible ? 'Dates flexibles' : field.value?.from ? (field.value.to ? `${format(field.value.from, 'd LLL y', { locale: fr })} - ${format(field.value.to, 'd LLL y', { locale: fr })}` : format(field.value.from, 'd LLL y', { locale: fr })) : 'Choisissez une période'}</Button></PopoverTrigger><PopoverContent className="w-auto p-0"><Calendar initialFocus mode="range" selected={field.value as DateRange} onSelect={field.onChange} numberOfMonths={2} locale={fr} /></PopoverContent></Popover><FormMessage /></FormItem>)} />
-                             <FormField control={control} name="flexibleDates" render={({ field }) => (<FormItem className="flex items-center space-x-2"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><FormLabel>Mes dates sont flexibles</FormLabel></FormItem>)} />
-                             <FormField control={control} name="travelStyle" render={({ field }) => (<FormItem><FormLabel>Style de voyage</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez..." /></SelectTrigger></FormControl><SelectContent><SelectItem value="Aventure / Sac à dos">Aventure / Sac à dos</SelectItem><SelectItem value="Luxe / Détente">Luxe / Détente</SelectItem><SelectItem value="Culturel / Historique">Culturel / Historique</SelectItem><SelectItem value="Festif / Événementiel">Festif / Événementiel</SelectItem><SelectItem value="Religieux / Spirituel">Religieux / Spirituel</SelectItem><SelectItem value="Road Trip / Van Life">Road Trip / Van Life</SelectItem><SelectItem value="Humanitaire / Écovolontariat">Humanitaire / Écovolontariat</SelectItem><SelectItem value="Autre">Autre</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
-                             <FormField control={control} name="activities" render={() => (<FormItem><FormLabel className="text-base">J'aimerais faire...</FormLabel><div className="grid grid-cols-2 gap-4">{activities.map((item) => (<FormField key={item.id} control={control} name="activities" render={({ field }) => { return (<FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item.id)} onCheckedChange={(checked) => { return checked ? field.onChange([...(field.value || []), item.id]) : field.onChange( field.value?.filter( (value: string) => value !== item.id ) ) }} /></FormControl><FormLabel className="font-normal">{item.label}</FormLabel></FormItem>)}}/>))}</div><FormMessage /></FormItem>)} />
-                             <FormField control={control} name="intention" render={({ field }) => (<FormItem><FormLabel>Intention</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez..." /></SelectTrigger></FormControl><SelectContent><SelectItem value="50/50">50/50</SelectItem><SelectItem value="Sponsor">Sponsor</SelectItem><SelectItem value="Sponsorisé">Sponsorisé</SelectItem><SelectItem value="Groupe">Groupe</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
-                         </div>
+                             {/* Section Voyage */}
+                             <div className="p-4 md:p-6 border rounded-lg space-y-4">
+                                 <h2 className="text-xl font-semibold">Mon Prochain Voyage</h2>
+                                 <FormField control={control} name="destination" render={({ field }) => (<FormItem><FormLabel>Destination</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                 <FormField control={control} name="dates" render={({ field }) => ( <FormItem className="flex flex-col"><FormLabel>Dates</FormLabel><Popover><PopoverTrigger asChild><Button variant="outline" className={cn(!field.value?.from && !areDatesFlexible && "text-muted-foreground")} disabled={areDatesFlexible}><CalendarIcon className="mr-2 h-4 w-4" />{areDatesFlexible ? 'Dates flexibles' : field.value?.from ? (field.value.to ? `${format(field.value.from, 'd LLL y', { locale: fr })} - ${format(field.value.to, 'd LLL y', { locale: fr })}` : format(field.value.from, 'd LLL y', { locale: fr })) : 'Choisissez une période'}</Button></PopoverTrigger><PopoverContent className="w-auto p-0"><Calendar initialFocus mode="range" selected={field.value as DateRange} onSelect={field.onChange} numberOfMonths={2} locale={fr} /></PopoverContent></Popover><FormMessage /></FormItem>)} />
+                                 <FormField control={control} name="flexibleDates" render={({ field }) => (<FormItem className="flex items-center space-x-2"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><FormLabel>Mes dates sont flexibles</FormLabel></FormItem>)} />
+                                 <FormField control={control} name="travelStyle" render={({ field }) => (<FormItem><FormLabel>Style de voyage</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez..." /></SelectTrigger></FormControl><SelectContent><SelectItem value="Aventure / Sac à dos">Aventure / Sac à dos</SelectItem><SelectItem value="Luxe / Détente">Luxe / Détente</SelectItem><SelectItem value="Culturel / Historique">Culturel / Historique</SelectItem><SelectItem value="Festif / Événementiel">Festif / Événementiel</SelectItem><SelectItem value="Religieux / Spirituel">Religieux / Spirituel</SelectItem><SelectItem value="Road Trip / Van Life">Road Trip / Van Life</SelectItem><SelectItem value="Humanitaire / Écovolontariat">Humanitaire / Écovolontariat</SelectItem><SelectItem value="Autre">Autre</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+                                 <FormField control={control} name="activities" render={() => (<FormItem><FormLabel className="text-base">J'aimerais faire...</FormLabel><div className="grid grid-cols-2 gap-4">{activities.map((item) => (<FormField key={item.id} control={control} name="activities" render={({ field }) => { return (<FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item.id)} onCheckedChange={(checked) => { return checked ? field.onChange([...(field.value || []), item.id]) : field.onChange( field.value?.filter( (value: string) => value !== item.id ) ) }} /></FormControl><FormLabel className="font-normal">{item.label}</FormLabel></FormItem>)}}/>))}</div><FormMessage /></FormItem>)} />
+                                 <FormField control={control} name="intention" render={({ field }) => (<FormItem><FormLabel>Intention</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez..." /></SelectTrigger></FormControl><SelectContent><SelectItem value="50/50">50/50</SelectItem><SelectItem value="Sponsor">Sponsor</SelectItem><SelectItem value="Sponsorisé">Sponsorisé</SelectItem><SelectItem value="Groupe">Groupe</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+                             </div>
 
-                        <div className="flex justify-end pt-8">
-                            <Button type="submit" size="lg" disabled={isSubmitting}>
-                                {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Sauvegarde...</> : <><Save className="mr-2 h-4 w-4" />Sauvegarder les modifications</>}
-                            </Button>
+                            <div className="flex justify-end pt-4 pb-16">
+                                <Button type="submit" size="lg" disabled={isSubmitting}>
+                                    {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Sauvegarde...</> : <><Save className="mr-2 h-4 w-4" />Sauvegarder</>}
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </main>
         </FormProvider>
     );
 }
+
+  
