@@ -16,6 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { SettingsHeader } from '@/components/settings/settings-header';
 
 const emailSchema = z.object({
   email: z.string().email('Adresse e-mail invalide.'),
@@ -143,8 +144,9 @@ export default function AccountSettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary/30 pt-12">
-      <main className="space-y-6 px-2 py-4 md:px-4">
+    <div className="min-h-screen bg-secondary/30">
+      <SettingsHeader title="Paramètres du compte" />
+      <main className="space-y-6 px-2 py-4 md:px-4 pt-16">
             <div className="mx-auto max-w-2xl space-y-4">
                 <Card>
                     <CardHeader>

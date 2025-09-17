@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, HelpCircle } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SettingsHeader } from '@/components/settings/settings-header';
 
 const faqItems = [
   {
@@ -33,8 +34,9 @@ export default function FaqPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-secondary/30 pt-12">
-        <main className="space-y-6 px-2 py-4 md:px-4">
+    <div className="min-h-screen bg-secondary/30">
+      <SettingsHeader title="FAQ" />
+      <main className="space-y-6 px-2 py-4 md:px-4 pt-16">
             <div className="mx-auto max-w-2xl space-y-4">
                 <Card>
                     <CardHeader>
