@@ -299,30 +299,30 @@ export default function ChatPage() {
         </div>
       </main>
 
-       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-1">
-        <form onSubmit={handleSendMessage}>
-          <div className="flex w-full items-end gap-2 border-b pb-0.5">
+       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2">
+        <form onSubmit={handleSendMessage} className="py-1">
+          <div className="flex w-full items-center gap-2 border-b">
             <Textarea
               ref={textareaRef}
               rows={1}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Dis quelque chose de sympa !"
-              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-0.5 px-2 max-h-20 overflow-y-auto text-sm"
+              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-2 max-h-20 overflow-y-auto text-sm py-1.5"
               autoComplete="off"
             />
             <Button
               type="submit"
               variant="link"
               size="sm"
-              className="text-primary font-semibold self-center"
+              className="text-primary font-semibold self-center h-8"
               disabled={!newMessage.trim()}
             >
               Envoyer
             </Button>
           </div>
           
-          <div className="flex items-center">
+          <div className="flex items-center h-8">
             <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
               <DialogTrigger asChild>
                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8">
