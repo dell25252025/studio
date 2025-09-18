@@ -238,6 +238,13 @@ function ConditionalHome() {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    // Redirect only when authentication check is complete and user is not logged in.
+    if (!loadingAuth && !currentUserAuth) {
+      router.push('/login');
+    }
+  }, [loadingAuth, currentUserAuth, router]);
+
   if (loadingAuth) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
@@ -253,12 +260,8 @@ function ConditionalHome() {
       </Suspense>
     );
   }
-
-  // If not logged in, redirect to login page
-  if (typeof window !== 'undefined') {
-    router.push('/login');
-  }
-
+  
+  // Return a loader while redirecting to prevent rendering anything else
   return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
