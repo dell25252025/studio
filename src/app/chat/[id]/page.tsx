@@ -463,5 +463,4 @@ export default function ChatPage() {
       </AlertDialog>
     </div>
   );
-
-    
+}
