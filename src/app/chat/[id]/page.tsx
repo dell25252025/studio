@@ -194,10 +194,8 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      const scrollHeight = textareaRef.current.scrollHeight;
-      const maxHeight = 120; // 5 lines approx
-      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+      textareaRef.current.style.height = 'auto'; // Reset height
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set to scroll height
     }
   }, [newMessage]);
   
@@ -306,27 +304,29 @@ export default function ChatPage() {
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-2">
         <form onSubmit={handleSendMessage} className="flex items-end gap-2 w-full">
-            <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
-              <DialogTrigger asChild>
-                <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9">
-                  <Camera className="h-5 w-5 text-muted-foreground" />
-                </Button>
-              </DialogTrigger>
-              {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
-            </Dialog>
+            <div className="flex items-center gap-0.5">
+                <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                <DialogTrigger asChild>
+                    <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9">
+                    <Camera className="h-5 w-5 text-muted-foreground" />
+                    </Button>
+                </DialogTrigger>
+                {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
+                </Dialog>
 
-            <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9" onClick={() => fileInputRef.current?.click()}>
-              <ImageIcon className="h-5 w-5 text-muted-foreground" />
-            </Button>
+                <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9" onClick={() => fileInputRef.current?.click()}>
+                <ImageIcon className="h-5 w-5 text-muted-foreground" />
+                </Button>
+            </div>
           
-            <div className="flex-1 relative flex items-center min-h-[36px]">
+            <div className="flex-1 relative flex items-center">
                 <Textarea
                     ref={textareaRef}
                     rows={1}
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Dis quelque chose..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-secondary rounded-2xl px-3 py-1.5 pr-10 min-h-[36px] max-h-[120px] overflow-y-auto"
+                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-secondary rounded-2xl px-3 py-2 pr-10 min-h-[40px] max-h-[120px] overflow-y-auto"
                     autoComplete="off"
                 />
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
