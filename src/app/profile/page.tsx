@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +22,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import Link from 'next/link';
 import Autoplay from "embla-carousel-autoplay"
 import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { countries } from '@/lib/countries';
 import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
@@ -319,6 +320,16 @@ export default function ProfilePage() {
       });
     }
   };
+  
+  const handleBlockUser = () => {
+    // Logic to block user
+    toast({ title: `${profile?.firstName} a été bloqué(e).` });
+  };
+
+  const handleReportUser = () => {
+    // Logic to report user
+    toast({ title: `Le profil de ${profile?.firstName} a été signalé.` });
+  };
 
   if (loading) {
     return (
@@ -364,7 +375,7 @@ export default function ProfilePage() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
-        <main className="flex-1 pb-24 pt-4 md:pt-16">
+        <main className="flex-1 pb-24">
              <div className="w-full bg-background md:py-4">
                 {profilePictures.length > 0 ? (
                     <Dialog>
@@ -420,7 +431,7 @@ export default function ProfilePage() {
                 )}
                  <div className="px-2 py-2 md:px-4 md:pt-4">
                      <div className="flex justify-between items-start">
-                        <div>
+                        <div className="flex-1">
                             <div className="flex items-center gap-2">
                                 <h1 className="text-xl md:text-2xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
                                 {isOwner && (
@@ -440,6 +451,41 @@ export default function ProfilePage() {
                                 <span>{profile.location}</span>
                             </div>
                         </div>
+                        
+                        {!isOwner && (
+                             <Drawer>
+                                <DrawerTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-7 w-7 md:h-9 md:w-9 -mr-2">
+                                        <MoreVertical className="h-4 w-4 md:h-5 md:w-5" />
+                                    </Button>
+                                </DrawerTrigger>
+                                <DrawerContent>
+                                    <div className="mx-auto w-full max-w-sm">
+                                        <div className="p-4 pb-0">
+                                            <div className="mt-3 h-full">
+                                                <DrawerClose asChild>
+                                                    <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleBlockUser}>
+                                                        <Ban className="mr-2 h-5 w-5" /> Bloquer
+                                                    </Button>
+                                                </DrawerClose>
+                                                <div className="my-2 border-t"></div>
+                                                <DrawerClose asChild>
+                                                    <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleReportUser}>
+                                                        <ShieldAlert className="mr-2 h-5 w-5" /> Signaler un abus
+                                                    </Button>
+                                                </DrawerClose>
+                                            </div>
+                                        </div>
+                                        <div className="p-4">
+                                             <DrawerClose asChild>
+                                                <Button variant="secondary" className="w-full h-12 text-base">Annuler</Button>
+                                            </DrawerClose>
+                                        </div>
+                                    </div>
+                                </DrawerContent>
+                            </Drawer>
+                        )}
+
                          <input
                             type="file"
                             ref={fileInputRef}
