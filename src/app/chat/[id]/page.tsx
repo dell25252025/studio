@@ -308,7 +308,7 @@ export default function ChatPage() {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Dis quelque chose..."
-              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-2 max-h-20 overflow-y-auto text-xs py-0 h-full flex items-center"
+              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-2 max-h-20 overflow-y-auto text-xs py-1"
               autoComplete="off"
             />
             <Button
