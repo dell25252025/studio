@@ -325,7 +325,7 @@ export default function ChatPage() {
                     rows={1}
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Dis quelque chose..."
+                    placeholder="Message..."
                     className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-secondary rounded-2xl px-3 py-2 pr-10 min-h-[40px] max-h-[120px] overflow-y-auto"
                     autoComplete="off"
                 />
