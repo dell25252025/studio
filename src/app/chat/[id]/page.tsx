@@ -301,7 +301,7 @@ export default function ChatPage() {
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm">
         <div className="flex flex-col">
-          <form onSubmit={handleSendMessage} className="flex items-end gap-2 p-1">
+          <form onSubmit={handleSendMessage} className="flex items-end gap-2 p-1 pt-0.5">
             <Textarea
               ref={textareaRef}
               rows={1}
