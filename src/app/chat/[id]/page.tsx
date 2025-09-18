@@ -27,7 +27,7 @@ const initialMessages = [
   { id: 3, text: 'Toujours ! Où rêves-tu d\'aller en premier ?', sender: 'other', image: null },
 ];
 
-const CameraView = ({ onCapture }: { onCapture: (image: string) => void }) => {
+const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void; onClose: () => void; }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
@@ -92,6 +92,15 @@ const CameraView = ({ onCapture }: { onCapture: (image: string) => void }) => {
                     </Alert>
                 </div>
             )}
+            
+             <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-4 left-4 text-white bg-black/30 hover:bg-black/50 hover:text-white"
+                onClick={onClose}
+             >
+                <X className="h-6 w-6" />
+             </Button>
             
             {hasCameraPermission && (
                 <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
@@ -284,7 +293,7 @@ export default function ChatPage() {
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 p-1 backdrop-blur-sm">
         <div className="flex flex-col">
-          <form onSubmit={handleSendMessage} className="flex items-center gap-2 border-b pb-1 mb-1">
+          <form onSubmit={handleSendMessage} className="flex items-center gap-2">
             <Input
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
@@ -305,7 +314,7 @@ export default function ChatPage() {
                   <span className="sr-only">Prendre une photo</span>
                 </Button>
               </DialogTrigger>
-              {isCameraOpen && <CameraView onCapture={handleCapturePhoto} />}
+              {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
             </Dialog>
             <Button type="button" variant="ghost" size="icon" className="h-7 w-7" onClick={() => fileInputRef.current?.click()}>
               <ImageIcon className="h-4 w-4 text-muted-foreground" />
