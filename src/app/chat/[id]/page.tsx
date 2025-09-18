@@ -308,10 +308,10 @@ export default function ChatPage() {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Dis quelque chose..."
-              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-6 py-1 px-2 max-h-24 overflow-y-auto text-base"
+              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 py-2 px-2 max-h-24 overflow-y-auto text-base leading-tight"
               autoComplete="off"
             />
-            <Button type="submit" variant="link" size="sm" className="h-6" disabled={!newMessage.trim()}>
+            <Button type="submit" variant="link" size="sm" className="self-end pb-1.5" disabled={!newMessage.trim()}>
               Envoyer
             </Button>
           </form>
