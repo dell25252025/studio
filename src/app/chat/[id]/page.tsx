@@ -181,7 +181,7 @@ export default function ChatPage() {
 
       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 p-2 backdrop-blur-sm">
         <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-           <Button type="button" variant="ghost" size="icon" className="h-9 w-9 rounded-full" onClick={() => fileInputRef.current?.click()}>
+           <Button type="button" variant="ghost" size="icon" className="h-9 w-9 flex-shrink-0 rounded-full" onClick={() => fileInputRef.current?.click()}>
               <ImageIcon className="h-5 w-5 text-muted-foreground" />
               <span className="sr-only">Envoyer une image</span>
             </Button>
@@ -196,10 +196,10 @@ export default function ChatPage() {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Écrivez votre message..."
-            className="flex-1 rounded-full"
+            className="flex-1 rounded-full h-9 px-4"
             autoComplete="off"
           />
-          <Button type="submit" size="icon" className="h-9 w-9 rounded-full">
+          <Button type="submit" size="icon" className="h-9 w-9 flex-shrink-0 rounded-full">
             <Send className="h-4 w-4" />
           </Button>
         </form>
