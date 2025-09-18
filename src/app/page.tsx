@@ -167,16 +167,7 @@ function DiscoverPage({ user }: { user: User }) {
     }));
   }
 
-  const groupedProfiles = [];
   const mappedProfiles = getMappedProfiles(displayMatches);
-  const profilesToDisplay = [...mappedProfiles, ...mappedProfiles, ...mappedProfiles, ...mappedProfiles]; // Duplicate for seamless scroll
-  
-  if (typeof window !== 'undefined' && window.innerWidth < 768) {
-    for (let i = 0; i < profilesToDisplay.length; i += 4) {
-      groupedProfiles.push(profilesToDisplay.slice(i, i + 4));
-    }
-  }
-
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -193,28 +184,10 @@ function DiscoverPage({ user }: { user: User }) {
               <>
                 <div>
                    {displayMatches.length > 0 ? (
-                    <div className="md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-4 space-y-2 md:space-y-0 overflow-x-hidden">
-                       {/* Mobile scrolling view */}
-                      <div className="md:hidden space-y-2">
-                        {groupedProfiles.map((row, rowIndex) => (
-                           <div key={rowIndex} className="flex overflow-hidden">
-                              <div className={`flex shrink-0 gap-2 ${rowIndex % 2 === 0 ? 'animate-scroll-left' : 'animate-scroll-right'}`}>
-                                  {row.map((profile, cardIndex) => (
-                                    <div key={`${profile.id}-${cardIndex}`} className="w-[calc(50vw-1rem)] shrink-0">
-                                      <ProfileCard profile={profile} />
-                                    </div>
-                                  ))}
-                              </div>
-                           </div>
-                        ))}
-                      </div>
-
-                      {/* Desktop grid view */}
-                      <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 w-full">
-                        {mappedProfiles.map((profile) => (
-                          <ProfileCard key={profile.id} profile={profile} />
-                        ))}
-                      </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
+                      {mappedProfiles.map((profile) => (
+                        <ProfileCard key={profile.id} profile={profile} />
+                      ))}
                     </div>
                   ) : (
                     <p className="text-muted-foreground mt-8">No profiles match your criteria.</p>
