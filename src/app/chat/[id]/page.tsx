@@ -299,23 +299,23 @@ export default function ChatPage() {
         </div>
       </main>
 
-       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm p-1">
+       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-1">
         <form onSubmit={handleSendMessage}>
-          <div className="flex w-full items-center gap-1 border-b pb-1">
+          <div className="flex w-full items-end gap-2 border-b pb-0.5">
             <Textarea
               ref={textareaRef}
               rows={1}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Dis quelque chose de sympa !"
-              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-1 px-2 max-h-20 overflow-y-auto text-sm"
+              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-0.5 px-2 max-h-20 overflow-y-auto text-sm"
               autoComplete="off"
             />
             <Button
               type="submit"
               variant="link"
               size="sm"
-              className="text-primary font-semibold"
+              className="text-primary font-semibold self-center"
               disabled={!newMessage.trim()}
             >
               Envoyer
