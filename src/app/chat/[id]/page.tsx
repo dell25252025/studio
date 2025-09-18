@@ -10,7 +10,7 @@ import { getUserProfile } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -285,7 +285,11 @@ export default function ChatPage() {
           </DrawerTrigger>
           <DrawerContent>
             <div className="mx-auto w-full max-w-sm">
-                <div className="p-4 pb-0">
+                <DrawerHeader>
+                    <DrawerTitle>Options</DrawerTitle>
+                    <DrawerDescription>Gérez votre interaction avec ce profil.</DrawerDescription>
+                </DrawerHeader>
+                <div className="p-4 pt-0">
                     <div className="mt-3 h-full">
                         <DrawerClose asChild>
                             <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleBlockUser}>
