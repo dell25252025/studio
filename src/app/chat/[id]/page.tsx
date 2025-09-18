@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone } from 'lucide-react';
+import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getUserProfile } from '@/app/actions';
@@ -245,6 +245,9 @@ export default function ChatPage() {
         </Link>
         <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('Les appels vocaux')}>
           <Phone className="h-5 w-5" />
+        </Button>
+        <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('Les appels vidéo')}>
+          <Video className="h-5 w-5" />
         </Button>
         <Drawer>
           <DrawerTrigger asChild>
