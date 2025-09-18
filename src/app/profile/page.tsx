@@ -632,12 +632,14 @@ export default function ProfilePage() {
                 </div>
             </div>
         </main>
-        {!isOwner && (
+        {!isOwner && profileId && (
             <div className="fixed bottom-0 left-0 right-0 z-10 p-4 bg-background/80 backdrop-blur-sm border-t">
-                <Button size="lg" className="w-full">
-                    <Send className="mr-2 h-4 w-4" />
-                    Envoyer un message
-                </Button>
+                <Link href={`/chat/${profileId}`} passHref>
+                    <Button size="lg" className="w-full">
+                        <Send className="mr-2 h-4 w-4" />
+                        Envoyer un message
+                    </Button>
+                </Link>
             </div>
         )}
     </div>
