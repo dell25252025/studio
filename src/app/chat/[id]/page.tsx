@@ -19,6 +19,7 @@ import Picker, { type EmojiClickData } from 'emoji-picker-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 
 // Mock messages for demonstration purposes
 const initialMessages = [
@@ -129,7 +130,6 @@ export default function ChatPage() {
   const [otherUser, setOtherUser] = useState<DocumentData | null>(null);
   const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState('');
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -177,6 +177,7 @@ export default function ChatPage() {
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setNewMessage(prevMessage => prevMessage + emojiData.emoji);
+    setIsEmojiPickerOpen(false);
   };
 
 
@@ -194,11 +195,13 @@ export default function ChatPage() {
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      const scrollHeight = textareaRef.current.scrollHeight;
+      const maxHeight = 120; // 5 lines approx
+      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
     }
   }, [newMessage]);
   
-    const handlePlaceholderAction = (feature: string) => {
+  const handlePlaceholderAction = (feature: string) => {
     toast({ title: 'Fonctionnalité à venir', description: `${feature} sera bientôt disponible.` });
   };
   
@@ -212,6 +215,8 @@ export default function ChatPage() {
   
   const otherUserName = otherUser?.firstName || 'Utilisateur';
   const otherUserImage = otherUser?.profilePictures?.[0] || `https://picsum.photos/seed/${otherUserId}/200`;
+
+  const showSendButton = newMessage.trim().length > 0;
 
   return (
     <div className="flex h-screen flex-col bg-background">
@@ -299,59 +304,57 @@ export default function ChatPage() {
         </div>
       </main>
 
-       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2">
-        <form onSubmit={handleSendMessage} className="py-1">
-          <div className="flex w-full items-center gap-2 border-b h-10">
-            <Textarea
-              ref={textareaRef}
-              rows={1}
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Dis quelque chose..."
-              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-2 max-h-20 overflow-y-auto text-xs py-2"
-              autoComplete="off"
-            />
-            <Button
-              type="submit"
-              variant="link"
-              size="sm"
-              className="text-primary font-semibold self-center h-full"
-              disabled={!newMessage.trim()}
-            >
-              Envoyer
-            </Button>
-          </div>
-          
-          <div className="flex items-center h-8">
+       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-2">
+        <form onSubmit={handleSendMessage} className="flex items-end gap-2 w-full">
             <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
               <DialogTrigger asChild>
-                <Button type="button" variant="ghost" size="icon" className="h-8 w-8">
-                  <Camera className="h-4 w-4 text-muted-foreground" />
-                  <span className="sr-only">Prendre une photo</span>
+                <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9">
+                  <Camera className="h-5 w-5 text-muted-foreground" />
                 </Button>
               </DialogTrigger>
               {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
             </Dialog>
-            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => fileInputRef.current?.click()}>
-              <ImageIcon className="h-4 w-4 text-muted-foreground" />
-              <span className="sr-only">Envoyer une image</span>
+
+            <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9" onClick={() => fileInputRef.current?.click()}>
+              <ImageIcon className="h-5 w-5 text-muted-foreground" />
             </Button>
-             <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
-              <PopoverTrigger asChild>
-                <Button type="button" variant="ghost" size="icon" className="h-8 w-8">
-                  <Smile className="h-4 w-4 text-muted-foreground" />
-                  <span className="sr-only">Ajouter un emoji</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 border-none mb-2">
-                 <Picker onEmojiClick={handleEmojiClick} />
-              </PopoverContent>
-            </Popover>
-            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les messages vocaux')}>
-              <Mic className="h-4 w-4 text-muted-foreground" />
-              <span className="sr-only">Envoyer un message vocal</span>
+          
+            <div className="flex-1 relative flex items-center min-h-[36px]">
+                <Textarea
+                    ref={textareaRef}
+                    rows={1}
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Dis quelque chose..."
+                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-secondary rounded-2xl px-3 py-1.5 pr-10 min-h-[36px] max-h-[120px] overflow-y-auto"
+                    autoComplete="off"
+                />
+                <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+                    <PopoverTrigger asChild>
+                        <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7">
+                            <Smile className="h-5 w-5 text-muted-foreground" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 border-none mb-2">
+                        <Picker onEmojiClick={handleEmojiClick} />
+                    </PopoverContent>
+                </Popover>
+            </div>
+          
+            <Button
+                type={showSendButton ? "submit" : "button"}
+                variant="ghost"
+                size="icon"
+                className="shrink-0 h-9 w-9 text-primary"
+                onClick={!showSendButton ? () => handlePlaceholderAction('Les messages vocaux') : undefined}
+                aria-label={showSendButton ? "Envoyer" : "Envoyer un message vocal"}
+            >
+                {showSendButton ? (
+                    <Send className="h-5 w-5" />
+                ) : (
+                    <Mic className="h-5 w-5 text-muted-foreground" />
+                )}
             </Button>
-          </div>
         </form>
          <input
           type="file"
