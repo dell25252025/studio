@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,8 @@ import { getUserProfile } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from '@/components/ui/drawer';
+import { useToast } from '@/hooks/use-toast';
 
 // Mock messages for demonstration purposes
 const initialMessages = [
@@ -23,6 +25,7 @@ export default function ChatPage() {
   const router = useRouter();
   const params = useParams();
   const otherUserId = params.id as string;
+  const { toast } = useToast();
   
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [otherUser, setOtherUser] = useState<DocumentData | null>(null);
@@ -57,6 +60,14 @@ export default function ChatPage() {
     }
   };
   
+  const handleBlockUser = () => {
+    toast({ title: `${otherUser?.firstName} a été bloqué(e).` });
+  };
+
+  const handleReportUser = () => {
+    toast({ title: `Le profil de ${otherUser?.firstName} a été signalé.` });
+  };
+  
   const otherUserName = otherUser?.firstName || 'Utilisateur';
   const otherUserImage = otherUser?.profilePictures?.[0] || `https://picsum.photos/seed/${otherUserId}/200`;
 
@@ -71,6 +82,37 @@ export default function ChatPage() {
           <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
         </Avatar>
         <h1 className="flex-1 truncate text-base font-semibold">{otherUserName}</h1>
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-9 w-9">
+              <MoreVertical className="h-5 w-5" />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <div className="mx-auto w-full max-w-sm">
+                <div className="p-4 pb-0">
+                    <div className="mt-3 h-full">
+                        <DrawerClose asChild>
+                            <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleBlockUser}>
+                                <Ban className="mr-2 h-5 w-5" /> Bloquer
+                            </Button>
+                        </DrawerClose>
+                        <div className="my-2 border-t"></div>
+                        <DrawerClose asChild>
+                            <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleReportUser}>
+                                <ShieldAlert className="mr-2 h-5 w-5" /> Signaler un abus
+                            </Button>
+                        </DrawerClose>
+                    </div>
+                </div>
+                <div className="p-4">
+                      <DrawerClose asChild>
+                        <Button variant="secondary" className="w-full h-12 text-base">Annuler</Button>
+                    </DrawerClose>
+                </div>
+            </div>
+          </DrawerContent>
+        </Drawer>
       </header>
 
       <main className="flex-1 overflow-y-auto pt-16 pb-20">
