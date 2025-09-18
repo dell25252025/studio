@@ -219,7 +219,7 @@ export default function ChatPage() {
   return (
     <div className="flex h-screen flex-col bg-background">
       <header className="fixed top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-2 backdrop-blur-sm md:px-4">
-        <Button onClick={() => router.back()} variant="ghost" size="icon" className="h-9 w-9">
+        <Button onClick={() => router.push('/')} variant="ghost" size="icon" className="h-9 w-9">
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <Link href={`/profile?id=${otherUserId}`} className="flex flex-1 items-center gap-2 truncate">
@@ -304,20 +304,22 @@ export default function ChatPage() {
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-2">
         <form onSubmit={handleSendMessage} className="flex items-end gap-2 w-full">
-            <div className="flex items-center gap-0.5 shrink-0">
-                <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
-                <DialogTrigger asChild>
-                    <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9">
-                    <Camera className="h-5 w-5 text-muted-foreground" />
-                    </Button>
-                </DialogTrigger>
-                {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
-                </Dialog>
+            {!showSendButton && (
+                <div className="flex items-center gap-0.5 shrink-0">
+                    <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                    <DialogTrigger asChild>
+                        <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9">
+                        <Camera className="h-5 w-5 text-muted-foreground" />
+                        </Button>
+                    </DialogTrigger>
+                    {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
+                    </Dialog>
 
-                <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9" onClick={() => fileInputRef.current?.click()}>
-                <ImageIcon className="h-5 w-5 text-muted-foreground" />
-                </Button>
-            </div>
+                    <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9" onClick={() => fileInputRef.current?.click()}>
+                    <ImageIcon className="h-5 w-5 text-muted-foreground" />
+                    </Button>
+                </div>
+            )}
           
             <div className="flex-1 relative flex items-center min-w-0">
                 <Textarea
@@ -326,7 +328,7 @@ export default function ChatPage() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Message..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-secondary rounded-2xl px-3 py-2 pr-10 min-h-[40px] max-h-[120px] overflow-y-auto"
+                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-secondary rounded-2xl px-3 py-2 pr-10 min-h-[40px] max-h-[120px] overflow-y-auto text-sm"
                     autoComplete="off"
                 />
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
