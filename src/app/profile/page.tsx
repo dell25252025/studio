@@ -5,11 +5,10 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import BottomNav from '@/components/bottom-nav';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
@@ -342,15 +341,10 @@ export default function ProfilePage() {
 
   if (!profile) {
     return (
-        <div className="flex min-h-screen flex-col">
-            <main className="flex-1 flex items-center justify-center text-center pt-16">
-                <div>
-                    <h2 className="text-2xl font-bold">Profil non trouvé</h2>
-                    <p className="text-muted-foreground">Impossible de charger les informations de ce profil.</p>
-                     <Button onClick={() => router.push('/')} className="mt-4">Retour à l'accueil</Button>
-                </div>
-            </main>
-            <BottomNav />
+        <div className="flex min-h-screen flex-col items-center justify-center text-center">
+            <h2 className="text-2xl font-bold">Profil non trouvé</h2>
+            <p className="text-muted-foreground">Impossible de charger les informations de ce profil.</p>
+            <Button onClick={() => router.push('/')} className="mt-4">Retour à l'accueil</Button>
       </div>
     );
   }
@@ -375,7 +369,7 @@ export default function ProfilePage() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
-        <main className="flex-1 pb-24">
+        <main className={cn("flex-1", isOwner ? "pb-4" : "pb-24")}>
              <div className="w-full bg-background md:py-4">
                 {profilePictures.length > 0 ? (
                     <Dialog>
@@ -629,16 +623,18 @@ export default function ProfilePage() {
                                 </Button>
                             </div>
                         )}
-                        {!isOwner && (
-                            <div className="flex justify-center pt-2">
-                                <Button size="lg">Envoyer un message</Button>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
         </main>
-        <BottomNav />
+        {!isOwner && (
+            <div className="fixed bottom-0 left-0 right-0 z-10 p-4 bg-background/80 backdrop-blur-sm border-t">
+                <Button size="lg" className="w-full">
+                    <Send className="mr-2 h-4 w-4" />
+                    Envoyer un message
+                </Button>
+            </div>
+        )}
     </div>
   );
 }
