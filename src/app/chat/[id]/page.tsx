@@ -304,7 +304,7 @@ export default function ChatPage() {
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-2">
         <form onSubmit={handleSendMessage} className="flex items-end gap-2 w-full">
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-0.5 shrink-0">
                 <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
                 <DialogTrigger asChild>
                     <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9">
@@ -319,7 +319,7 @@ export default function ChatPage() {
                 </Button>
             </div>
           
-            <div className="flex-1 relative flex items-center">
+            <div className="flex-1 relative flex items-center min-w-0">
                 <Textarea
                     ref={textareaRef}
                     rows={1}
@@ -341,20 +341,22 @@ export default function ChatPage() {
                 </Popover>
             </div>
           
-            <Button
-                type={showSendButton ? "submit" : "button"}
-                variant="ghost"
-                size="icon"
-                className="shrink-0 h-9 w-9 text-primary"
-                onClick={!showSendButton ? () => handlePlaceholderAction('Les messages vocaux') : undefined}
-                aria-label={showSendButton ? "Envoyer" : "Envoyer un message vocal"}
-            >
-                {showSendButton ? (
-                    <Send className="h-5 w-5" />
-                ) : (
-                    <Mic className="h-5 w-5 text-muted-foreground" />
-                )}
-            </Button>
+            <div className="shrink-0">
+              <Button
+                  type={showSendButton ? "submit" : "button"}
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0 h-9 w-9 text-primary"
+                  onClick={!showSendButton ? () => handlePlaceholderAction('Les messages vocaux') : undefined}
+                  aria-label={showSendButton ? "Envoyer" : "Envoyer un message vocal"}
+              >
+                  {showSendButton ? (
+                      <Send className="h-5 w-5" />
+                  ) : (
+                      <Mic className="h-5 w-5 text-muted-foreground" />
+                  )}
+              </Button>
+            </div>
         </form>
          <input
           type="file"
