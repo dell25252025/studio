@@ -16,7 +16,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import Picker, { type EmojiClickData, Categories } from 'emoji-picker-react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogTitle, DialogDescription, DialogHeader } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -136,6 +136,7 @@ export default function ChatPage() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState<number | null>(null);
+  const [viewingImage, setViewingImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -345,13 +346,36 @@ export default function ChatPage() {
               >
                 {message.text}
                 {message.image && (
-                   <Image 
-                     src={message.image} 
-                     alt="Image envoyée" 
-                     width={200} 
-                     height={200}
-                     className="rounded-xl object-cover"
-                    />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button type="button" className="block cursor-pointer">
+                        <Image 
+                          src={message.image} 
+                          alt="Image envoyée" 
+                          width={200} 
+                          height={200}
+                          className="rounded-xl object-cover"
+                        />
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="p-0 m-0 w-full h-full max-w-full max-h-screen bg-black/80 backdrop-blur-sm border-0 flex flex-col items-center justify-center">
+                       <DialogHeader className="sr-only">
+                          <DialogTitle>Visionneuse d'image</DialogTitle>
+                          <DialogDescription>Image en plein écran.</DialogDescription>
+                       </DialogHeader>
+                        <div className="relative w-full h-full">
+                           <Image 
+                              src={message.image} 
+                              alt="Image envoyée en plein écran" 
+                              fill
+                              className="object-contain"
+                            />
+                        </div>
+                        <DialogClose className="absolute top-2 right-2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 hover:text-white">
+                            <X className="h-6 w-6" />
+                        </DialogClose>
+                    </DialogContent>
+                  </Dialog>
                 )}
               </div>
             </div>
