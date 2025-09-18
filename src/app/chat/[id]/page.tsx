@@ -22,9 +22,9 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 // Mock messages for demonstration purposes
 const initialMessages = [
-  { id: 1, text: 'Salut ! Ton profil est super intéressant.', sender: 'other' },
-  { id: 2, text: 'Merci beaucoup ! Le tien aussi. Prêt pour l\'aventure ?', sender: 'me' },
-  { id: 3, text: 'Toujours ! Où rêves-tu d\'aller en premier ?', sender: 'other' },
+  { id: 1, text: 'Salut ! Ton profil est super intéressant.', sender: 'other', image: null },
+  { id: 2, text: 'Merci beaucoup ! Le tien aussi. Prêt pour l\'aventure ?', sender: 'me', image: null },
+  { id: 3, text: 'Toujours ! Où rêves-tu d\'aller en premier ?', sender: 'other', image: null },
 ];
 
 const CameraView = ({ onCapture }: { onCapture: (image: string) => void }) => {
@@ -59,7 +59,7 @@ const CameraView = ({ onCapture }: { onCapture: (image: string) => void }) => {
     return () => {
       stream?.getTracks().forEach(track => track.stop());
     };
-  }, []);
+  }, [stream, toast]);
 
   const handleCapture = () => {
     if (videoRef.current && canvasRef.current) {
@@ -175,7 +175,7 @@ export default function ChatPage() {
     if (newMessage.trim()) {
       setMessages([
         ...messages,
-        { id: Date.now(), text: newMessage, sender: 'me' },
+        { id: Date.now(), text: newMessage, sender: 'me', image: null },
       ]);
       setNewMessage('');
     }
@@ -338,5 +338,4 @@ export default function ChatPage() {
       </footer>
     </div>
   );
-
-    
+}
