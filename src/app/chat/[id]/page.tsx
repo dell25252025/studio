@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,7 @@ import { auth } from '@/lib/firebase';
 import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from '@/components/ui/drawer';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Mock messages for demonstration purposes
 const initialMessages = [
@@ -32,6 +33,8 @@ export default function ChatPage() {
   const [otherUser, setOtherUser] = useState<DocumentData | null>(null);
   const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState('');
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -49,6 +52,24 @@ export default function ChatPage() {
       fetchUserProfile();
     }
   }, [otherUserId]);
+  
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result;
+        if (typeof result === 'string') {
+          setSelectedImage(result);
+          // For demonstration, we'll add it as a message directly.
+          // In a real app, you'd upload this and get a URL.
+          setMessages(prev => [...prev, { id: Date.now(), text: '', sender: 'me', image: result }]);
+          setSelectedImage(null); // Reset after "sending"
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,13 +155,24 @@ export default function ChatPage() {
                 </Avatar>
               )}
               <div
-                className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm md:text-base ${
+                className={`max-w-[70%] rounded-2xl text-sm md:text-base ${
+                  message.text ? 'px-4 py-2' : 'p-1' // Less padding for images
+                } ${
                   message.sender === 'me'
                     ? 'rounded-br-none bg-primary text-primary-foreground'
                     : 'rounded-bl-none bg-secondary text-secondary-foreground'
                 }`}
               >
                 {message.text}
+                {message.image && (
+                   <Image 
+                     src={message.image} 
+                     alt="Image envoyée" 
+                     width={200} 
+                     height={200}
+                     className="rounded-xl object-cover"
+                    />
+                )}
               </div>
             </div>
           ))}
@@ -149,6 +181,17 @@ export default function ChatPage() {
 
       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 p-2 backdrop-blur-sm">
         <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+           <Button type="button" variant="ghost" size="icon" className="h-9 w-9 rounded-full" onClick={() => fileInputRef.current?.click()}>
+              <ImageIcon className="h-5 w-5 text-muted-foreground" />
+              <span className="sr-only">Envoyer une image</span>
+            </Button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleImageSelect}
+            />
           <Input
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
