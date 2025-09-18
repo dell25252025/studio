@@ -301,14 +301,14 @@ export default function ChatPage() {
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2">
         <form onSubmit={handleSendMessage} className="py-1">
-          <div className="flex w-full items-center gap-2 border-b h-8">
+          <div className="flex w-full items-center gap-2 border-b h-10">
             <Textarea
               ref={textareaRef}
               rows={1}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Dis quelque chose..."
-              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-2 max-h-20 overflow-y-auto text-xs py-1"
+              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-2 max-h-20 overflow-y-auto text-xs py-2"
               autoComplete="off"
             />
             <Button
