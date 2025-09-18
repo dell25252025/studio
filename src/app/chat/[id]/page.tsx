@@ -300,7 +300,7 @@ export default function ChatPage() {
       </main>
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm">
-        <div className="flex w-full items-end gap-2 p-2">
+        <div className="flex w-full items-end gap-2 p-1">
            <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
             <DialogTrigger asChild>
                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0">
