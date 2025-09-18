@@ -260,7 +260,7 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-screen flex-col bg-background">
-      <header className="fixed top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-1.5 backdrop-blur-sm">
+      <header className="fixed top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-1 backdrop-blur-sm">
         <Button onClick={() => router.push('/')} variant="ghost" size="icon" className="h-8 w-8">
           <ArrowLeft className="h-4 w-4" />
         </Button>
