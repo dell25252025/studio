@@ -307,7 +307,7 @@ export default function ChatPage() {
               rows={1}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Dis quelque chose..."
+              placeholder=""
               className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 py-2 px-2 max-h-24 overflow-y-auto text-base leading-tight"
               autoComplete="off"
             />
