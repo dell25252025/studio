@@ -202,7 +202,7 @@ export default function ChatPage() {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto'; // Reset height
       const scrollHeight = textareaRef.current.scrollHeight;
-      const maxHeight = 80; // Corresponds to max-h-20
+      const maxHeight = 120; // Corresponds to max-h-32
       textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
     }
   }, [newMessage]);
@@ -335,7 +335,7 @@ export default function ChatPage() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Message..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent p-0 pr-8 min-h-[20px] max-h-20 overflow-y-auto text-sm"
+                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent p-0 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
                     autoComplete="off"
                 />
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
@@ -391,3 +391,5 @@ export default function ChatPage() {
     </div>
   );
 }
+
+    
