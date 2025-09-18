@@ -260,7 +260,7 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-screen flex-col bg-background">
-      <header className="fixed top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-1 backdrop-blur-sm">
+      <header className="fixed top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-1 backdrop-blur-sm h-12">
         <Button onClick={() => router.push('/')} variant="ghost" size="icon" className="h-8 w-8">
           <ArrowLeft className="h-4 w-4" />
         </Button>
@@ -314,7 +314,7 @@ export default function ChatPage() {
         </Drawer>
       </header>
 
-      <main className="flex-1 overflow-y-auto pt-14 pb-20">
+      <main className="flex-1 overflow-y-auto pt-12 pb-20">
         <div className="space-y-4 p-4">
           {messages.map((message) => (
             <div
@@ -463,4 +463,5 @@ export default function ChatPage() {
       </AlertDialog>
     </div>
   );
-}
+
+    
