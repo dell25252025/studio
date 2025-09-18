@@ -242,7 +242,7 @@ export default function ChatPage() {
         </Drawer>
       </header>
 
-      <main className="flex-1 overflow-y-auto pt-16 pb-[120px]">
+      <main className="flex-1 overflow-y-auto pt-16 pb-28">
         <div className="space-y-4 p-4">
           {messages.map((message) => (
             <div
@@ -282,32 +282,32 @@ export default function ChatPage() {
         </div>
       </main>
 
-       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 p-2 backdrop-blur-sm">
+       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 p-1 backdrop-blur-sm">
         <div className="flex flex-col">
-          <form onSubmit={handleSendMessage} className="flex items-center gap-2 border-b pb-2 mb-1">
+          <form onSubmit={handleSendMessage} className="flex items-center gap-2 border-b pb-1 mb-1">
             <Input
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Dis quelque chose de sympa !"
-              className="flex-1 border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-9 px-2"
+              className="flex-1 border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-8 px-2"
               autoComplete="off"
             />
-            <Button type="submit" variant="link" disabled={!newMessage.trim()}>
+            <Button type="submit" variant="link" size="sm" disabled={!newMessage.trim()}>
               Envoyer
             </Button>
           </form>
 
-          <div className="flex items-center justify-around h-10">
+          <div className="flex items-center justify-around h-9">
              <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
               <DialogTrigger asChild>
-                 <Button type="button" variant="ghost" size="icon" className="h-9 w-9">
+                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8">
                   <Camera className="h-5 w-5 text-muted-foreground" />
                   <span className="sr-only">Prendre une photo</span>
                 </Button>
               </DialogTrigger>
               {isCameraOpen && <CameraView onCapture={handleCapturePhoto} />}
             </Dialog>
-            <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => fileInputRef.current?.click()}>
+            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => fileInputRef.current?.click()}>
               <ImageIcon className="h-5 w-5 text-muted-foreground" />
               <span className="sr-only">Envoyer une image</span>
             </Button>
@@ -320,7 +320,7 @@ export default function ChatPage() {
             />
              <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
               <PopoverTrigger asChild>
-                <Button type="button" variant="ghost" size="icon" className="h-9 w-9">
+                <Button type="button" variant="ghost" size="icon" className="h-8 w-8">
                   <Smile className="h-5 w-5 text-muted-foreground" />
                   <span className="sr-only">Ajouter un emoji</span>
                 </Button>
@@ -329,7 +329,7 @@ export default function ChatPage() {
                  <Picker onEmojiClick={handleEmojiClick} />
               </PopoverContent>
             </Popover>
-            <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('Les messages vocaux')}>
+            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les messages vocaux')}>
               <Mic className="h-5 w-5 text-muted-foreground" />
               <span className="sr-only">Envoyer un message vocal</span>
             </Button>
