@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import Picker, { type EmojiClickData } from 'emoji-picker-react';
+import Picker, { type EmojiClickData, Categories } from 'emoji-picker-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
@@ -177,7 +177,6 @@ export default function ChatPage() {
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setNewMessage(prevMessage => prevMessage + emojiData.emoji);
-    setIsEmojiPickerOpen(false);
   };
 
 
@@ -202,7 +201,9 @@ export default function ChatPage() {
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto'; // Reset height
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set to scroll height
+      const scrollHeight = textareaRef.current.scrollHeight;
+      const maxHeight = 80; // Corresponds to max-h-20
+      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
     }
   }, [newMessage]);
   
@@ -311,24 +312,22 @@ export default function ChatPage() {
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-1.5">
         <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
-            {!showSendButton && (
-                <div className="flex items-center gap-0 shrink-0">
-                    <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+            <div className="flex items-center gap-0 shrink-0">
+                 <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
                     <DialogTrigger asChild>
                         <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
                         <Camera className="h-4 w-4 text-muted-foreground" />
                         </Button>
                     </DialogTrigger>
                     {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
-                    </Dialog>
+                </Dialog>
 
-                    <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={() => fileInputRef.current?.click()}>
-                    <ImageIcon className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                </div>
-            )}
+                <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={() => fileInputRef.current?.click()}>
+                <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                </Button>
+            </div>
           
-            <div className="flex-1 relative flex items-center min-w-0">
+            <div className="flex-1 relative flex items-center min-w-0 bg-secondary rounded-xl px-3 py-1.5">
                 <Textarea
                     ref={textareaRef}
                     rows={1}
@@ -336,7 +335,7 @@ export default function ChatPage() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Message..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-secondary rounded-xl px-3 py-1.5 pr-8 min-h-[32px] max-h-[100px] overflow-y-auto text-sm"
+                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent p-0 pr-8 min-h-[20px] max-h-20 overflow-y-auto text-sm"
                     autoComplete="off"
                 />
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
@@ -346,7 +345,20 @@ export default function ChatPage() {
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 border-none mb-2">
-                        <Picker onEmojiClick={handleEmojiClick} />
+                        <Picker 
+                          onEmojiClick={handleEmojiClick}
+                          searchDisabled
+                          skinTonesDisabled
+                          categories={[
+                            { category: Categories.SUGGESTED, name: "Suggérés" },
+                            { category: Categories.TRAVEL_PLACES, name: "Voyage & Lieux" },
+                            { category: Categories.ACTIVITIES, name: "Activités" },
+                            { category: Categories.SMILEYS_PEOPLE, name: "Émotions" },
+                            { category: Categories.ANIMALS_NATURE, name: "Nature" },
+                            { category: Categories.FOOD_DRINK, name: "Nourriture" },
+                            { category: Categories.OBJECTS, name: "Objets" },
+                          ]}
+                        />
                     </PopoverContent>
                 </Popover>
             </div>
