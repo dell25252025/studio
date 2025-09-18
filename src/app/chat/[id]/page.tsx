@@ -302,21 +302,21 @@ export default function ChatPage() {
         </div>
       </main>
 
-       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-2">
-        <form onSubmit={handleSendMessage} className="flex items-end gap-2 w-full">
+       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-1.5">
+        <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
             {!showSendButton && (
-                <div className="flex items-center gap-0.5 shrink-0">
+                <div className="flex items-center gap-0 shrink-0">
                     <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
                     <DialogTrigger asChild>
-                        <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9">
-                        <Camera className="h-5 w-5 text-muted-foreground" />
+                        <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
+                        <Camera className="h-4 w-4 text-muted-foreground" />
                         </Button>
                     </DialogTrigger>
                     {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
                     </Dialog>
 
-                    <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9" onClick={() => fileInputRef.current?.click()}>
-                    <ImageIcon className="h-5 w-5 text-muted-foreground" />
+                    <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={() => fileInputRef.current?.click()}>
+                    <ImageIcon className="h-4 w-4 text-muted-foreground" />
                     </Button>
                 </div>
             )}
@@ -328,13 +328,13 @@ export default function ChatPage() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Message..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-secondary rounded-2xl px-3 py-2 pr-10 min-h-[40px] max-h-[120px] overflow-y-auto text-sm"
+                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-secondary rounded-xl px-3 py-1.5 pr-8 min-h-[32px] max-h-[100px] overflow-y-auto text-sm"
                     autoComplete="off"
                 />
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
                     <PopoverTrigger asChild>
-                        <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7">
-                            <Smile className="h-5 w-5 text-muted-foreground" />
+                        <Button type="button" variant="ghost" size="icon" className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6">
+                            <Smile className="h-4 w-4 text-muted-foreground" />
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 border-none mb-2">
@@ -348,14 +348,14 @@ export default function ChatPage() {
                   type={showSendButton ? "submit" : "button"}
                   variant="ghost"
                   size="icon"
-                  className="shrink-0 h-9 w-9 text-primary"
+                  className="shrink-0 h-8 w-8 text-primary"
                   onClick={!showSendButton ? () => handlePlaceholderAction('Les messages vocaux') : undefined}
                   aria-label={showSendButton ? "Envoyer" : "Envoyer un message vocal"}
               >
                   {showSendButton ? (
-                      <Send className="h-5 w-5" />
+                      <Send className="h-4 w-4" />
                   ) : (
-                      <Mic className="h-5 w-5 text-muted-foreground" />
+                      <Mic className="h-4 w-4 text-muted-foreground" />
                   )}
               </Button>
             </div>
