@@ -260,185 +260,187 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-screen flex-col bg-background">
-      <header className="fixed top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-1.5 backdrop-blur-sm">
-        <Button onClick={() => router.push('/')} variant="ghost" size="icon" className="h-8 w-8">
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <Link href={`/profile?id=${otherUserId}`} className="flex min-w-0 flex-1 items-center gap-2 truncate">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={otherUserImage} alt={otherUserName} />
-            <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <h1 className="flex-1 truncate text-sm font-semibold">{otherUserName}</h1>
-        </Link>
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vocaux')}>
-          <Phone className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vidéo')}>
-          <Video className="h-4 w-4" />
-        </Button>
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <div className="mx-auto w-full max-w-sm">
-                <div className="p-4 pb-0">
-                    <div className="mt-3 h-full">
+      <div className="w-full max-w-3xl mx-auto flex flex-col h-full">
+        <header className="sticky top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-1.5 backdrop-blur-sm">
+          <Button onClick={() => router.push('/')} variant="ghost" size="icon" className="h-8 w-8">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <Link href={`/profile?id=${otherUserId}`} className="flex min-w-0 flex-1 items-center gap-2 truncate">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={otherUserImage} alt={otherUserName} />
+              <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <h1 className="flex-1 truncate text-sm font-semibold">{otherUserName}</h1>
+          </Link>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vocaux')}>
+            <Phone className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vidéo')}>
+            <Video className="h-4 w-4" />
+          </Button>
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <div className="mx-auto w-full max-w-sm">
+                  <div className="p-4 pb-0">
+                      <div className="mt-3 h-full">
+                          <DrawerClose asChild>
+                              <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleBlockUser}>
+                                  <Ban className="mr-2 h-5 w-5" /> Bloquer
+                              </Button>
+                          </DrawerClose>
+                          <div className="my-2 border-t"></div>
+                          <DrawerClose asChild>
+                              <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleReportUser}>
+                                  <ShieldAlert className="mr-2 h-5 w-5" /> Signaler un abus
+                              </Button>
+                          </DrawerClose>
+                      </div>
+                  </div>
+                  <div className="p-4">
                         <DrawerClose asChild>
-                            <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleBlockUser}>
-                                <Ban className="mr-2 h-5 w-5" /> Bloquer
-                            </Button>
-                        </DrawerClose>
-                        <div className="my-2 border-t"></div>
-                        <DrawerClose asChild>
-                            <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleReportUser}>
-                                <ShieldAlert className="mr-2 h-5 w-5" /> Signaler un abus
-                            </Button>
-                        </DrawerClose>
-                    </div>
-                </div>
-                <div className="p-4">
-                      <DrawerClose asChild>
-                        <Button variant="secondary" className="w-full h-12 text-base">Annuler</Button>
-                    </DrawerClose>
-                </div>
-            </div>
-          </DrawerContent>
-        </Drawer>
-      </header>
+                          <Button variant="secondary" className="w-full h-12 text-base">Annuler</Button>
+                      </DrawerClose>
+                  </div>
+              </div>
+            </DrawerContent>
+          </Drawer>
+        </header>
 
-      <main className="flex-1 overflow-y-auto pt-14 pb-20">
-        <div className="space-y-4 p-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex items-end gap-2 ${
-                message.sender === 'me' ? 'justify-end' : 'justify-start'
-              }`}
-            >
-              {message.sender === 'other' && (
-                <Avatar className="h-6 w-6">
-                   <AvatarImage src={otherUserImage} alt={otherUserName} />
-                   <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
-                </Avatar>
-              )}
+        <main className="flex-1 overflow-y-auto">
+          <div className="space-y-4 p-4">
+            {messages.map((message) => (
               <div
-                onMouseDown={() => message.sender === 'me' && startLongPress(message.id)}
-                onMouseUp={cancelLongPress}
-                onMouseLeave={cancelLongPress}
-                onTouchStart={() => message.sender === 'me' && startLongPress(message.id)}
-                onTouchEnd={cancelLongPress}
-                className={`max-w-[70%] rounded-2xl text-sm md:text-base ${
-                  message.text ? 'px-4 py-2' : 'p-1'
-                } ${
-                  message.sender === 'me'
-                    ? 'rounded-br-none bg-primary text-primary-foreground select-none'
-                    : 'rounded-bl-none bg-secondary text-secondary-foreground'
+                key={message.id}
+                className={`flex items-end gap-2 ${
+                  message.sender === 'me' ? 'justify-end' : 'justify-start'
                 }`}
               >
-                {message.text}
-                {message.image && (
-                   <Image 
-                     src={message.image} 
-                     alt="Image envoyée" 
-                     width={200} 
-                     height={200}
-                     className="rounded-xl object-cover"
-                    />
+                {message.sender === 'other' && (
+                  <Avatar className="h-6 w-6">
+                     <AvatarImage src={otherUserImage} alt={otherUserName} />
+                     <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
+                  </Avatar>
                 )}
-              </div>
-            </div>
-          ))}
-           <div ref={messagesEndRef} />
-        </div>
-      </main>
-
-       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-1.5">
-        <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
-            <div className={cn(
-              "flex items-center gap-0 shrink-0 transition-all duration-300",
-              isFocused ? "w-0 opacity-0" : "w-16 opacity-100"
-            )}>
-                 <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
-                    <DialogTrigger asChild>
-                        <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
-                        <Camera className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                    </DialogTrigger>
-                    {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
-                </Dialog>
-
-                <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={() => fileInputRef.current?.click()}>
-                <ImageIcon className="h-4 w-4 text-muted-foreground" />
-                </Button>
-            </div>
-          
-            <div className="flex-1 relative flex items-center min-w-0 bg-secondary rounded-xl px-3 py-1.5">
-                <Textarea
-                    ref={textareaRef}
-                    rows={1}
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    placeholder="Message..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent p-0 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
-                    autoComplete="off"
-                />
-                <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
-                    <PopoverTrigger asChild>
-                        <Button type="button" variant="ghost" size="icon" className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6">
-                            <Smile className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-none mb-2">
-                        <Picker 
-                          onEmojiClick={handleEmojiClick}
-                          searchDisabled
-                          skinTonesDisabled
-                          categories={[
-                            { category: Categories.SUGGESTED, name: "Suggérés" },
-                            { category: Categories.TRAVEL_PLACES, name: "Voyage & Lieux" },
-                            { category: Categories.ACTIVITIES, name: "Activités" },
-                            { category: Categories.SMILEYS_PEOPLE, name: "Émotions" },
-                            { category: Categories.ANIMALS_NATURE, name: "Nature" },
-                            { category: Categories.FOOD_DRINK, name: "Nourriture" },
-                            { category: Categories.OBJECTS, name: "Objets" },
-                          ]}
-                        />
-                    </PopoverContent>
-                </Popover>
-            </div>
-          
-            <div className="shrink-0">
-              <Button
-                  type={showSendButton ? "submit" : "button"}
-                  variant="ghost"
-                  size="icon"
-                  className="shrink-0 h-8 w-8 text-primary"
-                  onClick={!showSendButton ? () => handlePlaceholderAction('Les messages vocaux') : undefined}
-                  aria-label={showSendButton ? "Envoyer" : "Envoyer un message vocal"}
-              >
-                  {showSendButton ? (
-                      <Send className="h-4 w-4" />
-                  ) : (
-                      <Mic className="h-4 w-4 text-muted-foreground" />
+                <div
+                  onMouseDown={() => message.sender === 'me' && startLongPress(message.id)}
+                  onMouseUp={cancelLongPress}
+                  onMouseLeave={cancelLongPress}
+                  onTouchStart={() => message.sender === 'me' && startLongPress(message.id)}
+                  onTouchEnd={cancelLongPress}
+                  className={`max-w-[70%] rounded-2xl text-sm md:text-base ${
+                    message.text ? 'px-4 py-2' : 'p-1'
+                  } ${
+                    message.sender === 'me'
+                      ? 'rounded-br-none bg-primary text-primary-foreground select-none'
+                      : 'rounded-bl-none bg-secondary text-secondary-foreground'
+                  }`}
+                >
+                  {message.text}
+                  {message.image && (
+                     <Image 
+                       src={message.image} 
+                       alt="Image envoyée" 
+                       width={200} 
+                       height={200}
+                       className="rounded-xl object-cover"
+                      />
                   )}
-              </Button>
-            </div>
-        </form>
-         <input
-          type="file"
-          ref={fileInputRef}
-          className="hidden"
-          accept="image/*"
-          onChange={handleImageSelect}
-        />
-      </footer>
+                </div>
+              </div>
+            ))}
+             <div ref={messagesEndRef} />
+          </div>
+        </main>
+
+         <footer className="sticky bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-1.5">
+          <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
+              <div className={cn(
+                "flex items-center gap-0 shrink-0 transition-all duration-300",
+                isFocused ? "w-0 opacity-0" : "w-16 opacity-100"
+              )}>
+                   <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                      <DialogTrigger asChild>
+                          <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
+                          <Camera className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                      </DialogTrigger>
+                      {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
+                  </Dialog>
+
+                  <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={() => fileInputRef.current?.click()}>
+                  <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+              </div>
+            
+              <div className="flex-1 relative flex items-center min-w-0 bg-secondary rounded-xl px-3 py-1.5">
+                  <Textarea
+                      ref={textareaRef}
+                      rows={1}
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      placeholder="Message..."
+                      className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent p-0 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
+                      autoComplete="off"
+                  />
+                  <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+                      <PopoverTrigger asChild>
+                          <Button type="button" variant="ghost" size="icon" className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6">
+                              <Smile className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0 border-none mb-2">
+                          <Picker 
+                            onEmojiClick={handleEmojiClick}
+                            searchDisabled
+                            skinTonesDisabled
+                            categories={[
+                              { category: Categories.SUGGESTED, name: "Suggérés" },
+                              { category: Categories.TRAVEL_PLACES, name: "Voyage & Lieux" },
+                              { category: Categories.ACTIVITIES, name: "Activités" },
+                              { category: Categories.SMILEYS_PEOPLE, name: "Émotions" },
+                              { category: Categories.ANIMALS_NATURE, name: "Nature" },
+                              { category: Categories.FOOD_DRINK, name: "Nourriture" },
+                              { category: Categories.OBJECTS, name: "Objets" },
+                            ]}
+                          />
+                      </PopoverContent>
+                  </Popover>
+              </div>
+            
+              <div className="shrink-0">
+                <Button
+                    type={showSendButton ? "submit" : "button"}
+                    variant="ghost"
+                    size="icon"
+                    className="shrink-0 h-8 w-8 text-primary"
+                    onClick={!showSendButton ? () => handlePlaceholderAction('Les messages vocaux') : undefined}
+                    aria-label={showSendButton ? "Envoyer" : "Envoyer un message vocal"}
+                >
+                    {showSendButton ? (
+                        <Send className="h-4 w-4" />
+                    ) : (
+                        <Mic className="h-4 w-4 text-muted-foreground" />
+                    )}
+                </Button>
+              </div>
+          </form>
+           <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept="image/*"
+            onChange={handleImageSelect}
+          />
+        </footer>
+      </div>
       
       <AlertDialog open={messageToDelete !== null} onOpenChange={(open) => !open && setMessageToDelete(null)}>
         <AlertDialogContent>
