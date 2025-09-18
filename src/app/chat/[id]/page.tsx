@@ -259,7 +259,7 @@ export default function ChatPage() {
         </Drawer>
       </header>
 
-      <main className="flex-1 overflow-y-auto pt-16 pb-28">
+      <main className="flex-1 overflow-y-auto pt-16 pb-20">
         <div className="space-y-4 p-4">
           {messages.map((message) => (
             <div
@@ -299,21 +299,22 @@ export default function ChatPage() {
         </div>
       </main>
 
-       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm p-2">
+       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm p-1">
         <form onSubmit={handleSendMessage}>
-          <div className="flex w-full items-center gap-2 border-b pb-2">
+          <div className="flex w-full items-center gap-1 border-b pb-1">
             <Textarea
               ref={textareaRef}
               rows={1}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Dis quelque chose de sympa !"
-              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-1.5 px-2 max-h-24 overflow-y-auto text-base leading-tight"
+              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-1 px-2 max-h-20 overflow-y-auto text-sm"
               autoComplete="off"
             />
             <Button
               type="submit"
               variant="link"
+              size="sm"
               className="text-primary font-semibold"
               disabled={!newMessage.trim()}
             >
@@ -321,24 +322,24 @@ export default function ChatPage() {
             </Button>
           </div>
           
-          <div className="flex items-center pt-1.5">
+          <div className="flex items-center">
             <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
               <DialogTrigger asChild>
-                <Button type="button" variant="ghost" size="icon">
-                  <Camera className="h-5 w-5 text-muted-foreground" />
+                <Button type="button" variant="ghost" size="icon" className="h-8 w-8">
+                  <Camera className="h-4 w-4 text-muted-foreground" />
                   <span className="sr-only">Prendre une photo</span>
                 </Button>
               </DialogTrigger>
               {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
             </Dialog>
-            <Button type="button" variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()}>
-              <ImageIcon className="h-5 w-5 text-muted-foreground" />
+            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => fileInputRef.current?.click()}>
+              <ImageIcon className="h-4 w-4 text-muted-foreground" />
               <span className="sr-only">Envoyer une image</span>
             </Button>
              <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
               <PopoverTrigger asChild>
-                <Button type="button" variant="ghost" size="icon">
-                  <Smile className="h-5 w-5 text-muted-foreground" />
+                <Button type="button" variant="ghost" size="icon" className="h-8 w-8">
+                  <Smile className="h-4 w-4 text-muted-foreground" />
                   <span className="sr-only">Ajouter un emoji</span>
                 </Button>
               </PopoverTrigger>
@@ -346,8 +347,8 @@ export default function ChatPage() {
                  <Picker onEmojiClick={handleEmojiClick} />
               </PopoverContent>
             </Popover>
-            <Button type="button" variant="ghost" size="icon" onClick={() => handlePlaceholderAction('Les messages vocaux')}>
-              <Mic className="h-5 w-5 text-muted-foreground" />
+            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les messages vocaux')}>
+              <Mic className="h-4 w-4 text-muted-foreground" />
               <span className="sr-only">Envoyer un message vocal</span>
             </Button>
           </div>
