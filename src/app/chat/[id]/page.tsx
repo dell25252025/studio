@@ -314,14 +314,7 @@ export default function ChatPage() {
         </Drawer>
       </header>
 
-      <main 
-        className="flex-1 overflow-y-auto pt-14 pb-20"
-        style={{
-            backgroundImage: `url('https://ik.imagekit.io/fip3ktm2p/ChatGPT%20Image%2019%20sept.%202025,%2000_18_43.png?updatedAt=1758216008963')`,
-            backgroundRepeat: 'repeat',
-            backgroundSize: 'auto',
-          }}
-      >
+      <main className="flex-1 overflow-y-auto pt-14 pb-20">
         <div className="space-y-4 p-4">
           {messages.map((message) => (
             <div
