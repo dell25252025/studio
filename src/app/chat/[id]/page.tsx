@@ -15,6 +15,8 @@ import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from '@/components/
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import Picker, { type EmojiClickData } from 'emoji-picker-react';
 
 // Mock messages for demonstration purposes
 const initialMessages = [
@@ -34,6 +36,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -68,6 +71,10 @@ export default function ChatPage() {
       };
       reader.readAsDataURL(e.target.files[0]);
     }
+  };
+
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    setNewMessage(prevMessage => prevMessage + emojiData.emoji);
   };
 
 
@@ -214,10 +221,17 @@ export default function ChatPage() {
               accept="image/*"
               onChange={handleImageSelect}
             />
-            <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('Les Emojis')}>
-              <Smile className="h-5 w-5 text-muted-foreground" />
-              <span className="sr-only">Ajouter un emoji</span>
-            </Button>
+             <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+              <PopoverTrigger asChild>
+                <Button type="button" variant="ghost" size="icon" className="h-9 w-9">
+                  <Smile className="h-5 w-5 text-muted-foreground" />
+                  <span className="sr-only">Ajouter un emoji</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 border-none mb-2">
+                 <Picker onEmojiClick={handleEmojiClick} />
+              </PopoverContent>
+            </Popover>
             <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('Les messages vocaux')}>
               <Mic className="h-5 w-5 text-muted-foreground" />
               <span className="sr-only">Envoyer un message vocal</span>
