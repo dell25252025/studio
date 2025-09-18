@@ -300,7 +300,7 @@ export default function ChatPage() {
       </main>
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm">
-        <div className="flex w-full items-end gap-2 p-1">
+        <div className="flex w-full items-end gap-2 p-2">
            <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
             <DialogTrigger asChild>
                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0">
@@ -322,30 +322,32 @@ export default function ChatPage() {
             onChange={handleImageSelect}
           />
           <form onSubmit={handleSendMessage} className="flex flex-1 items-end gap-2">
-            <Textarea
-              ref={textareaRef}
-              rows={1}
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder=""
-              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 py-1.5 px-2 max-h-24 overflow-y-auto text-base leading-tight"
-              autoComplete="off"
-            />
-             <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
-              <PopoverTrigger asChild>
-                <Button type="button" variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0">
-                  <Smile className="h-5 w-5 text-muted-foreground" />
-                  <span className="sr-only">Ajouter un emoji</span>
+            <div className="flex w-full items-center rounded-2xl bg-secondary px-2">
+                 <Textarea
+                    ref={textareaRef}
+                    rows={1}
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder=""
+                    className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-1.5 px-2 max-h-24 overflow-y-auto text-base leading-tight"
+                    autoComplete="off"
+                />
+                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+                  <PopoverTrigger asChild>
+                    <Button type="button" variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0">
+                      <Smile className="h-5 w-5 text-muted-foreground" />
+                      <span className="sr-only">Ajouter un emoji</span>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 border-none mb-2">
+                     <Picker onEmojiClick={handleEmojiClick} />
+                  </PopoverContent>
+                </Popover>
+                <Button type="button" variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0" onClick={() => handlePlaceholderAction('Les messages vocaux')}>
+                  <Mic className="h-5 w-5 text-muted-foreground" />
+                  <span className="sr-only">Envoyer un message vocal</span>
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 border-none mb-2">
-                 <Picker onEmojiClick={handleEmojiClick} />
-              </PopoverContent>
-            </Popover>
-            <Button type="button" variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0" onClick={() => handlePlaceholderAction('Les messages vocaux')}>
-              <Mic className="h-5 w-5 text-muted-foreground" />
-              <span className="sr-only">Envoyer un message vocal</span>
-            </Button>
+            </div>
             <Button type="submit" variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0" disabled={!newMessage.trim()}>
               <Send className="h-5 w-5 text-primary" />
               <span className="sr-only">Envoyer</span>
