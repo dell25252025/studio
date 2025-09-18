@@ -135,6 +135,7 @@ export default function ChatPage() {
   const [isFocused, setIsFocused] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -152,6 +153,10 @@ export default function ChatPage() {
       fetchUserProfile();
     }
   }, [otherUserId]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
   
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -308,6 +313,7 @@ export default function ChatPage() {
               </div>
             </div>
           ))}
+           <div ref={messagesEndRef} />
         </div>
       </main>
 
@@ -397,5 +403,3 @@ export default function ChatPage() {
     </div>
   );
 }
-
-    
