@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile } from 'lucide-react';
+import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import Picker, { type EmojiClickData } from 'emoji-picker-react';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 // Mock messages for demonstration purposes
 const initialMessages = [
@@ -24,6 +26,89 @@ const initialMessages = [
   { id: 2, text: 'Merci beaucoup ! Le tien aussi. Prêt pour l\'aventure ?', sender: 'me' },
   { id: 3, text: 'Toujours ! Où rêves-tu d\'aller en premier ?', sender: 'other' },
 ];
+
+const CameraView = ({ onCapture }: { onCapture: (image: string) => void }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const getCameraPermission = async () => {
+      try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setStream(mediaStream);
+        if (videoRef.current) {
+          videoRef.current.srcObject = mediaStream;
+        }
+        setHasCameraPermission(true);
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'Accès à la caméra refusé',
+          description: 'Veuillez autoriser l\'accès à la caméra dans les paramètres de votre navigateur.',
+        });
+      }
+    };
+
+    getCameraPermission();
+
+    return () => {
+      stream?.getTracks().forEach(track => track.stop());
+    };
+  }, []);
+
+  const handleCapture = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg');
+        onCapture(dataUrl);
+      }
+    }
+  };
+
+  return (
+    <DialogContent className="p-0 m-0 w-full h-full max-w-full max-h-screen bg-black border-0 flex flex-col items-center justify-center">
+        <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+            <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+            <canvas ref={canvasRef} className="hidden" />
+
+            {hasCameraPermission === false && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 p-4">
+                    <Alert variant="destructive">
+                        <AlertTitle>Accès à la caméra requis</AlertTitle>
+                        <AlertDescription>
+                            Impossible d'accéder à la caméra. Veuillez vérifier les autorisations dans les paramètres de votre navigateur.
+                        </AlertDescription>
+                    </Alert>
+                </div>
+            )}
+            
+            {hasCameraPermission && (
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+                    <Button
+                        size="icon"
+                        className="w-20 h-20 rounded-full bg-white/30 border-4 border-white backdrop-blur-sm"
+                        onClick={handleCapture}
+                    >
+                       <Circle className="w-12 h-12 text-white" fill="white" />
+                    </Button>
+                </div>
+            )}
+        </div>
+    </DialogContent>
+  );
+};
+
 
 export default function ChatPage() {
   const router = useRouter();
@@ -37,6 +122,7 @@ export default function ChatPage() {
   const [newMessage, setNewMessage] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -62,16 +148,22 @@ export default function ChatPage() {
       reader.onload = (event) => {
         const result = event.target?.result;
         if (typeof result === 'string') {
-          setSelectedImage(result);
-          // For demonstration, we'll add it as a message directly.
-          // In a real app, you'd upload this and get a URL.
-          setMessages(prev => [...prev, { id: Date.now(), text: '', sender: 'me', image: result }]);
-          setSelectedImage(null); // Reset after "sending"
+          sendImageMessage(result);
         }
       };
       reader.readAsDataURL(e.target.files[0]);
     }
   };
+
+  const handleCapturePhoto = (image: string) => {
+    sendImageMessage(image);
+    setIsCameraOpen(false);
+  };
+
+  const sendImageMessage = (imageData: string) => {
+    setMessages(prev => [...prev, { id: Date.now(), text: '', sender: 'me', image: imageData }]);
+  };
+
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setNewMessage(prevMessage => prevMessage + emojiData.emoji);
@@ -206,10 +298,15 @@ export default function ChatPage() {
           </form>
 
           <div className="flex items-center justify-around h-10">
-            <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('L\'appareil photo')}>
-              <Camera className="h-5 w-5 text-muted-foreground" />
-              <span className="sr-only">Prendre une photo</span>
-            </Button>
+             <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+              <DialogTrigger asChild>
+                 <Button type="button" variant="ghost" size="icon" className="h-9 w-9">
+                  <Camera className="h-5 w-5 text-muted-foreground" />
+                  <span className="sr-only">Prendre une photo</span>
+                </Button>
+              </DialogTrigger>
+              {isCameraOpen && <CameraView onCapture={handleCapturePhoto} />}
+            </Dialog>
             <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => fileInputRef.current?.click()}>
               <ImageIcon className="h-5 w-5 text-muted-foreground" />
               <span className="sr-only">Envoyer une image</span>
@@ -241,4 +338,5 @@ export default function ChatPage() {
       </footer>
     </div>
   );
-}
+
+    
