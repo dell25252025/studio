@@ -300,18 +300,18 @@ export default function ChatPage() {
       </main>
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm">
-        <div className="flex flex-col">
-          <form onSubmit={handleSendMessage} className="flex items-end gap-2 p-1 pt-0.5">
+        <div className="flex flex-col py-0.5">
+          <form onSubmit={handleSendMessage} className="flex items-end gap-2 px-1">
             <Textarea
               ref={textareaRef}
               rows={1}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder=""
-              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 py-2 px-2 max-h-24 overflow-y-auto text-base leading-tight"
+              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 py-1.5 px-2 max-h-24 overflow-y-auto text-base leading-tight"
               autoComplete="off"
             />
-            <Button type="submit" variant="link" size="sm" className="self-end pb-1.5" disabled={!newMessage.trim()}>
+            <Button type="submit" variant="link" size="sm" className="self-end h-8" disabled={!newMessage.trim()}>
               Envoyer
             </Button>
           </form>
