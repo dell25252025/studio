@@ -232,27 +232,27 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-screen flex-col bg-background">
-      <header className="fixed top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-2 backdrop-blur-sm md:px-4">
-        <Button onClick={() => router.push('/')} variant="ghost" size="icon" className="h-9 w-9">
-          <ArrowLeft className="h-5 w-5" />
+      <header className="fixed top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-1.5 backdrop-blur-sm">
+        <Button onClick={() => router.push('/')} variant="ghost" size="icon" className="h-8 w-8">
+          <ArrowLeft className="h-4 w-4" />
         </Button>
-        <Link href={`/profile?id=${otherUserId}`} className="flex flex-1 items-center gap-2 truncate">
-          <Avatar className="h-9 w-9">
+        <Link href={`/profile?id=${otherUserId}`} className="flex min-w-0 flex-1 items-center gap-2 truncate">
+          <Avatar className="h-8 w-8">
             <AvatarImage src={otherUserImage} alt={otherUserName} />
             <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
           </Avatar>
-          <h1 className="flex-1 truncate text-base font-semibold">{otherUserName}</h1>
+          <h1 className="flex-1 truncate text-sm font-semibold">{otherUserName}</h1>
         </Link>
-        <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('Les appels vocaux')}>
-          <Phone className="h-5 w-5" />
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vocaux')}>
+          <Phone className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('Les appels vidéo')}>
-          <Video className="h-5 w-5" />
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vidéo')}>
+          <Video className="h-4 w-4" />
         </Button>
         <Drawer>
           <DrawerTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-9 w-9">
-              <MoreVertical className="h-5 w-5" />
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreVertical className="h-4 w-4" />
             </Button>
           </DrawerTrigger>
           <DrawerContent>
@@ -282,7 +282,7 @@ export default function ChatPage() {
         </Drawer>
       </header>
 
-      <main className="flex-1 overflow-y-auto pt-16 pb-20">
+      <main className="flex-1 overflow-y-auto pt-14 pb-20">
         <div className="space-y-4 p-4">
           {messages.map((message) => (
             <div
