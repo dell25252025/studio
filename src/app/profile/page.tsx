@@ -20,8 +20,8 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import Link from 'next/link';
 import Autoplay from "embla-carousel-autoplay"
-import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
-import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
+import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogTitle, DialogDescription, DialogHeader } from '@/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader as DrawerHeaderComponent, DrawerTitle, DrawerDescription as DrawerDescriptionComponent } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { countries } from '@/lib/countries';
 import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
@@ -124,6 +124,12 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
 
     return (
         <DialogContent className="p-0 m-0 w-full h-full max-w-full max-h-screen bg-black/80 backdrop-blur-sm border-0 flex flex-col items-center justify-center">
+            <DialogHeader className="sr-only">
+                <DialogTitle>Visionneuse de photos</DialogTitle>
+                <DialogDescription>
+                    Agrandissement de la photo de profil. Utilisez les flèches pour naviguer et les boutons pour zoomer.
+                </DialogDescription>
+            </DialogHeader>
              <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
                 <Image
                     ref={imageRef}
@@ -460,6 +466,10 @@ export default function ProfilePage() {
                                 </DrawerTrigger>
                                 <DrawerContent>
                                     <div className="mx-auto w-full max-w-sm">
+                                        <DrawerHeaderComponent>
+                                            <DrawerTitle>Options</DrawerTitle>
+                                            <DrawerDescriptionComponent>Gérez votre interaction avec ce profil.</DrawerDescriptionComponent>
+                                        </DrawerHeaderComponent>
                                         <div className="p-4 pb-0">
                                             <div className="mt-3 h-full">
                                                 <DrawerClose asChild>
