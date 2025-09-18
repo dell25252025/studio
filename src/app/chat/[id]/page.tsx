@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video } from 'lucide-react';
+import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getUserProfile } from '@/app/actions';
@@ -20,6 +20,8 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+
 
 // Mock messages for demonstration purposes
 const initialMessages = [
@@ -133,9 +135,12 @@ export default function ChatPage() {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [messageToDelete, setMessageToDelete] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const longPressTimer = useRef<NodeJS.Timeout>();
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -203,6 +208,29 @@ export default function ChatPage() {
         handleSendMessage(event);
     }
   };
+
+  const startLongPress = (messageId: number) => {
+    longPressTimer.current = setTimeout(() => {
+      setMessageToDelete(messageId);
+    }, 1000); // 1-second long press
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
+  };
+
+  const handleDeleteMessage = () => {
+    if (messageToDelete !== null) {
+      setMessages(messages.filter(msg => msg.id !== messageToDelete));
+      setMessageToDelete(null);
+      toast({
+        title: 'Message supprimé',
+      });
+    }
+  };
+
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -298,11 +326,16 @@ export default function ChatPage() {
                 </Avatar>
               )}
               <div
+                onMouseDown={() => message.sender === 'me' && startLongPress(message.id)}
+                onMouseUp={cancelLongPress}
+                onMouseLeave={cancelLongPress}
+                onTouchStart={() => message.sender === 'me' && startLongPress(message.id)}
+                onTouchEnd={cancelLongPress}
                 className={`max-w-[70%] rounded-2xl text-sm md:text-base ${
-                  message.text ? 'px-4 py-2' : 'p-1' // Less padding for images
+                  message.text ? 'px-4 py-2' : 'p-1'
                 } ${
                   message.sender === 'me'
-                    ? 'rounded-br-none bg-primary text-primary-foreground'
+                    ? 'rounded-br-none bg-primary text-primary-foreground select-none'
                     : 'rounded-bl-none bg-secondary text-secondary-foreground'
                 }`}
               >
@@ -406,6 +439,24 @@ export default function ChatPage() {
           onChange={handleImageSelect}
         />
       </footer>
+      
+      <AlertDialog open={messageToDelete !== null} onOpenChange={(open) => !open && setMessageToDelete(null)}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Supprimer le message ?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    Cette action est irréversible et supprimera le message de cette conversation.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeleteMessage} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Supprimer
+                </AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
