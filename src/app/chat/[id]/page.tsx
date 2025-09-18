@@ -316,7 +316,7 @@ export default function ChatPage() {
             </Button>
           </form>
 
-          <div className="flex items-center justify-around h-7">
+          <div className="flex items-center justify-around h-7 py-0.5">
              <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
               <DialogTrigger asChild>
                  <Button type="button" variant="ghost" size="icon" className="h-7 w-7">
