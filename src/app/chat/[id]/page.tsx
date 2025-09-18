@@ -181,7 +181,7 @@ export default function ChatPage() {
   };
 
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = (e: React.FormEvent | React.KeyboardEvent<HTMLTextAreaElement>) => {
     e.preventDefault();
     if (newMessage.trim()) {
       setMessages([
@@ -189,6 +189,13 @@ export default function ChatPage() {
         { id: Date.now(), text: newMessage, sender: 'me', image: null },
       ]);
       setNewMessage('');
+    }
+  };
+  
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        handleSendMessage(event);
     }
   };
 
@@ -327,6 +334,7 @@ export default function ChatPage() {
                     rows={1}
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     placeholder="Message..."
                     className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-secondary rounded-xl px-3 py-1.5 pr-8 min-h-[32px] max-h-[100px] overflow-y-auto text-sm"
                     autoComplete="off"
