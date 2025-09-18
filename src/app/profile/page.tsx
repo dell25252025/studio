@@ -10,7 +10,6 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import BottomNav from '@/components/bottom-nav';
-import WanderlinkHeader from '@/components/wanderlink-header';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
@@ -333,7 +332,6 @@ export default function ProfilePage() {
   if (!profile) {
     return (
         <div className="flex min-h-screen flex-col">
-            <WanderlinkHeader />
             <main className="flex-1 flex items-center justify-center text-center pt-16">
                 <div>
                     <h2 className="text-2xl font-bold">Profil non trouvé</h2>
@@ -366,8 +364,7 @@ export default function ProfilePage() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
-        <WanderlinkHeader />
-        <main className="flex-1 pb-24 pt-16">
+        <main className="flex-1 pb-24 pt-4 md:pt-16">
              <div className="w-full bg-background md:py-4">
                 {profilePictures.length > 0 ? (
                     <Dialog>
@@ -386,7 +383,7 @@ export default function ProfilePage() {
                         >
                             <CarouselContent className="-ml-1 md:-ml-4">
                                 {profilePictures.map((src: string, index: number) => (
-                                    <CarouselItem key={index} className="pl-1 md:pl-4 basis-1/3 md:basis-1/3">
+                                    <CarouselItem key={index} className="pl-1 md:pl-4 basis-1/2 md:basis-[43%]">
                                         <DialogTrigger asChild>
                                             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg md:rounded-2xl group cursor-pointer">
                                                 <Image 
