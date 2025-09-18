@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -80,6 +80,11 @@ export default function ChatPage() {
       ]);
       setNewMessage('');
     }
+  };
+  
+    const handleVoiceMessage = () => {
+    // This is a placeholder for voice recording logic
+    toast({ title: 'Fonctionnalité à venir', description: 'L\'enregistrement de messages vocaux sera bientôt disponible.' });
   };
   
   const handleBlockUser = () => {
@@ -199,9 +204,15 @@ export default function ChatPage() {
             className="flex-1 rounded-full h-9 px-4"
             autoComplete="off"
           />
-          <Button type="submit" size="icon" className="h-9 w-9 flex-shrink-0 rounded-full">
-            <Send className="h-4 w-4" />
-          </Button>
+          {newMessage.trim() ? (
+            <Button type="submit" size="icon" className="h-9 w-9 flex-shrink-0 rounded-full">
+                <Send className="h-4 w-4" />
+            </Button>
+          ) : (
+             <Button type="button" size="icon" className="h-9 w-9 flex-shrink-0 rounded-full" onClick={handleVoiceMessage}>
+                <Mic className="h-4 w-4" />
+             </Button>
+          )}
         </form>
       </footer>
     </div>
