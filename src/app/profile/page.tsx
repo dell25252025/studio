@@ -368,27 +368,27 @@ export default function ProfilePage() {
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
         <WanderlinkHeader />
         <main className="flex-1 pb-24 pt-16">
-             <div className="w-full bg-background">
+             <div className="w-full bg-background md:py-4">
                 {profilePictures.length > 0 ? (
                     <Dialog>
                         <Carousel
                             className="w-full max-w-4xl mx-auto"
                              opts={{
                                 align: "center",
-                                loop: true,
+                                loop: profilePictures.length > 1,
                             }}
-                            plugins={[
+                            plugins={profilePictures.length > 1 ? [
                                 Autoplay({
                                   delay: 5000,
                                   stopOnInteraction: true,
                                 }),
-                            ]}
+                            ] : []}
                         >
-                            <CarouselContent className="-ml-2 md:-ml-4">
+                            <CarouselContent className="-ml-1 md:-ml-4">
                                 {profilePictures.map((src: string, index: number) => (
-                                    <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3">
+                                    <CarouselItem key={index} className="pl-1 md:pl-4 basis-1/3 md:basis-1/3">
                                         <DialogTrigger asChild>
-                                            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl group cursor-pointer">
+                                            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg md:rounded-2xl group cursor-pointer">
                                                 <Image 
                                                     src={src}
                                                     alt={`Photo de profil de ${profile.firstName} ${index + 1}`}
@@ -405,41 +405,41 @@ export default function ProfilePage() {
                         <PhotoViewer images={profilePictures} startIndex={0} />
                     </Dialog>
                 ) : (
-                     <div className="flex h-64 w-full items-center justify-center bg-card">
+                     <div className="flex h-48 md:h-64 w-full items-center justify-center bg-card">
                          {isOwner ? (
                              <Button 
                                 variant="outline" 
-                                className="h-32 w-32 rounded-full border-dashed border-2 flex-col gap-2"
+                                className="h-24 w-24 rounded-full border-dashed border-2 flex-col gap-1"
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={isUploading}
                             >
-                                {isUploading ? <Loader2 className="h-10 w-10 animate-spin" /> : <PlusCircle className="h-10 w-10 text-muted-foreground" />}
-                                <span className="text-sm text-muted-foreground mt-1">Ajouter une photo</span>
+                                {isUploading ? <Loader2 className="h-8 w-8 animate-spin" /> : <PlusCircle className="h-8 w-8 text-muted-foreground" />}
+                                <span className="text-xs text-muted-foreground mt-1">Ajouter</span>
                             </Button>
                          ) : (
-                             <Camera className="h-24 w-24 text-muted-foreground" />
+                             <Camera className="h-16 w-16 text-muted-foreground" />
                          )}
                     </div>
                 )}
-                 <div className="px-2 py-2 md:px-4">
+                 <div className="px-2 py-2 md:px-4 md:pt-4">
                      <div className="flex justify-between items-start">
                         <div>
-                            <div className="flex items-center gap-3">
-                                <h1 className="text-2xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-xl md:text-2xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
                                 {isOwner && (
                                     <Link href={`/profile/edit?id=${profileId}`} passHref>
-                                        <Button variant="ghost" size="icon" asChild>
+                                        <Button variant="ghost" size="icon" className="h-7 w-7 md:h-9 md:w-9" asChild>
                                             <div>
-                                                <Edit className="h-5 w-5" />
+                                                <Edit className="h-4 w-4 md:h-5 md:w-5" />
                                                 <span className="sr-only">Modifier le profil</span>
                                             </div>
                                         </Button>
                                     </Link>
                                 )}
                             </div>
-                            <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-                                <MapPin className="h-4 w-4" />
-                                {locationCountry && <span className={`fi fi-${locationCountry.code.toLowerCase()} mr-2`}></span>}
+                            <div className="flex items-center gap-2 mt-1 text-xs md:text-sm text-muted-foreground">
+                                <MapPin className="h-3 w-3 md:h-4 md:w-4" />
+                                {locationCountry && <span className={`fi fi-${locationCountry.code.toLowerCase()} mr-1`}></span>}
                                 <span>{profile.location}</span>
                             </div>
                         </div>
@@ -454,8 +454,8 @@ export default function ProfilePage() {
                     </div>
                     {intention && (
                         <div className="mt-2">
-                            <Badge variant="default" className={cn("border-none text-white", intention.color)}>
-                                <intention.icon className="mr-1 h-4 w-4" />
+                            <Badge variant="default" className={cn("border-none text-white text-xs px-2 py-0.5 h-auto", intention.color)}>
+                                <intention.icon className="mr-1 h-3 w-3" />
                                 {intention.text}
                             </Badge>
                         </div>
@@ -463,56 +463,56 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            <div className="container mx-auto max-w-4xl px-2 md:px-4 space-y-2 bg-background">
+            <div className="container mx-auto max-w-4xl px-2 md:px-4 space-y-2 mt-2 md:mt-0 md:bg-transparent bg-background md:pt-2">
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
                      <div className="md:col-span-2 space-y-2">
-                        <Card className="shadow-lg">
-                            <CardHeader>
-                                <CardTitle>Ma description</CardTitle>
+                        <Card className="shadow-none md:shadow-lg">
+                            <CardHeader className="p-3 md:p-6">
+                                <CardTitle className="text-base md:text-2xl">Ma description</CardTitle>
                             </CardHeader>
-                            <CardContent>
-                                <p className="text-sm text-muted-foreground">{profile.bio || "Aucune description fournie."}</p>
+                            <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
+                                <p className="text-xs md:text-sm text-muted-foreground">{profile.bio || "Aucune description fournie."}</p>
                             </CardContent>
                         </Card>
-                         <Card className="shadow-lg">
-                            <CardHeader>
-                                <CardTitle>Mon Prochain Voyage</CardTitle>
+                         <Card className="shadow-none md:shadow-lg">
+                            <CardHeader className="p-3 md:p-6">
+                                <CardTitle className="text-base md:text-2xl">Mon Prochain Voyage</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-1 text-sm">
-                                <div className="flex items-start gap-3">
-                                    <Plane className="h-4 w-4 text-primary mt-0.5" />
+                            <CardContent className="space-y-2 text-xs md:text-sm p-3 pt-0 md:p-6 md:pt-0">
+                                <div className="flex items-start gap-2">
+                                    <Plane className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-xs">Destination</p>
-                                        <p className="text-muted-foreground text-sm flex items-center gap-2">
+                                        <p className="font-semibold text-[10px] md:text-xs">Destination</p>
+                                        <p className="text-muted-foreground text-xs md:text-sm flex items-center gap-2">
                                             {destinationCountry && <span className={`fi fi-${destinationCountry.code.toLowerCase()}`}></span>}
                                             {profile.destination}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <Calendar className="h-4 w-4 text-primary mt-0.5" />
+                                <div className="flex items-start gap-2">
+                                    <Calendar className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-xs">Dates</p>
-                                        <p className="text-muted-foreground text-sm">{travelDates}</p>
+                                        <p className="font-semibold text-[10px] md:text-xs">Dates</p>
+                                        <p className="text-muted-foreground text-xs md:text-sm">{travelDates}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <Backpack className="h-4 w-4 text-primary mt-0.5" />
+                                <div className="flex items-start gap-2">
+                                    <Backpack className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-xs">Style de voyage</p>
-                                        <p className="text-muted-foreground text-sm flex items-center gap-2">
-                                           {travelStyleOption?.icon && <span>{travelStyleOption.icon}</span>}
+                                        <p className="font-semibold text-[10px] md:text-xs">Style de voyage</p>
+                                        <p className="text-muted-foreground text-xs md:text-sm flex items-center gap-2">
+                                           {travelStyleOption?.icon && <span className="text-sm">{travelStyleOption.icon}</span>}
                                            {profile.travelStyle}
                                         </p>
                                     </div>
                                 </div>
                                 {profile.activities && profile.activities !== 'Toutes' && (
-                                    <div className="flex items-start gap-3">
-                                        <Sparkles className="h-4 w-4 text-primary mt-0.5" />
+                                    <div className="flex items-start gap-2">
+                                        <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
                                         <div>
-                                            <p className="font-semibold text-xs">Activités prévues</p>
-                                            <p className="text-muted-foreground text-sm flex items-center gap-2">
-                                                {travelActivityOption?.icon && <span>{travelActivityOption.icon}</span>}
+                                            <p className="font-semibold text-[10px] md:text-xs">Activités prévues</p>
+                                            <p className="text-muted-foreground text-xs md:text-sm flex items-center gap-2">
+                                                {travelActivityOption?.icon && <span className="text-sm">{travelActivityOption.icon}</span>}
                                                 {profile.activities}
                                             </p>
                                         </div>
@@ -523,56 +523,56 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                        <Card className="shadow-lg">
-                             <CardHeader>
-                                <CardTitle>Détails</CardTitle>
+                        <Card className="shadow-none md:shadow-lg">
+                             <CardHeader className="p-3 md:p-6">
+                                <CardTitle className="text-base md:text-2xl">Détails</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-1 text-sm">
-                                <div className="flex items-start gap-3">
-                                    <Languages className="h-4 w-4 text-primary mt-0.5" />
+                            <CardContent className="space-y-2 text-xs md:text-sm p-3 pt-0 md:p-6 md:pt-0">
+                                <div className="flex items-start gap-2">
+                                    <Languages className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-xs">Langues parlées</p>
-                                        <p className="text-muted-foreground text-sm">{profile.languages.join(', ')}</p>
+                                        <p className="font-semibold text-[10px] md:text-xs">Langues parlées</p>
+                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.languages.join(', ')}</p>
                                     </div>
                                 </div>
                                 {profile.height && (
-                                <div className="flex items-start gap-3">
-                                    <Ruler className="h-4 w-4 text-primary mt-0.5" />
+                                <div className="flex items-start gap-2">
+                                    <Ruler className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-xs">Taille</p>
-                                        <p className="text-muted-foreground text-sm">{profile.height} cm</p>
+                                        <p className="font-semibold text-[10px] md:text-xs">Taille</p>
+                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.height} cm</p>
                                     </div>
                                 </div>
                                 )}
                                 {profile.weight && (
-                                <div className="flex items-start gap-3">
-                                    <Scale className="h-4 w-4 text-primary mt-0.5" />
+                                <div className="flex items-start gap-2">
+                                    <Scale className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-xs">Poids</p>
-                                        <p className="text-muted-foreground text-sm">{profile.weight} kg</p>
+                                        <p className="font-semibold text-[10px] md:text-xs">Poids</p>
+                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.weight} kg</p>
                                     </div>
                                 </div>
                                 )}
-                                 <div className="flex items-start gap-3">
-                                    <Cigarette className="h-4 w-4 text-primary mt-0.5" />
+                                 <div className="flex items-start gap-2">
+                                    <Cigarette className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-xs">Tabac</p>
-                                        <p className="text-muted-foreground text-sm">{profile.tobacco || 'Non spécifié'}</p>
+                                        <p className="font-semibold text-[10px] md:text-xs">Tabac</p>
+                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.tobacco || 'Non spécifié'}</p>
                                     </div>
                                 </div>
-                                 <div className="flex items-start gap-3">
-                                    <Wine className="h-4 w-4 text-primary mt-0.5" />
+                                 <div className="flex items-start gap-2">
+                                    <Wine className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-xs">Alcool</p>
-                                        <p className="text-muted-foreground text-sm">{profile.alcohol || 'Non spécifié'}</p>
+                                        <p className="font-semibold text-[10px] md:text-xs">Alcool</p>
+                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.alcohol || 'Non spécifié'}</p>
                                     </div>
                                 </div>
                                 {profile.cannabis && (
-                                <div className="flex items-start gap-3">
-                                    <CannabisIcon className="h-4 w-4 text-primary mt-0.5" />
+                                <div className="flex items-start gap-2">
+                                    <CannabisIcon className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-xs">Cannabis</p>
-                                        <p className="text-muted-foreground text-sm">{profile.cannabis}</p>
+                                        <p className="font-semibold text-[10px] md:text-xs">Cannabis</p>
+                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.cannabis}</p>
                                     </div>
                                 </div>
                                 )}
@@ -587,7 +587,7 @@ export default function ProfilePage() {
                             </div>
                         )}
                         {!isOwner && (
-                            <div className="flex justify-center">
+                            <div className="flex justify-center pt-2">
                                 <Button size="lg">Envoyer un message</Button>
                             </div>
                         )}
