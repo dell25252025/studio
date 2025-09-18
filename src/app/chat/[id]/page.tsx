@@ -6,7 +6,6 @@ import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { getUserProfile } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
@@ -19,6 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import Picker, { type EmojiClickData } from 'emoji-picker-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Textarea } from '@/components/ui/textarea';
 
 // Mock messages for demonstration purposes
 const initialMessages = [
@@ -133,6 +133,7 @@ export default function ChatPage() {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -189,6 +190,13 @@ export default function ChatPage() {
       setNewMessage('');
     }
   };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [newMessage]);
   
     const handlePlaceholderAction = (feature: string) => {
     toast({ title: 'Fonctionnalité à venir', description: `${feature} sera bientôt disponible.` });
@@ -293,12 +301,14 @@ export default function ChatPage() {
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 p-1 backdrop-blur-sm">
         <div className="flex flex-col">
-          <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-            <Input
+          <form onSubmit={handleSendMessage} className="flex items-end gap-2 p-1">
+            <Textarea
+              ref={textareaRef}
+              rows={1}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Dis quelque chose de sympa !"
-              className="flex-1 border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-7 px-2"
+              className="flex-1 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-7 px-2 max-h-24 overflow-y-auto"
               autoComplete="off"
             />
             <Button type="submit" variant="link" size="sm" className="h-7" disabled={!newMessage.trim()}>
@@ -306,7 +316,7 @@ export default function ChatPage() {
             </Button>
           </form>
 
-          <div className="flex items-center justify-around h-8">
+          <div className="flex items-center justify-around h-7">
              <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
               <DialogTrigger asChild>
                  <Button type="button" variant="ghost" size="icon" className="h-7 w-7">
