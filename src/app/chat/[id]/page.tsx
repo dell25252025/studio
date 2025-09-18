@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic } from 'lucide-react';
+import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -82,9 +82,8 @@ export default function ChatPage() {
     }
   };
   
-    const handleVoiceMessage = () => {
-    // This is a placeholder for voice recording logic
-    toast({ title: 'Fonctionnalité à venir', description: 'L\'enregistrement de messages vocaux sera bientôt disponible.' });
+    const handlePlaceholderAction = (feature: string) => {
+    toast({ title: 'Fonctionnalité à venir', description: `${feature} sera bientôt disponible.` });
   };
   
   const handleBlockUser = () => {
@@ -144,7 +143,7 @@ export default function ChatPage() {
         </Drawer>
       </header>
 
-      <main className="flex-1 overflow-y-auto pt-16 pb-20">
+      <main className="flex-1 overflow-y-auto pt-16 pb-[120px]">
         <div className="space-y-4 p-4">
           {messages.map((message) => (
             <div
@@ -184,36 +183,47 @@ export default function ChatPage() {
         </div>
       </main>
 
-      <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 p-2 backdrop-blur-sm">
-        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-           <Button type="button" variant="ghost" size="icon" className="h-9 w-9 flex-shrink-0 rounded-full" onClick={() => fileInputRef.current?.click()}>
+       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 p-2 backdrop-blur-sm">
+        <div className="flex flex-col">
+          <form onSubmit={handleSendMessage} className="flex items-center gap-2 border-b pb-2 mb-1">
+            <Input
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Dis quelque chose de sympa !"
+              className="flex-1 border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-9 px-2"
+              autoComplete="off"
+            />
+            <Button type="submit" variant="link" disabled={!newMessage.trim()}>
+              Envoyer
+            </Button>
+          </form>
+
+          <div className="flex items-center justify-around h-10">
+            <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('L\'appareil photo')}>
+              <Camera className="h-5 w-5 text-muted-foreground" />
+              <span className="sr-only">Prendre une photo</span>
+            </Button>
+            <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => fileInputRef.current?.click()}>
               <ImageIcon className="h-5 w-5 text-muted-foreground" />
               <span className="sr-only">Envoyer une image</span>
             </Button>
-            <input
+             <input
               type="file"
               ref={fileInputRef}
               className="hidden"
               accept="image/*"
               onChange={handleImageSelect}
             />
-          <Input
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Écrivez votre message..."
-            className="flex-1 rounded-full h-9 px-4"
-            autoComplete="off"
-          />
-          {newMessage.trim() ? (
-            <Button type="submit" size="icon" className="h-9 w-9 flex-shrink-0 rounded-full">
-                <Send className="h-4 w-4" />
+            <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('Les Emojis')}>
+              <Smile className="h-5 w-5 text-muted-foreground" />
+              <span className="sr-only">Ajouter un emoji</span>
             </Button>
-          ) : (
-             <Button type="button" size="icon" className="h-9 w-9 flex-shrink-0 rounded-full" onClick={handleVoiceMessage}>
-                <Mic className="h-4 w-4" />
-             </Button>
-          )}
-        </form>
+            <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => handlePlaceholderAction('Les messages vocaux')}>
+              <Mic className="h-5 w-5 text-muted-foreground" />
+              <span className="sr-only">Envoyer un message vocal</span>
+            </Button>
+          </div>
+        </div>
       </footer>
     </div>
   );
