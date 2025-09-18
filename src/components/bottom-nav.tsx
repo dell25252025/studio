@@ -44,7 +44,7 @@ const BottomNav = () => {
    const areSettingsActive = pathname.startsWith('/settings');
 
   const navItems = [
-    { icon: Compass, label: 'Discover', href: '/', active: isDiscoverActive },
+    { icon: Compass, label: 'Discover', href: '/discover', active: isDiscoverActive },
     { icon: Bell, label: 'Notifications', href: '#', active: false },
     { icon: MessageSquare, label: 'Messages', href: '/chat', active: areMessagesActive },
     { icon: Settings, label: 'Paramètres', href: '/settings', active: areSettingsActive },
