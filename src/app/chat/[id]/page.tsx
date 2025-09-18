@@ -13,6 +13,7 @@ import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from '@/components/ui/drawer';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 // Mock messages for demonstration purposes
 const initialMessages = [
@@ -77,11 +78,13 @@ export default function ChatPage() {
         <Button onClick={() => router.back()} variant="ghost" size="icon" className="h-9 w-9">
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <Avatar className="h-9 w-9">
-          <AvatarImage src={otherUserImage} alt={otherUserName} />
-          <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <h1 className="flex-1 truncate text-base font-semibold">{otherUserName}</h1>
+        <Link href={`/profile?id=${otherUserId}`} className="flex flex-1 items-center gap-2 truncate">
+          <Avatar className="h-9 w-9">
+            <AvatarImage src={otherUserImage} alt={otherUserName} />
+            <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <h1 className="flex-1 truncate text-base font-semibold">{otherUserName}</h1>
+        </Link>
         <Drawer>
           <DrawerTrigger asChild>
             <Button variant="ghost" size="icon" className="h-9 w-9">
