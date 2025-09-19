@@ -79,6 +79,15 @@ export default function AuthPage() {
             </div>
 
             <div className="flex flex-col h-screen p-4 md:items-center md:justify-center md:h-auto">
+                {isEmailFormVisible && (
+                  <div className="absolute top-4 left-4 hidden md:block">
+                    <button onClick={resetAuthState} aria-label="Retour" className="p-2 rounded-full bg-black/20 text-white hover:bg-black/40">
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
                 <div className={`text-center md:hidden pt-2 flex-shrink-0 ${isEmailFormVisible ? 'hidden' : ''}`}>
                     <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l\'accueil de l\'authentification">
                         <h1 className="text-2xl font-bold font-logo text-white">
