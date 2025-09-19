@@ -49,8 +49,8 @@ export default function InboxPage() {
 
   return (
     <div className="flex h-screen flex-col bg-background">
-      <WanderlinkHeader />
-      <main className="flex-1 overflow-y-auto pt-14 pb-24">
+      
+      <main className="flex-1 overflow-y-auto pt-4 pb-24">
         <div className="container mx-auto max-w-2xl px-2">
             <h1 className="text-2xl font-bold p-2">Messages</h1>
             <div className="relative p-2">
