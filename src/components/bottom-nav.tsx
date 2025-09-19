@@ -55,17 +55,17 @@ const BottomNav = () => {
     if (currentUser) {
       if (profilePicture) {
         return (
-          <Avatar className="h-10 w-10 border-2 border-background group-hover:border-secondary transition-colors">
+          <Avatar className="h-8 w-8 border-2 border-background group-hover:border-secondary transition-colors">
             <AvatarImage src={profilePicture} alt="User profile picture" className="object-cover" />
             <AvatarFallback>
-              <User className="h-5 w-5" />
+              <User className="h-4 w-4" />
             </AvatarFallback>
           </Avatar>
         );
       }
-      return <User className="h-6 w-6 mx-auto" />;
+      return <User className="h-5 w-5 mx-auto" />;
     }
-    return <UserPlus className="h-6 w-6 mx-auto" />;
+    return <UserPlus className="h-5 w-5 mx-auto" />;
   };
   
   const profileHref = currentUser ? `/profile?id=${currentUser.uid}` : '/login';
@@ -102,10 +102,10 @@ const BottomNav = () => {
           ))}
 
           {/* Central Profile Button */}
-          <div className="relative flex h-16 w-16 items-center justify-center mx-auto -mt-4">
+          <div className="relative flex h-12 w-12 items-center justify-center mx-auto -mt-4">
             <Link href={profileHref} passHref className="group">
               <div
-                className={cn(`inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90`,
+                className={cn(`inline-flex h-10 w-10 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90`,
                  isProfileActive ? 'bg-accent' : 'bg-primary',
                  !isUserLoggedIn ? 'animate-pulse-slow' : ''
                 )}
