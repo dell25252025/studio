@@ -440,10 +440,10 @@ export default function ProfilePage() {
                     </div>
                 )}
                  <div className="px-2 py-2 md:px-4 md:pt-4">
-                     <div className="flex justify-between items-start">
-                        <div className="flex-1">
+                     <div className="flex justify-between items-center">
+                        <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                                <h1 className="text-xl md:text-2xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
+                                <h1 className="text-xl md:text-2xl font-bold font-headline truncate">{profile.firstName}, {profile.age}</h1>
                                 {isOwner && (
                                     <Link href={`/profile/edit?id=${profileId}`} passHref>
                                         <Button variant="ghost" size="icon" className="h-7 w-7 md:h-9 md:w-9" asChild>
@@ -462,44 +462,53 @@ export default function ProfilePage() {
                             </div>
                         </div>
                         
-                        {!isOwner && (
-                             <Drawer>
-                                <DrawerTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-7 w-7 md:h-9 md:w-9 -mr-2">
-                                        <MoreVertical className="h-4 w-4 md:h-5 md:w-5" />
-                                    </Button>
-                                </DrawerTrigger>
-                                <DrawerContent>
-                                    <div className="mx-auto w-full max-w-sm">
-                                        <DrawerHeaderComponent>
-                                            <DrawerTitle>Options</DrawerTitle>
-                                            <DrawerDescriptionComponent>Gérez votre interaction avec ce profil.</DrawerDescriptionComponent>
-                                        </DrawerHeaderComponent>
-                                        <div className="p-4 pb-0">
-                                            <div className="mt-3 h-full">
+                        <div className="flex items-center gap-2 pl-2">
+                            {!isOwner && (
+                                <Button variant="outline" size="sm" onClick={handleAddFriend}>
+                                    <UserPlus className="mr-2 h-4 w-4" />
+                                    Ajouter
+                                </Button>
+                            )}
+                            
+                            {!isOwner && (
+                                <Drawer>
+                                    <DrawerTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                                            <MoreVertical className="h-4 w-4 md:h-5 md:w-5" />
+                                        </Button>
+                                    </DrawerTrigger>
+                                    <DrawerContent>
+                                        <div className="mx-auto w-full max-w-sm">
+                                            <DrawerHeaderComponent>
+                                                <DrawerTitle>Options</DrawerTitle>
+                                                <DrawerDescriptionComponent>Gérez votre interaction avec ce profil.</DrawerDescriptionComponent>
+                                            </DrawerHeaderComponent>
+                                            <div className="p-4 pb-0">
+                                                <div className="mt-3 h-full">
+                                                    <DrawerClose asChild>
+                                                        <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleBlockUser}>
+                                                            <Ban className="mr-2 h-5 w-5" /> Bloquer
+                                                        </Button>
+                                                    </DrawerClose>
+                                                    <div className="my-2 border-t"></div>
+                                                    <DrawerClose asChild>
+                                                        <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleReportUser}>
+                                                            <ShieldAlert className="mr-2 h-5 w-5" /> Signaler un abus
+                                                        </Button>
+                                                    </DrawerClose>
+                                                </div>
+                                            </div>
+                                            <div className="p-4">
                                                 <DrawerClose asChild>
-                                                    <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleBlockUser}>
-                                                        <Ban className="mr-2 h-5 w-5" /> Bloquer
-                                                    </Button>
-                                                </DrawerClose>
-                                                <div className="my-2 border-t"></div>
-                                                <DrawerClose asChild>
-                                                    <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleReportUser}>
-                                                        <ShieldAlert className="mr-2 h-5 w-5" /> Signaler un abus
-                                                    </Button>
+                                                    <Button variant="secondary" className="w-full h-12 text-base">Annuler</Button>
                                                 </DrawerClose>
                                             </div>
                                         </div>
-                                        <div className="p-4">
-                                             <DrawerClose asChild>
-                                                <Button variant="secondary" className="w-full h-12 text-base">Annuler</Button>
-                                            </DrawerClose>
-                                        </div>
-                                    </div>
-                                </DrawerContent>
-                            </Drawer>
-                        )}
-
+                                    </DrawerContent>
+                                </Drawer>
+                            )}
+                        </div>
+                        
                          <input
                             type="file"
                             ref={fileInputRef}
@@ -650,10 +659,6 @@ export default function ProfilePage() {
         {!isOwner && profileId && (
             <div className="fixed bottom-0 left-0 right-0 z-10 p-4 bg-background/80 backdrop-blur-sm border-t">
                 <div className="flex gap-4">
-                     <Button size="lg" className="flex-1" variant="outline" onClick={handleAddFriend}>
-                        <UserPlus className="mr-2 h-4 w-4" />
-                        Ajouter
-                    </Button>
                     <Link href={`/chat/${profileId}`} passHref className="flex-1">
                         <Button size="lg" className="w-full">
                             <Send className="mr-2 h-4 w-4" />
