@@ -72,30 +72,37 @@ const BottomNav = () => {
   const isProfileActive = currentUser ? pathname === `/profile` && new URLSearchParams(window.location.search).get('id') === currentUser.uid : false;
   const isUserLoggedIn = !!currentUser;
 
+  const NavItem = ({ item }: { item: typeof navItems[0] }) => (
+    <div className="flex justify-center items-center">
+        <Link href={item.href} passHref>
+            <Button
+                asChild
+                variant="ghost"
+                className={cn(
+                    'flex flex-col items-center justify-center rounded-full h-12 w-12 md:h-14 md:w-14 p-1 hover:bg-secondary/50',
+                    item.active ? 'text-primary' : 'text-muted-foreground'
+                )}
+            >
+                <div>
+                    <item.icon className="h-5 w-5 mb-0.5" />
+                    <span className="text-[10px] font-body">{item.label}</span>
+                </div>
+            </Button>
+        </Link>
+    </div>
+  );
+
   return (
     <div className="fixed bottom-2 left-1/2 z-20 w-[calc(100%-1rem)] max-w-md -translate-x-1/2 md:bottom-4 md:w-[calc(100%-2rem)]">
       <nav className="h-14 w-full rounded-full border bg-background/90 p-1 shadow-lg backdrop-blur-md md:h-16 md:p-2">
         <div className="grid h-full grid-cols-5 items-center font-medium">
           {/* Left Items */}
           {navItems.slice(0, 2).map((item) => (
-            <Link href={item.href} key={item.label} passHref>
-              <Button
-                asChild
-                variant="ghost"
-                className={cn(`inline-flex h-full w-full flex-col items-center justify-center rounded-full px-1 md:px-2 hover:bg-secondary/50`,
-                  item.active ? 'text-primary' : 'text-muted-foreground'
-                )}
-              >
-                <div>
-                  <item.icon className="h-5 w-5 mb-0.5" />
-                  <span className="text-[10px] font-body">{item.label}</span>
-                </div>
-              </Button>
-            </Link>
+            <NavItem key={item.label} item={item} />
           ))}
 
           {/* Central Profile Button */}
-          <div className="relative -mt-6 flex h-16 w-16 items-center justify-center mx-auto">
+          <div className="relative flex h-16 w-16 items-center justify-center mx-auto -mt-4">
             <Link href={profileHref} passHref className="group">
               <div
                 className={cn(`inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90`,
@@ -110,20 +117,7 @@ const BottomNav = () => {
 
           {/* Right Items */}
           {navItems.slice(2, 4).map((item) => (
-            <Link href={item.href} key={item.label} passHref>
-              <Button
-                asChild
-                variant="ghost"
-                className={cn(`inline-flex h-full w-full flex-col items-center justify-center rounded-full px-1 md:px-2 hover:bg-secondary/50`,
-                  item.active ? 'text-primary' : 'text-muted-foreground'
-                )}
-              >
-                <div>
-                  <item.icon className="h-5 w-5 mb-0.5" />
-                  <span className="text-[10px] font-body">{item.label}</span>
-                </div>
-              </Button>
-            </Link>
+            <NavItem key={item.label} item={item} />
           ))}
 
         </div>
