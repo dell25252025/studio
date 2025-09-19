@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send, UserPlus } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -334,6 +334,12 @@ export default function ProfilePage() {
     // Logic to report user
     toast({ title: `Le profil de ${profile?.firstName} a été signalé.` });
   };
+  
+  const handleAddFriend = () => {
+    // Placeholder logic to add a friend
+    toast({ title: 'Demande envoyée !', description: `Votre demande d'ami à ${profile?.firstName} a été envoyée.` });
+  };
+
 
   if (loading) {
     return (
@@ -438,7 +444,7 @@ export default function ProfilePage() {
                         <div className="flex-1">
                             <div className="flex items-center gap-2">
                                 <h1 className="text-xl md:text-2xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
-                                {isOwner && (
+                                {isOwner ? (
                                     <Link href={`/profile/edit?id=${profileId}`} passHref>
                                         <Button variant="ghost" size="icon" className="h-7 w-7 md:h-9 md:w-9" asChild>
                                             <div>
@@ -447,6 +453,11 @@ export default function ProfilePage() {
                                             </div>
                                         </Button>
                                     </Link>
+                                ) : (
+                                     <Button variant="ghost" size="icon" className="h-7 w-7 md:h-9 md:w-9" onClick={handleAddFriend}>
+                                        <UserPlus className="h-4 w-4 md:h-5 md:w-5" />
+                                        <span className="sr-only">Ajouter comme ami</span>
+                                    </Button>
                                 )}
                             </div>
                             <div className="flex items-center gap-2 mt-1 text-xs md:text-sm text-muted-foreground">
