@@ -16,12 +16,10 @@ const intentionMap: { [key: string]: { icon: React.ElementType, color: string, t
   'Sponsorisé': { icon: Coins, color: 'bg-yellow-500', text: 'Sponsorisé' },
   '50/50': { icon: Users, color: 'bg-blue-500', text: '50/50' },
   'Groupe': { icon: Users, color: 'bg-red-500', text: 'Groupe' },
-  'Toutes': { icon: Users, color: 'bg-gray-500', text: 'Toutes' },
 };
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
-  const intentionKey = profile.travelIntention || 'Toutes';
-  const intention = intentionMap[intentionKey] || intentionMap['Toutes'];
+  const intention = profile.travelIntention ? intentionMap[profile.travelIntention] : null;
 
   return (
     <Link href={`/profile?id=${profile.id}`} passHref>
@@ -46,11 +44,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
         )}
 
         <div className="absolute bottom-0 left-0 p-2 md:p-4 text-white w-full flex flex-col items-start">
-          <div className="mb-1 md:mb-2">
-            <Badge variant="default" className={cn("border-none text-white text-[10px] md:text-xs px-2 py-0.5 h-auto", intention.color)}>
-              {intention.text}
-            </Badge>
-          </div>
+          {intention && (
+            <div className="mb-1 md:mb-2">
+              <Badge variant="default" className={cn("border-none text-white text-[10px] md:text-xs px-2 py-0.5 h-auto", intention.color)}>
+                {intention.text}
+              </Badge>
+            </div>
+          )}
           <div className="text-left">
             <h3 className="font-bold text-sm md:text-lg drop-shadow-md">{profile.name}, {profile.age}</h3>
           </div>
