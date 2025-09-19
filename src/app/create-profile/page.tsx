@@ -106,9 +106,9 @@ export default function CreateProfilePage() {
       
       toast({
         title: 'Profil créé avec succès !',
-        description: "Vous allez être redirigé vers votre page de profil.",
+        description: "Vous allez être redirigé vers la page d'accueil.",
       });
-      router.push(`/profile?id=${result.id}`);
+      router.push('/');
 
     } catch (error) {
       console.error('Failed to create profile:', error);
