@@ -43,8 +43,10 @@ export async function createOrUpdateGoogleUserProfile(userId: string, profileDat
         const userDoc = await getDoc(userRef);
 
         if (userDoc.exists()) {
-            // User exists, no need to do anything for now, they will be redirected to complete their profile.
-             return { success: true, id: userId, exists: true };
+            // User exists, check if profile is complete
+            const data = userDoc.data();
+            const isComplete = !!data.intention && !!data.age; // A simple check for profile completion
+            return { success: true, id: userId, isNewUser: !isComplete };
         } else {
             // User does not exist, create a basic profile
             const [firstName] = profileData.displayName?.split(' ') || [''];
@@ -57,7 +59,7 @@ export async function createOrUpdateGoogleUserProfile(userId: string, profileDat
                 updatedAt: new Date().toISOString(),
             };
             await setDoc(userRef, newProfileData);
-            return { success: true, id: userId, exists: false };
+            return { success: true, id: userId, isNewUser: true };
         }
 
     } catch (e: any) {
@@ -97,7 +99,7 @@ export async function createUserProfile(userId: string, profileData: any) {
           finalProfileData.dates.to = new Date(finalProfileData.dates.to);
         }
 
-        await setDoc(doc(db, "users", userId), finalProfileData);
+        await setDoc(doc(db, "users", userId), finalProfileData, { merge: true });
         
         return { success: true, id: userId };
 
