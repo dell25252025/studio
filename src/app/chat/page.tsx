@@ -3,14 +3,18 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, ArrowLeft } from 'lucide-react';
+import { Search, ArrowLeft, MoreVertical, Trash2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
+
 
 // Données factices pour la liste des conversations
-const mockConversations = [
+const initialConversations = [
   {
     id: 'user123',
     name: 'Sophia',
@@ -41,10 +45,22 @@ const mockConversations = [
 export default function InboxPage() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
+  const [conversations, setConversations] = useState(initialConversations);
+  const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  const filteredConversations = mockConversations.filter(convo =>
+  const filteredConversations = conversations.filter(convo =>
     convo.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleDeleteConversation = () => {
+    if (conversationToDelete) {
+      setConversations(conversations.filter(c => c.id !== conversationToDelete));
+      toast({ title: 'Conversation supprimée' });
+      setConversationToDelete(null);
+    }
+  };
+
 
   return (
     <div className="flex h-screen flex-col bg-background">
@@ -73,8 +89,8 @@ export default function InboxPage() {
                 {filteredConversations.length > 0 ? (
                     <ul className="divide-y">
                     {filteredConversations.map((convo) => (
-                        <li key={convo.id}>
-                            <Link href={`/chat/${convo.id}`} className="flex items-center gap-3 p-2 transition-colors hover:bg-muted/50">
+                        <li key={convo.id} className="flex items-center gap-1 p-2 transition-colors hover:bg-muted/50">
+                            <Link href={`/chat/${convo.id}`} className="flex flex-1 items-center gap-3">
                                 <Avatar className="h-10 w-10">
                                 <AvatarImage src={convo.avatarUrl} alt={convo.name} />
                                 <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
@@ -96,6 +112,37 @@ export default function InboxPage() {
                                 </div>
                                 </div>
                             </Link>
+                            <AlertDialog>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem className="text-destructive" onClick={() => setConversationToDelete(convo.id)}>
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Supprimer
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                              <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                      <AlertDialogTitle>Supprimer la conversation ?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                          Cette action est irréversible et supprimera définitivement cette conversation.
+                                      </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                      <AlertDialogCancel onClick={() => setConversationToDelete(null)}>Annuler</AlertDialogCancel>
+                                      <AlertDialogAction onClick={handleDeleteConversation} className="bg-destructive hover:bg-destructive/90">
+                                          Supprimer
+                                      </AlertDialogAction>
+                                  </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                         </li>
                     ))}
                     </ul>
