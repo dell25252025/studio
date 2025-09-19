@@ -16,7 +16,6 @@ import { createUserProfile } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import Link from 'next/link';
 import { formSchema, type FormData } from '@/lib/schema';
 
 const steps = [
@@ -138,11 +137,11 @@ export default function CreateProfilePage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4">
        <div className="w-full max-w-2xl relative">
          <div className="flex items-center gap-2 mb-4 justify-center">
-          <Link href="/" className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <h1 className="text-3xl font-bold font-logo bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               WanderLink
             </h1>
-          </Link>
+          </div>
         </div>
 
         <Progress value={((currentStep + 1) / steps.length) * 100} className="mb-8" />
