@@ -144,18 +144,6 @@ export default function CreateProfilePage() {
             </h1>
           </Link>
         </div>
-        
-        <Link href="/" passHref>
-          <Button 
-              variant="ghost" 
-              size="icon" 
-              className="absolute top-0 right-0"
-          >
-              <X className="h-6 w-6" />
-              <span className="sr-only">Annuler</span>
-          </Button>
-        </Link>
-        
 
         <Progress value={((currentStep + 1) / steps.length) * 100} className="mb-8" />
         
