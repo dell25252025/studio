@@ -69,21 +69,25 @@ export function DateRangePicker({ className, date, onDateChange, disabled }: Dat
               disabled && 'cursor-not-allowed opacity-50' // Add disabled styles
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {
-              date?.from ? (
-                date.to ? (
-                  <>
-                    {format(date.from, 'LLL dd, y', { locale: fr })} -{' '}
-                    {format(date.to, 'LLL dd, y', { locale: fr })}
-                  </>
+            <div className="flex items-center w-full min-w-0">
+                <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+                <span className="truncate">
+                {
+                date?.from ? (
+                    date.to ? (
+                    <>
+                        {format(date.from, 'LLL dd, y', { locale: fr })} -{' '}
+                        {format(date.to, 'LLL dd, y', { locale: fr })}
+                    </>
+                    ) : (
+                    format(date.from, 'LLL dd, y', { locale: fr })
+                    )
                 ) : (
-                  format(date.from, 'LLL dd, y', { locale: fr })
+                    <span>Choisissez une période</span>
                 )
-              ) : (
-                <span>Choisissez une période</span>
-              )
-            }
+                }
+                </span>
+            </div>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
