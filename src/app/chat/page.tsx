@@ -7,7 +7,6 @@ import { Search, ArrowLeft } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import BottomNav from '@/components/bottom-nav';
 import { Button } from '@/components/ui/button';
 
 // Données factices pour la liste des conversations
@@ -59,7 +58,7 @@ export default function InboxPage() {
         <div className="w-8"></div>
       </header>
 
-      <main className="flex-1 overflow-y-auto pt-12 pb-24">
+      <main className="flex-1 overflow-y-auto pt-12 pb-4">
         <div className="container mx-auto max-w-2xl px-2">
             <div className="relative p-2 pt-4">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -106,7 +105,6 @@ export default function InboxPage() {
             </div>
         </div>
       </main>
-      <BottomNav />
     </div>
   );
 }
