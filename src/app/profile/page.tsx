@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send, UserPlus } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send, UserPlus, Heart } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,11 +25,11 @@ import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader as Draw
 import { cn } from '@/lib/utils';
 import { countries } from '@/lib/countries';
 import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 
 
 const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <path d="M12 22s8-4 8-10V7l-8-5-8 5v5c0 6 8 10 8 10z"></path>
     <path d="m9 11 3 3 3-3"></path>
     <path d="M12 14V8"></path>
@@ -54,12 +54,21 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
     const imageRef = useRef<HTMLImageElement>(null);
     const lastDist = useRef(0);
     const isMobile = useIsMobile();
+    const { toast } = useToast();
+    const [isLiked, setIsLiked] = useState(false);
+
 
     const resetZoom = () => {
         setScale(1);
         setPosition({ x: 0, y: 0 });
         lastDist.current = 0;
     };
+    
+    useEffect(() => {
+        // Reset like status when image changes
+        setIsLiked(false);
+    }, [currentIndex]);
+
 
     const handleNext = () => {
         setCurrentIndex((prev) => (prev + 1) % images.length);
@@ -74,6 +83,14 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
     const handleZoomIn = () => setScale(s => Math.min(s + 0.2, 3));
     const handleZoomOut = () => setScale(s => Math.max(s - 0.2, 1));
     
+    const handleLike = () => {
+        const newLikedState = !isLiked;
+        setIsLiked(newLikedState);
+        toast({
+            title: newLikedState ? "Photo aimée !" : "J'aime retiré",
+        });
+    };
+
     useEffect(() => {
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
@@ -158,19 +175,33 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
                     }}
                 />
             </div>
+            
+            <DialogClose className="absolute top-2 right-2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 hover:text-white z-10">
+                <X className="h-6 w-6" />
+                <span className="sr-only">Fermer</span>
+            </DialogClose>
+
             {images.length > 1 && (
                 <>
                     <Button onClick={handlePrev} variant="ghost" size="icon" className="absolute left-2 top-1/2 -translate-y-1/2 text-white bg-black/30 hover:bg-black/50 hover:text-white"><ArrowLeft /></Button>
                     <Button onClick={handleNext} variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 text-white bg-black/30 hover:bg-black/50 hover:text-white"><ArrowRight /></Button>
                 </>
             )}
-            {!isMobile && (
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 rounded-full bg-black/30 text-white">
-                    <Button onClick={handleZoomOut} variant="ghost" size="icon" disabled={scale <= 1} className="hover:bg-black/50 hover:text-white"><ZoomOut /></Button>
-                    <span className="min-w-[4ch] text-center font-mono">{(scale * 100).toFixed(0)}%</span>
-                    <Button onClick={handleZoomIn} variant="ghost" size="icon" disabled={scale >= 3} className="hover:bg-black/50 hover:text-white"><ZoomIn /></Button>
-                </div>
-            )}
+           
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 rounded-full bg-black/30 text-white">
+                <Button 
+                    onClick={handleLike} 
+                    variant="ghost" 
+                    size="icon" 
+                    className={cn(
+                        "hover:bg-black/50 hover:text-white",
+                        isLiked && "text-red-500 hover:text-red-400"
+                    )}
+                >
+                    <Heart className={cn("h-5 w-5", isLiked && "fill-current")} />
+                    <span className="sr-only">Aimer</span>
+                </Button>
+            </div>
         </DialogContent>
     )
 }
