@@ -2,7 +2,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { User, Heart, Eye } from 'lucide-react';
+import { User, Heart, Eye, UserPlus, Sparkles } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SettingsHeader } from '@/components/settings/settings-header';
 import { Card, CardContent } from '@/components/ui/card';
@@ -20,12 +20,28 @@ const notifications = [
     read: false,
   },
   {
+    id: 5,
+    type: 'friend_request',
+    user: { id: 'user101', name: 'Liam', avatarUrl: 'https://picsum.photos/seed/user4/200' },
+    text: 'vous a envoyé une demande d\'ami.',
+    timestamp: 'il y a 25 minutes',
+    read: false,
+  },
+  {
     id: 2,
     type: 'profile_visit',
     user: { id: 'user456', name: 'James', avatarUrl: 'https://picsum.photos/seed/user2/200' },
     text: 'a visité votre profil.',
     timestamp: 'il y a 1 heure',
     read: false,
+  },
+   {
+    id: 6,
+    type: 'photo_like',
+    user: { id: 'user789', name: 'Isabella', avatarUrl: 'https://picsum.photos/seed/user3/200' },
+    text: 'a aimé votre photo.',
+    timestamp: 'il y a 2 heures',
+    read: true,
   },
   {
     id: 3,
@@ -35,7 +51,7 @@ const notifications = [
     timestamp: 'il y a 3 heures',
     read: true,
   },
-    {
+  {
     id: 4,
     type: 'new_match',
     user: { id: 'user101', name: 'Liam', avatarUrl: 'https://picsum.photos/seed/user4/200' },
@@ -46,8 +62,10 @@ const notifications = [
 ];
 
 const notificationIcons: { [key: string]: { icon: React.ElementType, color: string } } = {
-  new_match: { icon: Heart, color: 'bg-pink-500' },
+  new_match: { icon: Sparkles, color: 'bg-yellow-500' },
   profile_visit: { icon: Eye, color: 'bg-blue-500' },
+  photo_like: { icon: Heart, color: 'bg-pink-500' },
+  friend_request: { icon: UserPlus, color: 'bg-green-500' },
 };
 
 export default function NotificationsPage() {
