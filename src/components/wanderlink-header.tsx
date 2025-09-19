@@ -22,7 +22,7 @@ const WanderlinkHeader = () => {
         </Link>
         <Link href="/notifications" passHref>
           <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5" />
+            <Bell className="h-5 w-5" strokeWidth={2.3} />
             <span className="sr-only">Notifications</span>
           </Button>
         </Link>
