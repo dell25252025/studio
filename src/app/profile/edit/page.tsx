@@ -26,7 +26,7 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
 import { Separator } from '@/components/ui/separator';
 
-const MAX_PHOTOS = 4;
+const MAX_PHOTOS = 6;
 
 export default function EditProfilePage() {
     const router = useRouter();

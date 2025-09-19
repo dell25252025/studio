@@ -45,7 +45,7 @@ const intentionMap: { [key: string]: { icon: React.ElementType, color: string, t
   'Groupe': { icon: Users, color: 'bg-red-500', text: 'Groupe' },
 };
 
-const MAX_PHOTOS = 4;
+const MAX_PHOTOS = 6;
 
 const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: number }) => {
     const [currentIndex, setCurrentIndex] = useState(startIndex);

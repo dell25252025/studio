@@ -17,7 +17,7 @@ import { Camera, Image as ImageIcon, Loader2, Trash2, UploadCloud } from 'lucide
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 
-const MAX_PHOTOS = 4;
+const MAX_PHOTOS = 6;
 
 const Step1 = () => {
   const { control, setValue, getValues, trigger } = useFormContext();
@@ -145,7 +145,7 @@ const Step1 = () => {
           name="profilePictures"
           render={({ field }) => (
             <FormItem>
-                <FormLabel>Vos photos de profil (1 à 4)</FormLabel>
+                <FormLabel>Vos photos de profil (1 à 6)</FormLabel>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {pictures.map((src: string, index: number) => (
                     <div key={index} className="relative aspect-square">
