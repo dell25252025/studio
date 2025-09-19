@@ -22,7 +22,7 @@ export const formSchema = z.object({
   flexibleDates: z.boolean().default(false),
   travelStyle: z.string().optional(),
   activities: z.string().optional(),
-  intention: z.enum(['Sponsor', 'Sponsorisé', '50/50', 'Groupe'], { required_error: "L'intention est obligatoire."}),
+  intention: z.enum(['Sponsor', 'Sponsorisé', '50/50', 'Groupe'], { required_error: "L'intention de voyage est obligatoire."}),
   financialArrangement: z.enum(['50/50', 'Sponsor', 'Sponsorisé', 'Groupe']).optional(),
 });
 
