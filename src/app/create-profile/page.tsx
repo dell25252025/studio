@@ -66,7 +66,7 @@ export default function CreateProfilePage() {
       activities: 'Toutes',
       flexibleDates: false,
       travelStyle: 'Tous',
-      intention: 'Toutes',
+      intention: undefined,
     },
     mode: 'onChange' // Validate on change for better user experience
   });

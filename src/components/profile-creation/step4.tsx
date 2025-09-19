@@ -107,7 +107,7 @@ const Step4 = () => {
                                     value={field.value} 
                                     onValueChange={field.onChange} 
                                     options={travelIntentions} 
-                                    placeholder="Toutes"
+                                    placeholder="Sélectionnez une intention"
                                 />
                              </FormControl>
                             <FormMessage />

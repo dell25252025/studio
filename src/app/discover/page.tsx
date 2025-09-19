@@ -26,7 +26,7 @@ export default function DiscoverPage() {
     const [nearby, setNearby] = useState(false);
     const [country, setCountry] = useState('');
     const [destination, setDestination] = useState('Toutes');
-    const [intention, setIntention] = useState('Toutes');
+    const [intention, setIntention] = useState('');
     const [travelStyle, setTravelStyle] = useState('Tous');
     const [activities, setActivities] = useState('Toutes');
 
@@ -58,7 +58,7 @@ export default function DiscoverPage() {
         if (nearby) params.set('nearby', 'true');
         if (country && !nearby) params.set('country', country);
         if (destination && destination !== 'Toutes') params.set('destination', destination);
-        if (intention && intention !== 'Toutes') params.set('intention', intention);
+        if (intention) params.set('intention', intention);
         if (travelStyle && travelStyle !== 'Tous') params.set('travelStyle', travelStyle);
         if (activities && activities !== 'Toutes') params.set('activities', activities);
         
@@ -151,7 +151,7 @@ export default function DiscoverPage() {
                                         className={uniformSelectClass}
                                         value={intention} 
                                         onValueChange={setIntention} 
-                                        options={travelIntentions} 
+                                        options={[{ value: '', label: 'Toutes' }, ...travelIntentions]}
                                         placeholder="Toutes"
                                     />
                                 </div>
