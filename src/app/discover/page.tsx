@@ -22,7 +22,7 @@ export default function DiscoverPage() {
     const [showMe, setShowMe] = useState('Femme');
     const [ageRange, setAgeRange] = useState<[number, number]>([25, 45]);
     const [date, setDate] = useState<DateRange | undefined>();
-    const [flexibleDates, setFlexibleDates] = useState(false);
+    const [flexibleDates, setFlexibleDates] = useState(true);
     const [nearby, setNearby] = useState(true);
     const [country, setCountry] = useState('');
     const [destination, setDestination] = useState('Toutes');
