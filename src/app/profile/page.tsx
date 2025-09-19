@@ -25,7 +25,7 @@ import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader as Draw
 import { cn } from '@/lib/utils';
 import { countries } from '@/lib/countries';
 import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
-import { useIsMobile } from '@/hooks/use-is-mobile';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 
 const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
