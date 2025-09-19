@@ -10,7 +10,7 @@ import Step1 from '@/components/profile-creation/step1';
 import Step2 from '@/components/profile-creation/step2';
 import Step3 from '@/components/profile-creation/step3';
 import Step4 from '@/components/profile-creation/step4';
-import { Loader2, Plane, X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createUserProfile } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
@@ -85,6 +85,10 @@ export default function CreateProfilePage() {
       setCurrentStep(currentStep - 1);
     }
   };
+  
+  const handleCancel = () => {
+    router.push('/');
+  }
 
   const onSubmit = async (data: FormData) => {
     if (!currentUser) {
@@ -151,13 +155,17 @@ export default function CreateProfilePage() {
             <CurrentStepComponent />
 
             <div className="mt-8 flex justify-between items-center">
-              {currentStep > 0 ? (
-                <Button type="button" variant="ghost" onClick={prevStep} disabled={isSubmitting}>
-                  Précédent
-                </Button>
-              ) : (
-                <div />
-              )}
+              <div>
+                {currentStep > 0 ? (
+                  <Button type="button" variant="ghost" onClick={prevStep} disabled={isSubmitting}>
+                    Précédent
+                  </Button>
+                ) : (
+                   <Button type="button" variant="ghost" onClick={handleCancel} disabled={isSubmitting}>
+                    Annuler
+                  </Button>
+                )}
+              </div>
               {currentStep < steps.length - 1 ? (
                 <Button type="button" onClick={nextStep}>
                   Suivant
