@@ -42,10 +42,11 @@ const BottomNav = () => {
    const isDiscoverActive = pathname === '/' || pathname.startsWith('/discover');
    const areMessagesActive = pathname.startsWith('/chat');
    const areSettingsActive = pathname.startsWith('/settings');
+   const areNotificationsActive = pathname.startsWith('/notifications');
 
   const navItems = [
     { icon: Compass, label: 'Discover', href: '/discover', active: isDiscoverActive },
-    { icon: Bell, label: 'Notifications', href: '#', active: false },
+    { icon: Bell, label: 'Notifications', href: '/notifications', active: areNotificationsActive },
     { icon: MessageSquare, label: 'Messages', href: '/chat', active: areMessagesActive },
     { icon: Settings, label: 'Paramètres', href: '/settings', active: areSettingsActive },
   ];
