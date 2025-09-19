@@ -119,7 +119,7 @@ export default function InboxPage() {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                 placeholder="Rechercher une conversation..."
-                className="pl-8"
+                className="pl-8 h-9"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -128,23 +128,23 @@ export default function InboxPage() {
                 {filteredConversations.length > 0 ? (
                     <ul className="divide-y">
                     {filteredConversations.map((convo) => (
-                        <li key={convo.id} className="flex items-center gap-1 p-2 transition-colors hover:bg-muted/50">
-                            <Link href={`/chat/${convo.id}`} className="flex flex-1 items-center gap-3 min-w-0">
-                                <Avatar className="h-10 w-10">
+                        <li key={convo.id} className="flex items-center gap-1 p-1.5 transition-colors hover:bg-muted/50">
+                            <Link href={`/chat/${convo.id}`} className="flex flex-1 items-center gap-2 min-w-0">
+                                <Avatar className="h-9 w-9">
                                 <AvatarImage src={convo.avatarUrl} alt={convo.name} />
                                 <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1 truncate">
                                 <div className="flex items-baseline justify-between">
-                                    <p className="font-semibold truncate text-sm">{convo.name}</p>
-                                    <p className="text-xs text-muted-foreground">{convo.timestamp}</p>
+                                    <p className="font-semibold truncate text-xs">{convo.name}</p>
+                                    <p className="text-[10px] text-muted-foreground">{convo.timestamp}</p>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <p className="truncate text-xs text-muted-foreground">
+                                    <p className="truncate text-[11px] text-muted-foreground">
                                     {convo.lastMessage}
                                     </p>
                                     {convo.unreadCount > 0 && (
-                                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+                                    <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-primary text-[9px] text-primary-foreground">
                                         {convo.unreadCount}
                                     </span>
                                     )}
