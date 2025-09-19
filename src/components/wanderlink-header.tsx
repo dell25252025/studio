@@ -30,7 +30,7 @@ const WanderlinkHeader = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link href="/notifications" passHref>
-                <Button variant="ghost" size="icon" className="text-muted-foreground">
+                <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-transparent hover:text-muted-foreground">
                   <Bell className="h-5 w-5" />
                   <span className="sr-only">Notifications</span>
                 </Button>
