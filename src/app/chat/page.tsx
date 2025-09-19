@@ -47,6 +47,7 @@ export default function InboxPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [conversations, setConversations] = useState(initialConversations);
   const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
+  const [isDeletingAll, setIsDeletingAll] = useState(false);
   const { toast } = useToast();
 
   const filteredConversations = conversations.filter(convo =>
@@ -60,6 +61,12 @@ export default function InboxPage() {
       setConversationToDelete(null);
     }
   };
+  
+  const handleDeleteAllConversations = () => {
+    setConversations([]);
+    toast({ title: 'Toutes les conversations ont été supprimées' });
+    setIsDeletingAll(false);
+  };
 
 
   return (
@@ -71,7 +78,39 @@ export default function InboxPage() {
             </Button>
             <h1 className="text-sm font-semibold ml-2">Messages</h1>
         </div>
-        <div className="w-8"></div>
+        
+        <AlertDialog open={isDeletingAll} onOpenChange={setIsDeletingAll}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <MoreVertical className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem className="text-destructive">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Tout supprimer
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AlertDialogContent>
+              <AlertDialogHeader>
+                  <AlertDialogTitle>Supprimer toutes les conversations ?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                      Cette action est irréversible et supprimera définitivement toutes vos conversations.
+                  </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                  <AlertDialogCancel>Annuler</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteAllConversations} className="bg-destructive hover:bg-destructive/90">
+                      Supprimer
+                  </AlertDialogAction>
+              </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
       </header>
 
       <main className="flex-1 overflow-y-auto pt-12 pb-4">
