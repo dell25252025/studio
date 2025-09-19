@@ -32,27 +32,27 @@ export default function LanguagePage() {
     <div className="min-h-screen bg-secondary/30">
       <SettingsHeader title="Langue" />
       <main className="px-2 py-4 md:px-4 pt-16">
-        <div className="mx-auto max-w-2xl space-y-4">
+        <div className="mx-auto max-w-2xl space-y-2">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2"><Languages /> Choisir une langue</CardTitle>
-              <CardDescription>Sélectionnez la langue d'affichage de l'application.</CardDescription>
+            <CardHeader className="p-4">
+              <CardTitle className="flex items-center gap-2 text-base"><Languages className="h-4 w-4" /> Choisir une langue</CardTitle>
+              <CardDescription className="text-xs">Sélectionnez la langue d'affichage de l'application.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 pt-0">
               <ul className="space-y-2">
                 {languages.map((lang) => (
                   <li key={lang.code}>
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-full justify-start p-4 h-auto text-base",
-                        selectedLanguage === lang.code && "border-primary ring-2 ring-primary"
+                        "w-full justify-start p-3 h-auto text-sm",
+                        selectedLanguage === lang.code && "border-primary ring-1 ring-primary"
                       )}
                       onClick={() => handleLanguageChange(lang.code)}
                     >
-                      <span className="mr-4 text-2xl">{lang.flag}</span>
+                      <span className="mr-3 text-xl">{lang.flag}</span>
                       <span className="flex-1 text-left">{lang.name}</span>
-                      {selectedLanguage === lang.code && <Check className="h-5 w-5 text-primary" />}
+                      {selectedLanguage === lang.code && <Check className="h-4 w-4 text-primary" />}
                     </Button>
                   </li>
                 ))}

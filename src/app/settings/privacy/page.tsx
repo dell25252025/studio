@@ -47,68 +47,68 @@ export default function PrivacySettingsPage() {
     <div className="min-h-screen bg-secondary/30">
         <SettingsHeader title="Paramètres de confidentialité" />
         <main className="px-2 py-4 md:px-4 pt-16">
-            <div className="mx-auto max-w-2xl space-y-4">
+            <div className="mx-auto max-w-2xl space-y-2">
                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Eye /> Visibilité du profil</CardTitle>
-                        <CardDescription>Contrôlez qui peut voir votre profil et vos informations.</CardDescription>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><Eye className="h-4 w-4"/> Visibilité du profil</CardTitle>
+                        <CardDescription className="text-xs">Contrôlez qui peut voir votre profil et vos informations.</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4 pt-0">
                         <RadioGroup value={profileVisibility} onValueChange={setProfileVisibility} className="space-y-2">
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="all" id="v-all" />
-                               <Label htmlFor="v-all" className="text-sm">Visible par tout le monde</Label>
+                               <Label htmlFor="v-all" className="text-xs">Visible par tout le monde</Label>
                            </div>
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="members" id="v-members" />
-                               <Label htmlFor="v-members" className="text-sm">Visible uniquement par les membres WanderLink</Label>
+                               <Label htmlFor="v-members" className="text-xs">Visible uniquement par les membres WanderLink</Label>
                            </div>
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="hidden" id="v-hidden" />
-                               <Label htmlFor="v-hidden" className="text-sm">Cacher mon profil temporairement</Label>
+                               <Label htmlFor="v-hidden" className="text-xs">Cacher mon profil temporairement</Label>
                            </div>
                         </RadioGroup>
                     </CardContent>
                 </Card>
 
                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Activity /> Votre activité</CardTitle>
-                        <CardDescription>Gérez la visibilité de votre statut en ligne et de votre activité.</CardDescription>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><Activity className="h-4 w-4"/> Votre activité</CardTitle>
+                        <CardDescription className="text-xs">Gérez la visibilité de votre statut en ligne et de votre activité.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between rounded-lg border p-3">
-                            <Label htmlFor="online-status" className="text-sm">Afficher mon statut "En ligne"</Label>
+                    <CardContent className="space-y-2 p-4 pt-0">
+                        <div className="flex items-center justify-between rounded-lg border p-2">
+                            <Label htmlFor="online-status" className="text-xs">Afficher mon statut "En ligne"</Label>
                             <Switch id="online-status" checked={showOnlineStatus} onCheckedChange={setShowOnlineStatus} />
                         </div>
-                         <div className="flex items-center justify-between rounded-lg border p-3">
-                            <Label htmlFor="recent-activity" className="text-sm">Afficher mon activité récente (ex: likes)</Label>
+                         <div className="flex items-center justify-between rounded-lg border p-2">
+                            <Label htmlFor="recent-activity" className="text-xs">Afficher mon activité récente (ex: likes)</Label>
                             <Switch id="recent-activity" checked={showRecentActivity} onCheckedChange={setShowRecentActivity} />
                         </div>
                     </CardContent>
                 </Card>
                 
                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><MessageSquare /> Messagerie</CardTitle>
-                        <CardDescription>Choisissez qui peut vous envoyer des messages.</CardDescription>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><MessageSquare className="h-4 w-4"/> Messagerie</CardTitle>
+                        <CardDescription className="text-xs">Choisissez qui peut vous envoyer des messages.</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4 pt-0">
                         <RadioGroup value={messagingPolicy} onValueChange={setMessagingPolicy} className="space-y-2">
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="all" id="m-all" />
-                               <Label htmlFor="m-all" className="text-sm">Tout le monde peut me contacter</Label>
+                               <Label htmlFor="m-all" className="text-xs">Tout le monde peut me contacter</Label>
                            </div>
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="matches" id="m-matches" />
-                               <Label htmlFor="m-matches" className="text-sm">Seuls les profils avec qui j'ai "matché"</Label>
+                               <Label htmlFor="m-matches" className="text-xs">Seuls les profils avec qui j'ai "matché"</Label>
                            </div>
                         </RadioGroup>
                     </CardContent>
                 </Card>
 
-                <div className="flex justify-end">
-                    <Button onClick={handleSave} disabled={isSubmitting}>
+                <div className="flex justify-end pt-2">
+                    <Button onClick={handleSave} disabled={isSubmitting} size="sm">
                          {isSubmitting ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -117,7 +117,7 @@ export default function PrivacySettingsPage() {
                          ) : (
                             <>
                                 <Save className="mr-2 h-4 w-4" />
-                                Enregistrer les modifications
+                                Enregistrer
                             </>
                          )}
                     </Button>

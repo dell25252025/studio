@@ -36,23 +36,23 @@ export default function BlockedUsersPage() {
     <div className="min-h-screen bg-secondary/30">
       <SettingsHeader title="Utilisateurs bloqués" />
       <main className="px-2 py-4 md:px-4 pt-16">
-            <div className="mx-auto max-w-2xl space-y-4">
+            <div className="mx-auto max-w-2xl space-y-2">
                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><UserX /> Gérer les utilisateurs bloqués</CardTitle>
-                        <CardDescription>Les utilisateurs que vous bloquez ne pourront plus vous contacter ni voir votre profil.</CardDescription>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><UserX className="h-4 w-4" /> Gérer les utilisateurs bloqués</CardTitle>
+                        <CardDescription className="text-xs">Les utilisateurs que vous bloquez ne pourront plus vous contacter ni voir votre profil.</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4 pt-0">
                         {blockedUsers.length > 0 ? (
-                            <ul className="space-y-4">
+                            <ul className="space-y-2">
                                 {blockedUsers.map(user => (
-                                    <li key={user.id} className="flex items-center justify-between rounded-lg border p-3">
-                                        <div className="flex items-center gap-4">
-                                            <Avatar>
+                                    <li key={user.id} className="flex items-center justify-between rounded-lg border p-2">
+                                        <div className="flex items-center gap-2">
+                                            <Avatar className="h-8 w-8">
                                                 <AvatarImage src={user.avatarUrl} alt={user.name} />
                                                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                                             </Avatar>
-                                            <span className="font-medium text-sm">{user.name}</span>
+                                            <span className="font-medium text-xs">{user.name}</span>
                                         </div>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
@@ -77,9 +77,9 @@ export default function BlockedUsersPage() {
                                 ))}
                             </ul>
                         ) : (
-                           <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 text-center">
-                                <ShieldCheck className="h-12 w-12 text-muted-foreground" />
-                                <h3 className="mt-4 font-semibold text-base">Aucun utilisateur bloqué</h3>
+                           <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 text-center">
+                                <ShieldCheck className="h-10 w-10 text-muted-foreground" />
+                                <h3 className="mt-3 font-semibold text-sm">Aucun utilisateur bloqué</h3>
                                 <p className="mt-1 text-xs text-muted-foreground">Votre liste d'utilisateurs bloqués est vide.</p>
                            </div>
                         )}
