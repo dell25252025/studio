@@ -172,7 +172,7 @@ function DiscoverPage({ user }: { user: User }) {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <WanderlinkHeader />
-      <main className="flex-1 pb-24 pt-16">
+      <main className="flex-1 pb-24 pt-14 md:pt-16">
         <div className="container mx-auto max-w-7xl px-2">
           <div className="text-center">
             {profilesLoading ? (
