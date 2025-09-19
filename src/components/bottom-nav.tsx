@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Compass, Bell, MessageSquare, User, UserPlus, Settings } from 'lucide-react';
+import { Compass, Users, MessageSquare, User, UserPlus, Settings } from 'lucide-react';
 import { Button } from './ui/button';
 import Link from 'next/link';
 import { auth } from '@/lib/firebase';
@@ -42,11 +42,11 @@ const BottomNav = () => {
    const isDiscoverActive = pathname === '/' || pathname.startsWith('/discover');
    const areMessagesActive = pathname.startsWith('/chat');
    const areSettingsActive = pathname.startsWith('/settings');
-   const areNotificationsActive = pathname.startsWith('/notifications');
+   const areFriendsActive = pathname.startsWith('/friends');
 
   const navItems = [
     { icon: Compass, label: 'Discover', href: '/discover', active: isDiscoverActive },
-    { icon: Bell, label: 'Notifications', href: '/notifications', active: areNotificationsActive },
+    { icon: Users, label: 'Amis', href: '/friends', active: areFriendsActive },
     { icon: MessageSquare, label: 'Messages', href: '/chat', active: areMessagesActive },
     { icon: Settings, label: 'Paramètres', href: '/settings', active: areSettingsActive },
   ];
