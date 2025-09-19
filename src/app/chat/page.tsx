@@ -74,22 +74,22 @@ export default function InboxPage() {
                     <ul className="divide-y">
                     {filteredConversations.map((convo) => (
                         <li key={convo.id}>
-                            <Link href={`/chat/${convo.id}`} className="flex items-center gap-4 p-3 transition-colors hover:bg-muted/50">
-                                <Avatar className="h-12 w-12">
+                            <Link href={`/chat/${convo.id}`} className="flex items-center gap-3 p-2 transition-colors hover:bg-muted/50">
+                                <Avatar className="h-10 w-10">
                                 <AvatarImage src={convo.avatarUrl} alt={convo.name} />
                                 <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1 truncate">
                                 <div className="flex items-baseline justify-between">
-                                    <p className="font-semibold truncate">{convo.name}</p>
+                                    <p className="font-semibold truncate text-sm">{convo.name}</p>
                                     <p className="text-xs text-muted-foreground">{convo.timestamp}</p>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <p className="truncate text-sm text-muted-foreground">
+                                    <p className="truncate text-xs text-muted-foreground">
                                     {convo.lastMessage}
                                     </p>
                                     {convo.unreadCount > 0 && (
-                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
                                         {convo.unreadCount}
                                     </span>
                                     )}
