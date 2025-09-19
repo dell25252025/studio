@@ -55,7 +55,7 @@ const BottomNav = () => {
     if (currentUser) {
       if (profilePicture) {
         return (
-          <Avatar className="h-8 w-8 border-2 border-background group-hover:border-secondary transition-colors">
+          <Avatar className="h-full w-full border-2 border-background group-hover:border-secondary transition-colors">
             <AvatarImage src={profilePicture} alt="User profile picture" className="object-cover" />
             <AvatarFallback>
               <User className="h-4 w-4" />
@@ -73,52 +73,45 @@ const BottomNav = () => {
   const isUserLoggedIn = !!currentUser;
 
   const NavItem = ({ item }: { item: typeof navItems[0] }) => (
-    <div className="flex justify-center items-center">
-        <Link href={item.href} passHref>
-            <Button
-                asChild
-                variant="ghost"
-                className={cn(
-                    'flex flex-col items-center justify-center rounded-full h-12 w-12 md:h-14 md:w-14 p-1 hover:bg-secondary/50',
-                    item.active ? 'text-primary' : 'text-muted-foreground'
-                )}
-            >
-                <div>
-                    <item.icon className="h-5 w-5 mb-0.5" />
-                    <span className="text-[10px] font-body">{item.label}</span>
-                </div>
-            </Button>
-        </Link>
-    </div>
+     <Link href={item.href} className="flex flex-col items-center justify-center h-full text-center">
+        <div
+            className={cn(
+                'flex flex-col items-center justify-center rounded-full h-12 w-12 p-1 transition-colors duration-200',
+                item.active ? 'text-primary' : 'text-muted-foreground'
+            )}
+        >
+            <item.icon className="h-5 w-5 mb-0.5" />
+            <span className="text-[9px] font-medium leading-tight tracking-tighter">{item.label}</span>
+        </div>
+    </Link>
   );
 
   return (
-    <div className="fixed bottom-2 left-1/2 z-20 w-[calc(100%-1rem)] max-w-md -translate-x-1/2 md:bottom-4 md:w-[calc(100%-2rem)]">
-      <nav className="h-14 w-full rounded-full border bg-background/90 p-1 shadow-lg backdrop-blur-md md:h-16 md:p-2">
-        <div className="grid h-full grid-cols-5 items-center font-medium">
-          {/* Left Items */}
-          {navItems.slice(0, 2).map((item) => (
-            <NavItem key={item.label} item={item} />
-          ))}
+    <div className="fixed bottom-2 left-1/2 z-20 w-[calc(100%-1rem)] max-w-sm -translate-x-1/2 md:bottom-4">
+      <nav className="h-14 w-full rounded-full border bg-background/90 p-1 shadow-lg backdrop-blur-md">
+        <div className="grid h-full grid-cols-5 items-center justify-around">
+          
+          <NavItem item={navItems[0]} />
+          <NavItem item={navItems[1]} />
 
           {/* Central Profile Button */}
-          <div className="relative flex h-12 w-12 items-center justify-center mx-auto -mt-4">
+          <div className="relative flex justify-center -mt-5">
             <Link href={profileHref} passHref className="group">
               <div
-                className={cn(`inline-flex h-10 w-10 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90`,
+                className={cn(`flex h-12 w-12 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90`,
                  isProfileActive ? 'bg-accent' : 'bg-primary',
                  !isUserLoggedIn ? 'animate-pulse-slow' : ''
                 )}
               >
-                {getProfileContent()}
+                <div className="h-10 w-10">
+                    {getProfileContent()}
+                </div>
               </div>
             </Link>
           </div>
 
-          {/* Right Items */}
-          {navItems.slice(2, 4).map((item) => (
-            <NavItem key={item.label} item={item} />
-          ))}
+          <NavItem item={navItems[2]} />
+          <NavItem item={navItems[3]} />
 
         </div>
       </nav>
