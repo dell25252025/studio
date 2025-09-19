@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Eye, MessageSquare, Shield, Activity, Save, Loader2, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Eye, MessageSquare, Shield, Activity, Save, Loader2, Image as ImageIcon, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -22,6 +22,8 @@ export default function PrivacySettingsPage() {
   const [showRecentActivity, setShowRecentActivity] = useState(false);
   const [messagingPolicy, setMessagingPolicy] = useState('all');
   const [photoVisibility, setPhotoVisibility] = useState('all');
+  const [friendRequestPolicy, setFriendRequestPolicy] = useState('all');
+
 
   const handleSave = async () => {
     setIsSubmitting(true);
@@ -34,6 +36,7 @@ export default function PrivacySettingsPage() {
       showRecentActivity,
       messagingPolicy,
       photoVisibility,
+      friendRequestPolicy,
     });
     
     setIsSubmitting(false);
@@ -50,7 +53,7 @@ export default function PrivacySettingsPage() {
             <div className="mx-auto max-w-2xl space-y-2">
                 <Card>
                     <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><Eye className="h-4 w-4"/> Visibilité</CardTitle>
+                        <CardTitle className="flex items-center gap-2 text-sm"><Eye className="h-4 w-4"/> Visibilité</CardTitle>
                         <CardDescription className="text-xs">Contrôlez qui peut voir votre profil.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2 p-4 pt-0">
@@ -67,8 +70,7 @@ export default function PrivacySettingsPage() {
                 
                 <Card>
                     <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><ImageIcon className="h-4 w-4"/> Qui peut voir mes photos ?</CardTitle>
-                        <CardDescription className="text-xs">Choisissez qui peut voir vos photos de profil.</CardDescription>
+                        <CardTitle className="flex items-center gap-2 text-sm"><ImageIcon className="h-4 w-4"/> Qui peut voir mes photos ?</CardTitle>
                     </CardHeader>
                     <CardContent className="p-4 pt-0">
                         <RadioGroup value={photoVisibility} onValueChange={setPhotoVisibility} className="space-y-2">
@@ -90,8 +92,7 @@ export default function PrivacySettingsPage() {
 
                 <Card>
                     <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><MessageSquare className="h-4 w-4"/> Qui peut m'envoyer un message ?</CardTitle>
-                        <CardDescription className="text-xs">Gérez qui a la permission de vous contacter.</CardDescription>
+                        <CardTitle className="flex items-center gap-2 text-sm"><MessageSquare className="h-4 w-4"/> Qui peut m'envoyer un message ?</CardTitle>
                     </CardHeader>
                     <CardContent className="p-4 pt-0">
                         <RadioGroup value={messagingPolicy} onValueChange={setMessagingPolicy} className="space-y-2">
@@ -106,6 +107,28 @@ export default function PrivacySettingsPage() {
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="none" id="m-none" />
                                <Label htmlFor="m-none" className="text-xs">Personne</Label>
+                           </div>
+                        </RadioGroup>
+                    </CardContent>
+                </Card>
+                
+                <Card>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-sm"><UserPlus className="h-4 w-4"/> Qui peut m'envoyer une demande d'ami ?</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0">
+                        <RadioGroup value={friendRequestPolicy} onValueChange={setFriendRequestPolicy} className="space-y-2">
+                           <div className="flex items-center space-x-2">
+                               <RadioGroupItem value="all" id="fr-all" />
+                               <Label htmlFor="fr-all" className="text-xs">Tout le monde</Label>
+                           </div>
+                           <div className="flex items-center space-x-2">
+                               <RadioGroupItem value="friends" id="fr-friends" />
+                               <Label htmlFor="fr-friends" className="text-xs">Amis de mes amis</Label>
+                           </div>
+                           <div className="flex items-center space-x-2">
+                               <RadioGroupItem value="none" id="fr-none" />
+                               <Label htmlFor="fr-none" className="text-xs">Personne</Label>
                            </div>
                         </RadioGroup>
                     </CardContent>
