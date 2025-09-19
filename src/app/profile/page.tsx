@@ -95,6 +95,7 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
 
         const handleTouchMove = (e: TouchEvent) => {
             if (e.touches.length === 2) {
+                e.preventDefault();
                 const dx = e.touches[0].clientX - e.touches[1].clientX;
                 const dy = e.touches[0].clientY - e.touches[1].clientY;
                 const dist = Math.sqrt(dx * dx + dy * dy);
@@ -105,9 +106,9 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
         };
 
         const imageEl = imageRef.current;
-        imageEl?.addEventListener('wheel', handleWheel);
-        imageEl?.addEventListener('touchstart', handleTouchStart);
-        imageEl?.addEventListener('touchmove', handleTouchMove);
+        imageEl?.addEventListener('wheel', handleWheel, { passive: false });
+        imageEl?.addEventListener('touchstart', handleTouchStart, { passive: true });
+        imageEl?.addEventListener('touchmove', handleTouchMove, { passive: false });
         return () => {
             imageEl?.removeEventListener('wheel', handleWheel);
             imageEl?.removeEventListener('touchstart', handleTouchStart);
@@ -135,7 +136,7 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
                     src={images[currentIndex]}
                     alt={`Photo de profil ${currentIndex + 1}`}
                     fill
-                    className="object-contain transition-transform duration-200"
+                    className="object-contain transition-transform duration-200 touch-none"
                     style={{
                         transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
                         cursor: scale > 1 ? 'grab' : 'auto',
@@ -166,6 +167,9 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
                 <span className="min-w-[4ch] text-center font-mono">{(scale * 100).toFixed(0)}%</span>
                 <Button onClick={handleZoomIn} variant="ghost" size="icon" disabled={scale >= 3} className="hover:bg-black/50 hover:text-white"><ZoomIn /></Button>
             </div>
+            <DialogClose className="absolute top-2 right-2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 hover:text-white">
+                <X className="h-6 w-6" />
+            </DialogClose>
         </DialogContent>
     )
 }
@@ -382,7 +386,7 @@ export default function ProfilePage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </header>
-        <main className={cn("flex-1", isOwner ? "pb-4" : "pb-24")}>
+        <main className={cn("flex-1 pb-24")}>
              <div className="w-full bg-background md:py-4">
                 {profilePictures.length > 0 ? (
                     <Dialog>
@@ -668,3 +672,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
