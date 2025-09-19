@@ -90,7 +90,7 @@ export default function InboxPage() {
                     <ul className="divide-y">
                     {filteredConversations.map((convo) => (
                         <li key={convo.id} className="flex items-center gap-1 p-2 transition-colors hover:bg-muted/50">
-                            <Link href={`/chat/${convo.id}`} className="flex flex-1 items-center gap-3">
+                            <Link href={`/chat/${convo.id}`} className="flex flex-1 items-center gap-3 min-w-0">
                                 <Avatar className="h-10 w-10">
                                 <AvatarImage src={convo.avatarUrl} alt={convo.name} />
                                 <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
