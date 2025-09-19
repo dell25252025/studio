@@ -56,52 +56,61 @@ function DiscoverPage({ user }: { user: User }) {
     const filterMatches = () => {
       let filtered = [...possibleMatches];
 
-      const showMe = searchParams.get('showMe');
-      if (showMe) {
-        filtered = filtered.filter(p => p.sex === showMe);
-      }
+      const hasUrlFilters = searchParams.toString().length > 0;
       
-      const minAge = searchParams.get('minAge');
-      if (minAge) {
-        filtered = filtered.filter(p => p.age >= parseInt(minAge));
-      }
+      if (hasUrlFilters) {
+          const showMe = searchParams.get('showMe');
+          if (showMe) {
+            filtered = filtered.filter(p => p.sex === showMe);
+          }
+          
+          const minAge = searchParams.get('minAge');
+          if (minAge) {
+            filtered = filtered.filter(p => p.age >= parseInt(minAge));
+          }
 
-      const maxAge = searchParams.get('maxAge');
-      if (maxAge) {
-        filtered = filtered.filter(p => p.age <= parseInt(maxAge));
-      }
+          const maxAge = searchParams.get('maxAge');
+          if (maxAge) {
+            filtered = filtered.filter(p => p.age <= parseInt(maxAge));
+          }
 
-      const destination = searchParams.get('destination');
-      if (destination && destination !== 'Toutes') {
-        filtered = filtered.filter(p => p.destination === destination);
-      }
+          const destination = searchParams.get('destination');
+          if (destination && destination !== 'Toutes') {
+            filtered = filtered.filter(p => p.destination === destination);
+          }
 
-      const intention = searchParams.get('intention');
-      if (intention && intention !== 'Toutes') {
-        filtered = filtered.filter(p => p.intention === intention);
-      }
-      
-      const travelStyle = searchParams.get('travelStyle');
-      if (travelStyle && travelStyle !== 'Tous') {
-        filtered = filtered.filter(p => p.travelStyle === travelStyle);
-      }
+          const intention = searchParams.get('intention');
+          if (intention && intention !== 'Toutes') {
+            filtered = filtered.filter(p => p.intention === intention);
+          }
+          
+          const travelStyle = searchParams.get('travelStyle');
+          if (travelStyle && travelStyle !== 'Tous') {
+            filtered = filtered.filter(p => p.travelStyle === travelStyle);
+          }
 
-      const activities = searchParams.get('activities');
-      if (activities && activities !== 'Toutes') {
-        filtered = filtered.filter(p => p.activities === activities);
+          const activities = searchParams.get('activities');
+          if (activities && activities !== 'Toutes') {
+            filtered = filtered.filter(p => p.activities === activities);
+          }
+      } else if (currentUserProfile) {
+         // Apply default filter if no URL params
+         let defaultShowMe = 'Femme';
+         if (currentUserProfile.sex === 'Femme') {
+           defaultShowMe = 'Homme';
+         } else if (currentUserProfile.sex === 'Autre') {
+           defaultShowMe = 'Autre';
+         }
+         filtered = filtered.filter(p => p.sex === defaultShowMe);
       }
       
       setDisplayMatches(filtered);
     };
 
     if (possibleMatches.length > 0) {
-      if (searchParams.toString()) {
         filterMatches();
-      } else {
-        setDisplayMatches(possibleMatches);
-      }
     }
-  }, [searchParams, possibleMatches]);
+  }, [searchParams, possibleMatches, currentUserProfile]);
 
 
   const runAiMatching = async () => {
@@ -172,7 +181,7 @@ function DiscoverPage({ user }: { user: User }) {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <WanderlinkHeader />
-      <main className="flex-1 pb-24 pt-14 md:pt-16">
+      <main className="flex-1 pb-24 pt-12">
         <div className="container mx-auto max-w-7xl px-2">
           <div className="text-center">
             {profilesLoading ? (

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -16,9 +16,18 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { AgeRangeSlider } from '@/components/ui/age-range-slider';
 import { type DateRange } from 'react-day-picker';
 import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
+import { onAuthStateChanged, type User } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { getUserProfile } from '@/app/actions';
+import type { DocumentData } from 'firebase/firestore';
+import { Loader2 } from 'lucide-react';
 
 export default function DiscoverPage() {
     const router = useRouter();
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [userProfile, setUserProfile] = useState<DocumentData | null>(null);
+    const [loading, setLoading] = useState(true);
+
     const [showMe, setShowMe] = useState('Femme');
     const [ageRange, setAgeRange] = useState<[number, number]>([25, 45]);
     const [date, setDate] = useState<DateRange | undefined>();
@@ -29,6 +38,32 @@ export default function DiscoverPage() {
     const [intention, setIntention] = useState('');
     const [travelStyle, setTravelStyle] = useState('Tous');
     const [activities, setActivities] = useState('Toutes');
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user);
+            if (user) {
+                getUserProfile(user.uid).then(profile => {
+                    setUserProfile(profile);
+                    if (profile) {
+                         if (profile.sex === 'Femme') {
+                            setShowMe('Homme');
+                        } else if (profile.sex === 'Autre') {
+                            setShowMe('Autre');
+                        } else {
+                            setShowMe('Femme');
+                        }
+                    }
+                    setLoading(false);
+                });
+            } else {
+                setLoading(false);
+                router.push('/login');
+            }
+        });
+        return () => unsubscribe();
+    }, [router]);
+
 
     const handleNearbyChange = (checked: boolean) => {
         setNearby(checked);
@@ -67,12 +102,20 @@ export default function DiscoverPage() {
 
     const uniformSelectClass = "w-3/5 md:w-[45%] h-8 text-xs";
 
+    if (loading) {
+         return (
+            <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
+                <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-background text-foreground">
             <WanderlinkHeader />
             <main className="pt-12 pb-24">
                 <div className="container mx-auto max-w-4xl px-4">
-                    {/* Montre-moi Section */}
+                     {/* Montre-moi Section */}
                     <div className="space-y-1 mb-2">
                       <div className="flex items-center justify-between">
                         <h2 className="font-semibold text-xs">Montre-moi</h2>
