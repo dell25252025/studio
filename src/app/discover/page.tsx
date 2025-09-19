@@ -90,7 +90,7 @@ export default function DiscoverPage() {
                             >
                               <ToggleGroupItem value="Homme" aria-label="Montrer les hommes">Homme</ToggleGroupItem>
                               <ToggleGroupItem value="Femme" aria-label="Montrer les femmes">Femme</ToggleGroupItem>
-                              <ToggleGroupItem value="Non-binaire" aria-label="Montrer les personnes non-binaires">Non-binaire</ToggleGroupItem>
+                              <ToggleGroupItem value="Autre" aria-label="Montrer les autres personnes">Autre</ToggleGroupItem>
                             </ToggleGroup>
                           </div>
                         </div>

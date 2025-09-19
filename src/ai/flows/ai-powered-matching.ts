@@ -59,7 +59,7 @@ const AIPoweredMatchingInputSchema = z.object({
       .describe('The user travel intention.'),
     interests: z.array(z.string()).describe('A list of the user interests.'),
     age: z.number().describe('The user age.'),
-    sex: z.enum(['Homme', 'Femme', 'Non-binaire', 'Male', 'Female', 'Other']).describe('The user sex.'),
+    sex: z.enum(['Homme', 'Femme', 'Autre', 'Male', 'Female', 'Other']).describe('The user sex.'),
     verified: z.boolean().describe('Whether the user profile is verified.'),
   }).describe('The user profile.'),
   possibleMatches: z.array(z.object({
@@ -71,7 +71,7 @@ const AIPoweredMatchingInputSchema = z.object({
       .describe('The possible match travel intention.'),
     interests: z.array(z.string()).describe('A list of the possible match interests.'),
     age: z.number().describe('The possible match age.'),
-    sex: z.enum(['Homme', 'Femme', 'Non-binaire', 'Male', 'Female', 'Other']).describe('The possible match sex.'),
+    sex: z.enum(['Homme', 'Femme', 'Autre', 'Male', 'Female', 'Other']).describe('The possible match sex.'),
     verified: z.boolean().describe('Whether the possible match profile is verified.'),
   })).describe('An array of possible travel matches.'),
 });

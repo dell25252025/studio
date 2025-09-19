@@ -129,9 +129,9 @@ const Step1 = () => {
                   </FormItem>
                   <FormItem className="flex items-center space-x-2 space-y-0">
                     <FormControl>
-                      <RadioGroupItem value="Non-binaire" />
+                      <RadioGroupItem value="Autre" />
                     </FormControl>
-                    <FormLabel className="font-normal">Non-binaire</FormLabel>
+                    <FormLabel className="font-normal">Autre</FormLabel>
                   </FormItem>
                 </RadioGroup>
               </FormControl>
