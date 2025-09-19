@@ -146,30 +146,30 @@ export default function AccountSettingsPage() {
   return (
     <div className="min-h-screen bg-secondary/30">
       <SettingsHeader title="Paramètres du compte" />
-      <main className="space-y-6 px-2 py-4 md:px-4 pt-16">
-            <div className="mx-auto max-w-2xl space-y-4">
+      <main className="px-2 py-4 md:px-4 pt-16">
+            <div className="mx-auto max-w-2xl space-y-2">
                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Mail className="h-5 w-5" /> Adresse e-mail</CardTitle>
-                        <CardDescription>Gérez l'adresse e-mail associée à votre compte.</CardDescription>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><Mail className="h-4 w-4" /> Adresse e-mail</CardTitle>
+                        <CardDescription className="text-xs">Gérez l'adresse e-mail associée à votre compte.</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4 pt-0">
                         <Form {...emailForm}>
-                            <form onSubmit={emailForm.handleSubmit(handleEmailUpdate)} className="space-y-4">
+                            <form onSubmit={emailForm.handleSubmit(handleEmailUpdate)} className="space-y-3">
                                 <FormField
                                     control={emailForm.control}
                                     name="email"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>E-mail</FormLabel>
+                                            <FormLabel className="text-xs">E-mail</FormLabel>
                                             <FormControl>
-                                                <Input type="email" placeholder="votre@email.com" {...field} />
+                                                <Input type="email" placeholder="votre@email.com" {...field} className="h-8 text-xs" />
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage className="text-xs" />
                                         </FormItem>
                                     )}
                                 />
-                                <Button type="submit" disabled={isEmailSubmitting}>
+                                <Button type="submit" disabled={isEmailSubmitting} size="sm">
                                     {isEmailSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     Enregistrer l'e-mail
                                 </Button>
@@ -179,27 +179,27 @@ export default function AccountSettingsPage() {
                 </Card>
 
                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><KeyRound className="h-5 w-5" /> Mot de passe</CardTitle>
-                        <CardDescription>Modifiez votre mot de passe régulièrement pour plus de sécurité.</CardDescription>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><KeyRound className="h-4 w-4" /> Mot de passe</CardTitle>
+                        <CardDescription className="text-xs">Modifiez votre mot de passe régulièrement pour plus de sécurité.</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4 pt-0">
                       {!isPasswordFormVisible ? (
-                        <Button onClick={() => setIsPasswordFormVisible(true)}>
+                        <Button onClick={() => setIsPasswordFormVisible(true)} size="sm">
                           <Edit className="mr-2 h-4 w-4" />
                           Changer le mot de passe
                         </Button>
                       ) : (
                         <Form {...passwordForm}>
-                            <form onSubmit={passwordForm.handleSubmit(handlePasswordUpdate)} className="space-y-4">
+                            <form onSubmit={passwordForm.handleSubmit(handlePasswordUpdate)} className="space-y-3">
                                 <FormField
                                     control={passwordForm.control}
                                     name="oldPassword"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Ancien mot de passe</FormLabel>
-                                            <FormControl><Input type="password" {...field} /></FormControl>
-                                            <FormMessage />
+                                            <FormLabel className="text-xs">Ancien mot de passe</FormLabel>
+                                            <FormControl><Input type="password" {...field} className="h-8 text-xs" /></FormControl>
+                                            <FormMessage className="text-xs" />
                                         </FormItem>
                                     )}
                                 />
@@ -208,9 +208,9 @@ export default function AccountSettingsPage() {
                                     name="newPassword"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Nouveau mot de passe</FormLabel>
-                                            <FormControl><Input type="password" {...field} /></FormControl>
-                                            <FormMessage />
+                                            <FormLabel className="text-xs">Nouveau mot de passe</FormLabel>
+                                            <FormControl><Input type="password" {...field} className="h-8 text-xs" /></FormControl>
+                                            <FormMessage className="text-xs" />
                                         </FormItem>
                                     )}
                                 />
@@ -219,18 +219,18 @@ export default function AccountSettingsPage() {
                                     name="confirmPassword"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Confirmer le nouveau mot de passe</FormLabel>
-                                            <FormControl><Input type="password" {...field} /></FormControl>
-                                            <FormMessage />
+                                            <FormLabel className="text-xs">Confirmer le nouveau mot de passe</FormLabel>
+                                            <FormControl><Input type="password" {...field} className="h-8 text-xs" /></FormControl>
+                                            <FormMessage className="text-xs" />
                                         </FormItem>
                                     )}
                                 />
                                 <div className="flex items-center gap-2">
-                                  <Button type="submit" disabled={isPasswordSubmitting}>
+                                  <Button type="submit" disabled={isPasswordSubmitting} size="sm">
                                       {isPasswordSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                       Enregistrer le mot de passe
                                   </Button>
-                                   <Button variant="ghost" onClick={() => setIsPasswordFormVisible(false)} disabled={isPasswordSubmitting}>
+                                   <Button variant="ghost" size="sm" onClick={() => setIsPasswordFormVisible(false)} disabled={isPasswordSubmitting}>
                                       Annuler
                                    </Button>
                                 </div>
@@ -240,10 +240,10 @@ export default function AccountSettingsPage() {
                     </CardContent>
                 </Card>
 
-                 <Alert>
+                 <Alert className="p-3">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Sécurité du compte</AlertTitle>
-                  <AlertDescription>
+                  <AlertTitle className="text-sm">Sécurité du compte</AlertTitle>
+                  <AlertDescription className="text-xs">
                     Pour des raisons de sécurité, la modification de votre e-mail ou de votre mot de passe peut nécessiter une déconnexion et une reconnexion récentes.
                   </AlertDescription>
                 </Alert>
