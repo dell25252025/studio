@@ -19,7 +19,9 @@ const intentionMap: { [key: string]: { icon: React.ElementType, color: string, t
 };
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
-  const intention = profile.travelIntention ? intentionMap[profile.travelIntention] : null;
+  // Use a default intention if none is provided to ensure the badge always shows.
+  const intentionValue = profile.travelIntention || '50/50';
+  const intention = intentionMap[intentionValue];
 
   return (
     <Link href={`/profile?id=${profile.id}`} passHref>
