@@ -13,6 +13,8 @@ import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
+import { useRouter } from 'next/navigation';
+import { createOrUpdateGoogleUserProfile } from '@/app/actions';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Adresse e-mail invalide.' }),
@@ -40,6 +42,7 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(isLogin ? loginSchema : signupSchema),
@@ -80,9 +83,22 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log("Connexion Google réussie :", user.displayName, user.email);
+      
+      const profileResult = await createOrUpdateGoogleUserProfile(user.uid, {
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL
+      });
+
+      if (!profileResult.success) {
+        throw new Error(profileResult.error || "Failed to create or update profile.");
+      }
+      
       toast({ title: 'Connexion réussie !', description: 'Bienvenue sur WanderLink.' });
-      onSuccess();
+      
+      // Redirect to complete profile, whether new or existing
+      router.push(`/create-profile`);
+      
     } catch (error) {
       console.error("Erreur de connexion Google:", error);
       const errorMessage = error instanceof Error ? error.message : "Une erreur inattendue s'est produite.";
