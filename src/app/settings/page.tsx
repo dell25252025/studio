@@ -16,6 +16,7 @@ import {
   MessageSquare,
   Trash2,
   Moon,
+  Languages,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -68,6 +69,13 @@ const SettingsPage = () => {
       href: '/settings/account',
       color: 'text-green-500',
       bgColor: 'bg-green-100',
+    },
+    {
+      icon: Languages,
+      label: 'Langue',
+      href: '/settings/language',
+      color: 'text-purple-500',
+      bgColor: 'bg-purple-100',
     },
     {
       icon: Shield,
