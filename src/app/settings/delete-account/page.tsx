@@ -56,49 +56,49 @@ export default function DeleteAccountPage() {
   return (
     <div className="min-h-screen bg-secondary/30">
       <SettingsHeader title="Supprimer le compte" />
-      <main className="px-2 py-4 md:px-4 pt-16">
-        <div className="mx-auto max-w-2xl space-y-2">
-          <Card className="border-destructive">
-            <CardHeader className="p-4">
-              <CardTitle className="flex items-center gap-2 text-destructive text-base">
-                <AlertTriangle className="h-4 w-4"/> Action irréversible
-              </CardTitle>
-              <CardDescription className="text-xs">
-                La suppression de votre compte est définitive et ne peut pas être annulée.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 p-4 pt-0">
-              <p className="text-xs text-muted-foreground">
-                Toutes vos données, y compris votre profil, vos messages, vos photos et vos matchs, seront supprimées de manière permanente. Cette action ne peut pas être annulée.
-              </p>
-              
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive" size="sm" className="w-full">
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Supprimer mon compte définitivement
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Êtes-vous absolument sûr(e) ?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Cette action est irréversible. Votre compte et toutes vos données seront supprimés. Personne ne pourra récupérer ce contenu.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel disabled={isDeleting}>Annuler</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDeleteAccount} disabled={isDeleting} className="bg-destructive hover:bg-destructive/90">
-                      {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Oui, supprimer mon compte
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+      <main className="flex items-center justify-center min-h-[calc(100vh-3rem)] p-4 pt-12">
+        <Card className="w-full max-w-md border-destructive">
+          <CardHeader className="text-center items-center">
+            <div className="p-3 rounded-full bg-destructive/10">
+              <AlertTriangle className="h-8 w-8 text-destructive" />
+            </div>
+            <CardTitle className="text-xl text-destructive pt-2">
+              Action Irréversible
+            </CardTitle>
+            <CardDescription>
+              La suppression de votre compte est définitive.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Toutes vos données, y compris votre profil, vos messages, vos photos et vos matchs, seront supprimées de manière permanente. Cette action ne peut pas être annulée.
+            </p>
 
-            </CardContent>
-          </Card>
-        </div>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" className="w-full">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Supprimer mon compte définitivement
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Êtes-vous absolument sûr(e) ?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Cette action est irréversible. Votre compte et toutes vos données seront supprimés. Personne ne pourra récupérer ce contenu.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={isDeleting}>Annuler</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteAccount} disabled={isDeleting} className="bg-destructive hover:bg-destructive/90">
+                    {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Oui, supprimer mon compte
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </CardContent>
+        </Card>
       </main>
     </div>
   );
