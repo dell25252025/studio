@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Eye, MessageSquare, Shield, Activity, Save, Loader2 } from 'lucide-react';
+import { ArrowLeft, Eye, MessageSquare, Shield, Activity, Save, Loader2, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -20,8 +20,8 @@ export default function PrivacySettingsPage() {
   // State for privacy settings - in a real app, this would come from user data
   const [showOnlineStatus, setShowOnlineStatus] = useState(true);
   const [showRecentActivity, setShowRecentActivity] = useState(false);
-  const [profileVisibility, setProfileVisibility] = useState('all');
   const [messagingPolicy, setMessagingPolicy] = useState('all');
+  const [photoVisibility, setPhotoVisibility] = useState('all');
 
   const handleSave = async () => {
     setIsSubmitting(true);
@@ -32,8 +32,8 @@ export default function PrivacySettingsPage() {
     console.log({
       showOnlineStatus,
       showRecentActivity,
-      profileVisibility,
-      messagingPolicy
+      messagingPolicy,
+      photoVisibility,
     });
     
     setIsSubmitting(false);
@@ -65,6 +65,29 @@ export default function PrivacySettingsPage() {
                     </CardContent>
                 </Card>
                 
+                <Card>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><ImageIcon className="h-4 w-4"/> Qui peut voir mes photos ?</CardTitle>
+                        <CardDescription className="text-xs">Choisissez qui peut voir vos photos de profil.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0">
+                        <RadioGroup value={photoVisibility} onValueChange={setPhotoVisibility} className="space-y-2">
+                           <div className="flex items-center space-x-2">
+                               <RadioGroupItem value="all" id="p-all" />
+                               <Label htmlFor="p-all" className="text-xs">Tout le monde</Label>
+                           </div>
+                           <div className="flex items-center space-x-2">
+                               <RadioGroupItem value="friends" id="p-friends" />
+                               <Label htmlFor="p-friends" className="text-xs">Seulement mes amis</Label>
+                           </div>
+                           <div className="flex items-center space-x-2">
+                               <RadioGroupItem value="none" id="p-none" />
+                               <Label htmlFor="p-none" className="text-xs">Personne</Label>
+                           </div>
+                        </RadioGroup>
+                    </CardContent>
+                </Card>
+
                 <Card>
                     <CardHeader className="p-4">
                         <CardTitle className="flex items-center gap-2 text-base"><MessageSquare className="h-4 w-4"/> Qui peut m'envoyer un message ?</CardTitle>
