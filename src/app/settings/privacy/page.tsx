@@ -45,36 +45,13 @@ export default function PrivacySettingsPage() {
 
   return (
     <div className="min-h-screen bg-secondary/30">
-        <SettingsHeader title="Paramètres de confidentialité" />
+        <SettingsHeader title="Confidentialité" />
         <main className="px-2 py-4 md:px-4 pt-16">
             <div className="mx-auto max-w-2xl space-y-2">
                 <Card>
                     <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><Eye className="h-4 w-4"/> Visibilité du profil</CardTitle>
-                        <CardDescription className="text-xs">Contrôlez qui peut voir votre profil et vos informations.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0">
-                        <RadioGroup value={profileVisibility} onValueChange={setProfileVisibility} className="space-y-2">
-                           <div className="flex items-center space-x-2">
-                               <RadioGroupItem value="all" id="v-all" />
-                               <Label htmlFor="v-all" className="text-xs">Visible par tout le monde</Label>
-                           </div>
-                           <div className="flex items-center space-x-2">
-                               <RadioGroupItem value="members" id="v-members" />
-                               <Label htmlFor="v-members" className="text-xs">Visible uniquement par les membres WanderLink</Label>
-                           </div>
-                           <div className="flex items-center space-x-2">
-                               <RadioGroupItem value="hidden" id="v-hidden" />
-                               <Label htmlFor="v-hidden" className="text-xs">Cacher mon profil temporairement</Label>
-                           </div>
-                        </RadioGroup>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><Activity className="h-4 w-4"/> Votre activité</CardTitle>
-                        <CardDescription className="text-xs">Gérez la visibilité de votre statut en ligne et de votre activité.</CardDescription>
+                        <CardTitle className="flex items-center gap-2 text-base"><Eye className="h-4 w-4"/> Visibilité</CardTitle>
+                        <CardDescription className="text-xs">Contrôlez qui peut voir votre profil.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2 p-4 pt-0">
                         <div className="flex items-center justify-between rounded-lg border p-2">
@@ -82,7 +59,7 @@ export default function PrivacySettingsPage() {
                             <Switch id="online-status" checked={showOnlineStatus} onCheckedChange={setShowOnlineStatus} />
                         </div>
                          <div className="flex items-center justify-between rounded-lg border p-2">
-                            <Label htmlFor="recent-activity" className="text-xs">Afficher mon activité récente (ex: likes)</Label>
+                            <Label htmlFor="recent-activity" className="text-xs">Afficher mon activité récente</Label>
                             <Switch id="recent-activity" checked={showRecentActivity} onCheckedChange={setShowRecentActivity} />
                         </div>
                     </CardContent>
@@ -90,18 +67,22 @@ export default function PrivacySettingsPage() {
                 
                 <Card>
                     <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><MessageSquare className="h-4 w-4"/> Messagerie</CardTitle>
-                        <CardDescription className="text-xs">Choisissez qui peut vous envoyer des messages.</CardDescription>
+                        <CardTitle className="flex items-center gap-2 text-base"><MessageSquare className="h-4 w-4"/> Qui peut m'envoyer un message ?</CardTitle>
+                        <CardDescription className="text-xs">Gérez qui a la permission de vous contacter.</CardDescription>
                     </CardHeader>
                     <CardContent className="p-4 pt-0">
                         <RadioGroup value={messagingPolicy} onValueChange={setMessagingPolicy} className="space-y-2">
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="all" id="m-all" />
-                               <Label htmlFor="m-all" className="text-xs">Tout le monde peut me contacter</Label>
+                               <Label htmlFor="m-all" className="text-xs">Tout le monde</Label>
                            </div>
                            <div className="flex items-center space-x-2">
-                               <RadioGroupItem value="matches" id="m-matches" />
-                               <Label htmlFor="m-matches" className="text-xs">Seuls les profils avec qui j'ai "matché"</Label>
+                               <RadioGroupItem value="friends" id="m-friends" />
+                               <Label htmlFor="m-friends" className="text-xs">Seulement mes amis</Label>
+                           </div>
+                           <div className="flex items-center space-x-2">
+                               <RadioGroupItem value="none" id="m-none" />
+                               <Label htmlFor="m-none" className="text-xs">Personne</Label>
                            </div>
                         </RadioGroup>
                     </CardContent>
@@ -112,12 +93,12 @@ export default function PrivacySettingsPage() {
                          {isSubmitting ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Enregistrement...
+                                Sauvegarde...
                             </>
                          ) : (
                             <>
                                 <Save className="mr-2 h-4 w-4" />
-                                Enregistrer
+                                Sauvegarder
                             </>
                          )}
                     </Button>
