@@ -56,12 +56,13 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
         const loginValues = values as z.infer<typeof loginSchema>;
         await signInWithEmailAndPassword(auth, loginValues.email, loginValues.password);
         toast({ title: 'Connexion réussie !', description: 'Heureux de vous revoir.' });
+        router.push('/');
       } else {
         const signupValues = values as z.infer<typeof signupSchema>;
         await createUserWithEmailAndPassword(auth, signupValues.email, signupValues.password);
         toast({ title: 'Compte créé avec succès !', description: 'Vous pouvez maintenant compléter votre profil.' });
+        router.push('/create-profile');
       }
-      onSuccess();
     } catch (error) {
       let description = "Une erreur inattendue s'est produite.";
       if (error instanceof FirebaseError) {
@@ -96,8 +97,11 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
       
       toast({ title: 'Connexion réussie !', description: 'Bienvenue sur WanderLink.' });
       
-      // Redirect to complete profile, whether new or existing
-      router.push(`/create-profile`);
+      if (profileResult.isNewUser) {
+        router.push(`/create-profile`);
+      } else {
+        router.push('/');
+      }
       
     } catch (error) {
       console.error("Erreur de connexion Google:", error);
