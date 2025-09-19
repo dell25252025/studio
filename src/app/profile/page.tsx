@@ -444,7 +444,7 @@ export default function ProfilePage() {
                         <div className="flex-1">
                             <div className="flex items-center gap-2">
                                 <h1 className="text-xl md:text-2xl font-bold font-headline">{profile.firstName}, {profile.age}</h1>
-                                {isOwner ? (
+                                {isOwner && (
                                     <Link href={`/profile/edit?id=${profileId}`} passHref>
                                         <Button variant="ghost" size="icon" className="h-7 w-7 md:h-9 md:w-9" asChild>
                                             <div>
@@ -453,11 +453,6 @@ export default function ProfilePage() {
                                             </div>
                                         </Button>
                                     </Link>
-                                ) : (
-                                     <Button variant="default" size="icon" className="h-10 w-10 md:h-12 md:w-12 rounded-full" onClick={handleAddFriend}>
-                                        <UserPlus className="h-5 w-5 md:h-6 md:w-6" />
-                                        <span className="sr-only">Ajouter comme ami</span>
-                                    </Button>
                                 )}
                             </div>
                             <div className="flex items-center gap-2 mt-1 text-xs md:text-sm text-muted-foreground">
@@ -654,12 +649,18 @@ export default function ProfilePage() {
         </main>
         {!isOwner && profileId && (
             <div className="fixed bottom-0 left-0 right-0 z-10 p-4 bg-background/80 backdrop-blur-sm border-t">
-                <Link href={`/chat/${profileId}`} passHref>
-                    <Button size="lg" className="w-full">
-                        <Send className="mr-2 h-4 w-4" />
-                        Envoyer un message
+                <div className="flex gap-4">
+                     <Button size="lg" className="flex-1" variant="outline" onClick={handleAddFriend}>
+                        <UserPlus className="mr-2 h-4 w-4" />
+                        Ajouter
                     </Button>
-                </Link>
+                    <Link href={`/chat/${profileId}`} passHref className="flex-1">
+                        <Button size="lg" className="w-full">
+                            <Send className="mr-2 h-4 w-4" />
+                            Envoyer un message
+                        </Button>
+                    </Link>
+                </div>
             </div>
         )}
     </div>
