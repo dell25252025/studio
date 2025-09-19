@@ -78,10 +78,13 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
     setIsGoogleLoading(true);
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Connexion Google réussie :", user.displayName, user.email);
       toast({ title: 'Connexion réussie !', description: 'Bienvenue sur WanderLink.' });
       onSuccess();
     } catch (error) {
+      console.error("Erreur de connexion Google:", error);
       const errorMessage = error instanceof Error ? error.message : "Une erreur inattendue s'est produite.";
       toast({ variant: 'destructive', title: 'Erreur de connexion Google', description: errorMessage });
     } finally {
