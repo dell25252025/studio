@@ -70,32 +70,31 @@ export default function DiscoverPage() {
     return (
         <div className="min-h-screen bg-background text-foreground">
             <WanderlinkHeader />
-            <main className="pt-16 pb-24">
-                <div className="container mx-auto max-w-4xl px-4 py-2">
+            <main className="pt-12 pb-24">
+                <div className="container mx-auto max-w-4xl px-4">
+                    {/* Montre-moi Section */}
+                    <div className="space-y-1 mb-2">
+                      <div className="flex items-center justify-between">
+                        <h2 className="font-semibold text-xs">Montre-moi</h2>
+                        <Button onClick={handleSearch} variant="ghost" size="sm" className="h-7 text-xs">Terminé</Button>
+                      </div>
+                      <div className="flex justify-center">
+                        <ToggleGroup
+                          type="single"
+                          value={showMe}
+                          onValueChange={(value) => { if (value) setShowMe(value) }}
+                          className="w-auto justify-start bg-slate-100 dark:bg-slate-800 p-0.5 rounded-full"
+                          variant='outline'
+                          size="sm"
+                        >
+                          <ToggleGroupItem value="Homme" aria-label="Montrer les hommes" className="text-xs h-7">Homme</ToggleGroupItem>
+                          <ToggleGroupItem value="Femme" aria-label="Montrer les femmes" className="text-xs h-7">Femme</ToggleGroupItem>
+                          <ToggleGroupItem value="Autre" aria-label="Montrer les autres personnes" className="text-xs h-7">Autre</ToggleGroupItem>
+                        </ToggleGroup>
+                      </div>
+                    </div>
+                
                     <div className="space-y-2">
-
-                        {/* Montre-moi Section */}
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between">
-                            <h2 className="font-semibold text-xs">Montre-moi</h2>
-                            <Button onClick={handleSearch} variant="ghost" size="sm" className="h-7 text-xs">Terminé</Button>
-                          </div>
-                          <div className="flex justify-center">
-                            <ToggleGroup
-                              type="single"
-                              value={showMe}
-                              onValueChange={(value) => { if (value) setShowMe(value) }}
-                              className="w-auto justify-start bg-slate-100 dark:bg-slate-800 p-0.5 rounded-full"
-                              variant='outline'
-                              size="sm"
-                            >
-                              <ToggleGroupItem value="Homme" aria-label="Montrer les hommes" className="text-xs h-7">Homme</ToggleGroupItem>
-                              <ToggleGroupItem value="Femme" aria-label="Montrer les femmes" className="text-xs h-7">Femme</ToggleGroupItem>
-                              <ToggleGroupItem value="Autre" aria-label="Montrer les autres personnes" className="text-xs h-7">Autre</ToggleGroupItem>
-                            </ToggleGroup>
-                          </div>
-                        </div>
-
                         {/* Age Section */}
                         <div className="rounded-lg border bg-card p-1.5">
                             <AgeRangeSlider
