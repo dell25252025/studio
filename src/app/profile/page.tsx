@@ -175,11 +175,6 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
                     }}
                 />
             </div>
-            
-            <DialogClose className="absolute top-2 right-2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 hover:text-white z-10">
-                <X className="h-6 w-6" />
-                <span className="sr-only">Fermer</span>
-            </DialogClose>
 
             {images.length > 1 && (
                 <>
