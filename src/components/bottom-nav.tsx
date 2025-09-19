@@ -95,10 +95,10 @@ const BottomNav = () => {
           ))}
 
           {/* Central Profile Button */}
-          <div className="relative -mt-8 flex h-full items-start justify-center">
+          <div className="relative -mt-6 flex h-16 w-16 items-center justify-center mx-auto">
             <Link href={profileHref} passHref className="group">
               <div
-                className={cn(`inline-flex h-12 w-12 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90 md:h-14 md:w-14`,
+                className={cn(`inline-flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90`,
                  isProfileActive ? 'bg-accent' : 'bg-primary',
                  !isUserLoggedIn ? 'animate-pulse-slow' : ''
                 )}
