@@ -64,7 +64,7 @@ export function DateRangePicker({ className, date, onDateChange, disabled }: Dat
             variant={"outline"}
             disabled={disabled} // Pass disabled prop to Button
             className={cn(
-              'w-full justify-start text-left font-normal h-10',
+              'w-full justify-start text-left font-normal h-8 md:h-10 text-xs md:text-sm',
               !date && 'text-muted-foreground',
               disabled && 'cursor-not-allowed opacity-50' // Add disabled styles
             )}
