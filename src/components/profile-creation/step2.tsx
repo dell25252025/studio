@@ -15,7 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { CountrySelect } from '@/components/country-select';
 import { Button } from '@/components/ui/button';
 import { Crosshair, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 const allLanguages = [
@@ -53,7 +53,7 @@ const allLanguages = [
 
 
 const Step2 = () => {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, getValues } = useFormContext();
   const [isLocating, setIsLocating] = useState(false);
   const { toast } = useToast();
 
@@ -96,6 +96,13 @@ const Step2 = () => {
       }
     );
   };
+
+  useEffect(() => {
+    const currentLocation = getValues('location');
+    if (!currentLocation) {
+      handleLocate();
+    }
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
 
   return (
     <div className="space-y-6">
