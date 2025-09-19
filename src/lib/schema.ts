@@ -5,7 +5,7 @@ export const formSchema = z.object({
   firstName: z.string().min(1, 'Le prénom est obligatoire.'),
   age: z.number({ required_error: "L'âge est obligatoire." }).min(18, 'Vous devez avoir au moins 18 ans.'),
   gender: z.enum(['Homme', 'Femme', 'Non-binaire'], { required_error: "Le genre est obligatoire."}),
-  profilePictures: z.array(z.string()).min(1, 'Veuillez ajouter au moins une photo.').max(4, 'Vous ne pouvez ajouter que 4 photos au maximum.'),
+  profilePictures: z.array(z.string()).min(1, 'Veuillez ajouter au moins une photo.').max(6, 'Vous ne pouvez ajouter que 6 photos au maximum.'),
   bio: z.string().max(500, 'La description ne doit pas dépasser 500 caractères.').optional(),
   languages: z.array(z.string()).min(1, 'Veuillez sélectionner au moins une langue.'),
   location: z.string().min(1, 'La localisation est obligatoire.'),
