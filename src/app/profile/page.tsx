@@ -166,9 +166,6 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
                 <span className="min-w-[4ch] text-center font-mono">{(scale * 100).toFixed(0)}%</span>
                 <Button onClick={handleZoomIn} variant="ghost" size="icon" disabled={scale >= 3} className="hover:bg-black/50 hover:text-white"><ZoomIn /></Button>
             </div>
-            <DialogClose className="absolute top-2 right-2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 hover:text-white">
-                <X className="h-6 w-6" />
-            </DialogClose>
         </DialogContent>
     )
 }
@@ -463,7 +460,7 @@ export default function ProfilePage() {
                         </div>
                         
                         <div className="flex items-center gap-2 pl-2">
-                            {!isOwner && (
+                             {!isOwner && (
                                 <Button variant="outline" size="sm" onClick={handleAddFriend}>
                                     <UserPlus className="mr-2 h-4 w-4" />
                                     Ajouter
