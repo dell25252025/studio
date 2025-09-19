@@ -49,16 +49,19 @@ export default function InboxPage() {
 
   return (
     <div className="flex h-screen flex-col bg-background">
-      
-      <main className="flex-1 overflow-y-auto pt-4 pb-24">
+      <header className="fixed top-0 z-20 w-full h-12 flex items-center justify-between border-b bg-background/95 px-2 py-1 backdrop-blur-sm md:px-4">
+        <div className="flex items-center">
+            <Button onClick={() => router.back()} variant="ghost" size="icon" className="h-8 w-8 -ml-2">
+                <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h1 className="text-sm font-semibold ml-2">Messages</h1>
+        </div>
+        <div className="w-8"></div>
+      </header>
+
+      <main className="flex-1 overflow-y-auto pt-12 pb-24">
         <div className="container mx-auto max-w-2xl px-2">
-            <div className="flex items-center p-2">
-                <Button onClick={() => router.back()} variant="ghost" size="icon" className="h-8 w-8 -ml-2">
-                    <ArrowLeft className="h-5 w-5" />
-                </Button>
-                <h1 className="text-xl font-semibold ml-2">Messages</h1>
-            </div>
-            <div className="relative p-2">
+            <div className="relative p-2 pt-4">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                 placeholder="Rechercher une conversation..."
