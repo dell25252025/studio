@@ -34,6 +34,39 @@ async function uploadProfilePicture(userId: string, photoDataUri: string): Promi
     }
 }
 
+export async function createOrUpdateGoogleUserProfile(userId: string, profileData: { email: string | null; displayName: string | null; photoURL: string | null; }) {
+    if (!userId) {
+        return { success: false, error: "User is not authenticated." };
+    }
+    try {
+        const userRef = doc(db, "users", userId);
+        const userDoc = await getDoc(userRef);
+
+        if (userDoc.exists()) {
+            // User exists, no need to do anything for now, they will be redirected to complete their profile.
+             return { success: true, id: userId, exists: true };
+        } else {
+            // User does not exist, create a basic profile
+            const [firstName] = profileData.displayName?.split(' ') || [''];
+            
+            const newProfileData = {
+                email: profileData.email,
+                firstName: firstName,
+                profilePictures: profileData.photoURL ? [profileData.photoURL] : [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            };
+            await setDoc(userRef, newProfileData);
+            return { success: true, id: userId, exists: false };
+        }
+
+    } catch (e: any) {
+        console.error("Error in createOrUpdateGoogleUserProfile:", e);
+        return { success: false, error: e.message || "An unknown error occurred." };
+    }
+}
+
+
 export async function createUserProfile(userId: string, profileData: any) {
     if (!userId) {
         return { success: false, error: "User is not authenticated." };
@@ -182,7 +215,7 @@ export async function getUserProfile(id: string): Promise<DocumentData | null> {
           data.dates.to = data.dates.to.toDate().toISOString();
         }
       }
-      return data;
+      return { id: docSnap.id, ...data };
     } else {
       console.log("No such document!");
       return null;
