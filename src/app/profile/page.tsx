@@ -25,7 +25,7 @@ import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader as Draw
 import { cn } from '@/lib/utils';
 import { countries } from '@/lib/countries';
 import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 
 
 const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -432,7 +432,7 @@ export default function ProfilePage() {
                         >
                             <CarouselContent className="-ml-1 md:-ml-4">
                                 {profilePictures.map((src: string, index: number) => (
-                                    <CarouselItem key={index} className="pl-1 md:pl-4 basis-1/2 md:basis-[43%]">
+                                    <CarouselItem key={index} className="pl-1 md:pl-4 basis-1/2 md:basis-1/5">
                                         <DialogTrigger asChild>
                                             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg md:rounded-2xl group cursor-pointer">
                                                 <Image 
