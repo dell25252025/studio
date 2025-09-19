@@ -102,7 +102,7 @@ const BottomNav = () => {
             <NavItem item={navItems[1]} />
 
             {/* Central Profile Button */}
-            <div className="relative flex justify-center -mt-4">
+            <div className="relative flex justify-center items-center h-full">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link href={profileHref} passHref className="group">
