@@ -25,6 +25,7 @@ import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader as Draw
 import { cn } from '@/lib/utils';
 import { countries } from '@/lib/countries';
 import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 
 const CannabisIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -52,6 +53,7 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const imageRef = useRef<HTMLImageElement>(null);
     const lastDist = useRef(0);
+    const isMobile = useIsMobile();
 
     const resetZoom = () => {
         setScale(1);
@@ -162,14 +164,13 @@ const PhotoViewer = ({ images, startIndex }: { images: string[], startIndex: num
                     <Button onClick={handleNext} variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 text-white bg-black/30 hover:bg-black/50 hover:text-white"><ArrowRight /></Button>
                 </>
             )}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 rounded-full bg-black/30 text-white">
-                <Button onClick={handleZoomOut} variant="ghost" size="icon" disabled={scale <= 1} className="hover:bg-black/50 hover:text-white"><ZoomOut /></Button>
-                <span className="min-w-[4ch] text-center font-mono">{(scale * 100).toFixed(0)}%</span>
-                <Button onClick={handleZoomIn} variant="ghost" size="icon" disabled={scale >= 3} className="hover:bg-black/50 hover:text-white"><ZoomIn /></Button>
-            </div>
-            <DialogClose className="absolute top-2 right-2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 hover:text-white">
-                <X className="h-6 w-6" />
-            </DialogClose>
+            {!isMobile && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 rounded-full bg-black/30 text-white">
+                    <Button onClick={handleZoomOut} variant="ghost" size="icon" disabled={scale <= 1} className="hover:bg-black/50 hover:text-white"><ZoomOut /></Button>
+                    <span className="min-w-[4ch] text-center font-mono">{(scale * 100).toFixed(0)}%</span>
+                    <Button onClick={handleZoomIn} variant="ghost" size="icon" disabled={scale >= 3} className="hover:bg-black/50 hover:text-white"><ZoomIn /></Button>
+                </div>
+            )}
         </DialogContent>
     )
 }
@@ -386,7 +387,7 @@ export default function ProfilePage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </header>
-        <main className={cn("flex-1 pb-24")}>
+        <main className={cn("flex-1", !isOwner && "pb-24")}>
              <div className="w-full bg-background md:py-4">
                 {profilePictures.length > 0 ? (
                     <Dialog>
@@ -672,4 +673,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
