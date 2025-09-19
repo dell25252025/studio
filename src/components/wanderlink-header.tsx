@@ -4,6 +4,12 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import { Bell } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip';
 
 const WanderlinkHeader = () => {
   return (
@@ -20,12 +26,21 @@ const WanderlinkHeader = () => {
               WanderLink
             </h1>
         </Link>
-        <Link href="/notifications" passHref>
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5" strokeWidth={2.3} />
-            <span className="sr-only">Notifications</span>
-          </Button>
-        </Link>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href="/notifications" passHref>
+                <Button variant="ghost" size="icon" className="text-muted-foreground">
+                  <Bell className="h-5 w-5" />
+                  <span className="sr-only">Notifications</span>
+                </Button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Notifications</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </header>
   );
