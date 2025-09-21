@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -6,7 +6,13 @@ import { ThemeProvider } from '@/components/theme-provider';
 export const metadata: Metadata = {
   title: 'WanderLink',
   description: 'Connect. Explore. Discover.',
+  manifest: '/manifest.json',
 };
+
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
+};
+
 
 export default function RootLayout({
   children,
