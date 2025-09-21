@@ -3,6 +3,7 @@ import ChatClientPage from './chat-client-page';
 
 // Indique à Next.js de ne pas essayer de générer de pages de chat
 // spécifiques (comme /chat/user123) au moment de la construction.
+// C'est obligatoire pour la configuration `output: 'export'`.
 export async function generateStaticParams() {
   return [];
 }
