@@ -2,8 +2,8 @@
 import ChatClientPage from './chat-client-page';
 
 export async function generateStaticParams() {
-  // We don't want to pre-render any chat pages at build time.
-  // This function is required for dynamic routes with `output: 'export'`.
+  // Nous ne voulons pas pré-générer de pages de chat au moment de la construction.
+  // Cette fonction est requise pour les routes dynamiques avec `output: 'export'`.
   return [];
 }
 
