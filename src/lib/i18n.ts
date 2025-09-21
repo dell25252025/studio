@@ -1,5 +1,4 @@
 
-import 'server-only';
 import fr from '@/locales/fr.json';
 import en from '@/locales/en.json';
 
