@@ -81,7 +81,7 @@ export default function FriendsPage() {
                                         </div>
                                     </div>
                                 </Link>
-                                <Button variant="outline" size="sm" onClick={() => router.push(`/chat/${friend.id}`)}>
+                                <Button variant="outline" size="sm" onClick={() => router.push(`/chat?id=${friend.id}`)}>
                                     Message
                                 </Button>
                             </li>

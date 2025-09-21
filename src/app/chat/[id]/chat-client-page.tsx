@@ -1,487 +1,105 @@
-
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2 } from 'lucide-react';
+import { Search, UserPlus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { getUserProfile } from '@/app/actions';
-import type { DocumentData } from 'firebase/firestore';
-import { onAuthStateChanged, type User } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
-import { useToast } from '@/hooks/use-toast';
+import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import Picker, { type EmojiClickData, Categories } from 'emoji-picker-react';
-import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogTitle, DialogDescription, DialogHeader } from '@/components/ui/dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import WanderlinkHeader from '@/components/wanderlink-header';
+import BottomNav from '@/components/bottom-nav';
 
-// Mock messages for demonstration purposes
-const initialMessages = [
-  { id: 1, text: 'Salut ! Ton profil est super intéressant.', sender: 'other', image: null },
-  { id: 2, text: 'Merci beaucoup ! Le tien aussi. Prêt pour l\'aventure ?', sender: 'me', image: null },
-  { id: 3, text: 'Toujours ! Où rêves-tu d\'aller en premier ?', sender: 'other', image: null },
+// Données factices pour la liste d'amis
+const initialFriends = [
+  {
+    id: 'user123',
+    name: 'Sophia',
+    avatarUrl: 'https://picsum.photos/seed/user1/200',
+    status: 'En ligne',
+  },
+  {
+    id: 'user456',
+    name: 'James',
+    avatarUrl: 'https://picsum.photos/seed/user2/200',
+    status: 'Hors ligne',
+  },
+  {
+    id: 'user789',
+    name: 'Isabella',
+    avatarUrl: 'https://picsum.photos/seed/user3/200',
+    status: 'En ligne',
+  },
 ];
 
-const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void; onClose: () => void; }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const getCameraPermission = async () => {
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-        setStream(mediaStream);
-        if (videoRef.current) {
-          videoRef.current.srcObject = mediaStream;
-        }
-        setHasCameraPermission(true);
-      } catch (error) {
-        console.error('Error accessing camera:', error);
-        setHasCameraPermission(false);
-        toast({
-          variant: 'destructive',
-          title: 'Accès à la caméra refusé',
-          description: 'Veuillez autoriser l\'accès à la caméra dans les paramètres de votre navigateur.',
-        });
-      }
-    };
-
-    getCameraPermission();
-
-    return () => {
-      stream?.getTracks().forEach(track => track.stop());
-    };
-  }, [stream, toast]);
-
-  const handleCapture = () => {
-    if (videoRef.current && canvasRef.current) {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const context = canvas.getContext('2d');
-      if (context) {
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL('image/jpeg');
-        onCapture(dataUrl);
-      }
-    }
-  };
-
-  return (
-    <DialogContent className="p-0 m-0 w-full h-full max-w-full max-h-screen bg-black border-0 flex flex-col items-center justify-center">
-        <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
-            <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
-            <canvas ref={canvasRef} className="hidden" />
-
-            {hasCameraPermission === false && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/70 p-4">
-                    <Alert variant="destructive">
-                        <AlertTitle>Accès à la caméra requis</AlertTitle>
-                        <AlertDescription>
-                            Impossible d'accéder à la caméra. Veuillez vérifier les autorisations dans les paramètres de votre navigateur.
-                        </AlertDescription>
-                    </Alert>
-                </div>
-            )}
-            
-             <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-4 left-4 text-white bg-black/30 hover:bg-black/50 hover:text-white"
-                onClick={onClose}
-             >
-                <X className="h-6 w-6" />
-             </Button>
-            
-            {hasCameraPermission && (
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-                    <Button
-                        size="icon"
-                        className="w-20 h-20 rounded-full bg-white/30 border-4 border-white backdrop-blur-sm"
-                        onClick={handleCapture}
-                    >
-                       <Circle className="w-12 h-12 text-white" fill="white" />
-                    </Button>
-                </div>
-            )}
-        </div>
-    </DialogContent>
-  );
-};
-
-
-export default function ChatClientPage({ otherUserId }: { otherUserId: string }) {
+export default function FriendsPage() {
   const router = useRouter();
-  const { toast } = useToast();
-  
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [otherUser, setOtherUser] = useState<DocumentData | null>(null);
-  const [messages, setMessages] = useState(initialMessages);
-  const [newMessage, setNewMessage] = useState('');
-  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [messageToDelete, setMessageToDelete] = useState<number | null>(null);
-  const [viewingImage, setViewingImage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const longPressTimer = useRef<NodeJS.Timeout>();
+  const [searchTerm, setSearchTerm] = useState('');
 
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-        setCurrentUser(user);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (otherUserId) {
-      const fetchUserProfile = async () => {
-        const profile = await getUserProfile(otherUserId);
-        setOtherUser(profile);
-      };
-      fetchUserProfile();
-    }
-  }, [otherUserId]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-  
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result;
-        if (typeof result === 'string') {
-          sendImageMessage(result);
-        }
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
-
-  const handleCapturePhoto = (image: string) => {
-    sendImageMessage(image);
-    setIsCameraOpen(false);
-  };
-
-  const sendImageMessage = (imageData: string) => {
-    setMessages(prev => [...prev, { id: Date.now(), text: '', sender: 'me', image: imageData }]);
-  };
-
-
-  const handleEmojiClick = (emojiData: EmojiClickData) => {
-    setNewMessage(prevMessage => prevMessage + emojiData.emoji);
-  };
-
-
-  const handleSendMessage = (e: React.FormEvent | React.KeyboardEvent<HTMLTextAreaElement>) => {
-    e.preventDefault();
-    if (newMessage.trim()) {
-      setMessages([
-        ...messages,
-        { id: Date.now(), text: newMessage, sender: 'me', image: null },
-      ]);
-      setNewMessage('');
-    }
-  };
-  
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        handleSendMessage(event);
-    }
-  };
-
-  const startLongPress = (messageId: number) => {
-    longPressTimer.current = setTimeout(() => {
-      setMessageToDelete(messageId);
-    }, 1000); // 1-second long press
-  };
-
-  const cancelLongPress = () => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-    }
-  };
-
-  const handleDeleteMessage = () => {
-    if (messageToDelete !== null) {
-      setMessages(messages.filter(msg => msg.id !== messageToDelete));
-      setMessageToDelete(null);
-      toast({
-        title: 'Message supprimé',
-      });
-    }
-  };
-
-
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'; // Reset height
-      const scrollHeight = textareaRef.current.scrollHeight;
-      const maxHeight = 120; // Corresponds to max-h-32
-      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
-    }
-  }, [newMessage]);
-  
-  const handlePlaceholderAction = (feature: string) => {
-    toast({ title: 'Fonctionnalité à venir', description: `${feature} sera bientôt disponible.` });
-  };
-  
-  const handleBlockUser = () => {
-    toast({ title: `${otherUser?.firstName} a été bloqué(e).` });
-  };
-
-  const handleReportUser = () => {
-    toast({ title: `Le profil de ${otherUser?.firstName} a été signalé.` });
-  };
-  
-  const otherUserName = otherUser?.firstName || 'Utilisateur';
-  const otherUserImage = otherUser?.profilePictures?.[0] || `https://picsum.photos/seed/${otherUserId}/200`;
-
-  const showSendButton = newMessage.trim().length > 0;
+  const filteredFriends = initialFriends.filter(friend =>
+    friend.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex h-screen flex-col bg-background">
-      <header className="fixed top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-1 backdrop-blur-sm h-12">
-        <Button onClick={() => router.push('/')} variant="ghost" size="icon" className="h-8 w-8">
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <Link href={`/profile?id=${otherUserId}`} className="flex min-w-0 flex-1 items-center gap-2 truncate">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={otherUserImage} alt={otherUserName} />
-            <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <h1 className="flex-1 truncate text-sm font-semibold">{otherUserName}</h1>
-        </Link>
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vocaux')}>
-          <Phone className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vidéo')}>
-          <Video className="h-4 w-4" />
-        </Button>
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <div className="mx-auto w-full max-w-sm">
-                <DrawerHeader>
-                    <DrawerTitle>Options</DrawerTitle>
-                    <DrawerDescription>Gérez votre interaction avec ce profil.</DrawerDescription>
-                </DrawerHeader>
-                <div className="p-4 pt-0">
-                    <div className="mt-3 h-full">
-                        <DrawerClose asChild>
-                            <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleBlockUser}>
-                                <Ban className="mr-2 h-5 w-5" /> Bloquer
-                            </Button>
-                        </DrawerClose>
-                        <div className="my-2 border-t"></div>
-                        <DrawerClose asChild>
-                            <Button variant="outline" className="w-full justify-start p-4 h-auto text-base" onClick={handleReportUser}>
-                                <ShieldAlert className="mr-2 h-5 w-5" /> Signaler un abus
-                            </Button>
-                        </DrawerClose>
-                    </div>
-                </div>
-                <div className="p-4">
-                      <DrawerClose asChild>
-                        <Button variant="secondary" className="w-full h-12 text-base">Annuler</Button>
-                    </DrawerClose>
-                </div>
-            </div>
-          </DrawerContent>
-        </Drawer>
-      </header>
-
-      <main className="flex-1 overflow-y-auto pt-12 pb-20">
-        <div className="space-y-4 p-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex items-end gap-2 ${
-                message.sender === 'me' ? 'justify-end' : 'justify-start'
-              }`}
-            >
-              {message.sender === 'other' && (
-                <Avatar className="h-6 w-6">
-                   <AvatarImage src={otherUserImage} alt={otherUserName} />
-                   <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
-                </Avatar>
-              )}
-              <div
-                onMouseDown={() => message.sender === 'me' && startLongPress(message.id)}
-                onMouseUp={cancelLongPress}
-                onMouseLeave={cancelLongPress}
-                onTouchStart={() => message.sender === 'me' && startLongPress(message.id)}
-                onTouchEnd={cancelLongPress}
-                className={`max-w-[70%] rounded-2xl text-sm md:text-base ${
-                  message.text ? 'px-4 py-2' : 'p-1'
-                } ${
-                  message.sender === 'me'
-                    ? 'rounded-br-none bg-primary text-primary-foreground select-none'
-                    : 'rounded-bl-none bg-secondary text-secondary-foreground'
-                }`}
-              >
-                {message.text}
-                {message.image && (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <button type="button" className="block cursor-pointer">
-                        <Image 
-                          src={message.image} 
-                          alt="Image envoyée" 
-                          width={200} 
-                          height={200}
-                          className="rounded-xl object-cover"
+      <WanderlinkHeader />
+      <main className="flex-1 overflow-y-auto pt-16 pb-24">
+        <div className="container mx-auto max-w-2xl px-2">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Mes Amis</CardTitle>
+                    <CardDescription>Retrouvez ici les voyageurs avec qui vous avez connecté.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="relative mb-4">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                        placeholder="Rechercher un ami..."
+                        className="pl-9"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent className="p-0 m-0 w-full h-full max-w-full max-h-screen bg-black/80 backdrop-blur-sm border-0 flex flex-col items-center justify-center">
-                       <DialogHeader className="sr-only">
-                          <DialogTitle>Visionneuse d'image</DialogTitle>
-                          <DialogDescription>Image en plein écran.</DialogDescription>
-                       </DialogHeader>
-                        <div className="relative w-full h-full">
-                           <Image 
-                              src={message.image} 
-                              alt="Image envoyée en plein écran" 
-                              fill
-                              className="object-contain"
-                            />
+                    </div>
+                    {filteredFriends.length > 0 ? (
+                        <ul className="space-y-3">
+                        {filteredFriends.map((friend) => (
+                            <li key={friend.id} className="flex items-center gap-3">
+                                <Link href={`/profile?id=${friend.id}`} className="flex flex-1 items-center gap-3 min-w-0">
+                                    <Avatar className="h-10 w-10">
+                                    <AvatarImage src={friend.avatarUrl} alt={friend.name} />
+                                    <AvatarFallback>{friend.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    <div className="flex-1 truncate">
+                                        <p className="font-semibold truncate text-sm">{friend.name}</p>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className={`h-2 w-2 rounded-full ${friend.status === 'En ligne' ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                                            <p className="truncate text-xs text-muted-foreground">
+                                                {friend.status}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                                <Button variant="outline" size="sm" onClick={() => router.push(`/chat?id=${friend.id}`)}>
+                                    Message
+                                </Button>
+                            </li>
+                        ))}
+                        </ul>
+                    ) : (
+                        <div className="text-center py-8">
+                            <p className="text-sm text-muted-foreground mb-4">Vous n'avez aucun ami pour le moment.</p>
+                            <Button onClick={() => router.push('/')}>
+                                <UserPlus className="mr-2 h-4 w-4" />
+                                Découvrir des profils
+                            </Button>
                         </div>
-                        <DialogClose className="absolute top-2 right-2 p-2 rounded-full bg-black/30 text-white hover:bg-black/50 hover:text-white">
-                            <X className="h-6 w-6" />
-                        </DialogClose>
-                    </DialogContent>
-                  </Dialog>
-                )}
-              </div>
-            </div>
-          ))}
-           <div ref={messagesEndRef} />
+                    )}
+                </CardContent>
+            </Card>
         </div>
       </main>
-
-       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-1.5">
-        <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
-            <div className={cn(
-              "flex items-center gap-0 shrink-0 transition-all duration-300",
-              isFocused ? "w-0 opacity-0" : "w-16 opacity-100"
-            )}>
-                 <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
-                    <DialogTrigger asChild>
-                        <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
-                        <Camera className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                    </DialogTrigger>
-                    {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
-                </Dialog>
-
-                <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={() => fileInputRef.current?.click()}>
-                <ImageIcon className="h-4 w-4 text-muted-foreground" />
-                </Button>
-            </div>
-          
-            <div className="flex-1 relative flex items-center min-w-0 bg-secondary rounded-xl px-3 py-1.5">
-                <Textarea
-                    ref={textareaRef}
-                    rows={1}
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    placeholder="Message..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent p-0 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
-                    autoComplete="off"
-                />
-                <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
-                    <PopoverTrigger asChild>
-                        <Button type="button" variant="ghost" size="icon" className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6">
-                            <Smile className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-none mb-2">
-                        <Picker 
-                          onEmojiClick={handleEmojiClick}
-                          searchDisabled
-                          skinTonesDisabled
-                          categories={[
-                            { category: Categories.SUGGESTED, name: "Suggérés" },
-                            { category: Categories.TRAVEL_PLACES, name: "Voyage & Lieux" },
-                            { category: Categories.ACTIVITIES, name: "Activités" },
-                            { category: Categories.SMILEYS_PEOPLE, name: "Émotions" },
-                            { category: Categories.ANIMALS_NATURE, name: "Nature" },
-                            { category: Categories.FOOD_DRINK, name: "Nourriture" },
-                            { category: Categories.OBJECTS, name: "Objets" },
-                          ]}
-                        />
-                    </PopoverContent>
-                </Popover>
-            </div>
-          
-            <div className="shrink-0">
-              <Button
-                  type={showSendButton ? "submit" : "button"}
-                  variant="ghost"
-                  size="icon"
-                  className="shrink-0 h-8 w-8 text-primary"
-                  onClick={!showSendButton ? () => handlePlaceholderAction('Les messages vocaux') : undefined}
-                  aria-label={showSendButton ? "Envoyer" : "Envoyer un message vocal"}
-              >
-                  {showSendButton ? (
-                      <Send className="h-4 w-4" />
-                  ) : (
-                      <Mic className="h-4 w-4 text-muted-foreground" />
-                  )}
-              </Button>
-            </div>
-        </form>
-         <input
-          type="file"
-          ref={fileInputRef}
-          className="hidden"
-          accept="image/*"
-          onChange={handleImageSelect}
-        />
-      </footer>
-      
-      <AlertDialog open={messageToDelete !== null} onOpenChange={(open) => !open && setMessageToDelete(null)}>
-        <AlertDialogContent>
-            <AlertDialogHeader>
-                <AlertDialogTitle>Supprimer le message ?</AlertDialogTitle>
-                <AlertDialogDescription>
-                    Cette action est irréversible et supprimera le message de cette conversation.
-                </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDeleteMessage} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Supprimer
-                </AlertDialogAction>
-            </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <BottomNav />
     </div>
   );
 }
