@@ -3,7 +3,8 @@ import ChatClientPage from './chat-client-page';
 
 export async function generateStaticParams() {
   // Nous ne voulons pas pré-générer de pages de chat au moment de la construction.
-  // Cette fonction est requise pour les routes dynamiques avec `output: 'export'`.
+  // Retourner un tableau vide est la bonne approche pour `output: 'export'`.
+  // Les nouvelles pages de chat seront générées à la demande côté client.
   return [];
 }
 
