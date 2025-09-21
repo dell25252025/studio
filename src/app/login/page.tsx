@@ -79,27 +79,27 @@ export default function AuthPage() {
             </div>
 
             <div className="flex flex-col h-screen p-4 md:items-center md:justify-center md:h-auto">
-                {isEmailFormVisible && (
-                  <div className="absolute top-4 left-4 hidden md:block">
-                    <button onClick={resetAuthState} aria-label="Retour" className="p-2 rounded-full bg-black/20 text-white hover:bg-black/40">
-                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                      </svg>
-                    </button>
-                  </div>
-                )}
-                <div className={`text-center md:hidden pt-2 flex-shrink-0 ${isEmailFormVisible ? 'hidden' : ''}`}>
+                <div className="text-center md:hidden pt-2 flex-shrink-0">
                     <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l\'accueil de l\'authentification">
                         <h1 className="text-2xl font-bold font-logo text-white">
                             WanderLink
                         </h1>
                     </button>
-                    <p className={`text-sm text-white px-1 leading-tight text-center md:hidden mt-1 w-full mx-auto ${isEmailFormVisible ? 'hidden' : ''}`}>
+                    <p className={`text-sm text-white px-1 leading-tight text-center md:hidden mt-1 w-full mx-auto`}>
                         Trouvez des compagnons de voyage qui partagent votre passion
                     </p>
                 </div>
             
-                <div className='flex-1 flex flex-col w-full max-w-sm mx-auto justify-end pb-4 md:justify-center md:bg-black/20 md:backdrop-blur-sm md:p-8 md:rounded-2xl'>
+                <div className='flex-1 flex flex-col w-full max-w-sm mx-auto justify-end pb-4 md:justify-center md:bg-black/20 md:backdrop-blur-sm md:p-8 md:rounded-2xl md:relative'>
+                  {isEmailFormVisible && (
+                    <div className="absolute top-4 left-4 hidden md:block">
+                      <button onClick={resetAuthState} aria-label="Retour" className="p-2 rounded-full bg-black/20 text-white hover:bg-black/40 transition-colors">
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                   <AuthForm
                       isLogin={isLogin}
                       setIsLogin={setIsLogin}
