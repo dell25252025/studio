@@ -1,21 +1,10 @@
 
 "use server";
 
-import { aiPoweredMatching, type AIPoweredMatchingInput, type AIPoweredMatchingOutput } from "@/ai/flows/ai-powered-matching";
 import { db, storage } from "@/lib/firebase";
 import { collection, doc, getDoc, DocumentData, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
-
-export async function handleAiMatching(input: AIPoweredMatchingInput): Promise<AIPoweredMatchingOutput> {
-  try {
-    const results = await aiPoweredMatching(input);
-    return results;
-  } catch (error) {
-    console.error("Error in AI matching flow:", error);
-    throw new Error("Failed to get AI-powered matches.");
-  }
-}
 
 async function uploadProfilePicture(userId: string, photoDataUri: string): Promise<string | null> {
     if (!userId || !photoDataUri || !photoDataUri.startsWith('data:')) {
