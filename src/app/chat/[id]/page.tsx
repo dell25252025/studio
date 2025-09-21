@@ -22,6 +22,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
+export const dynamicParams = true;
 
 // Mock messages for demonstration purposes
 const initialMessages = [
@@ -488,3 +489,5 @@ export default function ChatPage() {
     </div>
   );
 }
+
+    
