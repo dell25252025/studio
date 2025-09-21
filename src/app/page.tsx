@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
@@ -193,12 +192,8 @@ function DiscoverPage({ user }: { user: User }) {
               </div>
             ) : view === 'discover' ? (
               <>
-                <div className="my-4">
-                    <Button onClick={runAiMatching} size="lg" className="rounded-full shadow-lg">
-                        Find my AI Match
-                    </Button>
-                </div>
-                <div>
+                
+                <div className="mt-4">
                    {displayMatches.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
                       {mappedProfiles.map((profile) => (
