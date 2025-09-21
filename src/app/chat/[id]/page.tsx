@@ -23,6 +23,11 @@ import { cn } from '@/lib/utils';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 export const dynamicParams = true;
+export async function generateStaticParams() {
+  // We don't want to pre-render any chat pages at build time.
+  // This function is required for dynamic routes with `output: 'export'`.
+  return [];
+}
 
 // Mock messages for demonstration purposes
 const initialMessages = [
@@ -489,5 +494,7 @@ export default function ChatPage() {
     </div>
   );
 }
+
+    
 
     
