@@ -7,7 +7,8 @@ import { auth } from '@/lib/firebase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { handleAiMatching, getAllUsers, getUserProfile } from '@/app/actions';
+import { getAllUsers, getUserProfile } from '@/app/actions';
+import type { handleAiMatching } from '@/app/actions';
 import AiMatchResults from '@/components/ai-match-results';
 import BottomNav from '@/components/bottom-nav';
 import WanderlinkHeader from '@/components/wanderlink-header';
@@ -144,6 +145,7 @@ function DiscoverPage({ user }: { user: User }) {
           verified: true,
       }));
 
+      const { handleAiMatching } = await import('@/app/actions');
       const res = await handleAiMatching({ userProfile: mappedUserProfile, possibleMatches: mappedPossibleMatches });
       setResults(res);
     } catch (error) {
@@ -191,6 +193,11 @@ function DiscoverPage({ user }: { user: User }) {
               </div>
             ) : view === 'discover' ? (
               <>
+                <div className="my-4">
+                    <Button onClick={runAiMatching} size="lg" className="rounded-full shadow-lg">
+                        Find my AI Match
+                    </Button>
+                </div>
                 <div>
                    {displayMatches.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
