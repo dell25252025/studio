@@ -2,9 +2,10 @@
 import ChatClientPage from './chat-client-page';
 
 export async function generateStaticParams() {
-  // Nous ne voulons pas pré-générer de pages de chat au moment de la construction.
-  // Retourner un tableau vide est la bonne approche pour `output: 'export'`.
-  // Les nouvelles pages de chat seront générées à la demande côté client.
+  // Cette fonction est requise par Next.js lorsque "output: 'export'" est utilisé.
+  // Nous retournons un tableau vide car nous ne voulons pas pré-générer
+  // de pages de chat spécifiques au moment de la construction.
+  // Les pages seront générées côté client lors de la navigation.
   return [];
 }
 
