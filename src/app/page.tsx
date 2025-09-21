@@ -5,10 +5,7 @@ import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { getAllUsers, getUserProfile } from '@/app/actions';
-import type { handleAiMatching } from '@/app/actions';
-import AiMatchResults from '@/components/ai-match-results';
 import BottomNav from '@/components/bottom-nav';
 import WanderlinkHeader from '@/components/wanderlink-header';
 import { useToast } from '@/hooks/use-toast';
@@ -20,9 +17,6 @@ import ProfileCard from '@/components/profile-card';
 // --- Sub-component for Authenticated Users --- //
 
 function DiscoverPage({ user }: { user: User }) {
-  const [results, setResults] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [view, setView] = useState('discover');
   const { toast } = useToast();
   const searchParams = useSearchParams();
 
@@ -113,53 +107,6 @@ function DiscoverPage({ user }: { user: User }) {
   }, [searchParams, possibleMatches, currentUserProfile]);
 
 
-  const runAiMatching = async () => {
-    if (!currentUserProfile) {
-       toast({ variant: 'destructive', title: 'User profile not loaded' });
-       return;
-    }
-    setLoading(true);
-    setView('results');
-    try {
-      // Map Firestore data to the format expected by the AI flow
-      const mappedUserProfile = {
-          travelStyle: currentUserProfile.travelStyle || '',
-          dreamDestinations: [currentUserProfile.destination] || [],
-          languagesSpoken: currentUserProfile.languages || [],
-          travelIntention: currentUserProfile.intention || '50/50',
-          interests: [currentUserProfile.activities] || [],
-          age: currentUserProfile.age || 18,
-          sex: currentUserProfile.sex || 'Homme',
-          verified: true, // Assuming current user is always verified for this
-      };
-
-      const mappedPossibleMatches = displayMatches.map(p => ({
-          travelStyle: p.travelStyle || '',
-          dreamDestinations: [p.destination] || [],
-          languagesSpoken: p.languages || [],
-          travelIntention: p.intention || '50/50',
-          interests: [p.activities] || [],
-          age: p.age || 18,
-          sex: p.sex || 'Homme',
-          verified: true,
-      }));
-
-      const { handleAiMatching } = await import('@/app/actions');
-      const res = await handleAiMatching({ userProfile: mappedUserProfile, possibleMatches: mappedPossibleMatches });
-      setResults(res);
-    } catch (error) {
-      console.error("Failed to get AI matches:", error);
-      toast({ variant: 'destructive', title: 'AI Matching Error' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const resetView = () => {
-    setView('discover');
-    setResults([]);
-  };
-
   const getMappedProfiles = (profiles: DocumentData[]): UserProfile[] => {
       return profiles.map(p => ({
         id: p.id,
@@ -190,7 +137,7 @@ function DiscoverPage({ user }: { user: User }) {
                 <Loader2 className="h-16 w-16 animate-spin text-primary" />
                 <h2 className="mt-6 text-2xl font-semibold">Loading profiles...</h2>
               </div>
-            ) : view === 'discover' ? (
+            ) : (
               <>
                 
                 <div className="mt-4">
@@ -205,25 +152,6 @@ function DiscoverPage({ user }: { user: User }) {
                   )}
                 </div>
               </>
-            ) : null}
-
-            {view === 'results' && loading && (
-              <div className="flex flex-col items-center justify-center text-center h-96">
-                  <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                  <h2 className="mt-6 text-2xl font-semibold">Finding your perfect match...</h2>
-                  <p className="mt-2 text-muted-foreground">Our AI is analyzing profiles to find the best travel partners for you.</p>
-              </div>
-            )}
-
-            {view === 'results' && !loading && results.length > 0 && (
-              <AiMatchResults results={results} profiles={getMappedProfiles(displayMatches)} onReset={resetView} />
-            )}
-             {view === 'results' && !loading && results.length === 0 && (
-                <div className="flex flex-col items-center justify-center text-center h-96">
-                    <h2 className="mt-6 text-2xl font-semibold">No AI matches found</h2>
-                    <p className="mt-2 text-muted-foreground">Try adjusting your filters or check back later.</p>
-                    <Button onClick={resetView} className="mt-4">Back to Discover</Button>
-                </div>
             )}
           </div>
         </div>
