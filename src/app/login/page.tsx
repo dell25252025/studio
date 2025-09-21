@@ -99,7 +99,7 @@ export default function AuthPage() {
                     </p>
                 </div>
             
-                <div className='flex-1 flex flex-col w-full max-w-sm mx-auto justify-end pb-4 md:justify-center'>
+                <div className='flex-1 flex flex-col w-full max-w-sm mx-auto justify-end pb-4 md:justify-center md:bg-black/20 md:backdrop-blur-sm md:p-8 md:rounded-2xl'>
                   <AuthForm
                       isLogin={isLogin}
                       setIsLogin={setIsLogin}
