@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "android:build": "next build && npx cap sync android",
+    "android:build": "next build && npx cap add android && npx cap sync android",
     "android:open": "npx cap open android"
   },
   "dependencies": {
