@@ -75,6 +75,7 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
         toast({
             title: 'Signalement envoyé',
             description: `Merci. Nous allons examiner le profil de ${reportedUser?.firstName}.`,
+            duration: 3000,
         });
 
         // Reset and close
