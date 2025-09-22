@@ -179,7 +179,7 @@ const AudioPlayer = ({ audioUrl }: { audioUrl: string }) => {
   );
 };
 
-const EmojiPickerContent = ({ onEmojiClick }: { onEmojiClick: (emojiData: EmojiClickData) => void }) => (
+const EmojiPickerContent = ({ onEmojiClick, onOutsideClick }: { onEmojiClick: (emojiData: EmojiClickData) => void; onOutsideClick?: () => void; }) => (
     <div className="h-[350px] overflow-y-auto">
         <Picker
             onEmojiClick={onEmojiClick}
@@ -569,32 +569,19 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                     autoComplete="off"
                 />
                 
-                {isDesktop ? (
-                  <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
-                    <PopoverTrigger asChild>
-                        <Button type="button" variant="ghost" size="icon" className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6">
-                            <Smile className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-none mb-2">
-                      <EmojiPickerContent onEmojiClick={handleEmojiClick} />
-                    </PopoverContent>
-                  </Popover>
-                ) : (
-                  <Drawer open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
-                    <DrawerTrigger asChild>
+                <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+                  <PopoverTrigger asChild>
                       <Button type="button" variant="ghost" size="icon" className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6">
                           <Smile className="h-4 w-4 text-muted-foreground" />
                       </Button>
-                    </DrawerTrigger>
-                    <DrawerContent>
-                        <DrawerHeader className="sr-only">
-                          <DrawerTitle>Choisir un emoji</DrawerTitle>
-                        </DrawerHeader>
-                        <EmojiPickerContent onEmojiClick={handleEmojiClick} />
-                    </DrawerContent>
-                  </Drawer>
-                )}
+                  </PopoverTrigger>
+                  <PopoverContent side="top" align="end" className="w-full max-w-[320px] p-0 border-none mb-2">
+                    <EmojiPickerContent 
+                      onEmojiClick={handleEmojiClick} 
+                      onOutsideClick={() => setIsEmojiPickerOpen(false)}
+                    />
+                  </PopoverContent>
+                </Popover>
             </div>
           
             <div className="shrink-0">
