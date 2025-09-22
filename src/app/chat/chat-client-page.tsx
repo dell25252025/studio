@@ -544,7 +544,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                 <div className="flex gap-1">
                   <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
                       <DialogTrigger asChild>
-                          <Button type="button" variant="ghost" size="icon" onClick={() => setIsCameraOpen(true)}>
+                          <Button type="button" variant="ghost" size="icon">
                               <Camera className="h-4 w-4" />
                           </Button>
                       </DialogTrigger>
