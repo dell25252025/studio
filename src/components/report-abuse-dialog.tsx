@@ -20,6 +20,7 @@ import type { DocumentData } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
 import { submitAbuseReport } from '@/app/actions';
 import { auth } from '@/lib/firebase';
+import { cn } from '@/lib/utils';
 
 interface ReportAbuseDialogProps {
   isOpen: boolean;
@@ -95,7 +96,7 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-[90vw] max-w-[425px] rounded-lg">
         <DialogHeader>
           <DialogTitle>Signaler {reportedUser?.firstName || 'cet utilisateur'}</DialogTitle>
           <DialogDescription>
