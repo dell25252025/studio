@@ -482,7 +482,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
           </div>
         )}
         <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
-            <div className="flex items-center gap-1.5">
+            <div className={cn("flex items-center gap-1.5", showSendButton && "hidden")}>
               <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
                   <DialogTrigger asChild>
                       <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
