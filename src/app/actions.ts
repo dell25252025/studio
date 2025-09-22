@@ -2,7 +2,7 @@
 "use server";
 
 import { db, storage } from "@/lib/firebase";
-import { collection, doc, getDoc, DocumentData, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove } from "firebase/firestore";
+import { collection, doc, getDoc, DocumentData, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -238,5 +238,33 @@ export async function getAllUsers() {
   } catch (error) {
     console.error("Error getting all users:", error);
     throw new Error("Failed to retrieve user list.");
+  }
+}
+
+export async function submitAbuseReport(
+  reporterId: string,
+  reportedId: string,
+  reason: string,
+  details: string
+) {
+  if (!reporterId || !reportedId || !reason) {
+    return { success: false, error: 'Informations manquantes pour le signalement.' };
+  }
+
+  try {
+    const reportsCollection = collection(db, 'abuseReports');
+    await addDoc(reportsCollection, {
+      reporterId,
+      reportedId,
+      reason,
+      details,
+      status: 'pending', // pending, reviewed, resolved
+      createdAt: serverTimestamp(),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors de la soumission du signalement:", error);
+    const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
+    return { success: false, error: errorMessage };
   }
 }
