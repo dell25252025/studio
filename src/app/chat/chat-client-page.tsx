@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2 } from 'lucide-react';
+import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2, Plus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getUserProfile } from '@/app/actions';
@@ -131,9 +131,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   const [newMessage, setNewMessage] = useState('');
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState<number | null>(null);
-  const [viewingImage, setViewingImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -383,23 +381,27 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-1.5">
         <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
-            <div className={cn(
-              "flex items-center gap-0 shrink-0 transition-all duration-300",
-              isFocused ? "w-0 opacity-0" : "w-16 opacity-100"
-            )}>
-                 <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
-                    <DialogTrigger asChild>
-                        <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
-                        <Camera className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                    </DialogTrigger>
-                    {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
-                </Dialog>
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
+                        <Plus className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-1.5 mb-2 flex items-center gap-1.5" side="top" align="start">
+                    <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                        <DialogTrigger asChild>
+                            <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
+                                <Camera className="h-4 w-4 text-muted-foreground" />
+                            </Button>
+                        </DialogTrigger>
+                        {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
+                    </Dialog>
 
-                <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={() => fileInputRef.current?.click()}>
-                <ImageIcon className="h-4 w-4 text-muted-foreground" />
-                </Button>
-            </div>
+                    <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={() => fileInputRef.current?.click()}>
+                        <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                </PopoverContent>
+            </Popover>
           
             <div className="flex-1 relative flex items-center min-w-0 bg-secondary rounded-xl px-3 py-1.5">
                 <Textarea
@@ -408,8 +410,6 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
                     placeholder="Message..."
                     className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent p-0 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
                     autoComplete="off"
@@ -485,3 +485,5 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     </div>
   );
 }
+
+    
