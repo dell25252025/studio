@@ -538,7 +538,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Message..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-2 px-3 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
+                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-2.5 px-3 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
                     autoComplete="off"
                 />
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
