@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import AuthForm from '@/components/auth-form';
+import placeholderContent from '@/lib/placeholder-content.json';
 
-const desktopVideoUrl = "https://ik.imagekit.io/fip3ktm2p/545556555_24610768548534823_5832326088093088554_n.mp4?updatedAt=1757753813634";
-const mobileVideoUrl = "https://ik.imagekit.io/fip3ktm2p/video%20app2.mp4?updatedAt=1757957531301";
+const { desktopVideoUrl, mobileVideoUrl } = placeholderContent.loginVideos;
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
