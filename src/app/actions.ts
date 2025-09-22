@@ -46,6 +46,7 @@ export async function createOrUpdateGoogleUserProfile(userId: string, profileDat
                 profilePictures: profileData.photoURL ? [profileData.photoURL] : [],
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
+                friends: [],
             };
             await setDoc(userRef, newProfileData);
             return { success: true, id: userId, isNewUser: true };
@@ -79,6 +80,7 @@ export async function createUserProfile(userId: string, profileData: any) {
             profilePictures: uploadedPhotoUrls,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
+            friends: [],
         };
 
         if (finalProfileData.dates?.from) {
@@ -266,5 +268,76 @@ export async function submitAbuseReport(
     console.error("Erreur lors de la soumission du signalement:", error);
     const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
     return { success: false, error: errorMessage };
+  }
+}
+
+export async function addFriend(currentUserId: string, friendId: string) {
+  if (!currentUserId || !friendId) {
+    return { success: false, error: 'User IDs are required.' };
+  }
+  try {
+    const currentUserRef = doc(db, 'users', currentUserId);
+    const friendRef = doc(db, 'users', friendId);
+
+    await updateDoc(currentUserRef, {
+      friends: arrayUnion(friendId),
+    });
+    await updateDoc(friendRef, {
+      friends: arrayUnion(currentUserId),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error adding friend:', error);
+    return { success: false, error: 'Failed to add friend.' };
+  }
+}
+
+export async function removeFriend(currentUserId: string, friendId: string) {
+  if (!currentUserId || !friendId) {
+    return { success: false, error: 'User IDs are required.' };
+  }
+  try {
+    const currentUserRef = doc(db, 'users', currentUserId);
+    const friendRef = doc(db, 'users', friendId);
+
+    await updateDoc(currentUserRef, {
+      friends: arrayRemove(friendId),
+    });
+    await updateDoc(friendRef, {
+      friends: arrayRemove(currentUserId),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error removing friend:', error);
+    return { success: false, error: 'Failed to remove friend.' };
+  }
+}
+
+export async function getFriends(userId: string) {
+  try {
+    const userDoc = await getDoc(doc(db, "users", userId));
+    if (!userDoc.exists()) {
+      return [];
+    }
+    const userData = userDoc.data();
+    const friendIds = userData.friends || [];
+    
+    if (friendIds.length === 0) {
+      return [];
+    }
+
+    const friendPromises = friendIds.map((id: string) => getDoc(doc(db, "users", id)));
+    const friendDocs = await Promise.all(friendPromises);
+
+    const friends = friendDocs
+      .filter(doc => doc.exists())
+      .map(doc => ({ id: doc.id, ...doc.data() }));
+
+    return friends;
+  } catch (error) {
+    console.error("Error getting friends:", error);
+    throw new Error("Failed to retrieve friends list.");
   }
 }
