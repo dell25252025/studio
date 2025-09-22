@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
@@ -118,7 +119,7 @@ function DiscoverPage({ user }: { user: User }) {
         travelStyle: p.travelStyle || 'Tous',
         dreamDestinations: [p.destination] || ['Toutes'],
         languagesSpoken: p.languages || [],
-        travelIntention: p.intention || 'Toutes',
+        travelIntention: p.intention || '50/50',
         verified: true,
         image: p.profilePictures?.[0] || 'https://picsum.photos/800/1200'
     }));
@@ -129,7 +130,7 @@ function DiscoverPage({ user }: { user: User }) {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <WanderlinkHeader />
-      <main className="flex-1 pb-24 pt-12">
+      <main className="flex-1 pb-24 pt-10 md:pt-12">
         <div className="container mx-auto max-w-7xl px-2">
           <div className="text-center">
             {profilesLoading ? (
@@ -140,7 +141,7 @@ function DiscoverPage({ user }: { user: User }) {
             ) : (
               <>
                 
-                <div className="mt-2">
+                <div className="mt-0">
                    {displayMatches.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
                       {mappedProfiles.map((profile) => (
