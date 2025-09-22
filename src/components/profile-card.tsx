@@ -37,14 +37,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
         
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-        {profile.verified && (
-            <div className="absolute top-2 right-2">
-                <div className="h-6 w-6 rounded-full flex items-center justify-center text-white bg-black/20 backdrop-blur-sm">
-                    <ShieldCheck className="h-4 w-4 text-white" />
-                </div>
-            </div>
-        )}
-
         <div className="absolute bottom-0 left-0 p-2 md:p-4 text-white w-full flex flex-col items-start">
           {intention && (
             <div className="mb-1 md:mb-2">
