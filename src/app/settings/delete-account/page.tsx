@@ -58,27 +58,27 @@ export default function DeleteAccountPage() {
       <SettingsHeader title="Supprimer le compte" />
       <main className="flex items-center justify-center min-h-[calc(100vh-3rem)] p-4 pt-12">
         <Card className="w-full max-w-md border-destructive">
-          <CardHeader className="text-center items-center p-4">
+          <CardHeader className="text-center items-center p-3">
             <div className="p-2 rounded-full bg-destructive/10">
-              <AlertTriangle className="h-6 w-6 text-destructive" />
+              <AlertTriangle className="h-5 w-5 text-destructive" />
             </div>
-            <CardTitle className="text-lg text-destructive pt-1">
+            <CardTitle className="text-base text-destructive pt-1">
               Action Irréversible
             </CardTitle>
             <CardDescription className="text-xs">
               La suppression de votre compte est définitive.
             </CardDescription>
           </CardHeader>
-          <CardContent className="text-center space-y-4 p-4 pt-0">
+          <CardContent className="text-center space-y-3 p-3 pt-0">
             <p className="text-xs text-muted-foreground">
-              Toutes vos données, y compris votre profil, vos messages, vos photos et vos matchs, seront supprimées de manière permanente. Cette action ne peut pas être annulée.
+              Toutes vos données, y compris votre profil, vos messages et vos photos, seront supprimées de manière permanente. Cette action ne peut pas être annulée.
             </p>
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" className="w-full h-auto whitespace-normal">
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Supprimer mon compte définitivement
+                  Supprimer mon compte
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>

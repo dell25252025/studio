@@ -52,11 +52,11 @@ export default function PrivacySettingsPage() {
         <main className="px-2 py-4 md:px-4 pt-16">
             <div className="mx-auto max-w-2xl space-y-2">
                 <Card>
-                    <CardHeader className="p-4">
+                    <CardHeader className="p-3">
                         <CardTitle className="flex items-center gap-2 text-sm"><Eye className="h-4 w-4"/> Visibilité</CardTitle>
                         <CardDescription className="text-xs">Contrôlez qui peut voir votre profil.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-2 p-4 pt-0">
+                    <CardContent className="space-y-2 p-3 pt-0">
                         <div className="flex items-center justify-between rounded-lg border p-2">
                             <Label htmlFor="online-status" className="text-xs">Afficher mon statut "En ligne"</Label>
                             <Switch id="online-status" checked={showOnlineStatus} onCheckedChange={setShowOnlineStatus} />
@@ -69,11 +69,11 @@ export default function PrivacySettingsPage() {
                 </Card>
                 
                 <Card>
-                    <CardHeader className="p-4">
+                    <CardHeader className="p-3">
                         <CardTitle className="flex items-center gap-2 text-sm"><ImageIcon className="h-4 w-4"/> Qui peut voir mes photos ?</CardTitle>
                     </CardHeader>
-                    <CardContent className="p-4 pt-0">
-                        <RadioGroup value={photoVisibility} onValueChange={setPhotoVisibility} className="space-y-2">
+                    <CardContent className="p-3 pt-0">
+                        <RadioGroup value={photoVisibility} onValueChange={setPhotoVisibility} className="space-y-1.5">
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="all" id="p-all" />
                                <Label htmlFor="p-all" className="text-xs">Tout le monde</Label>
@@ -91,11 +91,11 @@ export default function PrivacySettingsPage() {
                 </Card>
 
                 <Card>
-                    <CardHeader className="p-4">
+                    <CardHeader className="p-3">
                         <CardTitle className="flex items-center gap-2 text-sm"><MessageSquare className="h-4 w-4"/> Qui peut m'envoyer un message ?</CardTitle>
                     </CardHeader>
-                    <CardContent className="p-4 pt-0">
-                        <RadioGroup value={messagingPolicy} onValueChange={setMessagingPolicy} className="space-y-2">
+                    <CardContent className="p-3 pt-0">
+                        <RadioGroup value={messagingPolicy} onValueChange={setMessagingPolicy} className="space-y-1.5">
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="all" id="m-all" />
                                <Label htmlFor="m-all" className="text-xs">Tout le monde</Label>
@@ -113,11 +113,11 @@ export default function PrivacySettingsPage() {
                 </Card>
                 
                 <Card>
-                    <CardHeader className="p-4">
+                    <CardHeader className="p-3">
                         <CardTitle className="flex items-center gap-2 text-sm"><UserPlus className="h-4 w-4"/> Qui peut m'envoyer une demande d'ami ?</CardTitle>
                     </CardHeader>
-                    <CardContent className="p-4 pt-0">
-                        <RadioGroup value={friendRequestPolicy} onValueChange={setFriendRequestPolicy} className="space-y-2">
+                    <CardContent className="p-3 pt-0">
+                        <RadioGroup value={friendRequestPolicy} onValueChange={setFriendRequestPolicy} className="space-y-1.5">
                            <div className="flex items-center space-x-2">
                                <RadioGroupItem value="all" id="fr-all" />
                                <Label htmlFor="fr-all" className="text-xs">Tout le monde</Label>

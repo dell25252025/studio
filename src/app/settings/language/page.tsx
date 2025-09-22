@@ -50,26 +50,26 @@ export default function LanguagePage() {
       <main className="px-2 py-4 md:px-4 pt-16">
         <div className="mx-auto max-w-2xl space-y-2">
           <Card>
-            <CardHeader className="p-4">
-              <CardTitle className="flex items-center gap-2 text-base">
+            <CardHeader className="p-3">
+              <CardTitle className="flex items-center gap-2 text-sm">
                 <Languages className="h-4 w-4" /> {dict.languagePage.cardTitle}
               </CardTitle>
               <CardDescription className="text-xs">{dict.languagePage.cardDescription}</CardDescription>
             </CardHeader>
-            <CardContent className="p-4 pt-0">
+            <CardContent className="p-3 pt-0">
               <ul className="space-y-2">
                 {availableLanguages.map((lang) => (
                   <li key={lang.code}>
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-full justify-start p-3 h-auto text-sm",
+                        "w-full justify-start p-2 h-auto text-sm",
                         selectedLanguage === lang.code && "border-primary ring-1 ring-primary"
                       )}
                       onClick={() => handleLanguageChange(lang.code)}
                     >
-                      <span className="mr-3 text-xl">{lang.flag}</span>
-                      <span className="flex-1 text-left">{lang.name}</span>
+                      <span className="mr-2 text-lg">{lang.flag}</span>
+                      <span className="flex-1 text-left text-xs">{lang.name}</span>
                       {selectedLanguage === lang.code && <Check className="h-4 w-4 text-primary" />}
                     </Button>
                   </li>

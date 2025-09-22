@@ -67,11 +67,11 @@ export default function BlockedUsersPage() {
       <main className="px-2 py-4 md:px-4 pt-16">
             <div className="mx-auto max-w-2xl space-y-2">
                 <Card>
-                    <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><UserX className="h-4 w-4" /> Gérer les utilisateurs bloqués</CardTitle>
-                        <CardDescription className="text-xs">Les utilisateurs que vous bloquez ne pourront plus vous contacter ni voir votre profil.</CardDescription>
+                    <CardHeader className="p-3">
+                        <CardTitle className="flex items-center gap-2 text-sm"><UserX className="h-4 w-4" /> Gérer les utilisateurs bloqués</CardTitle>
+                        <CardDescription className="text-xs">Ils ne pourront plus vous contacter ni voir votre profil.</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-4 pt-0">
+                    <CardContent className="p-3 pt-0">
                         {blockedUsers.length > 0 ? (
                             <ul className="space-y-2">
                                 {blockedUsers.map(user => (
@@ -106,10 +106,10 @@ export default function BlockedUsersPage() {
                                 ))}
                             </ul>
                         ) : (
-                           <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 text-center">
-                                <ShieldCheck className="h-10 w-10 text-muted-foreground" />
-                                <h3 className="mt-3 font-semibold text-sm">Aucun utilisateur bloqué</h3>
-                                <p className="mt-1 text-xs text-muted-foreground">Votre liste d'utilisateurs bloqués est vide.</p>
+                           <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 text-center">
+                                <ShieldCheck className="h-8 w-8 text-muted-foreground" />
+                                <h3 className="mt-2 font-semibold text-sm">Aucun utilisateur bloqué</h3>
+                                <p className="mt-1 text-xs text-muted-foreground">Votre liste est vide.</p>
                            </div>
                         )}
                     </CardContent>
