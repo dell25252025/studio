@@ -18,6 +18,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import type { DocumentData } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
+import { submitAbuseReport } from '@/app/actions';
+import { auth } from '@/lib/firebase';
 
 interface ReportAbuseDialogProps {
   isOpen: boolean;
@@ -39,8 +41,19 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
   const [details, setDetails] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const currentUser = auth.currentUser;
 
   const handleSubmit = async () => {
+    if (!currentUser) {
+       toast({ variant: 'destructive', title: 'Erreur', description: "Vous devez être connecté pour signaler un utilisateur." });
+       return;
+    }
+
+    if (!reportedUser) {
+        toast({ variant: 'destructive', title: 'Erreur', description: "Aucun utilisateur à signaler n'a été spécifié." });
+        return;
+    }
+      
     if (!selectedReason) {
       toast({
         variant: 'destructive',
@@ -50,24 +63,34 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
     }
 
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
+    try {
+        const result = await submitAbuseReport(currentUser.uid, reportedUser.id, selectedReason, details);
 
-    console.log({
-      reportedUserId: reportedUser?.id,
-      reason: selectedReason,
-      details,
-    });
-    
-    setIsSubmitting(false);
-    onOpenChange(false);
-    setSelectedReason(null);
-    setDetails('');
-    
-    toast({
-      title: 'Signalement envoyé',
-      description: `Merci. Nous allons examiner le profil de ${reportedUser?.firstName}.`,
-    });
+        if (!result.success) {
+            throw new Error(result.error);
+        }
+        
+        toast({
+            title: 'Signalement envoyé',
+            description: `Merci. Nous allons examiner le profil de ${reportedUser?.firstName}.`,
+        });
+
+        // Reset and close
+        onOpenChange(false);
+        setSelectedReason(null);
+        setDetails('');
+
+    } catch(error) {
+        const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
+        toast({
+            variant: 'destructive',
+            title: 'Échec de l\'envoi',
+            description: errorMessage
+        });
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
   return (
@@ -102,7 +125,7 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="button" variant="secondary">
+            <Button type="button" variant="secondary" disabled={isSubmitting}>
               Annuler
             </Button>
           </DialogClose>
