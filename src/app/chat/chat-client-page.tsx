@@ -22,6 +22,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Progress } from '@/components/ui/progress';
+import { ReportAbuseDialog } from '@/components/report-abuse-dialog';
+
 
 interface Message {
   id: number;
@@ -189,6 +191,8 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState<number | null>(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
@@ -361,7 +365,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   };
 
   const handleReportUser = () => {
-    toast({ title: `Le profil de ${otherUser?.firstName} a été signalé.` });
+    setIsReportModalOpen(true);
   };
   
   const otherUserName = otherUser?.firstName || 'Utilisateur';
@@ -543,7 +547,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                             <Smile className="h-4 w-4 text-muted-foreground" />
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-none mb-2">
+                    <PopoverContent className="w-auto max-w-[90vw] p-0 border-none mb-2">
                         <Picker 
                           onEmojiClick={handleEmojiClick}
                           searchDisabled
@@ -611,6 +615,12 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
             </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      
+      <ReportAbuseDialog 
+        isOpen={isReportModalOpen} 
+        onOpenChange={setIsReportModalOpen} 
+        reportedUser={otherUser}
+      />
     </div>
   );
 }
