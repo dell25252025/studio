@@ -140,7 +140,7 @@ function DiscoverPage({ user }: { user: User }) {
             ) : (
               <>
                 
-                <div className="mt-4">
+                <div className="mt-2">
                    {displayMatches.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
                       {mappedProfiles.map((profile) => (
