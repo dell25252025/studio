@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2, Plus, Play, Pause } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getUserProfile } from '@/app/actions';
+import { getUserProfile, submitAbuseReport } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -180,23 +180,26 @@ const AudioPlayer = ({ audioUrl }: { audioUrl: string }) => {
 };
 
 const EmojiPickerContent = ({ onEmojiClick }: { onEmojiClick: (emojiData: EmojiClickData) => void }) => (
-  <Picker
-    onEmojiClick={onEmojiClick}
-    searchDisabled
-    skinTonesDisabled
-    emojiStyle={EmojiStyle.NATIVE}
-    emojiSize={22}
-    width="100%"
-    categories={[
-      { category: Categories.SUGGESTED, name: "Suggérés" },
-      { category: Categories.TRAVEL_PLACES, name: "Voyage & Lieux" },
-      { category: Categories.ACTIVITIES, name: "Activités" },
-      { category: Categories.SMILEYS_PEOPLE, name: "Émotions" },
-      { category: Categories.ANIMALS_NATURE, name: "Nature" },
-      { category: Categories.FOOD_DRINK, name: "Nourriture" },
-      { category: Categories.OBJECTS, name: "Objets" },
-    ]}
-  />
+    <div className="h-[350px] overflow-y-auto">
+        <Picker
+            onEmojiClick={onEmojiClick}
+            searchDisabled
+            skinTonesDisabled
+            emojiStyle={EmojiStyle.NATIVE}
+            emojiSize={22}
+            width="100%"
+            height="100%"
+            categories={[
+              { category: Categories.SUGGESTED, name: "Suggérés" },
+              { category: Categories.TRAVEL_PLACES, name: "Voyage & Lieux" },
+              { category: Categories.ACTIVITIES, name: "Activités" },
+              { category: Categories.SMILEYS_PEOPLE, name: "Émotions" },
+              { category: Categories.ANIMALS_NATURE, name: "Nature" },
+              { category: Categories.FOOD_DRINK, name: "Nourriture" },
+              { category: Categories.OBJECTS, name: "Objets" },
+            ]}
+        />
+    </div>
 );
 
 
@@ -365,7 +368,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   };
   
   const handleBlockUser = () => {
-    if (!otherUser) return;
+    if (!otherUser || !otherUserId) return;
     try {
       const blockedUsers = JSON.parse(localStorage.getItem('blockedUsers') || '[]');
       const userToBlock = {
@@ -374,7 +377,6 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         avatarUrl: otherUser?.profilePictures?.[0] || `https://picsum.photos/seed/${otherUserId}/200`,
       };
       
-      // Prevent duplicates
       if (!blockedUsers.some((u: any) => u.id === otherUserId)) {
         blockedUsers.push(userToBlock);
         localStorage.setItem('blockedUsers', JSON.stringify(blockedUsers));
@@ -586,12 +588,10 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                       </Button>
                     </DrawerTrigger>
                     <DrawerContent>
-                      <div className="mx-auto w-full max-w-sm">
                         <DrawerHeader className="sr-only">
                           <DrawerTitle>Choisir un emoji</DrawerTitle>
                         </DrawerHeader>
                         <EmojiPickerContent onEmojiClick={handleEmojiClick} />
-                      </div>
                     </DrawerContent>
                   </Drawer>
                 )}
