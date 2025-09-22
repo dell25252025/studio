@@ -7,7 +7,7 @@ import { Compass, Users, MessageSquare, User, UserPlus, Settings } from 'lucide-
 import Link from 'next/link';
 import { auth } from '@/lib/firebase';
 import type { User as FirebaseUser } from 'firebase/auth';
-import { getUserProfile } from '@/app/actions';
+import { getUserProfile } from '@/lib/firebase-actions';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';

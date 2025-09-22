@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { getFriends } from '@/app/actions';
+import { getFriends } from '@/lib/firebase-actions';
 import { auth } from '@/lib/firebase';
 import type { User } from 'firebase/auth';
 import type { DocumentData } from 'firebase/firestore';

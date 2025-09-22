@@ -6,7 +6,7 @@ import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import { getAllUsers, getUserProfile } from '@/app/actions';
+import { getAllUsers, getUserProfile } from '@/lib/firebase-actions';
 import BottomNav from '@/components/bottom-nav';
 import WanderlinkHeader from '@/components/wanderlink-header';
 import { useToast } from '@/hooks/use-toast';

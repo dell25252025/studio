@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2, Plus, Play, Pause } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getUserProfile, submitAbuseReport } from '@/app/actions';
+import { getUserProfile, submitAbuseReport } from '@/lib/firebase-actions';
 import type { DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
