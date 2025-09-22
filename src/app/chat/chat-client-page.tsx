@@ -484,7 +484,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
             <Popover>
               <PopoverTrigger asChild>
-                <Button type="button" variant="ghost" size="icon" className={cn("shrink-0 h-8 w-8", showSendButton && "hidden")}>
+                <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
                     <Plus className="h-4 w-4 text-muted-foreground" />
                 </Button>
               </PopoverTrigger>
