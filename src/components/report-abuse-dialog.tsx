@@ -109,7 +109,7 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
               {reportReasons.map((reason) => (
                 <div key={reason.id} className="flex items-center space-x-2">
                   <RadioGroupItem value={reason.id} id={reason.id} />
-                  <Label htmlFor={reason.id} className="font-normal">
+                  <Label htmlFor={reason.id} className="font-normal text-xs">
                     {reason.label}
                   </Label>
                 </div>
@@ -121,7 +121,7 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
             placeholder="Fournissez plus de détails (optionnel)..."
             value={details}
             onChange={(e) => setDetails(e.target.value)}
-            className="mt-2"
+            className="mt-2 text-xs"
           />
         </div>
         <DialogFooter>
@@ -130,7 +130,7 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
               Annuler
             </Button>
           </DialogClose>
-          <Button type="submit" onClick={handleSubmit} disabled={isSubmitting}>
+          <Button type="submit" onClick={handleSubmit} disabled={!selectedReason || isSubmitting}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Soumettre
           </Button>
