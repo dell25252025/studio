@@ -96,7 +96,7 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[90vw] max-w-[425px] rounded-lg">
+      <DialogContent className="w-[90vw] max-w-sm rounded-lg">
         <DialogHeader>
           <DialogTitle>Signaler {reportedUser?.firstName || 'cet utilisateur'}</DialogTitle>
           <DialogDescription>
