@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, UserX, ShieldCheck } from 'lucide-react';
+import { UserX, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -11,26 +11,55 @@ import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { SettingsHeader } from '@/components/settings/settings-header';
 
-// Mock data for blocked users
-const initialBlockedUsers = [
-  { id: 'user123', name: 'Alexandre Dubois', avatarUrl: 'https://picsum.photos/seed/user1/200' },
-  { id: 'user456', name: 'Marie Claire', avatarUrl: 'https://picsum.photos/seed/user2/200' },
-];
+interface BlockedUser {
+  id: string;
+  name: string;
+  avatarUrl: string;
+}
 
 export default function BlockedUsersPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [blockedUsers, setBlockedUsers] = useState(initialBlockedUsers);
+  const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    // Load blocked users from localStorage when component mounts on the client
+    try {
+      const storedUsers = localStorage.getItem('blockedUsers');
+      if (storedUsers) {
+        setBlockedUsers(JSON.parse(storedUsers));
+      }
+    } catch (error) {
+      console.error("Failed to load blocked users from localStorage", error);
+    }
+  }, []);
 
   const handleUnblock = (userId: string) => {
-    // In a real app, you would make an API call here to unblock the user.
-    setBlockedUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
-    
-    toast({
-      title: 'Utilisateur débloqué',
-      description: 'Vous pouvez de nouveau interagir avec cet utilisateur.',
-    });
+    try {
+      const updatedUsers = blockedUsers.filter(user => user.id !== userId);
+      setBlockedUsers(updatedUsers);
+      localStorage.setItem('blockedUsers', JSON.stringify(updatedUsers));
+      
+      toast({
+        title: 'Utilisateur débloqué',
+        description: 'Vous pouvez de nouveau interagir avec cet utilisateur.',
+      });
+    } catch (error) {
+       console.error("Failed to unblock user", error);
+       toast({
+        variant: 'destructive',
+        title: 'Erreur',
+        description: 'Impossible de débloquer cet utilisateur.',
+      });
+    }
   };
+
+  if (!isClient) {
+    // Render nothing or a loading spinner on the server to avoid hydration mismatch
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-secondary/30">
