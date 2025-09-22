@@ -322,11 +322,16 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
 
 
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'; // Reset height
-      const scrollHeight = textareaRef.current.scrollHeight;
-      const maxHeight = 120; // Corresponds to max-h-32
-      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+    const textarea = textareaRef.current;
+    if (textarea) {
+        // Reset height to 'auto' to ensure the scrollHeight is calculated correctly.
+        textarea.style.height = 'auto';
+        
+        const scrollHeight = textarea.scrollHeight;
+        const maxHeight = 120; // 120px, corresponds to Tailwind's max-h-32
+        
+        // Set the height to the scroll height, but cap it at the max height.
+        textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
     }
   }, [newMessage]);
   
@@ -588,3 +593,5 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     </div>
   );
 }
+
+    
