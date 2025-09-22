@@ -564,7 +564,7 @@ export default function ProfileClientPage() {
                      <div className="md:col-span-2 space-y-2">
                         <Card className="shadow-none md:shadow-lg">
                             <CardHeader className="p-3 md:p-6">
-                                <CardTitle className="text-base md:text-2xl">Ma description</CardTitle>
+                                <CardTitle className="text-base md:text-xl">Ma description</CardTitle>
                             </CardHeader>
                             <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
                                 <p className="text-xs md:text-sm text-muted-foreground">{profile.bio || "Aucune description fournie."}</p>
@@ -572,7 +572,7 @@ export default function ProfileClientPage() {
                         </Card>
                          <Card className="shadow-none md:shadow-lg">
                             <CardHeader className="p-3 md:p-6">
-                                <CardTitle className="text-base md:text-2xl">Mon Prochain Voyage</CardTitle>
+                                <CardTitle className="text-base md:text-xl">Mon Prochain Voyage</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2 text-xs md:text-sm p-3 pt-0 md:p-6 md:pt-0">
                                 <div className="flex items-start gap-2">
@@ -621,7 +621,7 @@ export default function ProfileClientPage() {
                     <div className="space-y-2">
                         <Card className="shadow-none md:shadow-lg">
                              <CardHeader className="p-3 md:p-6">
-                                <CardTitle className="text-base md:text-2xl">Détails</CardTitle>
+                                <CardTitle className="text-base md:text-xl">Détails</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2 text-xs md:text-sm p-3 pt-0 md:p-6 md:pt-0">
                                 <div className="flex items-start gap-2">
