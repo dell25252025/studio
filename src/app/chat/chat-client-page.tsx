@@ -482,32 +482,30 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
           </div>
         )}
         <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
-            {!showSendButton && (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
-                      <Plus className="h-4 w-4 text-muted-foreground" />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button type="button" variant="ghost" size="icon" className={cn("shrink-0 h-8 w-8", showSendButton && "hidden")}>
+                    <Plus className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-1 mb-2">
+                <div className="flex gap-1">
+                  <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                      <DialogTrigger asChild>
+                          <Button type="button" variant="ghost" size="icon">
+                              <Camera className="h-4 w-4" />
+                          </Button>
+                      </DialogTrigger>
+                      {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
+                  </Dialog>
+                  <Button type="button" variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()}>
+                      <ImageIcon className="h-4 w-4" />
                   </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-1 mb-2">
-                  <div className="flex gap-1">
-                    <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
-                        <DialogTrigger asChild>
-                            <Button type="button" variant="ghost" size="icon">
-                                <Camera className="h-4 w-4" />
-                            </Button>
-                        </DialogTrigger>
-                        {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
-                    </Dialog>
-                    <Button type="button" variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()}>
-                        <ImageIcon className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            )}
+                </div>
+              </PopoverContent>
+            </Popover>
           
-            <div className="flex-1 relative flex items-center min-w-0 bg-secondary rounded-xl px-3 py-1.5">
+            <div className="flex-1 relative flex items-center min-w-0 bg-secondary rounded-xl">
                 <Textarea
                     ref={textareaRef}
                     rows={1}
@@ -515,7 +513,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Message..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent p-0 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
+                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-1.5 px-3 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
                     autoComplete="off"
                 />
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
