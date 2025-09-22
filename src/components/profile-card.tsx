@@ -46,7 +46,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
             </div>
           )}
           <div>
-            <h3 className="font-bold text-xs drop-shadow-md">{profile.name}, {profile.age}</h3>
+            <h3 className="font-bold text-[10px] drop-shadow-md">{profile.name}, {profile.age}</h3>
           </div>
         </div>
       </Card>
