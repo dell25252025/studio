@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Progress } from '@/components/ui/progress';
 import { ReportAbuseDialog } from '@/components/report-abuse-dialog';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 
 interface Message {
@@ -178,6 +179,26 @@ const AudioPlayer = ({ audioUrl }: { audioUrl: string }) => {
   );
 };
 
+const EmojiPickerContent = ({ onEmojiClick }: { onEmojiClick: (emojiData: EmojiClickData) => void }) => (
+  <Picker
+    onEmojiClick={onEmojiClick}
+    searchDisabled
+    skinTonesDisabled
+    emojiStyle={EmojiStyle.NATIVE}
+    emojiSize={22}
+    width="100%"
+    categories={[
+      { category: Categories.SUGGESTED, name: "Suggérés" },
+      { category: Categories.TRAVEL_PLACES, name: "Voyage & Lieux" },
+      { category: Categories.ACTIVITIES, name: "Activités" },
+      { category: Categories.SMILEYS_PEOPLE, name: "Émotions" },
+      { category: Categories.ANIMALS_NATURE, name: "Nature" },
+      { category: Categories.FOOD_DRINK, name: "Nourriture" },
+      { category: Categories.OBJECTS, name: "Objets" },
+    ]}
+  />
+);
+
 
 export default function ChatClientPage({ otherUserId }: { otherUserId: string }) {
   const router = useRouter();
@@ -200,6 +221,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const longPressTimer = useRef<NodeJS.Timeout>();
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
 
   useEffect(() => {
@@ -248,6 +270,9 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setNewMessage(prevMessage => prevMessage + emojiData.emoji);
+    if (!isDesktop) {
+        setIsEmojiPickerOpen(false);
+    }
   };
 
 
@@ -541,32 +566,35 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                     className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-2.5 px-3 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
                     autoComplete="off"
                 />
-                <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+                
+                {isDesktop ? (
+                  <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
                     <PopoverTrigger asChild>
                         <Button type="button" variant="ghost" size="icon" className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6">
                             <Smile className="h-4 w-4 text-muted-foreground" />
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto max-w-[90vw] p-0 border-none mb-2">
-                        <Picker 
-                          onEmojiClick={handleEmojiClick}
-                          searchDisabled
-                          skinTonesDisabled
-                          emojiStyle={EmojiStyle.NATIVE}
-                          emojiSize={22}
-                          width="100%"
-                          categories={[
-                            { category: Categories.SUGGESTED, name: "Suggérés" },
-                            { category: Categories.TRAVEL_PLACES, name: "Voyage & Lieux" },
-                            { category: Categories.ACTIVITIES, name: "Activités" },
-                            { category: Categories.SMILEYS_PEOPLE, name: "Émotions" },
-                            { category: Categories.ANIMALS_NATURE, name: "Nature" },
-                            { category: Categories.FOOD_DRINK, name: "Nourriture" },
-                            { category: Categories.OBJECTS, name: "Objets" },
-                          ]}
-                        />
+                    <PopoverContent className="w-auto p-0 border-none mb-2">
+                      <EmojiPickerContent onEmojiClick={handleEmojiClick} />
                     </PopoverContent>
-                </Popover>
+                  </Popover>
+                ) : (
+                  <Drawer open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+                    <DrawerTrigger asChild>
+                      <Button type="button" variant="ghost" size="icon" className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6">
+                          <Smile className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                    </DrawerTrigger>
+                    <DrawerContent>
+                      <div className="mx-auto w-full max-w-sm">
+                        <DrawerHeader className="sr-only">
+                          <DrawerTitle>Choisir un emoji</DrawerTitle>
+                        </DrawerHeader>
+                        <EmojiPickerContent onEmojiClick={handleEmojiClick} />
+                      </div>
+                    </DrawerContent>
+                  </Drawer>
+                )}
             </div>
           
             <div className="shrink-0">
