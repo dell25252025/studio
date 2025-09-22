@@ -522,7 +522,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                             <Smile className="h-4 w-4 text-muted-foreground" />
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full max-w-[90vw] md:max-w-sm p-0 border-none mb-2">
+                    <PopoverContent className="w-auto p-0 border-none mb-2">
                         <Picker 
                           onEmojiClick={handleEmojiClick}
                           searchDisabled
