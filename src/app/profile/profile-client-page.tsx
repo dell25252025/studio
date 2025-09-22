@@ -3,9 +3,9 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { getUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
+import { getUserProfile, addProfilePicture, removeProfilePicture, addFriend, removeFriend } from '@/app/actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send, UserPlus, Heart } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send, UserPlus, Heart, UserCheck, UserX } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -206,11 +206,13 @@ export default function ProfileClientPage() {
   const [loading, setLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUserProfile, setCurrentUserProfile] = useState<DocumentData | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const [isClient, setIsClient] = useState(false);
+  const [isFriend, setIsFriend] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -222,10 +224,22 @@ export default function ProfileClientPage() {
       return;
     }
 
-    const unsubscribe = auth.onAuthStateChanged(user => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
         setCurrentUser(user);
-        if (user && user.uid === profileId) {
+        if (user) {
+          const userProfileData = await getUserProfile(user.uid);
+          setCurrentUserProfile(userProfileData);
+          if (user.uid === profileId) {
             setIsOwner(true);
+          } else {
+            setIsOwner(false);
+            // Check friendship status
+            if (userProfileData?.friends?.includes(profileId)) {
+              setIsFriend(true);
+            } else {
+              setIsFriend(false);
+            }
+          }
         } else {
             setIsOwner(false);
         }
@@ -365,9 +379,28 @@ export default function ProfileClientPage() {
     toast({ title: `Le profil de ${profile?.firstName} a été signalé.` });
   };
   
-  const handleAddFriend = () => {
-    // Placeholder logic to add a friend
-    toast({ title: 'Demande envoyée !', description: `Votre demande d'ami à ${profile?.firstName} a été envoyée.` });
+  const handleFriendAction = async () => {
+    if (!currentUser || !profileId) return;
+
+    if (isFriend) {
+      // Remove friend
+      const result = await removeFriend(currentUser.uid, profileId);
+      if (result.success) {
+        setIsFriend(false);
+        toast({ title: 'Ami retiré' });
+      } else {
+        toast({ variant: 'destructive', title: 'Erreur', description: result.error });
+      }
+    } else {
+      // Add friend
+      const result = await addFriend(currentUser.uid, profileId);
+      if (result.success) {
+        setIsFriend(true);
+        toast({ title: 'Ami ajouté !' });
+      } else {
+        toast({ variant: 'destructive', title: 'Erreur', description: result.error });
+      }
+    }
   };
 
 
@@ -406,6 +439,39 @@ export default function ProfileClientPage() {
   const travelStyleOption = travelStyles.find(s => s.value === profile.travelStyle);
   const travelActivityOption = travelActivities.find(a => a.value === profile.activities);
   const intention = profile.intention ? intentionMap[profile.intention] : null;
+
+  const FriendButton = () => {
+    if (isFriend) {
+      return (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" size="sm">
+              <UserCheck className="mr-2 h-4 w-4" />
+              Amis
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Retirer {profile.firstName} de vos amis ?</AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction onClick={handleFriendAction} className="bg-destructive hover:bg-destructive/90">
+                <UserX className="mr-2 h-4 w-4" />
+                Retirer
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      );
+    }
+    return (
+      <Button variant="outline" size="sm" onClick={handleFriendAction}>
+        <UserPlus className="mr-2 h-4 w-4" />
+        Ajouter
+      </Button>
+    );
+  };
 
 
   return (
@@ -494,10 +560,7 @@ export default function ProfileClientPage() {
                         
                         <div className="flex items-center gap-2 pl-2">
                              {!isOwner && (
-                                <Button variant="outline" size="sm" onClick={handleAddFriend}>
-                                    <UserPlus className="mr-2 h-4 w-4" />
-                                    Ajouter
-                                </Button>
+                                <FriendButton />
                             )}
                             
                             {!isOwner && (
