@@ -96,20 +96,20 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[90vw] max-w-sm rounded-lg">
-        <DialogHeader>
-          <DialogTitle>Signaler {reportedUser?.firstName || 'cet utilisateur'}</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="w-[90vw] max-w-[340px] rounded-lg p-4">
+        <DialogHeader className="text-left">
+          <DialogTitle className="text-base">Signaler {reportedUser?.firstName || 'cet utilisateur'}</DialogTitle>
+          <DialogDescription className="text-xs">
             Aidez-nous à garder WanderLink sécurisé. Les signalements sont anonymes.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-3 py-2">
           <RadioGroup value={selectedReason || ''} onValueChange={setSelectedReason}>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {reportReasons.map((reason) => (
                 <div key={reason.id} className="flex items-center space-x-2">
                   <RadioGroupItem value={reason.id} id={reason.id} />
-                  <Label htmlFor={reason.id} className="font-normal text-xs">
+                  <Label htmlFor={reason.id} className="font-normal text-xs leading-tight">
                     {reason.label}
                   </Label>
                 </div>
@@ -121,16 +121,17 @@ export function ReportAbuseDialog({ isOpen, onOpenChange, reportedUser }: Report
             placeholder="Fournissez plus de détails (optionnel)..."
             value={details}
             onChange={(e) => setDetails(e.target.value)}
-            className="mt-2 text-xs"
+            className="mt-1 text-xs min-h-[60px]"
+            rows={2}
           />
         </div>
-        <DialogFooter>
+        <DialogFooter className="flex-row justify-end space-x-2">
           <DialogClose asChild>
-            <Button type="button" variant="secondary" disabled={isSubmitting}>
+            <Button type="button" variant="secondary" size="sm" disabled={isSubmitting}>
               Annuler
             </Button>
           </DialogClose>
-          <Button type="submit" onClick={handleSubmit} disabled={!selectedReason || isSubmitting}>
+          <Button type="submit" size="sm" onClick={handleSubmit} disabled={!selectedReason || isSubmitting}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Soumettre
           </Button>
