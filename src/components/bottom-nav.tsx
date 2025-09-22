@@ -39,13 +39,14 @@ const BottomNav = () => {
     return () => unsubscribe();
   }, []);
   
-   const isDiscoverActive = pathname === '/' || pathname.startsWith('/discover');
+   const isDiscoverActive = pathname.startsWith('/discover');
+   const isHomeActive = pathname === '/';
    const areMessagesActive = pathname.startsWith('/chat');
    const areSettingsActive = pathname.startsWith('/settings');
    const areFriendsActive = pathname.startsWith('/friends');
 
   const navItems = [
-    { icon: Compass, label: 'Découvrir', href: '/', active: isDiscoverActive },
+    { icon: Compass, label: 'Découvrir', href: '/discover', active: isDiscoverActive || isHomeActive },
     { icon: Users, label: 'Amis', href: '/friends', active: areFriendsActive },
     { icon: MessageSquare, label: 'Messages', href: '/chat', active: areMessagesActive },
     { icon: Settings, label: 'Paramètres', href: '/settings', active: areSettingsActive },
