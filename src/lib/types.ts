@@ -12,7 +12,7 @@ export type UserProfile = {
   dreamDestinations: string[];
   languagesSpoken: string[];
   travelIntention: TravelIntention;
-  interests: string[];
+  interests?: string[];
   verified: boolean;
   image: string;
 };
