@@ -687,10 +687,10 @@ export default function ProfileClientPage() {
             </div>
         </main>
         {!isOwner && profileId && (
-            <div className="fixed bottom-0 left-0 right-0 z-10 p-4 bg-background/80 backdrop-blur-sm border-t">
-                <div className="flex gap-4">
+            <div className="fixed bottom-0 left-0 right-0 z-10 p-2 bg-background/80 backdrop-blur-sm border-t">
+                <div className="flex">
                     <Link href={`/chat?id=${profileId}`} passHref className="flex-1">
-                        <Button size="lg" className="w-full">
+                        <Button size="lg" className="w-full h-10 text-sm">
                             <Send className="mr-2 h-4 w-4" />
                             Envoyer un message
                         </Button>
