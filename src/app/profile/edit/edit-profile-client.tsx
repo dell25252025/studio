@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { getUserProfile, updateUserProfile, addProfilePicture, removeProfilePicture } from '@/app/actions';
+import { getUserProfile, updateUserProfile, addProfilePicture, removeProfilePicture } from '@/lib/firebase-actions';
 import { formSchema, type FormData } from '@/lib/schema';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';

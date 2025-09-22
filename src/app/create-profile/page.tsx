@@ -12,7 +12,7 @@ import Step3 from '@/components/profile-creation/step3';
 import Step4 from '@/components/profile-creation/step4';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { createUserProfile } from '@/app/actions';
+import { createUserProfile } from '@/lib/firebase-actions';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';

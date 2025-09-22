@@ -18,7 +18,7 @@ import { type DateRange } from 'react-day-picker';
 import { travelIntentions, travelStyles, travelActivities } from '@/lib/options';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { getUserProfile } from '@/app/actions';
+import { getUserProfile } from '@/lib/firebase-actions';
 import type { DocumentData } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
 

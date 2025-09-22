@@ -18,7 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import type { DocumentData } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
-import { submitAbuseReport } from '@/app/actions';
+import { submitAbuseReport } from '@/lib/firebase-actions';
 import { auth } from '@/lib/firebase';
 import { cn } from '@/lib/utils';
 

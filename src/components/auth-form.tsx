@@ -14,7 +14,7 @@ import { auth } from '@/lib/firebase';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { useRouter } from 'next/navigation';
-import { createOrUpdateGoogleUserProfile } from '@/app/actions';
+import { createOrUpdateGoogleUserProfile } from '@/lib/firebase-actions';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Adresse e-mail invalide.' }),
