@@ -39,8 +39,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
 
         {profile.verified && (
             <div className="absolute top-2 right-2">
-                <div className="h-6 w-6 rounded-full bg-green-500/90 flex items-center justify-center text-white backdrop-blur-sm">
-                    <ShieldCheck className="h-3 w-3" />
+                <div className="h-6 w-6 rounded-full flex items-center justify-center text-white bg-black/20 backdrop-blur-sm">
+                    <ShieldCheck className="h-4 w-4 text-white" />
                 </div>
             </div>
         )}
