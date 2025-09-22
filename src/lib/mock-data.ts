@@ -13,7 +13,7 @@ export const currentUser: Omit<UserProfile, 'id' | 'name' | 'bio' | 'image'> = {
 
 export const possibleMatches: UserProfile[] = [
   {
-    id: 1,
+    id: 'user1',
     name: 'Sophia',
     age: 26,
     gender: 'Femme',
@@ -27,7 +27,7 @@ export const possibleMatches: UserProfile[] = [
     image: 'https://picsum.photos/800/1200',
   },
   {
-    id: 2,
+    id: 'user2',
     name: 'James',
     age: 35,
     gender: 'Homme',
@@ -41,7 +41,7 @@ export const possibleMatches: UserProfile[] = [
     image: 'https://picsum.photos/800/1201',
   },
   {
-    id: 3,
+    id: 'user3',
     name: 'Isabella',
     age: 22,
     gender: 'Femme',
@@ -55,7 +55,7 @@ export const possibleMatches: UserProfile[] = [
     image: 'https://picsum.photos/800/1202',
   },
   {
-    id: 4,
+    id: 'user4',
     name: 'Liam',
     age: 29,
     gender: 'Homme',
@@ -69,7 +69,7 @@ export const possibleMatches: UserProfile[] = [
     image: 'https://picsum.photos/800/1203',
   },
   {
-    id: 5,
+    id: 'user5',
     name: 'Chloe',
     age: 31,
     gender: 'Femme',
@@ -83,7 +83,7 @@ export const possibleMatches: UserProfile[] = [
     image: 'https://picsum.photos/800/1204',
   },
    {
-    id: 6,
+    id: 'user6',
     name: 'David',
     age: 42,
     gender: 'Homme',
