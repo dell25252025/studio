@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import Picker, { type EmojiClickData, Categories } from 'emoji-picker-react';
+import Picker, { type EmojiClickData, Categories, EmojiStyle } from 'emoji-picker-react';
 import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogTitle, DialogDescription, DialogHeader } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
@@ -513,7 +513,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Message..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-1.5 px-3 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
+                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-2 px-3 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
                     autoComplete="off"
                 />
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
@@ -522,11 +522,14 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                             <Smile className="h-4 w-4 text-muted-foreground" />
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-none mb-2">
+                    <PopoverContent className="w-full max-w-[90vw] md:max-w-sm p-0 border-none mb-2">
                         <Picker 
                           onEmojiClick={handleEmojiClick}
                           searchDisabled
                           skinTonesDisabled
+                          emojiStyle={EmojiStyle.NATIVE}
+                          emojiSize={22}
+                          width="100%"
                           categories={[
                             { category: Categories.SUGGESTED, name: "Suggérés" },
                             { category: Categories.TRAVEL_PLACES, name: "Voyage & Lieux" },
