@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import type { UserProfile } from '@/lib/types';
 import { Card } from '@/components/ui/card';
-import { ShieldCheck, BriefcaseBusiness, Coins, Users } from 'lucide-react';
+import { BriefcaseBusiness, Coins, Users } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
