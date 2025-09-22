@@ -56,7 +56,7 @@ function DiscoverPage({ user }: { user: User }) {
       if (hasUrlFilters) {
           const showMe = searchParams.get('showMe');
           if (showMe) {
-            filtered = filtered.filter(p => p.sex === showMe);
+            filtered = filtered.filter(p => p.gender === showMe);
           }
           
           const minAge = searchParams.get('minAge');
@@ -91,12 +91,12 @@ function DiscoverPage({ user }: { user: User }) {
       } else if (currentUserProfile) {
          // Apply default filter if no URL params
          let defaultShowMe = 'Femme';
-         if (currentUserProfile.sex === 'Femme') {
+         if (currentUserProfile.gender === 'Femme') {
            defaultShowMe = 'Homme';
-         } else if (currentUserProfile.sex === 'Autre') {
+         } else if (currentUserProfile.gender === 'Autre') {
            defaultShowMe = 'Autre';
          }
-         filtered = filtered.filter(p => p.sex === defaultShowMe);
+         filtered = filtered.filter(p => p.gender === defaultShowMe);
       }
       
       setDisplayMatches(filtered);
@@ -113,7 +113,7 @@ function DiscoverPage({ user }: { user: User }) {
         id: p.id,
         name: p.firstName,
         age: p.age,
-        sex: p.sex,
+        gender: p.gender,
         bio: p.bio,
         location: p.location || 'N/A',
         travelStyle: p.travelStyle || 'Tous',

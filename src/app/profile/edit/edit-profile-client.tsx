@@ -62,8 +62,6 @@ export default function EditProfileClientPage() {
                                         from: value.from ? new Date(value.from) : undefined,
                                         to: value.to ? new Date(value.to) : undefined,
                                     });
-                                } else if (key === 'sex') {
-                                    setValue('gender', value);
                                 } else {
                                     setValue(key as keyof FormData, value);
                                 }

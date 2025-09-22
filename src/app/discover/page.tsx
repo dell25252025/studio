@@ -46,9 +46,9 @@ export default function DiscoverPage() {
                 getUserProfile(user.uid).then(profile => {
                     setUserProfile(profile);
                     if (profile) {
-                         if (profile.sex === 'Femme') {
+                         if (profile.gender === 'Femme') {
                             setShowMe('Homme');
-                        } else if (profile.sex === 'Autre') {
+                        } else if (profile.gender === 'Autre') {
                             setShowMe('Autre');
                         } else {
                             setShowMe('Femme');

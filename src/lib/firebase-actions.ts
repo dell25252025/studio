@@ -63,7 +63,7 @@ export async function createUserProfile(userId: string, profileData: any) {
     }
 
     try {
-        const { gender, profilePictures: photoDataUris, ...restOfProfileData } = profileData;
+        const { profilePictures: photoDataUris, ...restOfProfileData } = profileData;
 
         let uploadedPhotoUrls: string[] = [];
         if (photoDataUris && photoDataUris.length > 0) {
@@ -74,7 +74,6 @@ export async function createUserProfile(userId: string, profileData: any) {
         
         const finalProfileData = {
             ...restOfProfileData,
-            sex: gender,
             profilePictures: uploadedPhotoUrls,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -104,11 +103,10 @@ export async function updateUserProfile(userId: string, profileData: any) {
     }
 
     try {
-        const { gender, profilePictures, ...restOfProfileData } = profileData;
+        const { profilePictures, ...restOfProfileData } = profileData;
 
         const finalProfileData = {
             ...restOfProfileData,
-            sex: gender,
             profilePictures: profilePictures, // Assume pictures are already URLs or handled client-side
             updatedAt: new Date().toISOString(),
         };
