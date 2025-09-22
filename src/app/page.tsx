@@ -11,7 +11,7 @@ import BottomNav from '@/components/bottom-nav';
 import WanderlinkHeader from '@/components/wanderlink-header';
 import { useToast } from '@/hooks/use-toast';
 import type { DocumentData } from 'firebase/firestore';
-import type { UserProfile } from '@/lib/types';
+import type { UserProfile } from '@/lib/schema';
 import ProfileCard from '@/components/profile-card';
 
 

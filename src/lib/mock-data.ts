@@ -1,4 +1,4 @@
-import type { UserProfile } from './types';
+import type { UserProfile } from './schema';
 
 export const currentUser: Omit<UserProfile, 'id' | 'name' | 'bio' | 'image'> = {
   travelStyle: 'Adventure',

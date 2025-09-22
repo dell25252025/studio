@@ -27,3 +27,22 @@ export const formSchema = z.object({
 });
 
 export type FormData = z.infer<typeof formSchema>;
+
+// Consolidated UserProfile type
+export type TravelIntention = 'Sponsor' | 'Sponsorisé' | '50/50' | 'Groupe';
+
+export type UserProfile = {
+  id: number;
+  name: string;
+  age: number;
+  gender: 'Homme' | 'Femme' | 'Autre';
+  bio: string;
+  location: string;
+  travelStyle: string;
+  dreamDestinations: string[];
+  languagesSpoken: string[];
+  travelIntention: TravelIntention;
+  interests?: string[];
+  verified: boolean;
+  image: string;
+};

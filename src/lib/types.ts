@@ -1,18 +1,6 @@
 
-export type TravelIntention = 'Sponsor' | 'Sponsorisé' | '50/50' | 'Groupe';
+// This file is deprecated. The UserProfile type has been moved to src/lib/schema.ts
+// to avoid circular dependencies and consolidate types with their validation schemas.
+// This file can be deleted in a future cleanup.
 
-export type UserProfile = {
-  id: number;
-  name: string;
-  age: number;
-  gender: 'Homme' | 'Femme' | 'Autre';
-  bio: string;
-  location: string;
-  travelStyle: 'Luxe' | 'Adventure' | 'Backpacking' | 'Relaxation' | 'Cultural' | 'Aventure / Sac à dos' | 'Luxe / Détente' | 'Culturel / Historique' | 'Festif / Événementiel' | 'Religieux / Spirituel';
-  dreamDestinations: string[];
-  languagesSpoken: string[];
-  travelIntention: TravelIntention;
-  interests?: string[];
-  verified: boolean;
-  image: string;
-};
+export {};
