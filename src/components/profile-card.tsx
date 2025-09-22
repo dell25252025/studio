@@ -39,7 +39,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
 
         <div className="absolute bottom-0 left-0 right-0 p-2 text-white w-full flex flex-col items-start justify-end text-left">
           {intention && (
-            <div className="mb-0.5">
+            <div>
               <Badge variant="default" className={cn("border-none text-white text-[8px] h-auto px-1.5 py-0.5", intention.color)}>
                 {intention.text}
               </Badge>
