@@ -376,7 +376,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   return (
     <div className="flex h-screen flex-col bg-background">
       <header className="fixed top-0 z-10 flex w-full items-center gap-2 border-b bg-background/95 px-2 py-1 backdrop-blur-sm h-12">
-        <Button onClick={() => router.push('/chat')} variant="ghost" size="icon" className="h-8 w-8">
+        <Button onClick={() => router.push('/')} variant="ghost" size="icon" className="h-8 w-8">
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <Link href={`/profile?id=${otherUserId}`} className="flex min-w-0 flex-1 items-center gap-2 truncate">
