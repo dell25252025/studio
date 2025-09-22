@@ -336,7 +336,28 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   };
   
   const handleBlockUser = () => {
-    toast({ title: `${otherUser?.firstName} a été bloqué(e).` });
+    if (!otherUser) return;
+    try {
+      const blockedUsers = JSON.parse(localStorage.getItem('blockedUsers') || '[]');
+      const userToBlock = {
+        id: otherUserId,
+        name: otherUser?.firstName || 'Utilisateur',
+        avatarUrl: otherUser?.profilePictures?.[0] || `https://picsum.photos/seed/${otherUserId}/200`,
+      };
+      
+      // Prevent duplicates
+      if (!blockedUsers.some((u: any) => u.id === otherUserId)) {
+        blockedUsers.push(userToBlock);
+        localStorage.setItem('blockedUsers', JSON.stringify(blockedUsers));
+      }
+
+      toast({ title: `${otherUser?.firstName} a été bloqué(e).` });
+      router.push('/settings/blocked-users');
+
+    } catch (error) {
+      console.error("Error blocking user:", error);
+      toast({ variant: 'destructive', title: 'Erreur', description: 'Impossible de bloquer cet utilisateur.' });
+    }
   };
 
   const handleReportUser = () => {
