@@ -25,11 +25,11 @@ export default function TermsOfServicePage() {
           <div className="space-y-6 px-2 py-4 md:px-4">
             <div className="mx-auto max-w-2xl space-y-2">
               <Card>
-                <CardHeader className="p-4">
-                  <CardTitle className="flex items-center gap-2 text-base"><FileText className="h-4 w-4"/> Conditions Générales d'Utilisation</CardTitle>
+                <CardHeader className="p-3">
+                  <CardTitle className="flex items-center gap-2 text-sm"><FileText className="h-4 w-4"/> Conditions Générales d'Utilisation</CardTitle>
                   <CardDescription className="text-xs">Dernière mise à jour : {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3 p-4 pt-0 text-xs text-muted-foreground">
+                <CardContent className="space-y-3 p-3 pt-0 text-xs text-muted-foreground">
                   <p>Veuillez lire attentivement ces conditions d'utilisation avant d'utiliser l'application WanderLink. En accédant ou en utilisant le service, vous acceptez d'être lié par ces conditions.</p>
                   
                   <h3 className="font-semibold text-foreground text-sm">1. Utilisation du Service</h3>

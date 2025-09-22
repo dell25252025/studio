@@ -25,11 +25,11 @@ export default function PrivacyPolicyPage() {
           <div className="space-y-6 px-2 py-4 md:px-4">
             <div className="mx-auto max-w-2xl space-y-2">
               <Card>
-                <CardHeader className="p-4">
-                  <CardTitle className="flex items-center gap-2 text-base"><Shield className="h-4 w-4"/> Notre engagement</CardTitle>
+                <CardHeader className="p-3">
+                  <CardTitle className="flex items-center gap-2 text-sm"><Shield className="h-4 w-4"/> Notre engagement</CardTitle>
                   <CardDescription className="text-xs">Dernière mise à jour : {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3 p-4 pt-0 text-xs text-muted-foreground">
+                <CardContent className="space-y-3 p-3 pt-0 text-xs text-muted-foreground">
                   <p>Bienvenue sur la politique de confidentialité de WanderLink. Votre vie privée est une priorité pour nous. Ce document explique quelles informations nous collectons, comment nous les utilisons et les choix que vous avez concernant vos données.</p>
                   
                   <h3 className="font-semibold text-foreground text-sm">1. Informations que nous collectons</h3>

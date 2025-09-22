@@ -162,9 +162,9 @@ const SettingsPage = () => {
       <main className="pt-12">
         <ul className="divide-y divide-border">
             {/* Dark Mode Toggle */}
-            <li className="flex cursor-pointer items-center p-2 transition-colors hover:bg-muted/50">
-                <div className="mr-3 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-100">
-                    <Moon className="h-4 w-4 text-indigo-500" />
+            <li className="flex cursor-pointer items-center p-1.5 transition-colors hover:bg-muted/50">
+                <div className="mr-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-indigo-100">
+                    <Moon className="h-3.5 w-3.5 text-indigo-500" />
                 </div>
                 <span className="flex-1 text-xs text-card-foreground">Mode Sombre</span>
                 <ThemeToggle />
@@ -172,9 +172,9 @@ const SettingsPage = () => {
 
           {settingsItems.map((item) => {
             const content = (
-              <div className="flex cursor-pointer items-center p-2 transition-colors hover:bg-muted/50">
-                <div className={`mr-3 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${item.bgColor}`}>
-                  <item.icon className={`h-4 w-4 ${item.color}`} />
+              <div className="flex cursor-pointer items-center p-1.5 transition-colors hover:bg-muted/50">
+                <div className={`mr-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg ${item.bgColor}`}>
+                  <item.icon className={`h-3.5 w-3.5 ${item.color}`} />
                 </div>
                 <span className="flex-1 text-xs text-card-foreground">{item.label}</span>
                 <ChevronRight className="h-4 w-4 text-muted-foreground/50" />

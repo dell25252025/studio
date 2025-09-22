@@ -149,11 +149,11 @@ export default function AccountSettingsPage() {
       <main className="px-2 py-4 md:px-4 pt-16">
             <div className="mx-auto max-w-2xl space-y-2">
                 <Card>
-                    <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><Mail className="h-4 w-4" /> Adresse e-mail</CardTitle>
+                    <CardHeader className="p-3">
+                        <CardTitle className="flex items-center gap-2 text-sm"><Mail className="h-4 w-4" /> Adresse e-mail</CardTitle>
                         <CardDescription className="text-xs">Gérez l'adresse e-mail associée à votre compte.</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-4 pt-0">
+                    <CardContent className="p-3 pt-0">
                         <Form {...emailForm}>
                             <form onSubmit={emailForm.handleSubmit(handleEmailUpdate)} className="space-y-3">
                                 <FormField
@@ -161,7 +161,7 @@ export default function AccountSettingsPage() {
                                     name="email"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel className="text-xs">E-mail</FormLabel>
+                                            <FormLabel className="sr-only">E-mail</FormLabel>
                                             <FormControl>
                                                 <Input type="email" placeholder="votre@email.com" {...field} className="h-8 text-xs" />
                                             </FormControl>
@@ -171,7 +171,7 @@ export default function AccountSettingsPage() {
                                 />
                                 <Button type="submit" disabled={isEmailSubmitting} size="sm">
                                     {isEmailSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Enregistrer l'e-mail
+                                    Enregistrer
                                 </Button>
                             </form>
                         </Form>
@@ -179,19 +179,19 @@ export default function AccountSettingsPage() {
                 </Card>
 
                 <Card>
-                    <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><KeyRound className="h-4 w-4" /> Mot de passe</CardTitle>
-                        <CardDescription className="text-xs">Modifiez votre mot de passe régulièrement pour plus de sécurité.</CardDescription>
+                    <CardHeader className="p-3">
+                        <CardTitle className="flex items-center gap-2 text-sm"><KeyRound className="h-4 w-4" /> Mot de passe</CardTitle>
+                        <CardDescription className="text-xs">Modifiez votre mot de passe régulièrement.</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-4 pt-0">
+                    <CardContent className="p-3 pt-0">
                       {!isPasswordFormVisible ? (
                         <Button onClick={() => setIsPasswordFormVisible(true)} size="sm">
                           <Edit className="mr-2 h-4 w-4" />
-                          Changer le mot de passe
+                          Changer
                         </Button>
                       ) : (
                         <Form {...passwordForm}>
-                            <form onSubmit={passwordForm.handleSubmit(handlePasswordUpdate)} className="space-y-3">
+                            <form onSubmit={passwordForm.handleSubmit(handlePasswordUpdate)} className="space-y-2">
                                 <FormField
                                     control={passwordForm.control}
                                     name="oldPassword"
@@ -219,16 +219,16 @@ export default function AccountSettingsPage() {
                                     name="confirmPassword"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel className="text-xs">Confirmer le nouveau mot de passe</FormLabel>
+                                            <FormLabel className="text-xs">Confirmer le nouveau</FormLabel>
                                             <FormControl><Input type="password" {...field} className="h-8 text-xs" /></FormControl>
                                             <FormMessage className="text-xs" />
                                         </FormItem>
                                     )}
                                 />
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 pt-2">
                                   <Button type="submit" disabled={isPasswordSubmitting} size="sm">
                                       {isPasswordSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                      Enregistrer le mot de passe
+                                      Enregistrer
                                   </Button>
                                    <Button variant="ghost" size="sm" onClick={() => setIsPasswordFormVisible(false)} disabled={isPasswordSubmitting}>
                                       Annuler
@@ -244,7 +244,7 @@ export default function AccountSettingsPage() {
                   <AlertCircle className="h-4 w-4" />
                   <AlertTitle className="text-sm">Sécurité du compte</AlertTitle>
                   <AlertDescription className="text-xs">
-                    Pour des raisons de sécurité, la modification de votre e-mail ou de votre mot de passe peut nécessiter une déconnexion et une reconnexion récentes.
+                    Pour des raisons de sécurité, la modification de vos informations peut nécessiter une reconnexion récente.
                   </AlertDescription>
                 </Alert>
             </div>

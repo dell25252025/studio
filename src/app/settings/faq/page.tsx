@@ -39,16 +39,16 @@ export default function FaqPage() {
       <main className="px-2 py-4 md:px-4 pt-16">
             <div className="mx-auto max-w-2xl space-y-2">
                 <Card>
-                    <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><HelpCircle className="h-4 w-4"/> Questions fréquentes</CardTitle>
+                    <CardHeader className="p-3">
+                        <CardTitle className="flex items-center gap-2 text-sm"><HelpCircle className="h-4 w-4"/> Questions fréquentes</CardTitle>
                         <CardDescription className="text-xs">Trouvez ici les réponses aux questions les plus courantes.</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-4 pt-0">
+                    <CardContent className="p-3 pt-0">
                         <Accordion type="single" collapsible className="w-full">
                             {faqItems.map((item, index) => (
                                 <AccordionItem key={index} value={`item-${index}`}>
-                                    <AccordionTrigger className="text-left text-xs py-3">{item.question}</AccordionTrigger>
-                                    <AccordionContent className="text-xs text-muted-foreground pb-3">
+                                    <AccordionTrigger className="text-left text-xs py-2">{item.question}</AccordionTrigger>
+                                    <AccordionContent className="text-xs text-muted-foreground pb-2">
                                         {item.answer}
                                     </AccordionContent>
                                 </AccordionItem>

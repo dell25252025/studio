@@ -50,11 +50,11 @@ export default function NotificationSettingsPage() {
       <main className="px-2 py-4 md:px-4 pt-16">
             <div className="mx-auto max-w-2xl space-y-2">
                 <Card>
-                    <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><Bell className="h-4 w-4" /> Notifications Push</CardTitle>
-                        <CardDescription className="text-xs">Recevez des alertes en temps réel directement sur votre appareil.</CardDescription>
+                    <CardHeader className="p-3">
+                        <CardTitle className="flex items-center gap-2 text-sm"><Bell className="h-4 w-4" /> Notifications Push</CardTitle>
+                        <CardDescription className="text-xs">Recevez des alertes en temps réel.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-2 p-4 pt-0">
+                    <CardContent className="space-y-2 p-3 pt-0">
                         <div className="flex items-center justify-between rounded-lg border p-2">
                             <Label htmlFor="push-messages" className="text-xs">Nouveaux messages</Label>
                             <Switch id="push-messages" checked={pushNotifications.newMessages} onCheckedChange={(checked) => setPushNotifications(prev => ({...prev, newMessages: checked}))} />
@@ -71,11 +71,11 @@ export default function NotificationSettingsPage() {
                 </Card>
 
                  <Card>
-                    <CardHeader className="p-4">
-                        <CardTitle className="flex items-center gap-2 text-base"><Mail className="h-4 w-4" /> Notifications par e-mail</CardTitle>
-                        <CardDescription className="text-xs">Recevez des résumés et des actualités dans votre boîte de réception.</CardDescription>
+                    <CardHeader className="p-3">
+                        <CardTitle className="flex items-center gap-2 text-sm"><Mail className="h-4 w-4" /> Notifications par e-mail</CardTitle>
+                        <CardDescription className="text-xs">Recevez des résumés dans votre boîte de réception.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-2 p-4 pt-0">
+                    <CardContent className="space-y-2 p-3 pt-0">
                         <div className="flex items-center justify-between rounded-lg border p-2">
                             <Label htmlFor="email-news" className="text-xs">Promotions & actualités</Label>
                             <Switch id="email-news" checked={emailNotifications.newsAndUpdates} onCheckedChange={(checked) => setEmailNotifications(prev => ({...prev, newsAndUpdates: checked}))} />
