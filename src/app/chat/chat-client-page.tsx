@@ -482,20 +482,30 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
           </div>
         )}
         <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
-            <div className={cn("flex items-center gap-1.5", showSendButton && "hidden")}>
-              <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
-                  <DialogTrigger asChild>
-                      <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
-                          <Camera className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                  </DialogTrigger>
-                  {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
-              </Dialog>
-
-              <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={() => fileInputRef.current?.click()}>
-                  <ImageIcon className="h-4 w-4 text-muted-foreground" />
-              </Button>
-            </div>
+            {!showSendButton && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
+                      <Plus className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-1 mb-2">
+                  <div className="flex gap-1">
+                    <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                        <DialogTrigger asChild>
+                            <Button type="button" variant="ghost" size="icon">
+                                <Camera className="h-4 w-4" />
+                            </Button>
+                        </DialogTrigger>
+                        {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
+                    </Dialog>
+                    <Button type="button" variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()}>
+                        <ImageIcon className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
           
             <div className="flex-1 relative flex items-center min-w-0 bg-secondary rounded-xl px-3 py-1.5">
                 <Textarea
