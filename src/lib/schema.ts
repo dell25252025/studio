@@ -32,7 +32,7 @@ export type FormData = z.infer<typeof formSchema>;
 export type TravelIntention = 'Sponsor' | 'Sponsorisé' | '50/50' | 'Groupe';
 
 export type UserProfile = {
-  id: number;
+  id: string;
   name: string;
   age: number;
   gender: 'Homme' | 'Femme' | 'Autre';
