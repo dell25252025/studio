@@ -14,12 +14,12 @@ import {
 const WanderlinkHeader = () => {
   return (
     <header className={cn(
-        "fixed top-0 left-0 z-20 w-full h-12 md:h-14 transition-all duration-300", // Reduced height for mobile
+        "fixed top-0 left-0 z-20 w-full h-10 md:h-12 transition-all duration-300",
         "bg-background/90 backdrop-blur-sm border-b"
       )}>
       <div className={cn(
         "flex items-center justify-between h-full",
-        "px-2 md:px-4" // Adjusted padding for mobile
+        "px-2 md:px-4"
         )}>
         <Link href="/" className="flex items-center gap-2 group">
              <h1 className="text-xl md:text-2xl font-bold font-logo bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
