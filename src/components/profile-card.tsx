@@ -1,6 +1,6 @@
 
 import Image from 'next/image';
-import type { UserProfile } from '@/lib/types';
+import type { UserProfile } from '@/lib/schema';
 import { Card } from '@/components/ui/card';
 import { BriefcaseBusiness, Coins, Users } from 'lucide-react';
 import Link from 'next/link';
