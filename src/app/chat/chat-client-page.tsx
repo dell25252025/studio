@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2, Plus } from 'lucide-react';
+import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2, Plus, Play, Pause } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getUserProfile } from '@/app/actions';
@@ -21,12 +21,21 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Progress } from '@/components/ui/progress';
+
+interface Message {
+  id: number;
+  text: string;
+  sender: 'me' | 'other';
+  image: string | null;
+  audio: string | null;
+}
 
 // Mock messages for demonstration purposes
-const initialMessages = [
-  { id: 1, text: 'Salut ! Ton profil est super intéressant.', sender: 'other', image: null },
-  { id: 2, text: 'Merci beaucoup ! Le tien aussi. Prêt pour l\'aventure ?', sender: 'me', image: null },
-  { id: 3, text: 'Toujours ! Où rêves-tu d\'aller en premier ?', sender: 'other', image: null },
+const initialMessages: Message[] = [
+  { id: 1, text: 'Salut ! Ton profil est super intéressant.', sender: 'other', image: null, audio: null },
+  { id: 2, text: 'Merci beaucoup ! Le tien aussi. Prêt pour l\'aventure ?', sender: 'me', image: null, audio: null },
+  { id: 3, text: 'Toujours ! Où rêves-tu d\'aller en premier ?', sender: 'other', image: null, audio: null },
 ];
 
 const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void; onClose: () => void; }) => {
@@ -120,6 +129,53 @@ const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void
   );
 };
 
+const AudioPlayer = ({ audioUrl }: { audioUrl: string }) => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateProgress = () => {
+      setProgress((audio.currentTime / audio.duration) * 100);
+    };
+    const handleEnd = () => {
+      setIsPlaying(false);
+      setProgress(0);
+    };
+
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('ended', handleEnd);
+    return () => {
+      audio.removeEventListener('timeupdate', updateProgress);
+      audio.removeEventListener('ended', handleEnd);
+    };
+  }, []);
+
+  return (
+    <div className="flex items-center gap-2 w-[150px]">
+      <audio ref={audioRef} src={audioUrl} preload="metadata" />
+      <Button onClick={togglePlay} size="icon" variant="ghost" className="h-8 w-8 shrink-0">
+        {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+      </Button>
+      <Progress value={progress} className="w-full h-1.5" />
+    </div>
+  );
+};
+
 
 export default function ChatClientPage({ otherUserId }: { otherUserId: string }) {
   const router = useRouter();
@@ -127,11 +183,15 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [otherUser, setOtherUser] = useState<DocumentData | null>(null);
-  const [messages, setMessages] = useState(initialMessages);
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [newMessage, setNewMessage] = useState('');
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState<number | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -178,7 +238,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   };
 
   const sendImageMessage = (imageData: string) => {
-    setMessages(prev => [...prev, { id: Date.now(), text: '', sender: 'me', image: imageData }]);
+    setMessages(prev => [...prev, { id: Date.now(), text: '', sender: 'me', image: imageData, audio: null }]);
   };
 
 
@@ -192,7 +252,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     if (newMessage.trim()) {
       setMessages([
         ...messages,
-        { id: Date.now(), text: newMessage, sender: 'me', image: null },
+        { id: Date.now(), text: newMessage, sender: 'me', image: null, audio: null },
       ]);
       setNewMessage('');
     }
@@ -204,6 +264,39 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         handleSendMessage(event);
     }
   };
+  
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+
+      mediaRecorderRef.current.ondataavailable = event => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        setMessages(prev => [...prev, { id: Date.now(), text: '', sender: 'me', image: null, audio: audioUrl }]);
+        stream.getTracks().forEach(track => track.stop()); // Stop microphone access
+      };
+
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+    } catch (err) {
+      console.error("Error starting recording:", err);
+      toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible d'accéder au microphone. Veuillez vérifier les autorisations." });
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+  };
+
 
   const startLongPress = (messageId: number) => {
     longPressTimer.current = setTimeout(() => {
@@ -332,7 +425,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                 onTouchStart={() => message.sender === 'me' && startLongPress(message.id)}
                 onTouchEnd={cancelLongPress}
                 className={`max-w-[70%] rounded-2xl text-sm md:text-base ${
-                  message.text ? 'px-4 py-2' : 'p-1'
+                  (message.text || message.audio) ? 'px-3 py-2' : 'p-1'
                 } ${
                   message.sender === 'me'
                     ? 'rounded-br-none bg-primary text-primary-foreground select-none'
@@ -340,6 +433,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                 }`}
               >
                 {message.text}
+                {message.audio && <AudioPlayer audioUrl={message.audio} />}
                 {message.image && (
                   <Dialog>
                     <DialogTrigger asChild>
@@ -380,6 +474,12 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
       </main>
 
        <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-1.5">
+         {isRecording && (
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-destructive text-destructive-foreground px-3 py-1 rounded-full text-sm">
+            <div className="h-2 w-2 rounded-full bg-white animate-pulse"></div>
+            Enregistrement...
+          </div>
+        )}
         <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
             <Popover>
                 <PopoverTrigger asChild>
@@ -444,14 +544,17 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
                   type={showSendButton ? "submit" : "button"}
                   variant="ghost"
                   size="icon"
-                  className="shrink-0 h-8 w-8 text-primary"
-                  onClick={!showSendButton ? () => handlePlaceholderAction('Les messages vocaux') : undefined}
+                  className={cn("shrink-0 h-8 w-8", showSendButton ? "text-primary" : "text-muted-foreground")}
+                  onMouseDown={!showSendButton ? startRecording : undefined}
+                  onMouseUp={!showSendButton ? stopRecording : undefined}
+                  onTouchStart={!showSendButton ? startRecording : undefined}
+                  onTouchEnd={!showSendButton ? stopRecording : undefined}
                   aria-label={showSendButton ? "Envoyer" : "Envoyer un message vocal"}
               >
                   {showSendButton ? (
                       <Send className="h-4 w-4" />
                   ) : (
-                      <Mic className="h-4 w-4 text-muted-foreground" />
+                      <Mic className="h-4 w-4" />
                   )}
               </Button>
             </div>
@@ -485,5 +588,3 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     </div>
   );
 }
-
-    
