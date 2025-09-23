@@ -20,7 +20,7 @@ import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { getUserProfile } from '@/lib/firebase-actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Search } from 'lucide-react';
 
 export default function DiscoverPage() {
     const router = useRouter();
@@ -119,7 +119,6 @@ export default function DiscoverPage() {
                     <div className="space-y-1 mb-2">
                       <div className="flex items-center justify-between">
                         <h2 className="font-semibold text-xs">Montre-moi</h2>
-                        <Button onClick={handleSearch} variant="ghost" size="sm" className="h-7 text-xs">Terminé</Button>
                       </div>
                       <div className="flex justify-center">
                         <ToggleGroup
@@ -227,6 +226,12 @@ export default function DiscoverPage() {
                     </div>
                 </div>
             </main>
+            <footer className="fixed bottom-0 z-10 w-full p-2 bg-background/80 backdrop-blur-sm border-t">
+                <Button onClick={handleSearch} size="lg" className="w-full">
+                    <Search className="mr-2 h-4 w-4" />
+                    Recherche
+                </Button>
+            </footer>
         </div>
     );
 }
