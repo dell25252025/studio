@@ -6,6 +6,17 @@ import { Switch } from "@/components/ui/switch"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    // Affichez un placeholder ou rien du tout pendant le rendu serveur
+    // pour éviter l'erreur d'hydratation.
+    return <div className="h-6 w-11" />
+  }
 
   return (
     <Switch
