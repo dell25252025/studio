@@ -339,7 +339,7 @@ export default function ProfileClientPage() {
       }
     } catch (error) {
       console.error("Failed to remove profile picture:", error);
-      const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue.";
+      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
       toast({
         variant: "destructive",
         title: "Erreur de suppression",
@@ -477,8 +477,8 @@ export default function ProfileClientPage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
         <header className="fixed top-0 left-0 z-30 w-full p-2">
-          <Button onClick={() => router.back()} variant="ghost" size="icon" className="h-9 w-9 text-white hover:bg-black/20 hover:text-white">
-            <ArrowLeft className="h-5 w-5 [text-shadow:_0_1px_4px_rgb(0_0_0_/_50%)]" />
+          <Button onClick={() => router.back()} variant="ghost" size="icon" className="h-9 w-9 text-white bg-black/20 hover:bg-black/40 hover:text-white [text-shadow:_0_1px_4px_rgb(0_0_0_/_50%)]">
+            <ArrowLeft className="h-5 w-5" />
           </Button>
         </header>
         <main className={cn("flex-1", !isOwner && "pb-24")}>
@@ -539,7 +539,7 @@ export default function ProfileClientPage() {
                      <div className="flex justify-between items-center">
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                                <h1 className="text-xl md:text-2xl font-bold font-headline truncate">{profile.firstName}, {profile.age}</h1>
+                                <h1 className="text-2xl md:text-2xl font-bold font-headline truncate">{profile.firstName}, {profile.age}</h1>
                                 {isOwner && (
                                     <Link href={`/profile/edit?id=${profileId}`} passHref>
                                         <Button variant="ghost" size="icon" className="h-7 w-7 md:h-9 md:w-9" asChild>
@@ -551,8 +551,8 @@ export default function ProfileClientPage() {
                                     </Link>
                                 )}
                             </div>
-                            <div className="flex items-center gap-2 mt-1 text-xs md:text-sm text-muted-foreground">
-                                <MapPin className="h-3 w-3 md:h-4 md:w-4" />
+                            <div className="flex items-center gap-2 mt-1 text-sm md:text-sm text-muted-foreground">
+                                <MapPin className="h-4 w-4 md:h-4 md:w-4" />
                                 {locationCountry && <span className={`fi fi-${locationCountry.code.toLowerCase()} mr-1`}></span>}
                                 <span>{profile.location}</span>
                             </div>
@@ -613,8 +613,8 @@ export default function ProfileClientPage() {
                     </div>
                     {intention && (
                         <div className="mt-2">
-                            <Badge variant="default" className={cn("border-none text-white text-xs px-2 py-0.5 h-auto", intention.color)}>
-                                <intention.icon className="mr-1 h-3 w-3" />
+                            <Badge variant="default" className={cn("border-none text-white text-sm px-2.5 py-1 h-auto", intention.color)}>
+                                <intention.icon className="mr-1.5 h-4 w-4" />
                                 {intention.text}
                             </Badge>
                         </div>
@@ -627,39 +627,39 @@ export default function ProfileClientPage() {
                      <div className="md:col-span-2 space-y-2">
                         <Card className="shadow-none md:shadow-lg">
                             <CardHeader className="p-3 md:p-6">
-                                <CardTitle className="text-base md:text-xl">Ma description</CardTitle>
+                                <CardTitle className="text-lg md:text-xl">Ma description</CardTitle>
                             </CardHeader>
                             <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
-                                <p className="text-xs md:text-sm text-muted-foreground">{profile.bio || "Aucune description fournie."}</p>
+                                <p className="text-sm md:text-sm text-muted-foreground">{profile.bio || "Aucune description fournie."}</p>
                             </CardContent>
                         </Card>
                          <Card className="shadow-none md:shadow-lg">
                             <CardHeader className="p-3 md:p-6">
-                                <CardTitle className="text-base md:text-xl">Mon Prochain Voyage</CardTitle>
+                                <CardTitle className="text-lg md:text-xl">Mon Prochain Voyage</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-2 text-xs md:text-sm p-3 pt-0 md:p-6 md:pt-0">
+                            <CardContent className="space-y-3 text-sm md:text-sm p-3 pt-0 md:p-6 md:pt-0">
                                 <div className="flex items-start gap-2">
-                                    <Plane className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
+                                    <Plane className="h-4 w-4 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-[10px] md:text-xs">Destination</p>
-                                        <p className="text-muted-foreground text-xs md:text-sm flex items-center gap-2">
+                                        <p className="font-semibold text-xs md:text-xs">Destination</p>
+                                        <p className="text-muted-foreground text-sm md:text-sm flex items-center gap-2">
                                             {destinationCountry && <span className={`fi fi-${destinationCountry.code.toLowerCase()}`}></span>}
                                             {profile.destination}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-2">
-                                    <Calendar className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
+                                    <Calendar className="h-4 w-4 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-[10px] md:text-xs">Dates</p>
-                                        <p className="text-muted-foreground text-xs md:text-sm">{travelDates}</p>
+                                        <p className="font-semibold text-xs md:text-xs">Dates</p>
+                                        <p className="text-muted-foreground text-sm md:text-sm">{travelDates}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-2">
-                                    <Backpack className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
+                                    <Backpack className="h-4 w-4 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-[10px] md:text-xs">Style de voyage</p>
-                                        <p className="text-muted-foreground text-xs md:text-sm flex items-center gap-2">
+                                        <p className="font-semibold text-xs md:text-xs">Style de voyage</p>
+                                        <p className="text-muted-foreground text-sm md:text-sm flex items-center gap-2">
                                            {travelStyleOption?.icon && <span className="text-sm">{travelStyleOption.icon}</span>}
                                            {profile.travelStyle}
                                         </p>
@@ -667,10 +667,10 @@ export default function ProfileClientPage() {
                                 </div>
                                 {profile.activities && profile.activities !== 'Toutes' && (
                                     <div className="flex items-start gap-2">
-                                        <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
+                                        <Sparkles className="h-4 w-4 md:h-4 md:w-4 text-primary mt-0.5" />
                                         <div>
-                                            <p className="font-semibold text-[10px] md:text-xs">Activités prévues</p>
-                                            <p className="text-muted-foreground text-xs md:text-sm flex items-center gap-2">
+                                            <p className="font-semibold text-xs md:text-xs">Activités prévues</p>
+                                            <p className="text-muted-foreground text-sm md:text-sm flex items-center gap-2">
                                                 {travelActivityOption?.icon && <span className="text-sm">{travelActivityOption.icon}</span>}
                                                 {profile.activities}
                                             </p>
@@ -684,54 +684,54 @@ export default function ProfileClientPage() {
                     <div className="space-y-2">
                         <Card className="shadow-none md:shadow-lg">
                              <CardHeader className="p-3 md:p-6">
-                                <CardTitle className="text-base md:text-xl">Détails</CardTitle>
+                                <CardTitle className="text-lg md:text-xl">Détails</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-2 text-xs md:text-sm p-3 pt-0 md:p-6 md:pt-0">
+                            <CardContent className="space-y-3 text-sm md:text-sm p-3 pt-0 md:p-6 md:pt-0">
                                 <div className="flex items-start gap-2">
-                                    <Languages className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
+                                    <Languages className="h-4 w-4 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-[10px] md:text-xs">Langues parlées</p>
-                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.languages.join(', ')}</p>
+                                        <p className="font-semibold text-xs md:text-xs">Langues parlées</p>
+                                        <p className="text-muted-foreground text-sm md:text-sm">{profile.languages.join(', ')}</p>
                                     </div>
                                 </div>
                                 {profile.height && (
                                 <div className="flex items-start gap-2">
-                                    <Ruler className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
+                                    <Ruler className="h-4 w-4 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-[10px] md:text-xs">Taille</p>
-                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.height} cm</p>
+                                        <p className="font-semibold text-xs md:text-xs">Taille</p>
+                                        <p className="text-muted-foreground text-sm md:text-sm">{profile.height} cm</p>
                                     </div>
                                 </div>
                                 )}
                                 {profile.weight && (
                                 <div className="flex items-start gap-2">
-                                    <Scale className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
+                                    <Scale className="h-4 w-4 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-[10px] md:text-xs">Poids</p>
-                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.weight} kg</p>
+                                        <p className="font-semibold text-xs md:text-xs">Poids</p>
+                                        <p className="text-muted-foreground text-sm md:text-sm">{profile.weight} kg</p>
                                     </div>
                                 </div>
                                 )}
                                  <div className="flex items-start gap-2">
-                                    <Cigarette className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
+                                    <Cigarette className="h-4 w-4 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-[10px] md:text-xs">Tabac</p>
-                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.tobacco || 'Non spécifié'}</p>
+                                        <p className="font-semibold text-xs md:text-xs">Tabac</p>
+                                        <p className="text-muted-foreground text-sm md:text-sm">{profile.tobacco || 'Non spécifié'}</p>
                                     </div>
                                 </div>
                                  <div className="flex items-start gap-2">
-                                    <Wine className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
+                                    <Wine className="h-4 w-4 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-[10px] md:text-xs">Alcool</p>
-                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.alcohol || 'Non spécifié'}</p>
+                                        <p className="font-semibold text-xs md:text-xs">Alcool</p>
+                                        <p className="text-muted-foreground text-sm md:text-sm">{profile.alcohol || 'Non spécifié'}</p>
                                     </div>
                                 </div>
                                 {profile.cannabis && (
                                 <div className="flex items-start gap-2">
-                                    <CannabisIcon className="h-3 w-3 md:h-4 md:w-4 text-primary mt-0.5" />
+                                    <CannabisIcon className="h-4 w-4 md:h-4 md:w-4 text-primary mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-[10px] md:text-xs">Cannabis</p>
-                                        <p className="text-muted-foreground text-xs md:text-sm">{profile.cannabis}</p>
+                                        <p className="font-semibold text-xs md:text-xs">Cannabis</p>
+                                        <p className="text-muted-foreground text-sm md:text-sm">{profile.cannabis}</p>
                                     </div>
                                 </div>
                                 )}
