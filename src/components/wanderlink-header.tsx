@@ -14,7 +14,7 @@ import {
 const WanderlinkHeader = () => {
   return (
     <header className={cn(
-        "fixed top-0 left-0 z-20 w-full h-10 md:h-12 transition-all duration-300",
+        "fixed top-0 left-0 z-20 w-full h-12 md:h-14 transition-all duration-300",
         "bg-background/90 backdrop-blur-sm border-b"
       )}>
       <div className={cn(
@@ -22,7 +22,7 @@ const WanderlinkHeader = () => {
         "px-2 md:px-4"
         )}>
         <Link href="/" className="flex items-center gap-2 group">
-             <h1 className="text-xl md:text-2xl font-bold font-logo bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+             <h1 className="text-2xl md:text-3xl font-bold font-logo bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               WanderLink
             </h1>
         </Link>
@@ -31,7 +31,7 @@ const WanderlinkHeader = () => {
             <TooltipTrigger asChild>
               <Link href="/notifications" passHref>
                 <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-transparent hover:text-muted-foreground">
-                  <Bell className="h-5 w-5" />
+                  <Bell className="h-6 w-6" />
                   <span className="sr-only">Notifications</span>
                 </Button>
               </Link>
