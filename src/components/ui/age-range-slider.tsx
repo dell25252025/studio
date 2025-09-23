@@ -41,7 +41,7 @@ export function AgeRangeSlider({
         <div className="flex justify-between items-center">
             <h2 className="font-semibold">Tranche d'âge</h2>
             <span className="text-sm text-muted-foreground">
-                {localValue[0]} - {localValue[1]}{localValue[1] === max ? ' ans et +': ' ans'}
+                {localValue[0]} - {localValue[1]}{localValue[1] === max ? ' ans et +' : ' ans'}
             </span>
         </div>
       <Slider
@@ -52,6 +52,7 @@ export function AgeRangeSlider({
         max={max}
         step={step}
         minStepsBetweenThumbs={1}
+        className="h-6"
       />
     </div>
   );
