@@ -59,14 +59,14 @@ const BottomNav = () => {
           <Avatar className="h-full w-full border-2 border-background group-hover:border-secondary transition-colors">
             <AvatarImage src={profilePicture} alt="User profile picture" className="object-cover" />
             <AvatarFallback>
-              <User className="h-4 w-4" />
+              <User className="h-5 w-5" />
             </AvatarFallback>
           </Avatar>
         );
       }
-      return <User className="h-5 w-5 mx-auto" />;
+      return <User className="h-6 w-6 mx-auto" />;
     }
-    return <UserPlus className="h-5 w-5 mx-auto" />;
+    return <UserPlus className="h-6 w-6 mx-auto" />;
   };
   
   const profileHref = currentUser ? `/profile?id=${currentUser.uid}` : '/login';
@@ -79,11 +79,11 @@ const BottomNav = () => {
              <Link href={item.href} className="flex flex-col items-center justify-center h-full text-center">
                 <div
                     className={cn(
-                        'flex flex-col items-center justify-center rounded-full h-10 w-10 p-1 transition-colors duration-200',
+                        'flex flex-col items-center justify-center rounded-full h-12 w-12 p-1 transition-colors duration-200',
                         item.active ? 'text-primary' : 'text-muted-foreground'
                     )}
                 >
-                    <item.icon className="h-5 w-5" />
+                    <item.icon className="h-6 w-6" />
                 </div>
             </Link>
         </TooltipTrigger>
@@ -96,7 +96,7 @@ const BottomNav = () => {
   return (
     <TooltipProvider>
       <div className="fixed bottom-2 left-1/2 z-20 w-[calc(100%-1rem)] max-w-sm -translate-x-1/2 md:bottom-4">
-        <nav className="h-12 w-full rounded-full border bg-background/90 p-1 shadow-lg backdrop-blur-md">
+        <nav className="h-14 w-full rounded-full border bg-background/90 p-1 shadow-lg backdrop-blur-md">
           <div className="grid h-full grid-cols-5 items-center justify-around">
             
             <NavItem item={navItems[0]} />
@@ -108,12 +108,12 @@ const BottomNav = () => {
                 <TooltipTrigger asChild>
                   <Link href={profileHref} passHref className="group">
                     <div
-                      className={cn(`flex h-10 w-10 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90`,
+                      className={cn(`flex h-12 w-12 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-all duration-300 ease-in-out hover:bg-primary/90`,
                       isProfileActive ? 'bg-accent' : 'bg-primary',
                       !isUserLoggedIn ? 'animate-pulse-slow' : ''
                       )}
                     >
-                      <div className="h-8 w-8">
+                      <div className="h-10 w-10">
                           {getProfileContent()}
                       </div>
                     </div>
