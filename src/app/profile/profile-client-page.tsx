@@ -477,8 +477,8 @@ export default function ProfileClientPage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-secondary/30">
         <header className="fixed top-0 left-0 z-30 w-full p-2">
-          <Button onClick={() => router.back()} variant="ghost" size="icon" className="h-9 w-9 bg-black/30 text-white backdrop-blur-sm hover:bg-black/50 hover:text-white">
-            <ArrowLeft className="h-5 w-5" />
+          <Button onClick={() => router.back()} variant="ghost" size="icon" className="h-9 w-9 text-white hover:bg-black/20 hover:text-white">
+            <ArrowLeft className="h-5 w-5 [text-shadow:_0_1px_4px_rgb(0_0_0_/_50%)]" />
           </Button>
         </header>
         <main className={cn("flex-1", !isOwner && "pb-24")}>
