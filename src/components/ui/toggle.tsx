@@ -16,7 +16,7 @@ const toggleVariants = cva(
           'border-0 bg-transparent data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm',
       },
       size: {
-        default: 'h-9 px-4', // Adjusted for a better pill shape
+        default: 'h-9 px-4',
         sm: 'h-8 px-3',
         lg: 'h-11 px-5',
       },

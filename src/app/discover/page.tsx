@@ -100,7 +100,7 @@ export default function DiscoverPage() {
         router.push(`/?${params.toString()}`);
     };
 
-    const uniformSelectClass = "w-3/5 md:w-[45%] h-8 text-xs";
+    const uniformSelectClass = "w-3/5 md:w-[45%] h-9 text-sm";
 
     if (loading) {
          return (
@@ -116,51 +116,51 @@ export default function DiscoverPage() {
             <main className="pt-12 pb-24">
                 <div className="container mx-auto max-w-4xl px-4">
                      {/* Montre-moi Section */}
-                    <div className="space-y-1 mb-2">
+                    <div className="space-y-2 mb-4">
                       <div className="flex items-center justify-between">
-                        <h2 className="font-semibold text-xs">Montre-moi</h2>
+                        <h2 className="font-semibold text-sm">Montre-moi</h2>
                       </div>
                       <div className="flex justify-center">
                         <ToggleGroup
                           type="single"
                           value={showMe}
                           onValueChange={(value) => { if (value) setShowMe(value) }}
-                          className="w-auto justify-start bg-slate-100 dark:bg-slate-800 p-0.5 rounded-full"
+                          className="w-auto justify-start bg-slate-100 dark:bg-slate-800 p-1 rounded-full"
                           variant='outline'
-                          size="sm"
+                          size="default"
                         >
-                          <ToggleGroupItem value="Homme" aria-label="Montrer les hommes" className="text-xs h-7">Homme</ToggleGroupItem>
-                          <ToggleGroupItem value="Femme" aria-label="Montrer les femmes" className="text-xs h-7">Femme</ToggleGroupItem>
-                          <ToggleGroupItem value="Autre" aria-label="Montrer les autres personnes" className="text-xs h-7">Autre</ToggleGroupItem>
+                          <ToggleGroupItem value="Homme" aria-label="Montrer les hommes" className="text-sm h-9">Homme</ToggleGroupItem>
+                          <ToggleGroupItem value="Femme" aria-label="Montrer les femmes" className="text-sm h-9">Femme</ToggleGroupItem>
+                          <ToggleGroupItem value="Autre" aria-label="Montrer les autres personnes" className="text-sm h-9">Autre</ToggleGroupItem>
                         </ToggleGroup>
                       </div>
                     </div>
                 
-                    <div className="space-y-2">
+                    <div className="space-y-4">
                         {/* Age Section */}
-                        <div className="rounded-lg border bg-card p-1.5">
+                        <div className="rounded-lg border bg-card p-3">
                             <AgeRangeSlider
                                 value={ageRange}
                                 onValueChange={setAgeRange}
-                                className="text-xs"
+                                className="text-sm"
                             />
                         </div>
 
                         {/* Position Section */}
-                        <div className="space-y-0.5">
-                            <h2 className="font-semibold text-xs">Position</h2>
-                            <div className="rounded-lg border bg-card p-1 space-y-1">
+                        <div className="space-y-1">
+                            <h2 className="font-semibold text-sm">Position</h2>
+                            <div className="rounded-lg border bg-card p-2 space-y-2">
                                 <div className="flex items-center justify-between py-1 px-1">
-                                    <Label htmlFor="nearby" className="text-xs font-normal">Personnes à proximité</Label>
+                                    <Label htmlFor="nearby" className="text-sm font-normal">Personnes à proximité</Label>
                                     <Checkbox id="nearby" checked={nearby} onCheckedChange={handleNearbyChange} />
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-1 px-1 text-xs">
+                                <div className="flex items-center justify-between py-1 px-1 text-sm">
                                     <span className={cn('text-muted-foreground', nearby && 'text-slate-400 dark:text-slate-600')}>Pays</span>
                                     <CountrySelect className={uniformSelectClass} value={country} onValueChange={setCountry} disabled={nearby} />
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-1 px-1 text-xs">
+                                <div className="flex items-center justify-between py-1 px-1 text-sm">
                                     <span className="text-muted-foreground">Destination</span>
                                     <CountrySelect 
                                         className={uniformSelectClass} 
@@ -173,22 +173,22 @@ export default function DiscoverPage() {
                         </div>
 
                         {/* Dates de voyage Section */}
-                        <div className="space-y-1">
-                          <h2 className="font-semibold text-xs">Dates de voyage</h2>
-                            <div className="rounded-lg border bg-card p-1.5 space-y-1.5">
+                        <div className="space-y-2">
+                          <h2 className="font-semibold text-sm">Dates de voyage</h2>
+                            <div className="rounded-lg border bg-card p-3 space-y-3">
                                 <DateRangePicker date={date} onDateChange={setDate} disabled={flexibleDates} />
                                 <div className="flex items-center space-x-2">
                                     <Checkbox id="flexible-dates" checked={flexibleDates} onCheckedChange={handleFlexibleDatesChange} />
-                                    <Label htmlFor="flexible-dates" className="text-xs">Mes dates sont flexibles</Label>
+                                    <Label htmlFor="flexible-dates" className="text-sm">Mes dates sont flexibles</Label>
                                 </div>
                             </div>
                         </div>
 
                         {/* Voyage Section */}
-                        <div className="space-y-0.5">
-                            <h2 className="font-semibold text-xs">Voyage</h2>
-                            <div className="rounded-lg border bg-card p-1 space-y-1">
-                                <div className="flex items-center justify-between py-1 px-1 text-xs">
+                        <div className="space-y-1">
+                            <h2 className="font-semibold text-sm">Voyage</h2>
+                            <div className="rounded-lg border bg-card p-2 space-y-2">
+                                <div className="flex items-center justify-between py-1 px-1 text-sm">
                                     <span className="text-muted-foreground">Intention</span>
                                     <GenericSelect 
                                         className={uniformSelectClass}
@@ -199,7 +199,7 @@ export default function DiscoverPage() {
                                     />
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-1 px-1 text-xs">
+                                <div className="flex items-center justify-between py-1 px-1 text-sm">
                                     <span className="text-muted-foreground">Style de voyage</span>
                                     <GenericSelect 
                                         className={uniformSelectClass}
@@ -210,7 +210,7 @@ export default function DiscoverPage() {
                                     />
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between py-1 px-1 text-xs">
+                                <div className="flex items-center justify-between py-1 px-1 text-sm">
                                     <span className="text-muted-foreground">Activités</span>
                                     <GenericSelect 
                                         className={uniformSelectClass}
