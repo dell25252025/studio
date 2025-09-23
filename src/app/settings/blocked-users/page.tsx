@@ -65,27 +65,27 @@ export default function BlockedUsersPage() {
     <div className="min-h-screen bg-secondary/30">
       <SettingsHeader title="Utilisateurs bloqués" />
       <main className="px-2 py-4 md:px-4 pt-16">
-            <div className="mx-auto max-w-2xl space-y-2">
+            <div className="mx-auto max-w-2xl space-y-4">
                 <Card>
-                    <CardHeader className="p-3">
-                        <CardTitle className="flex items-center gap-2 text-sm"><UserX className="h-4 w-4" /> Gérer les utilisateurs bloqués</CardTitle>
-                        <CardDescription className="text-xs">Ils ne pourront plus vous contacter ni voir votre profil.</CardDescription>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><UserX className="h-5 w-5" /> Gérer les utilisateurs bloqués</CardTitle>
+                        <CardDescription className="text-sm">Ils ne pourront plus vous contacter ni voir votre profil.</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-3 pt-0">
+                    <CardContent className="p-4 pt-0">
                         {blockedUsers.length > 0 ? (
-                            <ul className="space-y-2">
+                            <ul className="space-y-3">
                                 {blockedUsers.map(user => (
-                                    <li key={user.id} className="flex items-center justify-between rounded-lg border p-2">
-                                        <div className="flex items-center gap-2">
-                                            <Avatar className="h-8 w-8">
+                                    <li key={user.id} className="flex items-center justify-between rounded-lg border p-3">
+                                        <div className="flex items-center gap-3">
+                                            <Avatar className="h-10 w-10">
                                                 <AvatarImage src={user.avatarUrl} alt={user.name} />
                                                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                                             </Avatar>
-                                            <span className="font-medium text-xs">{user.name}</span>
+                                            <span className="font-medium text-sm">{user.name}</span>
                                         </div>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="outline" size="sm">Débloquer</Button>
+                                                <Button variant="outline">Débloquer</Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
@@ -106,10 +106,10 @@ export default function BlockedUsersPage() {
                                 ))}
                             </ul>
                         ) : (
-                           <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 text-center">
-                                <ShieldCheck className="h-8 w-8 text-muted-foreground" />
-                                <h3 className="mt-2 font-semibold text-sm">Aucun utilisateur bloqué</h3>
-                                <p className="mt-1 text-xs text-muted-foreground">Votre liste est vide.</p>
+                           <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 text-center">
+                                <ShieldCheck className="h-10 w-10 text-muted-foreground" />
+                                <h3 className="mt-4 font-semibold text-base">Aucun utilisateur bloqué</h3>
+                                <p className="mt-1 text-sm text-muted-foreground">Votre liste est vide.</p>
                            </div>
                         )}
                     </CardContent>

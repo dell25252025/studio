@@ -50,92 +50,92 @@ export default function PrivacySettingsPage() {
     <div className="min-h-screen bg-secondary/30">
         <SettingsHeader title="Confidentialité" />
         <main className="px-2 py-4 md:px-4 pt-16">
-            <div className="mx-auto max-w-2xl space-y-2">
+            <div className="mx-auto max-w-2xl space-y-4">
                 <Card>
-                    <CardHeader className="p-3">
-                        <CardTitle className="flex items-center gap-2 text-sm"><Eye className="h-4 w-4"/> Visibilité</CardTitle>
-                        <CardDescription className="text-xs">Contrôlez qui peut voir votre profil.</CardDescription>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><Eye className="h-5 w-5"/> Visibilité</CardTitle>
+                        <CardDescription className="text-sm">Contrôlez qui peut voir votre profil.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-2 p-3 pt-0">
-                        <div className="flex items-center justify-between rounded-lg border p-2">
-                            <Label htmlFor="online-status" className="text-xs">Afficher mon statut "En ligne"</Label>
+                    <CardContent className="space-y-3 p-4 pt-0">
+                        <div className="flex items-center justify-between rounded-lg border p-4">
+                            <Label htmlFor="online-status" className="text-sm">Afficher mon statut "En ligne"</Label>
                             <Switch id="online-status" checked={showOnlineStatus} onCheckedChange={setShowOnlineStatus} />
                         </div>
-                         <div className="flex items-center justify-between rounded-lg border p-2">
-                            <Label htmlFor="recent-activity" className="text-xs">Afficher mon activité récente</Label>
+                         <div className="flex items-center justify-between rounded-lg border p-4">
+                            <Label htmlFor="recent-activity" className="text-sm">Afficher mon activité récente</Label>
                             <Switch id="recent-activity" checked={showRecentActivity} onCheckedChange={setShowRecentActivity} />
                         </div>
                     </CardContent>
                 </Card>
                 
                 <Card>
-                    <CardHeader className="p-3">
-                        <CardTitle className="flex items-center gap-2 text-sm"><ImageIcon className="h-4 w-4"/> Qui peut voir mes photos ?</CardTitle>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><ImageIcon className="h-5 w-5"/> Qui peut voir mes photos ?</CardTitle>
                     </CardHeader>
-                    <CardContent className="p-3 pt-0">
-                        <RadioGroup value={photoVisibility} onValueChange={setPhotoVisibility} className="space-y-1.5">
-                           <div className="flex items-center space-x-2">
+                    <CardContent className="p-4 pt-0">
+                        <RadioGroup value={photoVisibility} onValueChange={setPhotoVisibility} className="space-y-2">
+                           <div className="flex items-center space-x-3">
                                <RadioGroupItem value="all" id="p-all" />
-                               <Label htmlFor="p-all" className="text-xs">Tout le monde</Label>
+                               <Label htmlFor="p-all" className="text-sm font-normal">Tout le monde</Label>
                            </div>
-                           <div className="flex items-center space-x-2">
+                           <div className="flex items-center space-x-3">
                                <RadioGroupItem value="friends" id="p-friends" />
-                               <Label htmlFor="p-friends" className="text-xs">Seulement mes amis</Label>
+                               <Label htmlFor="p-friends" className="text-sm font-normal">Seulement mes amis</Label>
                            </div>
-                           <div className="flex items-center space-x-2">
+                           <div className="flex items-center space-x-3">
                                <RadioGroupItem value="none" id="p-none" />
-                               <Label htmlFor="p-none" className="text-xs">Personne</Label>
+                               <Label htmlFor="p-none" className="text-sm font-normal">Personne</Label>
                            </div>
                         </RadioGroup>
                     </CardContent>
                 </Card>
 
                 <Card>
-                    <CardHeader className="p-3">
-                        <CardTitle className="flex items-center gap-2 text-sm"><MessageSquare className="h-4 w-4"/> Qui peut m'envoyer un message ?</CardTitle>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><MessageSquare className="h-5 w-5"/> Qui peut m'envoyer un message ?</CardTitle>
                     </CardHeader>
-                    <CardContent className="p-3 pt-0">
-                        <RadioGroup value={messagingPolicy} onValueChange={setMessagingPolicy} className="space-y-1.5">
-                           <div className="flex items-center space-x-2">
+                    <CardContent className="p-4 pt-0">
+                        <RadioGroup value={messagingPolicy} onValueChange={setMessagingPolicy} className="space-y-2">
+                           <div className="flex items-center space-x-3">
                                <RadioGroupItem value="all" id="m-all" />
-                               <Label htmlFor="m-all" className="text-xs">Tout le monde</Label>
+                               <Label htmlFor="m-all" className="text-sm font-normal">Tout le monde</Label>
                            </div>
-                           <div className="flex items-center space-x-2">
+                           <div className="flex items-center space-x-3">
                                <RadioGroupItem value="friends" id="m-friends" />
-                               <Label htmlFor="m-friends" className="text-xs">Seulement mes amis</Label>
+                               <Label htmlFor="m-friends" className="text-sm font-normal">Seulement mes amis</Label>
                            </div>
-                           <div className="flex items-center space-x-2">
+                           <div className="flex items-center space-x-3">
                                <RadioGroupItem value="none" id="m-none" />
-                               <Label htmlFor="m-none" className="text-xs">Personne</Label>
+                               <Label htmlFor="m-none" className="text-sm font-normal">Personne</Label>
                            </div>
                         </RadioGroup>
                     </CardContent>
                 </Card>
                 
                 <Card>
-                    <CardHeader className="p-3">
-                        <CardTitle className="flex items-center gap-2 text-sm"><UserPlus className="h-4 w-4"/> Qui peut m'envoyer une demande d'ami ?</CardTitle>
+                    <CardHeader className="p-4">
+                        <CardTitle className="flex items-center gap-2 text-base"><UserPlus className="h-5 w-5"/> Qui peut m'envoyer une demande d'ami ?</CardTitle>
                     </CardHeader>
-                    <CardContent className="p-3 pt-0">
-                        <RadioGroup value={friendRequestPolicy} onValueChange={setFriendRequestPolicy} className="space-y-1.5">
-                           <div className="flex items-center space-x-2">
+                    <CardContent className="p-4 pt-0">
+                        <RadioGroup value={friendRequestPolicy} onValueChange={setFriendRequestPolicy} className="space-y-2">
+                           <div className="flex items-center space-x-3">
                                <RadioGroupItem value="all" id="fr-all" />
-                               <Label htmlFor="fr-all" className="text-xs">Tout le monde</Label>
+                               <Label htmlFor="fr-all" className="text-sm font-normal">Tout le monde</Label>
                            </div>
-                           <div className="flex items-center space-x-2">
+                           <div className="flex items-center space-x-3">
                                <RadioGroupItem value="friends" id="fr-friends" />
-                               <Label htmlFor="fr-friends" className="text-xs">Amis de mes amis</Label>
+                               <Label htmlFor="fr-friends" className="text-sm font-normal">Amis de mes amis</Label>
                            </div>
-                           <div className="flex items-center space-x-2">
+                           <div className="flex items-center space-x-3">
                                <RadioGroupItem value="none" id="fr-none" />
-                               <Label htmlFor="fr-none" className="text-xs">Personne</Label>
+                               <Label htmlFor="fr-none" className="text-sm font-normal">Personne</Label>
                            </div>
                         </RadioGroup>
                     </CardContent>
                 </Card>
 
                 <div className="flex justify-end pt-2">
-                    <Button onClick={handleSave} disabled={isSubmitting} size="sm">
+                    <Button onClick={handleSave} disabled={isSubmitting} size="default">
                          {isSubmitting ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
