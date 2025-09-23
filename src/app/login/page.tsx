@@ -57,6 +57,8 @@ export default function AuthPage() {
           loop
           muted
           playsInline
+          controls={false}
+          disablePictureInPicture={true}
           className="h-full w-full object-cover"
         >
           <source
