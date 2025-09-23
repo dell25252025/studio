@@ -48,29 +48,29 @@ export default function LanguagePage() {
     <div className="min-h-screen bg-secondary/30">
       <SettingsHeader title={dict.languagePage.headerTitle} />
       <main className="px-2 py-4 md:px-4 pt-16">
-        <div className="mx-auto max-w-2xl space-y-2">
+        <div className="mx-auto max-w-2xl space-y-4">
           <Card>
-            <CardHeader className="p-3">
-              <CardTitle className="flex items-center gap-2 text-sm">
-                <Languages className="h-4 w-4" /> {dict.languagePage.cardTitle}
+            <CardHeader className="p-4">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Languages className="h-5 w-5" /> {dict.languagePage.cardTitle}
               </CardTitle>
-              <CardDescription className="text-xs">{dict.languagePage.cardDescription}</CardDescription>
+              <CardDescription className="text-sm">{dict.languagePage.cardDescription}</CardDescription>
             </CardHeader>
-            <CardContent className="p-3 pt-0">
-              <ul className="space-y-2">
+            <CardContent className="p-4 pt-0">
+              <ul className="space-y-3">
                 {availableLanguages.map((lang) => (
                   <li key={lang.code}>
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-full justify-start p-2 h-auto text-sm",
-                        selectedLanguage === lang.code && "border-primary ring-1 ring-primary"
+                        "w-full justify-start p-4 h-auto text-base",
+                        selectedLanguage === lang.code && "border-primary ring-2 ring-primary"
                       )}
                       onClick={() => handleLanguageChange(lang.code)}
                     >
-                      <span className="mr-2 text-lg">{lang.flag}</span>
-                      <span className="flex-1 text-left text-xs">{lang.name}</span>
-                      {selectedLanguage === lang.code && <Check className="h-4 w-4 text-primary" />}
+                      <span className="mr-3 text-2xl">{lang.flag}</span>
+                      <span className="flex-1 text-left text-sm">{lang.name}</span>
+                      {selectedLanguage === lang.code && <Check className="h-5 w-5 text-primary" />}
                     </Button>
                   </li>
                 ))}
