@@ -82,12 +82,12 @@ export default function AuthPage() {
 
             <div className="flex flex-col h-screen p-4 md:items-center md:justify-center md:h-auto">
                 <div className="text-center md:hidden pt-2 flex-shrink-0">
-                    <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l\'accueil de l\'authentification">
-                        <h1 className="text-2xl font-bold font-logo text-white">
+                    <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
+                        <h1 className="text-3xl font-bold font-logo text-white">
                             WanderLink
                         </h1>
                     </button>
-                    <p className={`text-sm text-white px-1 leading-tight text-center md:hidden mt-1 w-full mx-auto`}>
+                    <p className={`text-base text-white px-1 leading-tight text-center md:hidden mt-1 w-full mx-auto`}>
                         Trouvez des compagnons de voyage qui partagent votre passion
                     </p>
                 </div>
