@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
+import BackButtonHandler from '@/components/back-button-handler';
 
 export const metadata: Metadata = {
   title: 'WanderLink',
@@ -35,6 +36,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster />
+          <BackButtonHandler />
         </ThemeProvider>
       </body>
     </html>
