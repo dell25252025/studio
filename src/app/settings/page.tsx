@@ -182,10 +182,13 @@ const SettingsPage = () => {
             );
             
             if (item.href) {
+              const isExternal = item.href.startsWith('mailto:');
               return (
                 <li key={item.label}>
-                  <Link href={item.href} passHref>
-                    {content}
+                  <Link href={item.href} passHref legacyBehavior={isExternal}>
+                    <a target={isExternal ? '_blank' : '_self'} rel={isExternal ? 'noopener noreferrer' : undefined}>
+                      {content}
+                    </a>
                   </Link>
                 </li>
               );
