@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { App, type BackButtonListenerEvent } from '@capacitor/app';
+import { App, type BackButtonListenerEvent, type PluginListenerHandle } from '@capacitor/app';
 import { usePathname, useRouter } from 'next/navigation';
 
 const BackButtonHandler = () => {
@@ -10,6 +10,8 @@ const BackButtonHandler = () => {
   const pathname = usePathname();
 
   useEffect(() => {
+    let listener: PluginListenerHandle | null = null;
+
     const handleBackButton = (event: BackButtonListenerEvent) => {
       // Les pages qui devraient fermer l'application directement
       const exitPages = ['/', '/login'];
@@ -23,10 +25,14 @@ const BackButtonHandler = () => {
       }
     };
 
-    const listener = App.addListener('backButton', handleBackButton);
+    // On s'assure que le code ne s'exécute que sur le client
+    if (typeof window !== 'undefined') {
+      listener = App.addListener('backButton', handleBackButton);
+    }
 
     return () => {
-      listener.remove();
+      // On utilise la méthode remove() de l'écouteur retourné
+      listener?.remove();
     };
   }, [router, pathname]);
 
