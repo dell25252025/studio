@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'WanderLink',
   webDir: 'out',
   server: {
-    url: 'http://192.168.1.3:3000', // Remplacez par votre adresse IP locale
+    url: 'http://192.168.1.3:3000', // REMPLACEZ CETTE IP PAR LA VÔTRE
     cleartext: true
   }
 };
