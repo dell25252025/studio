@@ -24,6 +24,9 @@ export const formSchema = z.object({
   activities: z.string().optional(),
   intention: z.enum(['Sponsor', 'Sponsorisé', '50/50', 'Groupe'], { required_error: "L'intention de voyage est obligatoire."}),
   financialArrangement: z.enum(['50/50', 'Sponsor', 'Sponsorisé', 'Groupe']).optional(),
+  // Premium fields
+  isPremium: z.boolean().optional().default(false),
+  subscriptionEndDate: z.date().nullable().optional(),
 });
 
 export type FormData = z.infer<typeof formSchema>;
@@ -45,4 +48,8 @@ export type UserProfile = {
   interests?: string[];
   verified: boolean;
   image: string;
+  isPremium?: boolean;
+  subscriptionEndDate?: Date | null;
 };
+
+    

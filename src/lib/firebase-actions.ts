@@ -47,6 +47,8 @@ export async function createOrUpdateGoogleUserProfile(userId: string, profileDat
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 friends: [],
+                isPremium: false,
+                subscriptionEndDate: null,
             };
             await setDoc(userRef, newProfileData);
             return { success: true, id: userId, isNewUser: true };
@@ -80,6 +82,8 @@ export async function createUserProfile(userId: string, profileData: any) {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             friends: [],
+            isPremium: false,
+            subscriptionEndDate: null,
         };
 
         if (finalProfileData.dates?.from) {
@@ -206,6 +210,9 @@ export async function getUserProfile(id: string): Promise<DocumentData | null> {
           data.dates.to = data.dates.to.toDate().toISOString();
         }
       }
+      if (data.subscriptionEndDate && typeof data.subscriptionEndDate.toDate === 'function') {
+        data.subscriptionEndDate = data.subscriptionEndDate.toDate().toISOString();
+      }
       return { id: docSnap.id, ...data };
     } else {
       console.log("No such document!");
@@ -231,6 +238,9 @@ export async function getAllUsers() {
         if (data.dates.to && typeof data.dates.to.toDate === 'function') {
           data.dates.to = data.dates.to.toDate().toISOString();
         }
+      }
+      if (data.subscriptionEndDate && typeof data.subscriptionEndDate.toDate === 'function') {
+        data.subscriptionEndDate = data.subscriptionEndDate.toDate().toISOString();
       }
       return { id: doc.id, ...data };
     });
@@ -339,3 +349,5 @@ export async function getFriends(userId: string) {
     throw new Error("Failed to retrieve friends list.");
   }
 }
+
+    
