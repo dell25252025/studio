@@ -59,6 +59,7 @@ export default function AuthPage() {
           playsInline
           controls={false}
           disablePictureInPicture={true}
+          poster="https://ik.imagekit.io/fip3ktm2p/tr:w-1080,h-1920,bl-6/video_app_poster.jpg?updatedAt=1758004071374"
           className="h-full w-full object-cover"
         >
           <source
