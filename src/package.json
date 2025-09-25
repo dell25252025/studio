@@ -1,20 +1,24 @@
+
 {
-  "name": "nextn",
+  "name": "wanderlink",
   "version": "1.4.9",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H 0.0.0.0",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
     "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "android:remove": "npx cap remove android",
+    "android:add": "npx cap add android",
     "android:build": "npx next build && npx cap sync android",
     "android:open": "npx cap open android"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.1",
+    "@capacitor/app": "^6.0.0",
     "@capacitor/core": "^6.1.1",
     "@genkit-ai/googleai": "^1.14.1",
     "@genkit-ai/next": "^1.14.1",

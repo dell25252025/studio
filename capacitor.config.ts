@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.wanderlink.app.v3',
+  appId: 'com.wanderlink.app',
   appName: 'WanderLink',
   webDir: 'out',
   server: {
