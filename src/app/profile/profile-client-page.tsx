@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture, addFriend, removeFriend } from '@/lib/firebase-actions';
 import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send, UserPlus, Heart, UserCheck, UserX } from 'lucide-react';
+import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send, UserPlus, Heart, UserCheck, UserX, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -536,20 +536,11 @@ export default function ProfileClientPage() {
                     </div>
                 )}
                  <div className="px-2 py-2 md:px-4 md:pt-4">
-                     <div className="flex justify-between items-center">
+                     <div className="flex justify-between items-start">
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                                 <h1 className="text-2xl md:text-2xl font-bold font-headline truncate">{profile.firstName}, {profile.age}</h1>
-                                {isOwner && (
-                                    <Link href={`/profile/edit?id=${profileId}`} passHref>
-                                        <Button variant="ghost" size="icon" className="h-7 w-7 md:h-9 md:w-9" asChild>
-                                            <div>
-                                                <Edit className="h-4 w-4 md:h-5 md:w-5" />
-                                                <span className="sr-only">Modifier le profil</span>
-                                            </div>
-                                        </Button>
-                                    </Link>
-                                )}
+                                {profile.isVerified && <CheckCircle className="h-5 w-5 text-blue-500 shrink-0" />}
                             </div>
                             <div className="flex items-center gap-2 mt-1 text-sm md:text-sm text-muted-foreground">
                                 <MapPin className="h-4 w-4 md:h-4 md:w-4" />
@@ -611,6 +602,22 @@ export default function ProfileClientPage() {
                             disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
                         />
                     </div>
+                     {isOwner && (
+                        <div className="flex flex-wrap gap-2 mt-3">
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href={`/profile/edit?id=${profileId}`}>
+                                    <Edit className="mr-2 h-4 w-4" /> Modifier le profil
+                                </Link>
+                            </Button>
+                             {!profile.isVerified && (
+                                <Button variant="outline" size="sm" asChild>
+                                     <Link href="/profile/verify">
+                                        Se faire vérifier ✔️
+                                    </Link>
+                                </Button>
+                            )}
+                        </div>
+                    )}
                     {intention && (
                         <div className="mt-2">
                             <Badge variant="default" className={cn("border-none text-white text-sm px-2.5 py-1 h-auto", intention.color)}>

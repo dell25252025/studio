@@ -1,0 +1,16 @@
+{
+  "heroBanner": {
+    "url": "https://picsum.photos/seed/hero/1920/1080",
+    "alt": "Travelers enjoying a scenic view",
+    "hint": "travelers landscape"
+  },
+  "loginVideos": {
+    "desktopVideoUrl": "https://ik.imagekit.io/fip3ktm2p/545556555_24610768548534823_5832326088093088554_n.mp4?updatedAt=1757753813634",
+    "mobileVideoUrl": "https://ik.imagekit.io/fip3ktm2p/video%20app2.mp4?updatedAt=1757957531301"
+  },
+  "verificationPose": {
+    "url": "https://picsum.photos/seed/verify1/600/600",
+    "alt": "Exemple de pose pour la vérification de profil",
+    "hint": "person peace"
+  }
+}
