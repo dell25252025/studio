@@ -49,6 +49,7 @@ export async function createOrUpdateGoogleUserProfile(userId: string, profileDat
                 friends: [],
                 isPremium: false,
                 subscriptionEndDate: null,
+                isVerified: false,
             };
             await setDoc(userRef, newProfileData);
             return { success: true, id: userId, isNewUser: true };
@@ -84,6 +85,7 @@ export async function createUserProfile(userId: string, profileData: any) {
             friends: [],
             isPremium: false,
             subscriptionEndDate: null,
+            isVerified: false,
         };
 
         if (finalProfileData.dates?.from) {

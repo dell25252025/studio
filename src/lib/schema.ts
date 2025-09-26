@@ -27,6 +27,8 @@ export const formSchema = z.object({
   // Premium fields
   isPremium: z.boolean().optional().default(false),
   subscriptionEndDate: z.date().nullable().optional(),
+  // Verification field
+  isVerified: z.boolean().optional().default(false),
 });
 
 export type FormData = z.infer<typeof formSchema>;
@@ -50,6 +52,7 @@ export type UserProfile = {
   image: string;
   isPremium?: boolean;
   subscriptionEndDate?: Date | null;
+  isVerified?: boolean;
 };
 
     
