@@ -12,12 +12,14 @@ import placeholderImages from '@/lib/placeholder-images.json';
 import { useToast } from '@/hooks/use-toast';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
+import { submitVerificationRequest } from '@/lib/firebase-actions';
+import { auth } from '@/lib/firebase';
 
 export default function VerifyProfilePage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selfie, setSelfie] = useState<string | null>(null);
+  const [selfie, setSelfie] = useState<string | null>(null); // Will store dataUrl
 
   const takePicture = async () => {
     if (!Capacitor.isPluginAvailable('Camera')) {
@@ -33,20 +35,13 @@ export default function VerifyProfilePage() {
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: false,
-        resultType: CameraResultType.Uri,
+        resultType: CameraResultType.DataUrl, // Important: we get the base64 string directly
         source: CameraSource.Camera,
         direction: 'front',
       });
 
-      // image.webPath will contain a path that can be set as an image src.
-      // You can access the original file using image.path, which can be
-      // passed to the Filesystem API to read the raw data of the image,
-      // if needed (like sending to a server).
-      if (image.webPath) {
-        setSelfie(image.webPath);
-        // Here you would typically upload the image to your server
-        // and create a verification request.
-        console.log('Selfie taken:', image.webPath);
+      if (image.dataUrl) {
+        setSelfie(image.dataUrl);
         toast({
             title: 'Selfie capturé !',
             description: "Maintenant, soumettez votre demande de vérification.",
@@ -63,17 +58,40 @@ export default function VerifyProfilePage() {
   };
 
   const handleSubmitVerification = async () => {
+    if (!selfie) {
+        toast({ variant: 'destructive', title: 'Aucun selfie pris', description: 'Veuillez prendre une photo avant de soumettre.' });
+        return;
+    }
+    const user = auth.currentUser;
+    if (!user) {
+        toast({ variant: 'destructive', title: 'Utilisateur non connecté', description: 'Veuillez vous reconnecter.' });
+        return;
+    }
+
     setIsSubmitting(true);
-    // Simulate API call to submit the verification request
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
+    
+    try {
+        const result = await submitVerificationRequest(user.uid, selfie);
+        if (!result.success) {
+            throw new Error(result.error || 'Une erreur est survenue lors de la soumission.');
+        }
 
-    toast({
-      title: 'Demande de vérification envoyée !',
-      description: "Nous examinerons votre demande dans les 24 heures.",
-    });
+        toast({
+          title: 'Votre demande a bien été envoyée !',
+          description: "Nous examinerons votre demande dans les 24 heures.",
+        });
 
-    router.push('/profile'); // Redirect back to profile
+        router.push(`/profile?id=${user.uid}`);
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Une erreur inconnue est survenue.';
+        toast({
+            variant: 'destructive',
+            title: 'Erreur de soumission',
+            description: errorMessage,
+        });
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
   return (
@@ -102,12 +120,18 @@ export default function VerifyProfilePage() {
 
             {selfie ? (
                 <>
-                    <div className="relative w-48 h-48 mx-auto rounded-lg overflow-hidden border-2 border-green-500">
+                    <div className="relative w-48 h-48 mx-auto rounded-lg overflow-hidden border-2 border-primary">
                         <Image src={selfie} alt="Votre selfie" fill className="object-cover" />
                     </div>
                      <Button onClick={handleSubmitVerification} size="lg" className="w-full" disabled={isSubmitting}>
-                        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Soumettre ma vérification
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Envoi en cours...
+                            </>
+                        ) : (
+                            "Soumettre ma vérification"
+                        )}
                     </Button>
                     <Button onClick={() => setSelfie(null)} variant="outline" size="sm" disabled={isSubmitting}>
                         Reprendre la photo

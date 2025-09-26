@@ -281,6 +281,35 @@ export async function submitAbuseReport(
   }
 }
 
+export async function submitVerificationRequest(userId: string, selfieDataUrl: string) {
+    if (!userId || !selfieDataUrl) {
+        return { success: false, error: 'User ID and selfie are required.' };
+    }
+
+    try {
+        // 1. Upload selfie to Firebase Storage
+        const storageRef = ref(storage, `verification_selfies/${userId}.jpg`);
+        const uploadResult = await uploadString(storageRef, selfieDataUrl, 'data_url');
+        const selfieUrl = await getDownloadURL(uploadResult.ref);
+
+        // 2. Create a verification request document in Firestore
+        const verificationRef = doc(db, 'verificationRequests', userId);
+        await setDoc(verificationRef, {
+            userId: userId,
+            selfieUrl: selfieUrl,
+            status: 'pending', // pending, approved, rejected
+            requestedAt: serverTimestamp(),
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error submitting verification request:", error);
+        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
+        return { success: false, error: errorMessage };
+    }
+}
+
+
 export async function addFriend(currentUserId: string, friendId: string) {
   if (!currentUserId || !friendId) {
     return { success: false, error: 'User IDs are required.' };
