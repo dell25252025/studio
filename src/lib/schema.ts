@@ -52,7 +52,7 @@ export type UserProfile = {
   image: string;
   isPremium?: boolean;
   subscriptionEndDate?: Date | null;
-  isVerified?: boolean;
+  isVerified: boolean;
 };
 
     

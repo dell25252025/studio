@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import type { UserProfile } from '@/lib/schema';
 import { Card } from '@/components/ui/card';
-import { BriefcaseBusiness, Coins, Users } from 'lucide-react';
+import { BriefcaseBusiness, Coins, Users, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -46,7 +46,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
             </div>
           )}
           <div>
-            <h3 className="font-bold text-[10px] drop-shadow-md">{profile.name}, {profile.age}</h3>
+            <h3 className="font-bold text-[10px] drop-shadow-md flex items-center gap-1">
+              {profile.name}, {profile.age}
+              {profile.isVerified && <CheckCircle className="h-3 w-3 text-blue-400" fill="white" />}
+            </h3>
           </div>
         </div>
       </Card>

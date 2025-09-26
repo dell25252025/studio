@@ -2,7 +2,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { User, Heart, Eye, UserPlus, Sparkles } from 'lucide-react';
+import { User, Heart, Eye, UserPlus, Sparkles, CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SettingsHeader } from '@/components/settings/settings-header';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,7 +14,7 @@ const notifications = [
   {
     id: 1,
     type: 'new_match',
-    user: { id: 'user123', name: 'Sophia', avatarUrl: 'https://picsum.photos/seed/user1/200' },
+    user: { id: 'user123', name: 'Sophia', avatarUrl: 'https://picsum.photos/seed/user1/200', isVerified: true },
     text: 'Vous avez un nouveau match !',
     timestamp: 'il y a 5 minutes',
     read: false,
@@ -22,7 +22,7 @@ const notifications = [
   {
     id: 5,
     type: 'friend_request',
-    user: { id: 'user101', name: 'Liam', avatarUrl: 'https://picsum.photos/seed/user4/200' },
+    user: { id: 'user101', name: 'Liam', avatarUrl: 'https://picsum.photos/seed/user4/200', isVerified: false },
     text: 'vous a envoyé une demande d\'ami.',
     timestamp: 'il y a 25 minutes',
     read: false,
@@ -30,7 +30,7 @@ const notifications = [
   {
     id: 2,
     type: 'profile_visit',
-    user: { id: 'user456', name: 'James', avatarUrl: 'https://picsum.photos/seed/user2/200' },
+    user: { id: 'user456', name: 'James', avatarUrl: 'https://picsum.photos/seed/user2/200', isVerified: false },
     text: 'a visité votre profil.',
     timestamp: 'il y a 1 heure',
     read: false,
@@ -38,7 +38,7 @@ const notifications = [
    {
     id: 6,
     type: 'photo_like',
-    user: { id: 'user789', name: 'Isabella', avatarUrl: 'https://picsum.photos/seed/user3/200' },
+    user: { id: 'user789', name: 'Isabella', avatarUrl: 'https://picsum.photos/seed/user3/200', isVerified: true },
     text: 'a aimé votre photo.',
     timestamp: 'il y a 2 heures',
     read: true,
@@ -46,7 +46,7 @@ const notifications = [
   {
     id: 3,
     type: 'profile_visit',
-    user: { id: 'user789', name: 'Isabella', avatarUrl: 'https://picsum.photos/seed/user3/200' },
+    user: { id: 'user789', name: 'Isabella', avatarUrl: 'https://picsum.photos/seed/user3/200', isVerified: true },
     text: 'a visité votre profil.',
     timestamp: 'il y a 3 heures',
     read: true,
@@ -54,7 +54,7 @@ const notifications = [
   {
     id: 4,
     type: 'new_match',
-    user: { id: 'user101', name: 'Liam', avatarUrl: 'https://picsum.photos/seed/user4/200' },
+    user: { id: 'user101', name: 'Liam', avatarUrl: 'https://picsum.photos/seed/user4/200', isVerified: false },
     text: 'Vous avez un nouveau match !',
     timestamp: 'Hier',
     read: true,
@@ -104,7 +104,9 @@ export default function NotificationsPage() {
                                             </div>
                                             <div className="flex-1 text-sm">
                                                 <p className="text-foreground">
-                                                    <span className="font-semibold">{notif.user.name}</span> {notif.text}
+                                                    <span className="font-semibold">{notif.user.name}</span>
+                                                    {notif.user.isVerified && <CheckCircle className="inline-block h-3.5 w-3.5 text-blue-500 ml-1" />}
+                                                    {' '}{notif.text}
                                                 </p>
                                                 <p className="text-xs text-muted-foreground mt-0.5">{notif.timestamp}</p>
                                             </div>

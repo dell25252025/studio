@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, ArrowLeft, MoreVertical, Trash2 } from 'lucide-react';
+import { Search, ArrowLeft, MoreVertical, Trash2, CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
@@ -22,6 +22,7 @@ const initialConversations = [
     lastMessage: 'Salut ! Ton profil est super intéressant.',
     timestamp: '10:42',
     unreadCount: 2,
+    isVerified: true,
   },
   {
     id: 'user456',
@@ -30,6 +31,7 @@ const initialConversations = [
     lastMessage: 'Merci beaucoup ! Le tien aussi. Prêt pour l\'aventure ?',
     timestamp: 'Hier',
     unreadCount: 0,
+    isVerified: false,
   },
   {
     id: 'user789',
@@ -38,6 +40,7 @@ const initialConversations = [
     lastMessage: 'J\'ai vu qu\'on aimait tous les deux l\'Italie !',
     timestamp: 'Hier',
     unreadCount: 1,
+    isVerified: true,
   },
 ];
 
@@ -136,7 +139,10 @@ export default function InboxPage() {
                                 </Avatar>
                                 <div className="flex-1 truncate">
                                 <div className="flex items-baseline justify-between">
-                                    <p className="font-semibold truncate text-xs">{convo.name}</p>
+                                    <p className="font-semibold truncate text-xs flex items-center gap-1">
+                                      {convo.name}
+                                      {convo.isVerified && <CheckCircle className="h-3 w-3 text-blue-500" />}
+                                    </p>
                                     <p className="text-[10px] text-muted-foreground">{convo.timestamp}</p>
                                 </div>
                                 <div className="flex items-center justify-between">

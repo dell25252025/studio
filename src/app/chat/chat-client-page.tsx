@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2, Plus, Play, Pause } from 'lucide-react';
+import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2, Plus, Play, Pause, CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getUserProfile, submitAbuseReport } from '@/lib/firebase-actions';
@@ -398,6 +398,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   
   const otherUserName = otherUser?.firstName || 'Utilisateur';
   const otherUserImage = otherUser?.profilePictures?.[0] || `https://picsum.photos/seed/${otherUserId}/200`;
+  const otherUserIsVerified = otherUser?.isVerified ?? false;
 
   const showSendButton = newMessage.trim().length > 0;
 
@@ -412,7 +413,10 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
             <AvatarImage src={otherUserImage} alt={otherUserName} />
             <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
           </Avatar>
-          <h1 className="flex-1 truncate text-sm font-semibold">{otherUserName}</h1>
+          <div className="flex-1 truncate flex items-center gap-1.5">
+            <h1 className="truncate text-sm font-semibold">{otherUserName}</h1>
+            {otherUserIsVerified && <CheckCircle className="h-3.5 w-3.5 text-blue-500 shrink-0" />}
+          </div>
         </Link>
         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vocaux')}>
           <Phone className="h-4 w-4" />

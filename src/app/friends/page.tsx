@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, UserPlus, Loader2 } from 'lucide-react';
+import { Search, UserPlus, Loader2, CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
@@ -85,7 +85,10 @@ export default function FriendsPage() {
                                     <AvatarFallback>{friend.firstName?.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                     <div className="flex-1 truncate">
-                                        <p className="font-semibold truncate text-xs">{friend.firstName}</p>
+                                        <p className="font-semibold truncate text-xs flex items-center gap-1">
+                                          {friend.firstName}
+                                          {friend.isVerified && <CheckCircle className="h-3 w-3 text-blue-500" />}
+                                        </p>
                                     </div>
                                 </Link>
                                 <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => router.push(`/chat?id=${friend.id}`)}>

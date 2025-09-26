@@ -120,7 +120,8 @@ function DiscoverPage({ user }: { user: User }) {
         dreamDestinations: [p.destination] || ['Toutes'],
         languagesSpoken: p.languages || [],
         travelIntention: p.intention || '50/50',
-        verified: true,
+        verified: p.isVerified ?? false,
+        isVerified: p.isVerified ?? false,
         image: p.profilePictures?.[0] || 'https://picsum.photos/800/1200'
     }));
   }
