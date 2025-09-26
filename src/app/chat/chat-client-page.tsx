@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -10,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { getUserProfile, submitAbuseReport } from '@/lib/firebase-actions';
 import type { DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
@@ -25,6 +24,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Progress } from '@/components/ui/progress';
 import { ReportAbuseDialog } from '@/components/report-abuse-dialog';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { collection, addDoc } from 'firebase/firestore';
 
 
 interface Message {
@@ -396,9 +396,19 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     setIsReportModalOpen(true);
   };
 
-  const handleStartCall = () => {
-    if (!otherUserId) return;
-    router.push(`/call?id=${otherUserId}`);
+  const handleStartCall = async () => {
+    if (!otherUserId || !currentUser) return;
+     try {
+      const callDocRef = await addDoc(collection(db, 'calls'), {
+        callerId: currentUser.uid,
+        calleeId: otherUserId,
+        status: 'ringing',
+      });
+      router.push(`/call?callId=${callDocRef.id}`);
+    } catch (error) {
+      console.error("Error creating call:", error);
+      toast({ variant: 'destructive', title: 'Erreur d\'appel', description: 'Impossible de démarrer l\'appel.' });
+    }
   };
 
   const otherUserName = otherUser?.firstName || 'Utilisateur';

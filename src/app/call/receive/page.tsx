@@ -8,10 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getUserProfile } from '@/lib/firebase-actions';
 import { auth, db } from '@/lib/firebase';
-import { doc, getDoc, setDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
-// Configuration du serveur STUN de Google (public et gratuit)
 const servers = {
   iceServers: [
     {
@@ -21,18 +20,17 @@ const servers = {
   iceCandidatePoolSize: 10,
 };
 
-
-function CallUI() {
+function ReceiveCallUI() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
   
   const [otherUser, setOtherUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
-  const [callStatus, setCallStatus] = useState('calling'); // calling, connected, ended, declined
+  const [callStatus, setCallStatus] = useState('connecting'); // connecting, connected, ended
   const [isMuted, setIsMuted] = useState(false);
   const [isDeafened, setIsDeafened] = useState(false);
-  const [isVideoOn, setIsVideoOn] = useState(false); // Gardé pour l'UI, non fonctionnel pour l'audio
+  const [isVideoOn, setIsVideoOn] = useState(false);
 
   const pc = useRef<RTCPeerConnection | null>(null);
   const localStream = useRef<MediaStream | null>(null);
@@ -60,16 +58,14 @@ function CallUI() {
       }
       
       const callData = callDocSnap.data();
-      const calleeId = callData.calleeId;
-      const profile = await getUserProfile(calleeId);
+      const callerId = callData.callerId;
+      const profile = await getUserProfile(callerId);
       setOtherUser(profile);
       setLoading(false);
 
-      // Initialiser WebRTC
       pc.current = new RTCPeerConnection(servers);
       remoteStream.current = new MediaStream();
 
-      // Obtenir le flux audio local
       try {
         localStream.current = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
         localStream.current.getTracks().forEach((track) => {
@@ -79,13 +75,11 @@ function CallUI() {
             localAudioRef.current.srcObject = localStream.current;
         }
       } catch (error) {
-        console.error("Error getting user media", error);
         toast({ variant: 'destructive', title: 'Erreur de micro', description: 'Impossible d\'accéder au microphone.' });
         handleEndCall();
         return;
       }
 
-      // Gérer les pistes audio distantes
       pc.current.ontrack = (event) => {
         event.streams[0].getTracks().forEach((track) => {
           remoteStream.current?.addTrack(track);
@@ -95,75 +89,66 @@ function CallUI() {
         }
       };
 
-      // Créer et gérer l'appel
-      await createAndManageCall(callDocRef);
+      await answerCall(callDocRef, callData.offer);
     };
 
-    const createAndManageCall = async (callDocRef: any) => {
+    const answerCall = async (callDocRef: any, offer: any) => {
         if (!pc.current) return;
 
-        const offerCandidates = collection(callDocRef, 'offerCandidates');
         const answerCandidates = collection(callDocRef, 'answerCandidates');
+        const offerCandidates = collection(callDocRef, 'offerCandidates');
 
         pc.current.onicecandidate = (event) => {
-            event.candidate && addDoc(offerCandidates, event.candidate.toJSON());
+            event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
         };
 
-        const offerDescription = await pc.current.createOffer();
-        await pc.current.setLocalDescription(offerDescription);
+        await pc.current.setRemoteDescription(new RTCSessionDescription(offer));
+        
+        const answerDescription = await pc.current.createAnswer();
+        await pc.current.setLocalDescription(answerDescription);
 
-        const offer = {
-            sdp: offerDescription.sdp,
-            type: offerDescription.type,
+        const answer = {
+            type: answerDescription.type,
+            sdp: answerDescription.sdp,
         };
 
-        await updateDoc(callDocRef, { offer });
+        await updateDoc(callDocRef, { answer, status: 'connected' });
+        setCallStatus('connected');
 
-        // Écouter la réponse et le statut
-        onSnapshot(callDocRef, (snapshot) => {
-            const data = snapshot.data();
-            if(data?.status === 'declined'){
-                setCallStatus('declined');
-                 toast({ variant: 'destructive', title: 'Appel refusé' });
-                setTimeout(() => handleEndCall(), 2000);
-            }
-            if (!pc.current?.currentRemoteDescription && data?.answer) {
-                const answerDescription = new RTCSessionDescription(data.answer);
-                pc.current?.setRemoteDescription(answerDescription);
-                setCallStatus('connected');
-            }
-        });
-
-        // Écouter les candidats ICE de la réponse
-        onSnapshot(answerCandidates, (snapshot) => {
+        onSnapshot(offerCandidates, (snapshot) => {
             snapshot.docChanges().forEach((change) => {
                 if (change.type === 'added') {
-                    const candidate = new RTCIceCandidate(change.doc.data());
-                    pc.current?.addIceCandidate(candidate);
+                    pc.current?.addIceCandidate(new RTCIceCandidate(change.doc.data()));
                 }
             });
         });
-    }
+
+        // Listen for call termination
+        onSnapshot(callDocRef, (snapshot) => {
+             if (!snapshot.exists()) {
+                setCallStatus('ended');
+                toast({ title: 'Appel terminé', description: 'Votre correspondant a raccroché.' });
+                setTimeout(() => handleEndCall(false), 1500);
+            }
+        });
+    };
 
     initialize();
 
     return () => {
-      handleEndCall(false); // Cleanup on component unmount
+      handleEndCall(false);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleEndCall = async (notify = true) => {
     setCallStatus('ended');
-
-    // Nettoyage WebRTC
     pc.current?.close();
     localStream.current?.getTracks().forEach((track) => track.stop());
 
-    // Nettoyage Firestore
     if (callId) {
       const callDocRef = doc(db, 'calls', callId);
-      if((await getDoc(callDocRef)).exists()){
+       if((await getDoc(callDocRef)).exists()){
         await deleteDoc(callDocRef);
       }
     }
@@ -171,8 +156,8 @@ function CallUI() {
     pc.current = null;
     localStream.current = null;
     remoteStream.current = null;
-    
-    if(notify) {
+
+    if (notify) {
         router.back();
     }
   };
@@ -185,7 +170,6 @@ function CallUI() {
         setIsMuted(!isMuted);
     }
   };
-
 
   if (loading) {
     return (
@@ -200,7 +184,6 @@ function CallUI() {
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-between bg-slate-900 text-white p-8">
-      {/* Background Image/Video (optional) */}
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${otherUserImage})` }}>
         <div className="absolute inset-0 bg-black/70 backdrop-blur-lg" />
       </div>
@@ -208,7 +191,6 @@ function CallUI() {
       <audio ref={localAudioRef} autoPlay muted />
       <audio ref={remoteAudioRef} autoPlay />
 
-      {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center text-center mt-16">
         <Avatar className="h-32 w-32 border-4 border-white/50">
           <AvatarImage src={otherUserImage} alt={otherUserName} />
@@ -216,14 +198,12 @@ function CallUI() {
         </Avatar>
         <h1 className="mt-6 text-3xl font-bold">{otherUserName}</h1>
         <p className="mt-2 text-lg text-slate-300">
-          {callStatus === 'calling' && 'Appel en cours...'}
+          {callStatus === 'connecting' && 'Connexion...'}
           {callStatus === 'connected' && 'Connecté'}
           {callStatus === 'ended' && 'Appel terminé'}
-          {callStatus === 'declined' && 'Appel refusé'}
         </p>
       </div>
 
-      {/* Action Buttons */}
       <div className="relative z-10 flex w-full max-w-sm flex-col items-center">
         <div className="flex items-center justify-center gap-4 mb-8">
           <Button
@@ -239,7 +219,7 @@ function CallUI() {
             size="icon"
             className="h-16 w-16 rounded-full bg-white/10 hover:bg-white/20"
             onClick={() => setIsVideoOn(!isVideoOn)}
-            disabled // Vidéo non implémentée
+            disabled
           >
             {isVideoOn ? <VideoOff className="h-7 w-7" /> : <Video className="h-7 w-7" />}
           </Button>
@@ -248,7 +228,7 @@ function CallUI() {
             size="icon"
             className="h-16 w-16 rounded-full bg-white/10 hover:bg-white/20"
             onClick={() => setIsDeafened(!isDeafened)}
-            disabled // Non implémenté
+            disabled
           >
             {isDeafened ? <VolumeX className="h-7 w-7" /> : <Volume2 className="h-7 w-7" />}
           </Button>
@@ -265,14 +245,14 @@ function CallUI() {
   );
 }
 
-export default function CallPage() {
+export default function ReceiveCallPage() {
     return (
         <Suspense fallback={
             <div className="flex h-screen w-full flex-col items-center justify-center bg-slate-900 text-white">
               <Loader2 className="h-16 w-16 animate-spin" />
             </div>
         }>
-            <CallUI />
+            <ReceiveCallUI />
         </Suspense>
     )
 }
