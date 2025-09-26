@@ -554,22 +554,12 @@ export default function ProfileClientPage() {
                                 <FriendButton />
                             )}
                              {isOwner && (
-                                <>
-                                    {!profile.isVerified && (
-                                        <Button variant="outline" size="icon" className="h-8 w-8" asChild>
-                                            <Link href="/profile/verify">
-                                                <ShieldCheck className="h-4 w-4" />
-                                                <span className="sr-only">Se faire vérifier</span>
-                                            </Link>
-                                        </Button>
-                                    )}
-                                    <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                                        <Link href={`/profile/edit?id=${profileId}`}>
-                                            <Edit className="h-4 w-4" />
-                                            <span className="sr-only">Modifier le profil</span>
-                                        </Link>
-                                    </Button>
-                                </>
+                                <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                                    <Link href={`/profile/edit?id=${profileId}`}>
+                                        <Edit className="h-4 w-4" />
+                                        <span className="sr-only">Modifier le profil</span>
+                                    </Link>
+                                </Button>
                             )}
                             
                             {!isOwner && (
@@ -626,6 +616,15 @@ export default function ProfileClientPage() {
                                 <intention.icon className="mr-1.5 h-4 w-4" />
                                 {intention.text}
                             </Badge>
+                        )}
+
+                        {isOwner && !profile.isVerified && (
+                            <Button variant="outline" size="icon" className="h-8 w-8" asChild>
+                                <Link href="/profile/verify">
+                                    <ShieldCheck className="h-4 w-4" />
+                                    <span className="sr-only">Se faire vérifier</span>
+                                </Link>
+                            </Button>
                         )}
                     </div>
                 </div>
