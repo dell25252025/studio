@@ -20,78 +20,20 @@ const premiumFeatures = [
   { text: "Débloquez des destinations exclusives." },
 ];
 
-const googleApiKey = "goog_jLdAnVbyRLrhEfdrpzudXAcvGjP";
-const productId = 'wanderlink_gold_monthly';
-
 export default function PremiumPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubscribing, setIsSubscribing] = useState(false);
-  const [product, setProduct] = useState<any | null>(null);
-
-  useEffect(() => {
-    const setupRevenueCat = async () => {
-      if (Capacitor.isNativePlatform()) {
-        try {
-          // Dynamically import to avoid server-side execution
-          const { Purchases, LOG_LEVEL } = await import('@revenuecat/purchases-capacitor');
-          await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
-          await Purchases.configure({ apiKey: googleApiKey });
-          
-          const { products } = await Purchases.getProducts({ productIdentifiers: [productId] });
-          if (products.length > 0) {
-            setProduct(products[0]);
-          } else {
-             console.warn("Product 'wanderlink_gold_monthly' not found.");
-          }
-        } catch (e) {
-          console.error('Error setting up RevenueCat:', e);
-        }
-      }
-    };
-    setupRevenueCat();
-  }, []);
 
   const handleSubscribe = async () => {
-    if (!product) {
-       toast({
-        variant: 'destructive',
-        title: "Offre indisponible",
-        description: "L'abonnement n'est pas disponible pour le moment.",
-      });
-      return;
-    }
-    
     setIsSubscribing(true);
-    
-    try {
-      const { Purchases } = await import('@revenuecat/purchases-capacitor');
-      const { customerInfo, userCancelled } = await Purchases.purchaseStoreProduct({ product: product });
-
-      if (userCancelled) {
-        toast({ title: 'Achat annulé' });
-      } else if (customerInfo.entitlements.active['premium']) {
-        // TODO: Mettre à jour la base de données de l'utilisateur avec le statut premium
-        toast({ title: 'Félicitations !', description: 'Vous êtes maintenant membre WanderLink Gold.' });
-        router.push('/');
-      } else {
-        toast({ title: 'Achat réussi !', description: 'Votre abonnement est en cours de validation.' });
-      }
-
-    } catch (error: any) {
-      if (!error.userCancelled) {
-          console.error("RevenueCat purchase error:", error);
-          toast({
-            variant: 'destructive',
-            title: 'Erreur d\'achat',
-            description: "Une erreur est survenue. Veuillez réessayer.",
-          });
-      } else {
-          toast({ title: 'Achat annulé' });
-      }
-    } finally {
-      setIsSubscribing(false);
-    }
+    // This is a placeholder for the actual subscription logic
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    toast({
+      title: 'Fonctionnalité à venir',
+      description: "L'abonnement Gold sera bientôt disponible !",
+    });
+    setIsSubscribing(false);
   };
 
   return (
@@ -122,7 +64,7 @@ export default function PremiumPage() {
                 )} 
                 size="lg" 
                 onClick={handleSubscribe}
-                disabled={isSubscribing || !product}
+                disabled={isSubscribing}
             >
               {isSubscribing ? (
                 <>
@@ -130,7 +72,7 @@ export default function PremiumPage() {
                     Traitement...
                 </>
               ) : (
-                `Choisir mon abonnement (${product ? product.priceString : '...'})`
+                `Choisir mon abonnement`
               )}
             </Button>
           </CardFooter>
