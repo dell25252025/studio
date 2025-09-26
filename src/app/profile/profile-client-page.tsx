@@ -619,7 +619,7 @@ export default function ProfileClientPage() {
                         )}
 
                         {isOwner && !profile.isVerified && (
-                            <Button variant="outline" size="icon" className="h-8 w-8" asChild>
+                            <Button variant="default" size="icon" className="h-8 w-8 bg-blue-500 hover:bg-blue-600 text-white" asChild>
                                 <Link href="/profile/verify">
                                     <ShieldCheck className="h-4 w-4" />
                                     <span className="sr-only">Se faire vérifier</span>
