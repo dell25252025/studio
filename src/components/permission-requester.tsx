@@ -22,10 +22,10 @@ const PermissionRequester = () => {
           await Geolocation.requestPermissions();
           
           // Demande de permission pour l'accès aux photos/stockage
-          await Permissions.request({ permissions: ['photos'] });
+          await Permissions.request({ name: 'photos' });
           
-          // D'autres permissions peuvent être demandées ici si nécessaire,
-          // par exemple pour les notifications push ou le microphone.
+          // Demande de permission pour le microphone
+          await Permissions.request({ name: 'microphone' });
 
         } catch (error) {
           console.error('Erreur lors de la demande de permissions:', error);
