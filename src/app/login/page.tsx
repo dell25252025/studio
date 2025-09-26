@@ -74,7 +74,7 @@ export default function AuthPage() {
         <div className="grid min-h-screen items-center md:grid-cols-2">
             <div className="hidden md:flex flex-col justify-center p-12 lg:p-16">
               <h1 className="text-6xl font-bold font-logo text-white mb-4">
-                  WanderLink
+                  <span className="text-white">Wander</span><span className="text-accent">Link</span>
               </h1>
               <p className="text-xl text-white">
                   Trouvez des compagnons de voyage qui partagent votre passion. Votre prochaine grande aventure commence ici.
@@ -85,7 +85,7 @@ export default function AuthPage() {
                 <div className="text-center md:hidden pt-2 flex-shrink-0">
                     <button onClick={resetAuthState} className="flex w-full justify-center items-center gap-2 bg-transparent border-none p-0" aria-label="Retour à l'accueil de l'authentification">
                         <h1 className="text-3xl font-bold font-logo text-white">
-                            WanderLink
+                            <span className="text-white">Wander</span><span className="text-accent">Link</span>
                         </h1>
                     </button>
                     <p className={`text-base text-white px-1 leading-tight text-center md:hidden mt-1 w-full mx-auto`}>

@@ -142,8 +142,8 @@ export default function CreateProfilePage() {
        <div className="w-full max-w-2xl relative">
          <div className="flex items-center gap-2 mb-4 justify-center">
           <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-bold font-logo bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              WanderLink
+            <h1 className="text-3xl font-bold font-logo">
+                <span className="text-foreground">Wander</span><span className="text-accent">Link</span>
             </h1>
           </div>
         </div>

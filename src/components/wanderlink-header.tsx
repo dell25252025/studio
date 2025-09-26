@@ -22,8 +22,8 @@ const WanderlinkHeader = () => {
         "px-2 md:px-4"
         )}>
         <Link href="/" className="flex items-center gap-2 group">
-             <h1 className="text-2xl md:text-3xl font-bold font-logo bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              WanderLink
+             <h1 className="text-2xl md:text-3xl font-bold font-logo">
+              <span className="text-foreground">Wander</span><span className="text-accent">Link</span>
             </h1>
         </Link>
         <TooltipProvider>
