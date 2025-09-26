@@ -10,6 +10,7 @@ import { getUserProfile } from '@/lib/firebase-actions';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 const servers = {
   iceServers: [
@@ -30,17 +31,20 @@ function ReceiveCallUI() {
   const [callStatus, setCallStatus] = useState('connecting'); // connecting, connected, ended
   const [isMuted, setIsMuted] = useState(false);
   const [isDeafened, setIsDeafened] = useState(false);
-  const [isVideoOn, setIsVideoOn] = useState(false);
+  const [isVideoOn, setIsVideoOn] = useState(true);
 
   const pc = useRef<RTCPeerConnection | null>(null);
   const localStream = useRef<MediaStream | null>(null);
   const remoteStream = useRef<MediaStream | null>(null);
-  const localAudioRef = useRef<HTMLAudioElement>(null);
-  const remoteAudioRef = useRef<HTMLAudioElement>(null);
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
   const callId = searchParams.get('callId');
+  const isVideoCall = searchParams.get('video') === 'true';
 
   useEffect(() => {
+    setIsVideoOn(isVideoCall);
+
     const initialize = async () => {
       if (!callId) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'ID d\'appel manquant.' });
@@ -67,15 +71,15 @@ function ReceiveCallUI() {
       remoteStream.current = new MediaStream();
 
       try {
-        localStream.current = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        localStream.current = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
         localStream.current.getTracks().forEach((track) => {
           pc.current?.addTrack(track, localStream.current!);
         });
-        if (localAudioRef.current && localStream.current) {
-            localAudioRef.current.srcObject = localStream.current;
+        if (localVideoRef.current && localStream.current) {
+            localVideoRef.current.srcObject = localStream.current;
         }
       } catch (error) {
-        toast({ variant: 'destructive', title: 'Erreur de micro', description: 'Impossible d\'accéder au microphone.' });
+        toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible d\'accéder au microphone ou à la caméra.' });
         handleEndCall();
         return;
       }
@@ -84,8 +88,8 @@ function ReceiveCallUI() {
         event.streams[0].getTracks().forEach((track) => {
           remoteStream.current?.addTrack(track);
         });
-        if (remoteAudioRef.current && remoteStream.current) {
-            remoteAudioRef.current.srcObject = remoteStream.current;
+        if (remoteVideoRef.current && remoteStream.current) {
+            remoteVideoRef.current.srcObject = remoteStream.current;
         }
       };
 
@@ -171,6 +175,15 @@ function ReceiveCallUI() {
     }
   };
 
+   const toggleVideo = () => {
+    if (localStream.current) {
+        localStream.current.getVideoTracks().forEach(track => {
+            track.enabled = !track.enabled;
+        });
+        setIsVideoOn(!isVideoOn);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-slate-900 text-white">
@@ -184,14 +197,15 @@ function ReceiveCallUI() {
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-between bg-slate-900 text-white p-8">
-      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${otherUserImage})` }}>
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-lg" />
-      </div>
+       <video ref={remoteVideoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-cover" />
+      <div className="absolute inset-0 bg-black/30" />
 
-      <audio ref={localAudioRef} autoPlay muted />
-      <audio ref={remoteAudioRef} autoPlay />
+      <video ref={localVideoRef} autoPlay muted playsInline className={cn(
+          "absolute top-4 right-4 w-1/4 max-w-[150px] rounded-lg shadow-lg border-2 border-white/50",
+          !isVideoOn && "hidden"
+      )} />
 
-      <div className="relative z-10 flex flex-col items-center text-center mt-16">
+      <div className="relative z-10 flex flex-col items-center text-center mt-16 [text-shadow:_0_1px_4px_rgb(0_0_0_/_50%)]">
         <Avatar className="h-32 w-32 border-4 border-white/50">
           <AvatarImage src={otherUserImage} alt={otherUserName} />
           <AvatarFallback>{otherUserName.charAt(0)}</AvatarFallback>
@@ -218,10 +232,10 @@ function ReceiveCallUI() {
             variant="ghost"
             size="icon"
             className="h-16 w-16 rounded-full bg-white/10 hover:bg-white/20"
-            onClick={() => setIsVideoOn(!isVideoOn)}
-            disabled
+            onClick={toggleVideo}
+            disabled={!isVideoCall}
           >
-            {isVideoOn ? <VideoOff className="h-7 w-7" /> : <Video className="h-7 w-7" />}
+            {isVideoOn ? <Video className="h-7 w-7" /> : <VideoOff className="h-7 w-7" />}
           </Button>
           <Button
             variant="ghost"

@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { getUserProfile } from '@/lib/firebase-actions';
-import { Phone, PhoneOff } from 'lucide-react';
+import { Phone, PhoneOff, Video } from 'lucide-react';
 import type { DocumentData } from 'firebase/firestore';
 
 interface CallData extends DocumentData {
@@ -26,6 +26,7 @@ interface CallData extends DocumentData {
     callerId: string;
     callerName?: string;
     callerImage?: string;
+    type?: 'audio' | 'video';
 }
 
 const IncomingCallManager = () => {
@@ -61,7 +62,8 @@ const IncomingCallManager = () => {
 
   const handleAcceptCall = () => {
     if (!incomingCall) return;
-    router.push(`/call/receive?callId=${incomingCall.id}`);
+    const isVideo = incomingCall.type === 'video';
+    router.push(`/call/receive?callId=${incomingCall.id}&video=${isVideo}`);
     setIncomingCall(null);
   };
 
@@ -75,6 +77,8 @@ const IncomingCallManager = () => {
     setTimeout(() => deleteDoc(callDocRef), 2000);
   };
 
+  const isVideoCall = incomingCall?.type === 'video';
+
   return (
     <AlertDialog open={!!incomingCall}>
       <AlertDialogContent>
@@ -84,8 +88,9 @@ const IncomingCallManager = () => {
                 <AvatarFallback>{incomingCall?.callerName?.charAt(0)}</AvatarFallback>
             </Avatar>
           <AlertDialogTitle className="pt-2">{incomingCall?.callerName} vous appelle...</AlertDialogTitle>
-          <AlertDialogDescription>
-            Voulez-vous répondre à cet appel ?
+          <AlertDialogDescription className="flex items-center justify-center gap-2">
+            Appel {isVideoCall ? 'vidéo' : 'audio'} entrant
+            {isVideoCall && <Video className="h-4 w-4" />}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="sm:justify-center gap-4">

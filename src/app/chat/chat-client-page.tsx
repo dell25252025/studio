@@ -364,8 +364,20 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     }
   }, [newMessage]);
   
-  const handlePlaceholderAction = (feature: string) => {
-    toast({ title: 'Fonctionnalité à venir', description: `${feature} sera bientôt disponible.` });
+  const handleStartCall = async (isVideo: boolean) => {
+    if (!otherUserId || !currentUser) return;
+     try {
+      const callDocRef = await addDoc(collection(db, 'calls'), {
+        callerId: currentUser.uid,
+        calleeId: otherUserId,
+        status: 'ringing',
+        type: isVideo ? 'video' : 'audio',
+      });
+      router.push(`/call?callId=${callDocRef.id}&video=${isVideo}`);
+    } catch (error) {
+      console.error("Error creating call:", error);
+      toast({ variant: 'destructive', title: 'Erreur d\'appel', description: 'Impossible de démarrer l\'appel.' });
+    }
   };
   
   const handleBlockUser = () => {
@@ -396,21 +408,6 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     setIsReportModalOpen(true);
   };
 
-  const handleStartCall = async () => {
-    if (!otherUserId || !currentUser) return;
-     try {
-      const callDocRef = await addDoc(collection(db, 'calls'), {
-        callerId: currentUser.uid,
-        calleeId: otherUserId,
-        status: 'ringing',
-      });
-      router.push(`/call?callId=${callDocRef.id}`);
-    } catch (error) {
-      console.error("Error creating call:", error);
-      toast({ variant: 'destructive', title: 'Erreur d\'appel', description: 'Impossible de démarrer l\'appel.' });
-    }
-  };
-
   const otherUserName = otherUser?.firstName || 'Utilisateur';
   const otherUserImage = otherUser?.profilePictures?.[0] || `https://picsum.photos/seed/${otherUserId}/200`;
   const otherUserIsVerified = otherUser?.isVerified ?? false;
@@ -433,10 +430,10 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
             {otherUserIsVerified && <CheckCircle className="h-3.5 w-3.5 text-blue-500 shrink-0" />}
           </div>
         </Link>
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleStartCall}>
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleStartCall(false)}>
           <Phone className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vidéo')}>
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleStartCall(true)}>
           <Video className="h-4 w-4" />
         </Button>
         <Drawer>
