@@ -338,7 +338,7 @@ export default function ProfileClientPage() {
         throw new Error(result.error || "La suppression de la photo a échoué.");
       }
     } catch (error) {
-      console.error("Failed to remove profile picture:", error);
+      console.error("Error removing profile picture:", error);
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
       toast({
         variant: "destructive",
@@ -481,7 +481,7 @@ export default function ProfileClientPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </header>
-        <main className={cn("flex-1", !isOwner && "pb-24")}>
+        <main className={cn("flex-1", !isOwner && "pb-24 md:pb-0")}>
              <div className="w-full bg-background md:py-4">
                 {profilePictures.length > 0 ? (
                     <Dialog>
@@ -551,7 +551,15 @@ export default function ProfileClientPage() {
                         
                         <div className="flex items-center gap-2 pl-2">
                              {!isOwner && (
-                                <FriendButton />
+                               <div className="hidden md:flex items-center gap-2">
+                                 <FriendButton />
+                                 <Button asChild size="sm">
+                                  <Link href={`/chat?id=${profileId}`}>
+                                    <Send className="mr-2 h-4 w-4" />
+                                    Message
+                                  </Link>
+                                </Button>
+                               </div>
                             )}
                              {isOwner && (
                                 <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
@@ -758,7 +766,7 @@ export default function ProfileClientPage() {
             </div>
         </main>
         {!isOwner && profileId && (
-            <div className="fixed bottom-0 left-0 right-0 z-10 p-2 bg-background/80 backdrop-blur-sm border-t">
+            <div className="fixed bottom-0 left-0 right-0 z-10 p-2 bg-background/80 backdrop-blur-sm border-t md:hidden">
                 <div className="flex">
                     <Link href={`/chat?id=${profileId}`} passHref className="flex-1">
                         <Button className="w-full text-sm">
