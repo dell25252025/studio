@@ -4,8 +4,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getUserProfile, addProfilePicture, removeProfilePicture, addFriend, removeFriend } from '@/lib/firebase-actions';
-import type { DocumentData } from 'firebase/firestore';
-import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send, UserPlus, Heart, UserCheck, UserX, CheckCircle } from 'lucide-react';
+import type { DocumentData } from 'firestore';
+import { Loader2, Plane, MapPin, Languages, Backpack, Cigarette, Wine, Calendar, Camera, Trash2, PlusCircle, LogOut, Edit, Ruler, Scale, ZoomIn, ZoomOut, ArrowLeft, ArrowRight, X, Sparkles, BriefcaseBusiness, Coins, Users, MoreVertical, ShieldAlert, Ban, Send, UserPlus, Heart, UserCheck, UserX, CheckCircle, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -554,12 +554,22 @@ export default function ProfileClientPage() {
                                 <FriendButton />
                             )}
                              {isOwner && (
-                                <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                                    <Link href={`/profile/edit?id=${profileId}`}>
-                                        <Edit className="h-4 w-4" />
-                                        <span className="sr-only">Modifier le profil</span>
-                                    </Link>
-                                </Button>
+                                <>
+                                    {!profile.isVerified && (
+                                        <Button variant="outline" size="icon" className="h-8 w-8" asChild>
+                                            <Link href="/profile/verify">
+                                                <ShieldCheck className="h-4 w-4" />
+                                                <span className="sr-only">Se faire vérifier</span>
+                                            </Link>
+                                        </Button>
+                                    )}
+                                    <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                                        <Link href={`/profile/edit?id=${profileId}`}>
+                                            <Edit className="h-4 w-4" />
+                                            <span className="sr-only">Modifier le profil</span>
+                                        </Link>
+                                    </Button>
+                                </>
                             )}
                             
                             {!isOwner && (
@@ -616,14 +626,6 @@ export default function ProfileClientPage() {
                                 <intention.icon className="mr-1.5 h-4 w-4" />
                                 {intention.text}
                             </Badge>
-                        )}
-
-                        {isOwner && !profile.isVerified && (
-                            <Button variant="outline" size="sm" asChild>
-                                <Link href="/profile/verify">
-                                Se faire vérifier ✔️
-                                </Link>
-                            </Button>
                         )}
                     </div>
                 </div>
