@@ -23,10 +23,7 @@ const loginSchema = z.object({
 
 const signupSchema = z.object({
   email: z.string().email({ message: 'Adresse e-mail invalide.' }),
-  password: z.string()
-    .min(9, { message: 'Le mot de passe doit contenir au moins 9 caractères.' })
-    .regex(/[a-zA-Z]/, { message: 'Le mot de passe doit contenir au moins une lettre.' })
-    .regex(/[0-9]/, { message: 'Le mot de passe doit contenir au moins un chiffre.' }),
+  password: z.string().min(6, { message: 'Le mot de passe doit contenir au moins 6 caractères.' }),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Les mots de passe ne correspondent pas.",
@@ -63,10 +60,11 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
       } else {
         const signupValues = values as z.infer<typeof signupSchema>;
         const userCredential = await createUserWithEmailAndPassword(auth, signupValues.email, signupValues.password);
-        await sendEmailVerification(userCredential.user);
+        // await sendEmailVerification(userCredential.user); // We will add this later
 
-        toast({ title: 'Compte créé !', description: 'Un e-mail de vérification a été envoyé.' });
-        router.push('/verify-email');
+        toast({ title: 'Compte créé !', description: "Vous pouvez maintenant vous connecter." });
+        // Redirect to login or directly to profile creation
+        router.push('/create-profile');
       }
     } catch (error) {
       let description = "Une erreur inattendue s'est produite.";
