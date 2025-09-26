@@ -610,14 +610,16 @@ export default function ProfileClientPage() {
                             disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
                         />
                     </div>
-                     {isOwner && !profile.isVerified && (
-                        <div className="mt-3">
-                            <Button variant="outline" size="sm" asChild>
-                                    <Link href="/profile/verify">
-                                    Se faire vérifier ✔️
-                                </Link>
-                            </Button>
-                        </div>
+                    {isOwner && (
+                      <div className="mt-3 flex flex-col items-start gap-2">
+                        {!profile.isVerified && (
+                          <Button variant="outline" size="sm" asChild>
+                            <Link href="/profile/verify">
+                              Se faire vérifier ✔️
+                            </Link>
+                          </Button>
+                        )}
+                      </div>
                     )}
                     {intention && (
                         <div className="mt-2">
