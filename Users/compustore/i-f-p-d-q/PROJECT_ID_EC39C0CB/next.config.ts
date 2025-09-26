@@ -7,6 +7,14 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  devIndicators: {
+    buildActivity: false,
+  },
+  experimental: {
+    // This allows the Next.js dev server to accept requests from the
+    // Firebase Studio web preview and the Android emulator.
+    allowedDevOrigins: ["https://*.cloudworkstations.dev"],
+  },
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -29,7 +37,8 @@ const nextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
+        protocol: 'https'
+        ,
         hostname: 'lh3.googleusercontent.com',
         port: '',
         pathname: '/**',
