@@ -6,7 +6,6 @@ import { Capacitor } from '@capacitor/core';
 import { Camera } from '@capacitor/camera';
 import { Geolocation } from '@capacitor/geolocation';
 import { useToast } from '@/hooks/use-toast';
-import { Permissions } from '@capacitor/permissions';
 
 const PermissionRequester = () => {
   const { toast } = useToast();
