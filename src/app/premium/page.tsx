@@ -10,7 +10,6 @@ import { Check, Crown, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Capacitor } from '@capacitor/core';
-import { Purchases, PurchasesStoreProduct, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
 
 const premiumFeatures = [
   { text: "Découvrez qui a aimé votre profil et matchez instantanément." },
@@ -28,12 +27,14 @@ export default function PremiumPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubscribing, setIsSubscribing] = useState(false);
-  const [product, setProduct] = useState<PurchasesStoreProduct | null>(null);
+  const [product, setProduct] = useState<any | null>(null);
 
   useEffect(() => {
     const setupRevenueCat = async () => {
       if (Capacitor.isNativePlatform()) {
         try {
+          // Dynamically import to avoid server-side execution
+          const { Purchases, LOG_LEVEL } = await import('@revenuecat/purchases-capacitor');
           await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
           await Purchases.configure({ apiKey: googleApiKey });
           
@@ -64,6 +65,7 @@ export default function PremiumPage() {
     setIsSubscribing(true);
     
     try {
+      const { Purchases } = await import('@revenuecat/purchases-capacitor');
       const { customerInfo, userCancelled } = await Purchases.purchaseStoreProduct({ product: product });
 
       if (userCancelled) {
