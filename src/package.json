@@ -19,6 +19,7 @@
   "dependencies": {
     "@capacitor/android": "^6.1.1",
     "@capacitor/app": "^6.0.0",
+    "@capacitor/camera": "^6.0.0",
     "@capacitor/core": "^6.1.1",
     "@genkit-ai/googleai": "^1.14.1",
     "@genkit-ai/next": "^1.14.1",
@@ -46,7 +47,6 @@
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.1.8",
-    "@revenuecat/purchases-capacitor": "^7.2.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
