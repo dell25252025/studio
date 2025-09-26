@@ -1,0 +1,287 @@
+[debug] [2025-09-26T09:40:20.340Z] ----------------------------------------------------------------------
+[debug] [2025-09-26T09:40:20.342Z] Command:       /nix/store/ws50yvm6vzlzf7jzz6n7xh4szddrack1-nodejs-20.19.1/bin/node /nix/store/a3jfkfzmr1h8lmk31a8fbchkg5sp12q9-firebase-tools-14.16.0/lib/node_modules/firebase-tools/lib/bin/firebase.js deploy --only functions
+[debug] [2025-09-26T09:40:20.343Z] CLI Version:   14.16.0
+[debug] [2025-09-26T09:40:20.343Z] Platform:      linux
+[debug] [2025-09-26T09:40:20.343Z] Node Version:  v20.19.1
+[debug] [2025-09-26T09:40:20.343Z] Time:          Fri Sep 26 2025 09:40:20 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-09-26T09:40:20.343Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-09-26T09:40:20.708Z] No OAuth tokens found
+[debug] [2025-09-26T09:40:20.709Z] No OAuth tokens found
+[error] Failed to fetch Firebase Project from current Studio Workspace: Unable to refresh auth: not yet authenticated.
+[debug] [2025-09-26T09:40:20.713Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:40:20.714Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:40:20.714Z] [iam] checking project wanderlink-c1a35 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-09-26T09:40:20.714Z] No OAuth tokens found
+[debug] [2025-09-26T09:40:20.714Z] No OAuth tokens found
+[debug] [2025-09-26T09:40:20.714Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:40:20.715Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:40:20.716Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35:testIamPermissions [none]
+[debug] [2025-09-26T09:40:20.716Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35:testIamPermissions x-goog-quota-user=projects/wanderlink-c1a35
+[debug] [2025-09-26T09:40:20.716Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-09-26T09:40:20.946Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35:testIamPermissions 200
+[debug] [2025-09-26T09:40:20.947Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-09-26T09:40:20.947Z] No OAuth tokens found
+[debug] [2025-09-26T09:40:20.948Z] No OAuth tokens found
+[debug] [2025-09-26T09:40:20.948Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:40:20.948Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:40:20.948Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/wanderlink-c1a35/serviceAccounts/wanderlink-c1a35@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-09-26T09:40:20.948Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/wanderlink-c1a35/serviceAccounts/wanderlink-c1a35@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-09-26T09:40:21.931Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/wanderlink-c1a35/serviceAccounts/wanderlink-c1a35@appspot.gserviceaccount.com:testIamPermissions 404
+[debug] [2025-09-26T09:40:21.931Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/wanderlink-c1a35/serviceAccounts/wanderlink-c1a35@appspot.gserviceaccount.com:testIamPermissions {"error":{"code":404,"message":"Unknown service account","status":"NOT_FOUND"}}
+[debug] [2025-09-26T09:40:21.934Z] [functions] service account IAM check errored, deploy may fail:Request to https://iam.googleapis.com/v1/projects/wanderlink-c1a35/serviceAccounts/wanderlink-c1a35@appspot.gserviceaccount.com:testIamPermissions had HTTP Error: 404, Unknown service account {"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":404,"message":"Unknown service account","status":"NOT_FOUND"}},"response":{"statusCode":404}},"exit":1,"message":"Request to https://iam.googleapis.com/v1/projects/wanderlink-c1a35/serviceAccounts/wanderlink-c1a35@appspot.gserviceaccount.com:testIamPermissions had HTTP Error: 404, Unknown service account","status":404}
+[info] 
+[info] === Deploying to 'wanderlink-c1a35'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix functions install
+[info] Running command: npm --prefix functions run build
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2025-09-26T09:41:29.381Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:29.381Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:29.381Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:29.382Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:29.382Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35 [none]
+[debug] [2025-09-26T09:41:30.173Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35 200
+[debug] [2025-09-26T09:41:30.173Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35 {"projectNumber":"186522309970","projectId":"wanderlink-c1a35","lifecycleState":"ACTIVE","name":"WanderLink","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-09-07T10:35:44.458877Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-09-26T09:41:30.179Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:30.179Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:30.179Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:30.179Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:30.179Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/wanderlink-c1a35/adminSdkConfig [none]
+[debug] [2025-09-26T09:41:30.839Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/wanderlink-c1a35/adminSdkConfig 200
+[debug] [2025-09-26T09:41:30.839Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/wanderlink-c1a35/adminSdkConfig {"projectId":"wanderlink-c1a35","storageBucket":"wanderlink-c1a35.firebasestorage.app"}
+[debug] [2025-09-26T09:41:30.840Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:30.841Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:30.841Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:30.841Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:30.841Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wanderlink-c1a35/configs [none]
+[debug] [2025-09-26T09:41:31.154Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wanderlink-c1a35/configs 200
+[debug] [2025-09-26T09:41:31.154Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wanderlink-c1a35/configs {}
+[debug] [2025-09-26T09:41:31.157Z] Validating nodejs source
+[warn] ⚠  functions: Runtime Node.js 18 was deprecated on 2025-04-30 and will be decommissioned on 2025-10-30, after which you will not be able to deploy without upgrading. Consider upgrading now to avoid disruption. See https://cloud.google.com/functions/docs/runtime-support for full details on the lifecycle policy 
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2025-09-26T09:41:32.135Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@google-cloud/vision": "^4.3.0",
+    "firebase-admin": "^12.1.1",
+    "firebase-functions": "^5.0.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "eslint": "^8.57.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.29.1",
+    "typescript": "^5.4.5"
+  },
+  "private": true
+}
+[debug] [2025-09-26T09:41:32.136Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-09-26T09:41:32.139Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-09-26T09:41:32.154Z] Found firebase-functions binary at '/home/user/studio/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8239
+
+[debug] [2025-09-26T09:41:34.333Z] Got response from /__/functions.yaml {"endpoints":{"moderateProfilePicture":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"google.storage.object.finalize","eventFilters":{"resource":"projects/_/buckets/wanderlink-c1a35.firebasestorage.app"},"retry":false},"labels":{},"entryPoint":"moderateProfilePicture"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2025-09-26T09:41:34.499Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:34.500Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:34.500Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:34.501Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:34.501Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/wanderlink-c1a35/services/firebaseextensions.googleapis.com [none]
+[debug] [2025-09-26T09:41:34.501Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/wanderlink-c1a35/services/firebaseextensions.googleapis.com x-goog-quota-user=projects/wanderlink-c1a35
+[debug] [2025-09-26T09:41:35.549Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/wanderlink-c1a35/services/firebaseextensions.googleapis.com 200
+[debug] [2025-09-26T09:41:35.553Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/wanderlink-c1a35/services/firebaseextensions.googleapis.com [omitted]
+[warn] ⚠  extensions: missing required API firebaseextensions.googleapis.com. Enabling now... 
+[debug] [2025-09-26T09:41:35.559Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:35.559Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:35.559Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:35.560Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:35.560Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/wanderlink-c1a35/services/firebaseextensions.googleapis.com:enable [none]
+[debug] [2025-09-26T09:41:35.560Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/wanderlink-c1a35/services/firebaseextensions.googleapis.com:enable x-goog-quota-user=projects/wanderlink-c1a35
+[debug] [2025-09-26T09:41:35.977Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/wanderlink-c1a35/services/firebaseextensions.googleapis.com:enable 200
+[debug] [2025-09-26T09:41:35.978Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/wanderlink-c1a35/services/firebaseextensions.googleapis.com:enable [omitted]
+[debug] [2025-09-26T09:41:46.002Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:46.002Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:46.002Z] [iam] checking project wanderlink-c1a35 for permissions ["firebase.projects.get","firebaseextensions.instances.list"]
+[debug] [2025-09-26T09:41:46.003Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:46.003Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:46.003Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:46.003Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:46.004Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35:testIamPermissions [none]
+[debug] [2025-09-26T09:41:46.004Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35:testIamPermissions x-goog-quota-user=projects/wanderlink-c1a35
+[debug] [2025-09-26T09:41:46.005Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-09-26T09:41:46.766Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35:testIamPermissions 200
+[debug] [2025-09-26T09:41:46.766Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-09-26T09:41:46.767Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:46.767Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:46.767Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:46.767Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:46.768Z] >>> [apiv2][query] GET https://firebaseextensions.googleapis.com/v1beta/projects/wanderlink-c1a35/instances pageSize=100&pageToken=
+[debug] [2025-09-26T09:41:50.147Z] <<< [apiv2][status] GET https://firebaseextensions.googleapis.com/v1beta/projects/wanderlink-c1a35/instances 200
+[debug] [2025-09-26T09:41:50.148Z] <<< [apiv2][body] GET https://firebaseextensions.googleapis.com/v1beta/projects/wanderlink-c1a35/instances {}
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged /home/user/studio/functions (62.1 KB) for uploading 
+[debug] [2025-09-26T09:41:50.273Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:50.273Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:50.273Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:50.273Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:50.273Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/-/functions [none]
+[debug] [2025-09-26T09:41:51.202Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/-/functions 200
+[debug] [2025-09-26T09:41:51.203Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/-/functions {}
+[debug] [2025-09-26T09:41:51.207Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:51.213Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:51.213Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:51.213Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:51.213Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/wanderlink-c1a35/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2025-09-26T09:41:52.495Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/wanderlink-c1a35/locations/-/functions 200
+[debug] [2025-09-26T09:41:52.495Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/wanderlink-c1a35/locations/-/functions {}
+[debug] [2025-09-26T09:41:52.504Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:52.505Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:52.505Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:52.505Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:52.505Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35 [none]
+[debug] [2025-09-26T09:41:53.295Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35 200
+[debug] [2025-09-26T09:41:53.296Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/wanderlink-c1a35 {"projectNumber":"186522309970","projectId":"wanderlink-c1a35","lifecycleState":"ACTIVE","name":"WanderLink","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-09-07T10:35:44.458877Z"}
+[debug] [2025-09-26T09:41:53.299Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:53.299Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:53.299Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:53.300Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:53.300Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/wanderlink-c1a35/billingInfo [none]
+[debug] [2025-09-26T09:41:53.531Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/wanderlink-c1a35/billingInfo 200
+[debug] [2025-09-26T09:41:53.531Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/wanderlink-c1a35/billingInfo {"name":"projects/wanderlink-c1a35/billingInfo","projectId":"wanderlink-c1a35","billingAccountName":"billingAccounts/01BD83-AEC036-D9A6E5","billingEnabled":true}
+[debug] [2025-09-26T09:41:53.532Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:53.533Z] No OAuth tokens found
+[debug] [2025-09-26T09:41:53.533Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:41:53.533Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:41:53.533Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/functions:generateUploadUrl [none]
+[debug] [2025-09-26T09:41:53.533Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/functions:generateUploadUrl {}
+[debug] [2025-09-26T09:42:05.578Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/functions:generateUploadUrl 200
+[debug] [2025-09-26T09:42:05.578Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/uploads-81175242099.us-central1.cloudfunctions.appspot.com/423ffbd1-dff0-461f-8422-cd710c8ffab9.zip?GoogleAccessId=service-186522309970@gcf-admin-robot.iam.gserviceaccount.com&Expires=1758881525&Signature=OklMMw1ef%2BlIHR1qIerkqYhButBWUv8NX6QDlwA80o4%2FSlFPIvULQWV8Ct0o1%2BDaoBwNGZTkW2qAumexmOxi8MTW8fQkIb0Mj7DdnsJpXSxjlEkKrgnugtM5iy2qu5YCf0LVJfJa%2FIbBeRukUcUK7P3jMsV5f9l1vlXZeITCYh49uQZROsCOws16lTve69uy%2FIlPZFyd5%2Bg%2BP%2BQuQT6U38QTZV1QID3J3h%2FzeXHf3huN4TCkWFcThDmcUcGV%2Bs%2BTUnHnb6nnbvdz35kL7UBhKv5fBXxGJfLdCYjnUtIYO%2BrEkuXgjgul8kgY5fJEsgfpivHwI3FPo7QsEEE%2BFORjFw%3D%3D"}
+[debug] [2025-09-26T09:42:05.580Z] >>> [apiv2][query] PUT https://storage.googleapis.com/uploads-81175242099.us-central1.cloudfunctions.appspot.com/423ffbd1-dff0-461f-8422-cd710c8ffab9.zip GoogleAccessId=service-186522309970%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1758881525&Signature=OklMMw1ef%2BlIHR1qIerkqYhButBWUv8NX6QDlwA80o4%2FSlFPIvULQWV8Ct0o1%2BDaoBwNGZTkW2qAumexmOxi8MTW8fQkIb0Mj7DdnsJpXSxjlEkKrgnugtM5iy2qu5YCf0LVJfJa%2FIbBeRukUcUK7P3jMsV5f9l1vlXZeITCYh49uQZROsCOws16lTve69uy%2FIlPZFyd5%2Bg%2BP%2BQuQT6U38QTZV1QID3J3h%2FzeXHf3huN4TCkWFcThDmcUcGV%2Bs%2BTUnHnb6nnbvdz35kL7UBhKv5fBXxGJfLdCYjnUtIYO%2BrEkuXgjgul8kgY5fJEsgfpivHwI3FPo7QsEEE%2BFORjFw%3D%3D
+[debug] [2025-09-26T09:42:05.580Z] >>> [apiv2][body] PUT https://storage.googleapis.com/uploads-81175242099.us-central1.cloudfunctions.appspot.com/423ffbd1-dff0-461f-8422-cd710c8ffab9.zip [stream]
+[debug] [2025-09-26T09:42:06.907Z] <<< [apiv2][status] PUT https://storage.googleapis.com/uploads-81175242099.us-central1.cloudfunctions.appspot.com/423ffbd1-dff0-461f-8422-cd710c8ffab9.zip 200
+[debug] [2025-09-26T09:42:06.907Z] <<< [apiv2][body] PUT https://storage.googleapis.com/uploads-81175242099.us-central1.cloudfunctions.appspot.com/423ffbd1-dff0-461f-8422-cd710c8ffab9.zip [omitted]
+[info] ✔  functions: functions source uploaded successfully 
+[info] i  functions: creating Node.js 18 (1st Gen) function moderateProfilePicture(us-central1)... 
+[debug] [2025-09-26T09:42:06.915Z] No OAuth tokens found
+[debug] [2025-09-26T09:42:06.916Z] No OAuth tokens found
+[debug] [2025-09-26T09:42:06.916Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:42:06.916Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:42:06.916Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/functions [none]
+[debug] [2025-09-26T09:42:06.916Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/functions {"name":"projects/wanderlink-c1a35/locations/us-central1/functions/moderateProfilePicture","sourceUploadUrl":"https://storage.googleapis.com/uploads-81175242099.us-central1.cloudfunctions.appspot.com/423ffbd1-dff0-461f-8422-cd710c8ffab9.zip?GoogleAccessId=service-186522309970@gcf-admin-robot.iam.gserviceaccount.com&Expires=1758881525&Signature=OklMMw1ef%2BlIHR1qIerkqYhButBWUv8NX6QDlwA80o4%2FSlFPIvULQWV8Ct0o1%2BDaoBwNGZTkW2qAumexmOxi8MTW8fQkIb0Mj7DdnsJpXSxjlEkKrgnugtM5iy2qu5YCf0LVJfJa%2FIbBeRukUcUK7P3jMsV5f9l1vlXZeITCYh49uQZROsCOws16lTve69uy%2FIlPZFyd5%2Bg%2BP%2BQuQT6U38QTZV1QID3J3h%2FzeXHf3huN4TCkWFcThDmcUcGV%2Bs%2BTUnHnb6nnbvdz35kL7UBhKv5fBXxGJfLdCYjnUtIYO%2BrEkuXgjgul8kgY5fJEsgfpivHwI3FPo7QsEEE%2BFORjFw%3D%3D","entryPoint":"moderateProfilePicture","runtime":"nodejs18","dockerRegistry":"ARTIFACT_REGISTRY","labels":{"deployment-tool":"cli-firebase--project-idx","firebase-functions-hash":"b8745213a0db9d06d316227051fce102bf831e3a"},"eventTrigger":{"eventType":"google.storage.object.finalize","resource":"projects/_/buckets/wanderlink-c1a35.firebasestorage.app"},"minInstances":null,"maxInstances":null,"ingressSettings":null,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wanderlink-c1a35\",\"storageBucket\":\"wanderlink-c1a35.firebasestorage.app\"}","GCLOUD_PROJECT":"wanderlink-c1a35","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wanderlink-c1a35/locations/us-central1/functions/moderateProfilePicture"},"serviceAccountEmail":null,"availableMemoryMb":null,"timeout":null,"vpcConnector":null,"vpcConnectorEgressSettings":null,"buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}}
+[debug] [2025-09-26T09:42:11.483Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/functions 403
+[debug] [2025-09-26T09:42:11.483Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/functions {"error":{"code":403,"message":"Failed to create 1st Gen function projects/wanderlink-c1a35/locations/us-central1/functions/moderateProfilePicture: Unable to retrieve the repository metadata for projects/wanderlink-c1a35/locations/us-central1/repositories/gcf-artifacts. Ensure that the Cloud Functions service account has 'artifactregistry.repositories.list' and 'artifactregistry.repositories.get' permissions. You can add the permissions by granting the role 'roles/artifactregistry.reader'.","status":"PERMISSION_DENIED"}}
+[warn] ⚠  functions: failed to create function projects/wanderlink-c1a35/locations/us-central1/functions/moderateProfilePicture 
+[error] Failed to create function projects/wanderlink-c1a35/locations/us-central1/functions/moderateProfilePicture
+[debug] [2025-09-26T09:42:11.489Z] Total Function Deployment time: 4574
+[debug] [2025-09-26T09:42:11.490Z] 1 Functions Deployed
+[debug] [2025-09-26T09:42:11.490Z] 1 Functions Errored
+[debug] [2025-09-26T09:42:11.490Z] 0 Function Deployments Aborted
+[debug] [2025-09-26T09:42:11.490Z] Average Function Deployment time: 4573
+[info] 
+[info] Functions deploy had errors with the following functions:
+	moderateProfilePicture(us-central1)
+[debug] [2025-09-26T09:42:11.495Z] No OAuth tokens found
+[debug] [2025-09-26T09:42:11.497Z] No OAuth tokens found
+[debug] [2025-09-26T09:42:11.497Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-26T09:42:11.498Z] > authorizing via signed-in user (dell25252025@gmail.com)
+[debug] [2025-09-26T09:42:11.501Z] >>> [apiv2][query] GET https://artifactregistry.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/repositories/gcf-artifacts [none]
+[debug] [2025-09-26T09:42:12.485Z] <<< [apiv2][status] GET https://artifactregistry.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/repositories/gcf-artifacts 404
+[debug] [2025-09-26T09:42:12.488Z] <<< [apiv2][body] GET https://artifactregistry.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/repositories/gcf-artifacts {"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}}
+[debug] [2025-09-26T09:42:12.488Z] Failed to check artifact cleanup policy for region us-central1:Request to https://artifactregistry.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/repositories/gcf-artifacts had HTTP Error: 404, Requested entity was not found. {"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}},"response":{"statusCode":404}},"exit":1,"message":"Request to https://artifactregistry.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/repositories/gcf-artifacts had HTTP Error: 404, Requested entity was not found.","status":404}
+[debug] [2025-09-26T09:42:12.489Z] Functions deploy failed.
+[debug] [2025-09-26T09:42:12.489Z] {
+  "endpoint": {
+    "id": "moderateProfilePicture",
+    "project": "wanderlink-c1a35",
+    "region": "us-central1",
+    "entryPoint": "moderateProfilePicture",
+    "platform": "gcfv1",
+    "runtime": "nodejs18",
+    "eventTrigger": {
+      "eventType": "google.storage.object.finalize",
+      "retry": false,
+      "eventFilters": {
+        "resource": "projects/_/buckets/wanderlink-c1a35.firebasestorage.app"
+      }
+    },
+    "labels": {
+      "deployment-tool": "cli-firebase--project-idx"
+    },
+    "serviceAccount": null,
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "timeoutSeconds": null,
+    "maxInstances": null,
+    "minInstances": null,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"wanderlink-c1a35\",\"storageBucket\":\"wanderlink-c1a35.firebasestorage.app\"}",
+      "GCLOUD_PROJECT": "wanderlink-c1a35",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/wanderlink-c1a35/locations/us-central1/functions/moderateProfilePicture"
+    },
+    "codebase": "default",
+    "targetedByOnly": false,
+    "hash": "b8745213a0db9d06d316227051fce102bf831e3a"
+  },
+  "op": "create",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "context": {
+      "function": "projects/wanderlink-c1a35/locations/us-central1/functions/moderateProfilePicture"
+    },
+    "exit": 1,
+    "message": "Failed to create function projects/wanderlink-c1a35/locations/us-central1/functions/moderateProfilePicture",
+    "original": {
+      "name": "FirebaseError",
+      "children": [],
+      "context": {
+        "body": {
+          "error": {
+            "code": 403,
+            "message": "Failed to create 1st Gen function projects/wanderlink-c1a35/locations/us-central1/functions/moderateProfilePicture: Unable to retrieve the repository metadata for projects/wanderlink-c1a35/locations/us-central1/repositories/gcf-artifacts. Ensure that the Cloud Functions service account has 'artifactregistry.repositories.list' and 'artifactregistry.repositories.get' permissions. You can add the permissions by granting the role 'roles/artifactregistry.reader'.",
+            "status": "PERMISSION_DENIED"
+          }
+        },
+        "response": {
+          "statusCode": 403
+        }
+      },
+      "exit": 1,
+      "message": "Request to https://cloudfunctions.googleapis.com/v1/projects/wanderlink-c1a35/locations/us-central1/functions had HTTP Error: 403, Failed to create 1st Gen function projects/wanderlink-c1a35/locations/us-central1/functions/moderateProfilePicture: Unable to retrieve the repository metadata for projects/wanderlink-c1a35/locations/us-central1/repositories/gcf-artifacts. Ensure that the Cloud Functions service account has 'artifactregistry.repositories.list' and 'artifactregistry.repositories.get' permissions. You can add the permissions by granting the role 'roles/artifactregistry.reader'.",
+      "status": 403
+    },
+    "status": 403,
+    "code": 403
+  }
+}
+[debug] [2025-09-26T09:42:12.490Z] Error: Failed to create function moderateProfilePicture in region us-central1
+    at /nix/store/a3jfkfzmr1h8lmk31a8fbchkg5sp12q9-firebase-tools-14.16.0/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:52:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Fabricator.createV1Function (/nix/store/a3jfkfzmr1h8lmk31a8fbchkg5sp12q9-firebase-tools-14.16.0/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:194:32)
+    at async Fabricator.createEndpoint (/nix/store/a3jfkfzmr1h8lmk31a8fbchkg5sp12q9-firebase-tools-14.16.0/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:134:13)
+    at async handle (/nix/store/a3jfkfzmr1h8lmk31a8fbchkg5sp12q9-firebase-tools-14.16.0/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:89:17)
+[error] 
+[error] Error: There was an error deploying functions
