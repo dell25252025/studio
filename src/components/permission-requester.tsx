@@ -6,6 +6,7 @@ import { Capacitor } from '@capacitor/core';
 import { Camera } from '@capacitor/camera';
 import { Geolocation } from '@capacitor/geolocation';
 import { useToast } from '@/hooks/use-toast';
+import { Permissions } from '@capacitor/permissions';
 
 const PermissionRequester = () => {
   const { toast } = useToast();
@@ -19,6 +20,9 @@ const PermissionRequester = () => {
 
           // Demande de permission pour la géolocalisation
           await Geolocation.requestPermissions();
+          
+          // Demande de permission pour l'accès aux photos/stockage
+          await Permissions.request({ permissions: ['photos'] });
           
           // D'autres permissions peuvent être demandées ici si nécessaire,
           // par exemple pour les notifications push ou le microphone.
