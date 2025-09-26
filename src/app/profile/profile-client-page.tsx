@@ -553,6 +553,14 @@ export default function ProfileClientPage() {
                              {!isOwner && (
                                 <FriendButton />
                             )}
+                             {isOwner && (
+                                <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                                    <Link href={`/profile/edit?id=${profileId}`}>
+                                        <Edit className="h-4 w-4" />
+                                        <span className="sr-only">Modifier le profil</span>
+                                    </Link>
+                                </Button>
+                            )}
                             
                             {!isOwner && (
                                 <Drawer>
@@ -602,20 +610,13 @@ export default function ProfileClientPage() {
                             disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
                         />
                     </div>
-                     {isOwner && (
-                        <div className="flex flex-wrap gap-2 mt-3">
+                     {isOwner && !profile.isVerified && (
+                        <div className="mt-3">
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={`/profile/edit?id=${profileId}`}>
-                                    <Edit className="mr-2 h-4 w-4" /> Modifier le profil
+                                    <Link href="/profile/verify">
+                                    Se faire vérifier ✔️
                                 </Link>
                             </Button>
-                             {!profile.isVerified && (
-                                <Button variant="outline" size="sm" asChild>
-                                     <Link href="/profile/verify">
-                                        Se faire vérifier ✔️
-                                    </Link>
-                                </Button>
-                            )}
                         </div>
                     )}
                     {intention && (
