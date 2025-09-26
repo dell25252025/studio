@@ -290,5 +290,4 @@ export default function DiscoverPage() {
             </AlertDialog>
         </div>
     );
-
-    
+}
