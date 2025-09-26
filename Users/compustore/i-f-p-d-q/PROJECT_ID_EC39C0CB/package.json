@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "android:remove": "npx cap remove android",
     "android:add": "npx cap add android",
-    "android:build": "npx next build && npx cap sync android",
+    "android:build": "npx cap sync android",
     "android:open": "npx cap open android"
   },
   "dependencies": {
