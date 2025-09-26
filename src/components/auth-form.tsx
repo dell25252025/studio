@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, sendEmailVerification } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { useRouter } from 'next/navigation';
 import { createOrUpdateGoogleUserProfile } from '@/lib/firebase-actions';
@@ -38,7 +38,7 @@ type AuthFormProps = {
   setIsLogin: (isLogin: boolean) => void;
   isEmailFormVisible: boolean;
   setIsEmailFormVisible: (isVisible: boolean) => void;
-  onSuccess: () => void;
+  onSuccess?: () => void; // Made onSuccess optional as we handle redirection here
 };
 
 export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setIsEmailFormVisible, onSuccess }: AuthFormProps) {
@@ -59,12 +59,14 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
         const loginValues = values as z.infer<typeof loginSchema>;
         await signInWithEmailAndPassword(auth, loginValues.email, loginValues.password);
         toast({ title: 'Connexion réussie !', description: 'Heureux de vous revoir.' });
-        router.push('/');
+        if (onSuccess) onSuccess(); else router.push('/');
       } else {
         const signupValues = values as z.infer<typeof signupSchema>;
-        await createUserWithEmailAndPassword(auth, signupValues.email, signupValues.password);
-        toast({ title: 'Compte créé avec succès !', description: 'Vous pouvez maintenant compléter votre profil.' });
-        router.push('/create-profile');
+        const userCredential = await createUserWithEmailAndPassword(auth, signupValues.email, signupValues.password);
+        await sendEmailVerification(userCredential.user);
+
+        toast({ title: 'Compte créé !', description: 'Un e-mail de vérification a été envoyé.' });
+        router.push('/verify-email');
       }
     } catch (error) {
       let description = "Une erreur inattendue s'est produite.";

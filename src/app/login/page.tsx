@@ -108,7 +108,6 @@ export default function AuthPage() {
                       setIsLogin={setIsLogin}
                       isEmailFormVisible={isEmailFormVisible}
                       setIsEmailFormVisible={setIsEmailFormVisible}
-                      onSuccess={() => router.push(isLogin ? '/' : '/create-profile')}
                   />
                 </div>
 
