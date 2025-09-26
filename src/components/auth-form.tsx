@@ -23,8 +23,11 @@ const loginSchema = z.object({
 
 const signupSchema = z.object({
   email: z.string().email({ message: 'Adresse e-mail invalide.' }),
-  password: z.string().min(6, { message: 'Le mot de passe doit contenir au moins 6 caractères.' }),
-  confirmPassword: z.string().min(6, { message: 'Le mot de passe doit contenir au moins 6 caractères.' }),
+  password: z.string()
+    .min(9, { message: 'Le mot de passe doit contenir au moins 9 caractères.' })
+    .regex(/[a-zA-Z]/, { message: 'Le mot de passe doit contenir au moins une lettre.' })
+    .regex(/[0-9]/, { message: 'Le mot de passe doit contenir au moins un chiffre.' }),
+  confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Les mots de passe ne correspondent pas.",
   path: ["confirmPassword"],
