@@ -610,25 +610,22 @@ export default function ProfileClientPage() {
                             disabled={isUploading || profilePictures.length >= MAX_PHOTOS}
                         />
                     </div>
-                    {isOwner && (
-                      <div className="mt-3 flex flex-col items-start gap-2">
-                        {!profile.isVerified && (
-                          <Button variant="outline" size="sm" asChild>
-                            <Link href="/profile/verify">
-                              Se faire vérifier ✔️
-                            </Link>
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                    {intention && (
-                        <div className="mt-2">
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                        {intention && (
                             <Badge variant="default" className={cn("border-none text-white text-sm px-2.5 py-1 h-auto", intention.color)}>
                                 <intention.icon className="mr-1.5 h-4 w-4" />
                                 {intention.text}
                             </Badge>
-                        </div>
-                    )}
+                        )}
+
+                        {isOwner && !profile.isVerified && (
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href="/profile/verify">
+                                Se faire vérifier ✔️
+                                </Link>
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </div>
 
