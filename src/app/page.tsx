@@ -22,7 +22,7 @@ function DiscoverPage({ user }: { user: User }) {
   const searchParams = useSearchParams();
 
   const [currentUserProfile, setCurrentUserProfile] = useState<DocumentData | null>(null);
-  const [possibleMatches, setPossibleMatches] = useState<DocumentData[]>([]);
+  const [allUsers, setAllUsers] = useState<DocumentData[]>([]);
   const [displayMatches, setDisplayMatches] = useState<DocumentData[]>([]);
   const [profilesLoading, setProfilesLoading] = useState(true);
 
@@ -30,13 +30,14 @@ function DiscoverPage({ user }: { user: User }) {
     async function fetchProfiles() {
       try {
         setProfilesLoading(true);
-        const [userProfile, allUsers] = await Promise.all([
+        const [userProfile, users] = await Promise.all([
           getUserProfile(user.uid),
           getAllUsers(),
         ]);
         setCurrentUserProfile(userProfile);
-        const otherUsers = allUsers.filter(u => u.id !== user.uid);
-        setPossibleMatches(otherUsers);
+        const otherUsers = users.filter(u => u.id !== user.uid);
+        setAllUsers(otherUsers);
+        setDisplayMatches(otherUsers); // Initially display all other users
       } catch (error) {
         console.error("Failed to fetch profiles:", error);
         toast({ variant: 'destructive', title: 'Error fetching profiles' });
@@ -46,66 +47,15 @@ function DiscoverPage({ user }: { user: User }) {
     }
     fetchProfiles();
   }, [user, toast]);
-
+  
+  // Minimal filtering logic can be added back here if needed
   useEffect(() => {
-    const filterMatches = () => {
-      let filtered = [...possibleMatches];
-
-      const hasUrlFilters = searchParams.toString().length > 0;
-      
-      if (hasUrlFilters) {
-          const showMe = searchParams.get('showMe');
-          if (showMe) {
-            filtered = filtered.filter(p => p.gender === showMe);
-          }
-          
-          const minAge = searchParams.get('minAge');
-          if (minAge) {
-            filtered = filtered.filter(p => p.age >= parseInt(minAge));
-          }
-
-          const maxAge = searchParams.get('maxAge');
-          if (maxAge) {
-            filtered = filtered.filter(p => p.age <= parseInt(maxAge));
-          }
-
-          const destination = searchParams.get('destination');
-          if (destination && destination !== 'Toutes') {
-            filtered = filtered.filter(p => p.destination === destination);
-          }
-
-          const intention = searchParams.get('intention');
-          if (intention && intention !== 'Toutes') {
-            filtered = filtered.filter(p => p.intention === intention);
-          }
-          
-          const travelStyle = searchParams.get('travelStyle');
-          if (travelStyle && travelStyle !== 'Tous') {
-            filtered = filtered.filter(p => p.travelStyle === travelStyle);
-          }
-
-          const activities = searchParams.get('activities');
-          if (activities && activities !== 'Toutes') {
-            filtered = filtered.filter(p => p.activities === activities);
-          }
-      } else if (currentUserProfile) {
-         // Apply default filter if no URL params
-         let defaultShowMe = 'Femme';
-         if (currentUserProfile.gender === 'Femme') {
-           defaultShowMe = 'Homme';
-         } else if (currentUserProfile.gender === 'Autre') {
-           defaultShowMe = 'Autre';
-         }
-         filtered = filtered.filter(p => p.gender === defaultShowMe);
-      }
-      
-      setDisplayMatches(filtered);
-    };
-
-    if (possibleMatches.length > 0) {
-        filterMatches();
+    // This effect can be expanded later to re-introduce filtering logic
+    // For now, it just ensures displayMatches is populated from allUsers
+    if (allUsers.length > 0) {
+      setDisplayMatches(allUsers);
     }
-  }, [searchParams, possibleMatches, currentUserProfile]);
+  }, [allUsers, searchParams]);
 
 
   const getMappedProfiles = (profiles: DocumentData[]): UserProfile[] => {
@@ -122,7 +72,7 @@ function DiscoverPage({ user }: { user: User }) {
         travelIntention: p.intention || '50/50',
         verified: p.isVerified ?? false,
         isVerified: p.isVerified ?? false,
-        image: p.profilePictures?.[0] || 'https://picsum.photos/800/1200'
+        image: p.profilePictures?.[0] || `https://picsum.photos/seed/${p.id}/800/1200`
     }));
   }
 
@@ -137,7 +87,7 @@ function DiscoverPage({ user }: { user: User }) {
             {profilesLoading ? (
               <div className="flex flex-col items-center justify-center text-center h-96">
                 <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                <h2 className="mt-6 text-2xl font-semibold">Loading profiles...</h2>
+                <h2 className="mt-6 text-2xl font-semibold">Chargement des profils...</h2>
               </div>
             ) : (
               <>
@@ -150,7 +100,7 @@ function DiscoverPage({ user }: { user: User }) {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-muted-foreground mt-8">No profiles match your criteria.</p>
+                    <p className="text-muted-foreground mt-8">Aucun autre profil trouvé.</p>
                   )}
                 </div>
               </>
