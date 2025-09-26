@@ -69,9 +69,7 @@ const SettingsPage = () => {
       icon: Crown,
       label: 'WanderLink Gold',
       href: '/premium',
-      color: 'text-amber-500',
-      bgColor: 'bg-amber-100 dark:bg-amber-900/50',
-      isSpecial: true, // Custom flag
+      isSpecial: true,
     },
     {
       icon: User,
@@ -181,12 +179,28 @@ const SettingsPage = () => {
             </li>
 
           {settingsItems.map((item) => {
+            if (item.isSpecial) {
+              return (
+                 <li key={item.label}>
+                    <Link href={item.href || '#'} className="block p-2">
+                       <div className="relative flex cursor-pointer items-center p-4 rounded-lg overflow-hidden bg-gradient-to-br from-amber-400 to-yellow-500 text-slate-900 shadow-md transition-transform hover:scale-[1.02]">
+                          <div className='mr-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/30'>
+                             <item.icon className='h-5 w-5 text-slate-900' />
+                          </div>
+                          <span className='flex-1 text-sm font-bold'>{item.label}</span>
+                          <ChevronRight className='h-5 w-5 text-slate-900/70' />
+                       </div>
+                    </Link>
+                 </li>
+              )
+            }
+            
             const content = (
               <div className="flex cursor-pointer items-center p-4 transition-colors">
                 <div className={cn('mr-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg', item.bgColor)}>
                   <item.icon className={cn('h-4 w-4', item.color)} />
                 </div>
-                <span className={cn('flex-1 text-sm', item.isSpecial ? 'font-bold text-amber-600 dark:text-amber-400' : 'text-card-foreground')}>
+                <span className='flex-1 text-sm text-card-foreground'>
                   {item.label}
                 </span>
                 <ChevronRight className="h-5 w-5 text-muted-foreground/50" />
@@ -196,9 +210,7 @@ const SettingsPage = () => {
             if (item.href) {
               const isExternal = item.href.startsWith('mailto:');
               return (
-                <li key={item.label} className={cn(
-                  item.isSpecial && 'bg-amber-400/10 dark:bg-amber-500/10 hover:bg-amber-400/20 dark:hover:bg-amber-500/20'
-                )}>
+                <li key={item.label} className="hover:bg-muted/50">
                   <Link
                     href={item.href}
                     target={isExternal ? '_blank' : '_self'}
@@ -211,9 +223,7 @@ const SettingsPage = () => {
             }
 
             return (
-              <li key={item.label} onClick={item.onClick} className={cn(
-                  item.isSpecial && 'bg-amber-400/10 dark:bg-amber-500/10 hover:bg-amber-400/20 dark:hover:bg-amber-500/20'
-                )}>
+              <li key={item.label} onClick={item.onClick} className="hover:bg-muted/50">
                 {content}
               </li>
             )
