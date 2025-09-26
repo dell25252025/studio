@@ -395,7 +395,12 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   const handleReportUser = () => {
     setIsReportModalOpen(true);
   };
-  
+
+  const handleStartCall = () => {
+    if (!otherUserId) return;
+    router.push(`/call?id=${otherUserId}`);
+  };
+
   const otherUserName = otherUser?.firstName || 'Utilisateur';
   const otherUserImage = otherUser?.profilePictures?.[0] || `https://picsum.photos/seed/${otherUserId}/200`;
   const otherUserIsVerified = otherUser?.isVerified ?? false;
@@ -418,7 +423,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
             {otherUserIsVerified && <CheckCircle className="h-3.5 w-3.5 text-blue-500 shrink-0" />}
           </div>
         </Link>
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vocaux')}>
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleStartCall}>
           <Phone className="h-4 w-4" />
         </Button>
         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlaceholderAction('Les appels vidéo')}>
