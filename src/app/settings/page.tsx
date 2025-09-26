@@ -17,6 +17,7 @@ import {
   Trash2,
   Moon,
   Languages,
+  Crown,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -63,6 +64,13 @@ const SettingsPage = () => {
   };
 
   const settingsItems = [
+    {
+      icon: Crown,
+      label: 'WanderLink Gold',
+      href: '/premium',
+      color: 'text-amber-500',
+      bgColor: 'bg-amber-100',
+    },
     {
       icon: User,
       label: 'Paramètres du compte',
