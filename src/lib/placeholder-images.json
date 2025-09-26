@@ -9,8 +9,8 @@
     "mobileVideoUrl": "https://ik.imagekit.io/fip3ktm2p/video%20app2.mp4?updatedAt=1757957531301"
   },
   "verificationPose": {
-    "url": "https://picsum.photos/seed/verify1/600/600",
-    "alt": "Exemple de pose pour la vérification de profil",
-    "hint": "person peace"
+    "url": "https://picsum.photos/seed/selfie-pose/600/600",
+    "alt": "Exemple de pose pour la vérification de profil, une personne faisant un signe de paix.",
+    "hint": "person selfie"
   }
 }
