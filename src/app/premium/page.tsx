@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { SettingsHeader } from '@/components/settings/settings-header';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Check, Crown, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { Capacitor } from '@capacitor/core';
+import { Purchases, PurchasesStoreProduct, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
 
 const premiumFeatures = [
   { text: "Découvrez qui a aimé votre profil et matchez instantanément." },
@@ -19,30 +21,75 @@ const premiumFeatures = [
   { text: "Débloquez des destinations exclusives." },
 ];
 
+const googleApiKey = "goog_jLdAnVbyRLrhEfdrpzudXAcvGjP";
 const productId = 'wanderlink_gold_monthly';
 
 export default function PremiumPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubscribing, setIsSubscribing] = useState(false);
+  const [product, setProduct] = useState<PurchasesStoreProduct | null>(null);
+
+  useEffect(() => {
+    const setupRevenueCat = async () => {
+      if (Capacitor.isNativePlatform()) {
+        try {
+          await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
+          await Purchases.configure({ apiKey: googleApiKey });
+          
+          const { products } = await Purchases.getProducts({ productIdentifiers: [productId] });
+          if (products.length > 0) {
+            setProduct(products[0]);
+          } else {
+             console.warn("Product 'wanderlink_gold_monthly' not found.");
+          }
+        } catch (e) {
+          console.error('Error setting up RevenueCat:', e);
+        }
+      }
+    };
+    setupRevenueCat();
+  }, []);
 
   const handleSubscribe = async () => {
+    if (!product) {
+       toast({
+        variant: 'destructive',
+        title: "Offre indisponible",
+        description: "L'abonnement n'est pas disponible pour le moment.",
+      });
+      return;
+    }
+    
     setIsSubscribing(true);
     
-    // TODO: Intégrer la logique d'achat avec l'API Google Play Billing
-    // Pour l'instant, nous allons simuler un succès.
-    
-    console.log(`Lancement du processus d'abonnement pour le produit : ${productId}`);
-    
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Simule l'appel API
+    try {
+      const { customerInfo, userCancelled } = await Purchases.purchaseStoreProduct({ product: product });
 
-    toast({
-      title: "Félicitations et bienvenue !",
-      description: "Vous êtes maintenant membre WanderLink Gold.",
-    });
+      if (userCancelled) {
+        toast({ title: 'Achat annulé' });
+      } else if (customerInfo.entitlements.active['premium']) {
+        // TODO: Mettre à jour la base de données de l'utilisateur avec le statut premium
+        toast({ title: 'Félicitations !', description: 'Vous êtes maintenant membre WanderLink Gold.' });
+        router.push('/');
+      } else {
+        toast({ title: 'Achat réussi !', description: 'Votre abonnement est en cours de validation.' });
+      }
 
-    setIsSubscribing(false);
-    router.push('/'); // Redirige l'utilisateur après l'abonnement
+    } catch (error: any) {
+      if (!error.userCancelled) {
+          console.error("RevenueCat purchase error:", error);
+          toast({
+            variant: 'destructive',
+            title: 'Erreur d\'achat',
+            description: "Une erreur est survenue. Veuillez réessayer.",
+          });
+      } else {
+          toast({ title: 'Achat annulé' });
+      }
+    } finally {
+      setIsSubscribing(false);
+    }
   };
 
   return (
@@ -73,7 +120,7 @@ export default function PremiumPage() {
                 )} 
                 size="lg" 
                 onClick={handleSubscribe}
-                disabled={isSubscribing}
+                disabled={isSubscribing || !product}
             >
               {isSubscribing ? (
                 <>
@@ -81,7 +128,7 @@ export default function PremiumPage() {
                     Traitement...
                 </>
               ) : (
-                "S'abonner maintenant (9.99 €/mois)"
+                `Choisir mon abonnement (${product ? product.priceString : '...'})`
               )}
             </Button>
           </CardFooter>
