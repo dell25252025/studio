@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.wanderlink.app',
   appName: 'WanderLink',
   server: {
-    url: 'http://192.168.100.26:3000', 
+    url: 'http://192.168.100.26:3004', 
     cleartext: true
   }
 };
