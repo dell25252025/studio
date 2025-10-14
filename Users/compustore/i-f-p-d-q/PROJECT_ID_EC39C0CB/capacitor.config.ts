@@ -4,9 +4,9 @@ const config: CapacitorConfig = {
   appId: 'com.wanderlink.app',
   appName: 'WanderLink',
   server: {
-    // This is the special IP address that the Android emulator uses
-    // to connect to the host machine (your computer).
-    url: 'http://10.0.2.2:3005', 
+    // IMPORTANT: Remplacez par l'adresse IP locale ACTUELLE de votre ordinateur.
+    // Assurez-vous que votre téléphone est sur le même réseau WiFi.
+    url: 'http://192.168.1.99:3000', 
     cleartext: true
   }
 };
