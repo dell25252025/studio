@@ -13,7 +13,6 @@
     "typecheck": "tsc --noEmit",
     "android:remove": "npx cap remove android",
     "android:add": "npx cap add android",
-    "android:build": "npx next build && npx cap sync android",
     "android:open": "npx cap open android"
   },
   "dependencies": {
@@ -21,6 +20,7 @@
     "@capacitor/app": "^6.0.0",
     "@capacitor/camera": "^6.0.0",
     "@capacitor/core": "^6.1.1",
+    "@capacitor/geolocation": "^6.0.0",
     "@genkit-ai/googleai": "^1.14.1",
     "@genkit-ai/next": "^1.14.1",
     "@hookform/resolvers": "^4.1.3",
