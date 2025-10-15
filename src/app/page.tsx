@@ -13,8 +13,6 @@ import { useToast } from '@/hooks/use-toast';
 import type { DocumentData } from 'firebase/firestore';
 import type { UserProfile } from '@/lib/schema';
 import ProfileCard from '@/components/profile-card';
-import IncomingCallManager from '@/components/incoming-call-manager';
-
 
 // --- Sub-component for Authenticated Users --- //
 
@@ -31,14 +29,15 @@ function DiscoverPage({ user }: { user: User }) {
     async function fetchProfiles() {
       try {
         setProfilesLoading(true);
+        // Let's limit the number of users we fetch to improve performance
         const [userProfile, users] = await Promise.all([
           getUserProfile(user.uid),
-          getAllUsers(),
+          getAllUsers(12), // Fetch a limited number of users
         ]);
         setCurrentUserProfile(userProfile);
         const otherUsers = users.filter(u => u.id !== user.uid);
         setAllUsers(otherUsers);
-        setDisplayMatches(otherUsers); // Initially display all other users
+        setDisplayMatches(otherUsers); // Initially display the fetched users
       } catch (error) {
         console.error("Failed to fetch profiles:", error);
         toast({ variant: 'destructive', title: 'Error fetching profiles' });

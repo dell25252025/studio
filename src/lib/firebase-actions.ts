@@ -2,7 +2,7 @@
 'use server';
 
 import { db, storage } from "@/lib/firebase";
-import { collection, doc, getDoc, DocumentData, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, doc, getDoc, DocumentData, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove, addDoc, serverTimestamp, limit, query as firestoreQuery } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -226,10 +226,11 @@ export async function getUserProfile(id: string): Promise<DocumentData | null> {
   }
 }
 
-export async function getAllUsers() {
+export async function getAllUsers(count?: number) {
   try {
     const usersCollection = collection(db, "users");
-    const userSnapshot = await getDocs(usersCollection);
+    const q = count ? firestoreQuery(usersCollection, limit(count)) : usersCollection;
+    const userSnapshot = await getDocs(q);
     const userList = userSnapshot.docs.map(doc => {
       const data = doc.data();
       // Convert Firestore Timestamps to serializable format (ISO strings)
@@ -380,5 +381,3 @@ export async function getFriends(userId: string) {
     throw new Error("Failed to retrieve friends list.");
   }
 }
-
-    
