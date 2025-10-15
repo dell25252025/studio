@@ -6,7 +6,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import BackButtonHandler from '@/components/back-button-handler';
 import { Playfair_Display, Poppins, PT_Sans } from 'next/font/google';
 import { cn } from '@/lib/utils';
-
+// import IncomingCallManager from '@/components/incoming-call-manager';
+import PermissionRequester from '@/components/permission-requester';
 
 export const metadata: Metadata = {
   title: 'WanderLink',
@@ -59,7 +60,8 @@ export default function RootLayout({
           {children}
           <Toaster />
           <BackButtonHandler />
-          
+          {/* <IncomingCallManager /> */}
+          <PermissionRequester />
         </ThemeProvider>
       </body>
     </html>
