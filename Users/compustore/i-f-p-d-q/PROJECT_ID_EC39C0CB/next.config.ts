@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -13,7 +12,7 @@ const nextConfig = {
   experimental: {
     // This allows the Next.js dev server to accept requests from the
     // Firebase Studio web preview and the Android emulator.
-    allowedDevOrigins: ["https://*.cloudworkstations.dev"],
+    allowedDevOrigins: ["https://*.cloudworkstations.dev", "http://*.localhost", "http://localhost"],
   },
   images: {
     unoptimized: true,
@@ -40,6 +39,12 @@ const nextConfig = {
         protocol: 'https'
         ,
         hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ik.imagekit.io',
         port: '',
         pathname: '/**',
       }
