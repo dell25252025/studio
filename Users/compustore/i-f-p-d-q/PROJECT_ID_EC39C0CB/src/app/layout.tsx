@@ -60,7 +60,7 @@ export default function RootLayout({
           {children}
           <Toaster />
           <BackButtonHandler />
-          {/* <IncomingCallManager /> */}
+          {/* IncomingCallManager est déplacé dans les pages où l'utilisateur est connecté */}
           <PermissionRequester />
         </ThemeProvider>
       </body>

@@ -11,39 +11,27 @@ const PermissionRequester = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // const requestPermissions = async () => {
-    //   if (Capacitor.isNativePlatform()) {
-    //     try {
-    //       // Demande de permission pour la caméra
-    //       // await Camera.requestPermissions();
-
-    //       // Demande de permission pour la géolocalisation
-    //       // await Geolocation.requestPermissions();
+    const requestInitialPermissions = async () => {
+      if (Capacitor.isNativePlatform()) {
+        try {
+          // Uniquement demander les permissions non-bloquantes au démarrage.
+          // La géolocalisation est souvent moins intrusive.
+          await Geolocation.requestPermissions();
           
-    //       // Demande de permission pour le microphone via l'API web standard
-    //       // C'est la méthode recommandée pour le micro, même dans Capacitor.
-    //       // await navigator.mediaDevices.getUserMedia({ audio: true });
+          // Les permissions pour la caméra et le micro seront demandées
+          // au moment de l'action (clic sur le bouton d'appel).
+          // Cela évite de surcharger l'application au démarrage.
 
-    //     } catch (error: any) {
-    //       // Gérer les erreurs spécifiques au micro
-    //       if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-    //          console.log('Permission pour le microphone refusée.');
-    //       } else {
-    //         console.error('Erreur lors de la demande de permissions:', error);
-    //         toast({
-    //           variant: 'destructive',
-    //           title: 'Erreur de permissions',
-    -           description: 'Impossible de demander toutes les autorisations nécessaires.',
-    //         });
-    //       }
-    //     }
-    //   }
-    // };
+        } catch (error: any) {
+            console.error('Erreur lors de la demande de permission de géolocalisation:', error);
+            // On ne bloque pas l'utilisateur pour ça, on log juste l'erreur.
+        }
+      }
+    };
 
-    // // On attend un court instant avant de demander pour s'assurer que l'UI est prête
-    // const timeoutId = setTimeout(requestPermissions, 1000);
+    const timeoutId = setTimeout(requestInitialPermissions, 2000);
     
-    // return () => clearTimeout(timeoutId);
+    return () => clearTimeout(timeoutId);
 
   }, [toast]);
 
