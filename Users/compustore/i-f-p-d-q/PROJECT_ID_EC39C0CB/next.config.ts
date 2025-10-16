@@ -13,7 +13,7 @@ const nextConfig = {
   experimental: {
     // This allows the Next.js dev server to accept requests from the
     // Firebase Studio web preview and the Android emulator.
-    allowedDevOrigins: ["https://*.cloudworkstations.dev", "http://*.localhost", "http://localhost", "http://192.168.100.26:3000"],
+    allowedDevOrigins: ["https://*.cloudworkstations.dev", "http://*.localhost", "http://localhost", "http://192.168.100.26:3000", "http://192.168.100.26:3001"],
   },
   images: {
     unoptimized: true,
