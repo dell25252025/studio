@@ -45,40 +45,8 @@ function CallUI() {
   const isVideoCall = searchParams.get('video') === 'true';
 
   useEffect(() => {
-    const fetchInitialData = async () => {
-      if (!callId) {
-        toast({ variant: 'destructive', title: 'Erreur', description: 'ID d\'appel manquant.' });
-        router.push('/');
-        return;
-      }
-      
-      const callDocRef = doc(db, 'calls', callId);
-      const callDocSnap = await getDoc(callDocRef);
-
-      if (!callDocSnap.exists()) {
-        toast({ variant: 'destructive', title: 'Erreur', description: 'Appel non trouvé.' });
-        router.push('/');
-        return;
-      }
-      
-      const callData = callDocSnap.data();
-      const calleeId = callData.calleeId;
-      const profile = await getUserProfile(calleeId);
-      setOtherUser(profile);
-      setLoading(false);
-    };
-
-    fetchInitialData();
-  }, [callId, router, toast]);
-
-
-  useEffect(() => {
     setIsVideoOn(isVideoCall);
 
-    // ---- DEACTIVATION TEMPORAIRE DE WEBRTC ----
-    // Le code ci-dessous est mis en commentaire pour éviter de surcharger
-    // l'application au démarrage. Il sera réactivé plus tard.
-    /*
     const initialize = async () => {
       if (!callId) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'ID d\'appel manquant.' });
@@ -182,8 +150,6 @@ function CallUI() {
     }
 
     initialize();
-    */
-    // ---- FIN DE LA DEACTIVATION ----
 
     return () => {
       handleEndCall(false); // Cleanup on component unmount

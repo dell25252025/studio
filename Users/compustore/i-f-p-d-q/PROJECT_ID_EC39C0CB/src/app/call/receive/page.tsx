@@ -43,36 +43,8 @@ function ReceiveCallUI() {
   const isVideoCall = searchParams.get('video') === 'true';
 
   useEffect(() => {
-    const fetchInitialData = async () => {
-       if (!callId) {
-        toast({ variant: 'destructive', title: 'Erreur', description: 'ID d\'appel manquant.' });
-        router.push('/');
-        return;
-      }
-      
-      const callDocRef = doc(db, 'calls', callId);
-      const callDocSnap = await getDoc(callDocRef);
-
-      if (!callDocSnap.exists()) {
-        toast({ variant: 'destructive', title: 'Erreur', description: 'Appel non trouvé.' });
-        router.push('/');
-        return;
-      }
-      
-      const callData = callDocSnap.data();
-      const callerId = callData.callerId;
-      const profile = await getUserProfile(callerId);
-      setOtherUser(profile);
-      setLoading(false);
-    };
-    fetchInitialData();
-  }, [callId, router, toast]);
-
-  useEffect(() => {
     setIsVideoOn(isVideoCall);
 
-    // ---- DEACTIVATION TEMPORAIRE DE WEBRTC ----
-    /*
     const initialize = async () => {
       if (!callId) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'ID d\'appel manquant.' });
@@ -166,8 +138,6 @@ function ReceiveCallUI() {
     };
 
     initialize();
-    */
-    // ---- FIN DE LA DEACTIVATION ----
 
     return () => {
       handleEndCall(false);
