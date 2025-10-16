@@ -9,10 +9,10 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "android:remove": "npx cap remove android",
+    "android:remove": "rm -rf android",
     "android:add": "npx cap add android",
-    "android:open": "npx cap open android",
-    "android:sync": "npx cap sync android"
+    "android:sync": "npx cap sync android",
+    "android:open": "npx cap open android"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.1",
@@ -67,6 +67,7 @@
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.54.2",
     "recharts": "^2.15.1",
+    "rimraf": "^5.0.7",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1",
