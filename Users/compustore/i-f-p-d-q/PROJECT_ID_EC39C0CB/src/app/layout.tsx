@@ -8,6 +8,7 @@ import { Playfair_Display, Poppins, PT_Sans } from 'next/font/google';
 import { cn } from '@/lib/utils';
 // import IncomingCallManager from '@/components/incoming-call-manager';
 import PermissionRequester from '@/components/permission-requester';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'WanderLink',
@@ -63,6 +64,24 @@ export default function RootLayout({
           {/* IncomingCallManager est déplacé dans les pages où l'utilisateur est connecté */}
           <PermissionRequester />
         </ThemeProvider>
+         <Script id="capacitor-force-redirect" strategy="afterInteractive">
+          {`
+            (function() {
+              // Exécute ce script uniquement dans un contexte Capacitor (natif)
+              if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+                // L'URL du serveur de développement que nous voulons forcer
+                var targetHost = '192.168.100.26:3000';
+                var currentHost = window.location.host;
+
+                // Si l'hôte actuel n'est pas celui que nous voulons, on redirige.
+                if (currentHost !== targetHost) {
+                  console.log('Capacitor: Hôte incorrect détecté (' + currentHost + '). Redirection vers ' + targetHost);
+                  window.location.href = 'http://' + targetHost;
+                }
+              }
+            })();
+          `}
+        </Script>
       </body>
     </html>
   );
