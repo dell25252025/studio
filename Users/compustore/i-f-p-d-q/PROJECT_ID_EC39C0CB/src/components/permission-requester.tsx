@@ -6,31 +6,42 @@ import { Capacitor } from '@capacitor/core';
 import { Camera } from '@capacitor/camera';
 import { Geolocation } from '@capacitor/geolocation';
 import { useToast } from '@/hooks/use-toast';
-import { Permissions } from '@capacitor/permissions';
 
 const PermissionRequester = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const requestInitialPermissions = async () => {
+    const requestPermissions = async () => {
       if (Capacitor.isNativePlatform()) {
         try {
-          // Demander les permissions une par une est une bonne pratique.
-          // Ici, nous les demandons au démarrage pour simplifier.
-          await Permissions.request({ name: 'camera' });
-          await Permissions.request({ name: 'geolocation' });
-          await Permissions.request({ name: 'microphone' });
+          // Demande de permission pour la caméra
+          await Camera.requestPermissions();
+
+          // Demande de permission pour la géolocalisation
+          await Geolocation.requestPermissions();
+          
+          // Demande de permission pour le microphone via l'API web standard
+          // C'est la méthode recommandée pour le micro, même dans Capacitor.
+          await navigator.mediaDevices.getUserMedia({ audio: true });
 
         } catch (error: any) {
+          // Gérer les erreurs spécifiques au micro
+          if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+             console.log('Permission pour le microphone refusée.');
+          } else {
             console.error('Erreur lors de la demande de permissions:', error);
-            // On informe l'utilisateur uniquement si quelque chose s'est mal passé,
-            // sans être trop intrusif.
+            toast({
+              variant: 'destructive',
+              title: 'Erreur de permissions',
+              description: 'Impossible de demander toutes les autorisations nécessaires.',
+            });
+          }
         }
       }
     };
 
-    // On attend un court instant pour ne pas bloquer l'affichage initial de l'app.
-    const timeoutId = setTimeout(requestInitialPermissions, 2000);
+    // On attend un court instant avant de demander pour s'assurer que l'UI est prête
+    const timeoutId = setTimeout(requestPermissions, 1000);
     
     return () => clearTimeout(timeoutId);
 
