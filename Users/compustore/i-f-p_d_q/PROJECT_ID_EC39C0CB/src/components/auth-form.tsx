@@ -11,10 +11,13 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Mail, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithCredential, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { useRouter } from 'next/navigation';
 import { createOrUpdateGoogleUserProfile } from '@/lib/firebase-actions';
+import { Capacitor } from '@capacitor/core';
+import { GoogleAuth } from '@capacitor/google-auth';
+
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Adresse e-mail invalide.' }),
@@ -83,12 +86,32 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
     }
   }
 
+  async function handleNativeGoogleSignIn() {
+    try {
+        const googleUser = await GoogleAuth.signIn();
+        const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
+        const result = await signInWithCredential(auth, credential);
+        return result.user;
+    } catch (error) {
+        console.error("Native Google sign-in error", error);
+        // If native sign-in fails, we can fall back to the web method.
+        // For simplicity, we just log the error here.
+        throw new Error("La connexion native avec Google a échoué.");
+    }
+  }
+
+  async function handleWebGoogleSignIn() {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      return result.user;
+  }
+
   async function handleGoogleSignIn() {
     setIsGoogleLoading(true);
-    const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+        const user = Capacitor.isNativePlatform() 
+            ? await handleNativeGoogleSignIn() 
+            : await handleWebGoogleSignIn();
       
       const profileResult = await createOrUpdateGoogleUserProfile(user.uid, {
         email: user.email,
