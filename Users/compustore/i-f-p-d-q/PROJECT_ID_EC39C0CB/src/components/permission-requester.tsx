@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect } from 'react';
@@ -27,6 +26,7 @@ const PermissionRequester = () => {
 
           // Demande de permission pour le microphone
            console.log('Demande de la permission du microphone...');
+           // Cette méthode déclenche la popup de permission native
            await navigator.mediaDevices.getUserMedia({ audio: true });
            console.log('Permission du microphone accordée ou déjà active.');
            
@@ -39,7 +39,7 @@ const PermissionRequester = () => {
         } catch (error: any) {
             console.error('Erreur lors de la demande de permissions:', error);
             // On ne spamme pas l'utilisateur avec des toasts pour chaque permission refusée.
-            // On loggue juste l'erreur.
+            // On loggue juste l'erreur, la popup native est suffisante.
         }
       }
     };
