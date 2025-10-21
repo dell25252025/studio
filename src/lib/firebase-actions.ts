@@ -35,6 +35,14 @@ export async function createOrUpdateGoogleUserProfile(userId: string, profileDat
             // User exists, check if profile is complete
             const data = userDoc.data();
             const isComplete = !!data.intention && !!data.age; // A simple check for profile completion
+            
+            // Update profile picture if it's different
+            if (profileData.photoURL && (!data.profilePictures || !data.profilePictures.includes(profileData.photoURL))) {
+                 await updateDoc(userRef, {
+                    profilePictures: arrayUnion(profileData.photoURL)
+                });
+            }
+            
             return { success: true, id: userId, isNewUser: !isComplete };
         } else {
             // User does not exist, create a basic profile
@@ -50,6 +58,10 @@ export async function createOrUpdateGoogleUserProfile(userId: string, profileDat
                 isPremium: false,
                 subscriptionEndDate: null,
                 isVerified: false,
+                // These will be filled in the create-profile steps
+                age: undefined,
+                gender: undefined,
+                intention: undefined,
             };
             await setDoc(userRef, newProfileData);
             return { success: true, id: userId, isNewUser: true };
@@ -70,22 +82,26 @@ export async function createUserProfile(userId: string, profileData: any) {
     try {
         const { profilePictures: photoDataUris, ...restOfProfileData } = profileData;
 
-        let uploadedPhotoUrls: string[] = [];
+        // Fetch existing photos to avoid re-uploading
+        const userDoc = await getDoc(doc(db, "users", userId));
+        const existingPhotos = userDoc.exists() ? userDoc.data().profilePictures || [] : [];
+        
+        let uploadedPhotoUrls: string[] = [...existingPhotos];
+
         if (photoDataUris && photoDataUris.length > 0) {
-            const uploadPromises = photoDataUris.map((uri: string) => uploadProfilePicture(userId, uri));
+            const newPhotosToUpload = photoDataUris.filter((uri: string) => !uri.startsWith('http'));
+            
+            const uploadPromises = newPhotosToUpload.map((uri: string) => uploadProfilePicture(userId, uri));
             const results = await Promise.all(uploadPromises);
-            uploadedPhotoUrls = results.filter((url): url is string => url !== null);
+            
+            const successfullyUploaded = results.filter((url): url is string => url !== null);
+            uploadedPhotoUrls = [...existingPhotos, ...successfullyUploaded];
         }
         
         const finalProfileData = {
             ...restOfProfileData,
             profilePictures: uploadedPhotoUrls,
-            createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            friends: [],
-            isPremium: false,
-            subscriptionEndDate: null,
-            isVerified: false,
         };
 
         if (finalProfileData.dates?.from) {
@@ -95,6 +111,7 @@ export async function createUserProfile(userId: string, profileData: any) {
           finalProfileData.dates.to = new Date(finalProfileData.dates.to);
         }
 
+        // Use set with merge true to create or update the document
         await setDoc(doc(db, "users", userId), finalProfileData, { merge: true });
         
         return { success: true, id: userId };
@@ -211,6 +228,12 @@ export async function getUserProfile(id: string): Promise<DocumentData | null> {
         if (data.dates.to && typeof data.dates.to.toDate === 'function') {
           data.dates.to = data.dates.to.toDate().toISOString();
         }
+      }
+      if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+        data.createdAt = data.createdAt.toDate().toISOString();
+      }
+       if (data.updatedAt && typeof data.updatedAt.toDate === 'function') {
+        data.updatedAt = data.updatedAt.toDate().toISOString();
       }
       if (data.subscriptionEndDate && typeof data.subscriptionEndDate.toDate === 'function') {
         data.subscriptionEndDate = data.subscriptionEndDate.toDate().toISOString();
@@ -381,3 +404,5 @@ export async function getFriends(userId: string) {
     throw new Error("Failed to retrieve friends list.");
   }
 }
+
+    
