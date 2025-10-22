@@ -89,7 +89,8 @@ function CallUI() {
       } catch (error) {
         console.error("Error getting user media", error);
         setHasMediaPermission(false);
-        toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible d\'accéder au microphone ou à la caméra.' });
+        toast({ variant: 'destructive', title: 'Accès Média Refusé', description: 'Veuillez autoriser l\'accès au micro et à la caméra dans les paramètres de votre appareil.' });
+        // Ne pas quitter la page immédiatement, laisser l'alerte s'afficher
         return;
       }
 
@@ -229,9 +230,10 @@ function CallUI() {
           hasMediaPermission === false && 'hidden'
       )} />
       {hasMediaPermission === false && (
-          <div className="absolute top-4 right-4 w-1/4 max-w-[150px] aspect-video rounded-lg bg-black flex items-center justify-center">
-              <Alert variant="destructive" className="p-2 text-xs">
+          <div className="absolute top-4 right-4 w-1/4 max-w-[150px] aspect-video rounded-lg bg-black flex items-center justify-center p-1">
+              <Alert variant="destructive" className="p-2 text-[10px] bg-red-900/80 border-red-500/50 text-white">
                 <AlertTitle className="text-xs">Caméra Désactivée</AlertTitle>
+                <AlertDescription>Autorisation requise</AlertDescription>
               </Alert>
           </div>
       )}
