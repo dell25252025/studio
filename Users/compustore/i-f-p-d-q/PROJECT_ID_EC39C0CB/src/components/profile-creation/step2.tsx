@@ -18,7 +18,7 @@ import { Crosshair, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Capacitor } from '@capacitor/core';
-import { Geolocation, type PermissionStatus } from '@capacitor/geolocation';
+import { Geolocation } from '@capacitor/geolocation';
 
 const allLanguages = [
     { id: 'fr', label: 'Français' },
@@ -62,29 +62,25 @@ const Step2 = () => {
   const requestAndLocate = async () => {
     setIsLocating(true);
     try {
-      if (!Capacitor.isPluginAvailable('Geolocation')) {
-        throw new Error("La géolocalisation n'est pas disponible sur cet appareil.");
-      }
-
-      let permStatus: PermissionStatus;
-      if (Capacitor.isNativePlatform()) {
-          permStatus = await Geolocation.requestPermissions();
-      } else {
-          // For web, check permission status via standard API
-          const status = await navigator.permissions.query({ name: 'geolocation' });
-          permStatus = { location: status.state };
-      }
-
-
-      if (permStatus.location !== 'granted') {
-        toast({
-          variant: 'destructive',
-          title: 'Permission refusée',
-          description: "L'accès à la localisation est nécessaire. Vous pouvez l'activer dans les paramètres de l'application.",
-        });
-        setIsLocating(false);
-        return;
-      }
+        if (!Capacitor.isPluginAvailable('Geolocation')) {
+          // Fallback for web browsers
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+              const { latitude, longitude } = position.coords;
+              const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`);
+              const data = await response.json();
+              if (data?.address?.country) {
+                setValue('location', data.address.country, { shouldValidate: true });
+                toast({ title: "Position trouvée !", description: `Pays défini sur : ${data.address.country}` });
+              } else { throw new Error("Pays non trouvé."); }
+            }, () => {
+               toast({ variant: 'destructive', title: 'Permission refusée', description: "Veuillez autoriser l'accès à la localisation."});
+            });
+          } else {
+             throw new Error("La géolocalisation n'est pas disponible sur cet appareil.");
+          }
+          return;
+        }
 
       const position = await Geolocation.getCurrentPosition();
       const { latitude, longitude } = position.coords;
@@ -251,5 +247,3 @@ const Step2 = () => {
 };
 
 export default Step2;
-
-    

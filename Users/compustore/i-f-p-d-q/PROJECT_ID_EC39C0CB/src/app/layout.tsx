@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 // import IncomingCallManager from '@/components/incoming-call-manager';
 import Script from 'next/script';
 import { Suspense } from 'react';
+import PermissionRequester from '@/components/permission-requester';
 
 export const metadata: Metadata = {
   title: 'WanderLink',
@@ -63,6 +64,7 @@ export default function RootLayout({
           </Suspense>
           <Toaster />
           <BackButtonHandler />
+          <PermissionRequester />
           {/* IncomingCallManager est déplacé dans les pages où l'utilisateur est connecté */}
         </ThemeProvider>
       </body>

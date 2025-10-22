@@ -367,15 +367,6 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   const handleStartCall = async (isVideo: boolean) => {
     if (!otherUserId || !currentUser) return;
 
-    try {
-        // Demander la permission avant de créer l'appel
-        await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideo });
-    } catch (error) {
-        console.error("Media permission denied for call:", error);
-        toast({ variant: 'destructive', title: 'Permission requise', description: 'Veuillez autoriser l\'accès au micro/caméra pour passer un appel.' });
-        return;
-    }
-
      try {
       const callDocRef = await addDoc(collection(db, 'calls'), {
         callerId: currentUser.uid,
