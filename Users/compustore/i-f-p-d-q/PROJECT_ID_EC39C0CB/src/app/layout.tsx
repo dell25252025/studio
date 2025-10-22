@@ -7,7 +7,6 @@ import BackButtonHandler from '@/components/back-button-handler';
 import { Playfair_Display, Poppins, PT_Sans } from 'next/font/google';
 import { cn } from '@/lib/utils';
 // import IncomingCallManager from '@/components/incoming-call-manager';
-import PermissionRequester from '@/components/permission-requester';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
@@ -62,7 +61,6 @@ export default function RootLayout({
           <Toaster />
           <BackButtonHandler />
           {/* IncomingCallManager est déplacé dans les pages où l'utilisateur est connecté */}
-          <PermissionRequester />
         </ThemeProvider>
          <Script id="capacitor-force-redirect" strategy="afterInteractive">
           {`
