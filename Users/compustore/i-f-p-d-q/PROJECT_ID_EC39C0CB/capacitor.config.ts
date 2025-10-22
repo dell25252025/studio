@@ -4,10 +4,8 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.wanderlink.app',
   appName: 'WanderLink',
-  webDir: 'out',
+  webDir: 'src', // This forces Capacitor to create the assets directory.
   server: {
-    // IMPORTANT: Replace with your computer's local IP address.
-    // Find it on Windows with `ipconfig` or on macOS/Linux with `ifconfig`.
     url: 'http://192.168.100.26:3000', 
     cleartext: true
   },
