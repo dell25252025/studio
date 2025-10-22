@@ -70,42 +70,44 @@ function CallUI() {
       const profile = await getUserProfile(calleeId);
       setOtherUser(profile);
       setLoading(false);
-
-      // Initialiser WebRTC
-      pc.current = new RTCPeerConnection(servers);
-      remoteStream.current = new MediaStream();
-
+      
       // Obtenir le flux audio/vidéo local
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
         localStream.current = stream;
         setHasMediaPermission(true);
+
+        // Initialiser WebRTC SEULEMENT après avoir obtenu les permissions
+        pc.current = new RTCPeerConnection(servers);
+        remoteStream.current = new MediaStream();
+
         localStream.current.getTracks().forEach((track) => {
           pc.current?.addTrack(track, localStream.current!);
         });
         if (localVideoRef.current) {
             localVideoRef.current.srcObject = localStream.current;
         }
+        
+        // Gérer les pistes distantes
+        pc.current.ontrack = (event) => {
+            event.streams[0].getTracks().forEach((track) => {
+            remoteStream.current?.addTrack(track);
+            });
+            if (remoteVideoRef.current && remoteStream.current) {
+                remoteVideoRef.current.srcObject = remoteStream.current;
+            }
+        };
+
+        // Créer et gérer l'appel
+        await createAndManageCall(callDocRef);
+
       } catch (error) {
         console.error("Error getting user media", error);
         setHasMediaPermission(false);
-        toast({ variant: 'destructive', title: 'Accès Média Refusé', description: 'Veuillez autoriser l\'accès au micro et à la caméra dans les paramètres de votre appareil.' });
+        toast({ variant: 'destructive', title: 'Accès Média Refusé', description: 'Veuillez autoriser l\'accès au micro et à la caméra.' });
         // Ne pas quitter la page immédiatement, laisser l'alerte s'afficher
         return;
       }
-
-      // Gérer les pistes distantes
-      pc.current.ontrack = (event) => {
-        event.streams[0].getTracks().forEach((track) => {
-          remoteStream.current?.addTrack(track);
-        });
-        if (remoteVideoRef.current && remoteStream.current) {
-            remoteVideoRef.current.srcObject = remoteStream.current;
-        }
-      };
-
-      // Créer et gérer l'appel
-      await createAndManageCall(callDocRef);
     };
 
     const createAndManageCall = async (callDocRef: any) => {
@@ -136,7 +138,7 @@ function CallUI() {
                  toast({ variant: 'destructive', title: 'Appel refusé' });
                 setTimeout(() => handleEndCall(), 2000);
             }
-            if (!pc.current?.currentRemoteDescription && data?.answer) {
+            if (pc.current && !pc.current.currentRemoteDescription && data?.answer) {
                 const answerDescription = new RTCSessionDescription(data.answer);
                 pc.current?.setRemoteDescription(answerDescription);
                 setCallStatus('connected');
@@ -174,7 +176,11 @@ function CallUI() {
       const callDocRef = doc(db, 'calls', callId);
       const docExists = (await getDoc(callDocRef)).exists();
       if(docExists){
-        await deleteDoc(callDocRef);
+        try {
+            await deleteDoc(callDocRef);
+        } catch (error) {
+            console.warn("Could not delete call document, it might have been deleted already.");
+        }
       }
     }
     
@@ -307,3 +313,5 @@ export default function CallPage() {
         </Suspense>
     )
 }
+
+    

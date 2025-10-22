@@ -70,7 +70,9 @@ const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void
     getCameraPermission();
 
     return () => {
-      videoRef.current?.srcObject && (videoRef.current.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+      if (videoRef.current && videoRef.current.srcObject) {
+         (videoRef.current.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+      }
     };
   }, [toast]);
 
@@ -380,6 +382,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         calleeId: otherUserId,
         status: 'ringing',
         type: isVideo ? 'video' : 'audio',
+        createdAt: new Date().toISOString(),
       });
       router.push(`/call?callId=${callDocRef.id}&video=${isVideo}`);
     } catch (error) {
@@ -664,3 +667,5 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     </div>
   );
 }
+
+    

@@ -17,9 +17,8 @@ import { Button } from '@/components/ui/button';
 import { Crosshair, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { Geolocation } from '@capacitor/geolocation';
 import { Capacitor } from '@capacitor/core';
-import { Permissions } from '@capacitor/permissions';
+import { Geolocation, type PermissionStatus } from '@capacitor/geolocation';
 
 const allLanguages = [
     { id: 'fr', label: 'Français' },
@@ -67,15 +66,17 @@ const Step2 = () => {
         throw new Error("La géolocalisation n'est pas disponible sur cet appareil.");
       }
 
-      // Check permission status
-      let permStatus = await Permissions.query({ name: 'geolocation' });
-
-      // If not yet granted, request it
-      if (permStatus.state !== 'granted') {
-          permStatus = await Permissions.request({ name: 'geolocation' });
+      let permStatus: PermissionStatus;
+      if (Capacitor.isNativePlatform()) {
+          permStatus = await Geolocation.requestPermissions();
+      } else {
+          // For web, check permission status via standard API
+          const status = await navigator.permissions.query({ name: 'geolocation' });
+          permStatus = { location: status.state };
       }
 
-      if (permStatus.state !== 'granted') {
+
+      if (permStatus.location !== 'granted') {
         toast({
           variant: 'destructive',
           title: 'Permission refusée',
@@ -250,3 +251,5 @@ const Step2 = () => {
 };
 
 export default Step2;
+
+    
