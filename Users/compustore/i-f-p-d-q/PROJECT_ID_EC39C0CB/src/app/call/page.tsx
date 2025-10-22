@@ -11,6 +11,7 @@ import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 // Configuration du serveur STUN de Google (public et gratuit)
 const servers = {
@@ -34,6 +35,7 @@ function CallUI() {
   const [isMuted, setIsMuted] = useState(false);
   const [isDeafened, setIsDeafened] = useState(false); // Non implémenté
   const [isVideoOn, setIsVideoOn] = useState(true);
+  const [hasMediaPermission, setHasMediaPermission] = useState<boolean | null>(null);
 
   const pc = useRef<RTCPeerConnection | null>(null);
   const localStream = useRef<MediaStream | null>(null);
@@ -75,17 +77,19 @@ function CallUI() {
 
       // Obtenir le flux audio/vidéo local
       try {
-        localStream.current = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
+        localStream.current = stream;
+        setHasMediaPermission(true);
         localStream.current.getTracks().forEach((track) => {
           pc.current?.addTrack(track, localStream.current!);
         });
-        if (localVideoRef.current && localStream.current) {
+        if (localVideoRef.current) {
             localVideoRef.current.srcObject = localStream.current;
         }
       } catch (error) {
         console.error("Error getting user media", error);
+        setHasMediaPermission(false);
         toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible d\'accéder au microphone ou à la caméra.' });
-        handleEndCall();
         return;
       }
 
@@ -221,8 +225,17 @@ function CallUI() {
        {/* Vidéo locale en miniature */}
       <video ref={localVideoRef} autoPlay muted playsInline className={cn(
           "absolute top-4 right-4 w-1/4 max-w-[150px] rounded-lg shadow-lg border-2 border-white/50",
-          !isVideoOn && "hidden"
+          !isVideoOn && "hidden",
+          hasMediaPermission === false && 'hidden'
       )} />
+      {hasMediaPermission === false && (
+          <div className="absolute top-4 right-4 w-1/4 max-w-[150px] aspect-video rounded-lg bg-black flex items-center justify-center">
+              <Alert variant="destructive" className="p-2 text-xs">
+                <AlertTitle className="text-xs">Caméra Désactivée</AlertTitle>
+              </Alert>
+          </div>
+      )}
+
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center text-center mt-16 [text-shadow:_0_1px_4px_rgb(0_0_0_/_50%)]">

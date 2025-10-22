@@ -8,6 +8,7 @@ import { Playfair_Display, Poppins, PT_Sans } from 'next/font/google';
 import { cn } from '@/lib/utils';
 // import IncomingCallManager from '@/components/incoming-call-manager';
 import Script from 'next/script';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'WanderLink',
@@ -57,7 +58,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <Suspense>
+            {children}
+          </Suspense>
           <Toaster />
           <BackButtonHandler />
           {/* IncomingCallManager est déplacé dans les pages où l'utilisateur est connecté */}

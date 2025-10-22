@@ -19,6 +19,7 @@ import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Geolocation } from '@capacitor/geolocation';
 import { Capacitor } from '@capacitor/core';
+import { Permissions } from '@capacitor/permissions';
 
 const allLanguages = [
     { id: 'fr', label: 'Français' },
@@ -62,17 +63,26 @@ const Step2 = () => {
   const requestAndLocate = async () => {
     setIsLocating(true);
     try {
-      if (Capacitor.isNativePlatform()) {
-        const permissions = await Geolocation.requestPermissions();
-        if (permissions.location !== 'granted') {
-          toast({
-            variant: 'destructive',
-            title: 'Permission refusée',
-            description: "L'accès à la localisation est nécessaire. Vous pouvez l'activer dans les paramètres de l'application.",
-          });
-          setIsLocating(false);
-          return;
-        }
+      if (!Capacitor.isPluginAvailable('Geolocation')) {
+        throw new Error("La géolocalisation n'est pas disponible sur cet appareil.");
+      }
+
+      // Check permission status
+      let permStatus = await Permissions.query({ name: 'geolocation' });
+
+      // If not yet granted, request it
+      if (permStatus.state !== 'granted') {
+          permStatus = await Permissions.request({ name: 'geolocation' });
+      }
+
+      if (permStatus.state !== 'granted') {
+        toast({
+          variant: 'destructive',
+          title: 'Permission refusée',
+          description: "L'accès à la localisation est nécessaire. Vous pouvez l'activer dans les paramètres de l'application.",
+        });
+        setIsLocating(false);
+        return;
       }
 
       const position = await Geolocation.getCurrentPosition();
