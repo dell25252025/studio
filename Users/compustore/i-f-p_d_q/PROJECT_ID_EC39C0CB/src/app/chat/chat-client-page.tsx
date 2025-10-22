@@ -365,20 +365,19 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   }, [newMessage]);
   
   const handleStartCall = async (isVideo: boolean) => {
-     toast({ variant: 'destructive', title: 'Fonctionnalité désactivée', description: 'Les appels sont temporairement désactivés.' });
-    // if (!otherUserId || !currentUser) return;
-    //  try {
-    //   const callDocRef = await addDoc(collection(db, 'calls'), {
-    //     callerId: currentUser.uid,
-    //     calleeId: otherUserId,
-    //     status: 'ringing',
-    //     type: isVideo ? 'video' : 'audio',
-    //   });
-    //   router.push(`/call?callId=${callDocRef.id}&video=${isVideo}`);
-    // } catch (error) {
-    //   console.error("Error creating call:", error);
-    //   toast({ variant: 'destructive', title: 'Erreur d\'appel', description: 'Impossible de démarrer l\'appel.' });
-    // }
+    if (!otherUserId || !currentUser) return;
+     try {
+      const callDocRef = await addDoc(collection(db, 'calls'), {
+        callerId: currentUser.uid,
+        calleeId: otherUserId,
+        status: 'ringing',
+        type: isVideo ? 'video' : 'audio',
+      });
+      router.push(`/call?callId=${callDocRef.id}&video=${isVideo}`);
+    } catch (error) {
+      console.error("Error creating call:", error);
+      toast({ variant: 'destructive', title: 'Erreur d\'appel', description: 'Impossible de démarrer l\'appel.' });
+    }
   };
   
   const handleBlockUser = () => {
