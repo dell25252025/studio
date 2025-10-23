@@ -130,7 +130,7 @@ function CallUI() {
         await updateDoc(callDocRef, { offer });
 
         // Écouter la réponse et le statut
-        onSnapshot(callDocRef, (snapshot) => {
+        const unsubscribe = onSnapshot(callDocRef, (snapshot) => {
             const data = snapshot.data();
             if(data?.status === 'declined'){
                 setCallStatus('declined');
@@ -145,7 +145,7 @@ function CallUI() {
         });
 
         // Écouter les candidats ICE de la réponse
-        onSnapshot(answerCandidates, (snapshot) => {
+        const unsubscribeCandidates = onSnapshot(answerCandidates, (snapshot) => {
             snapshot.docChanges().forEach((change) => {
                 if (change.type === 'added') {
                     const candidate = new RTCIceCandidate(change.doc.data());
@@ -153,6 +153,11 @@ function CallUI() {
                 }
             });
         });
+
+        return () => {
+          unsubscribe();
+          unsubscribeCandidates();
+        }
     }
 
     initialize();

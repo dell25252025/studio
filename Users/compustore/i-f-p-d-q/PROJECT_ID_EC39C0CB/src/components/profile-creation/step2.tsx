@@ -17,6 +17,7 @@ import { Crosshair, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Geolocation } from '@capacitor/geolocation';
+import { Capacitor } from '@capacitor/core';
 
 const allLanguages = [
     { id: 'fr', label: 'Français' },
@@ -60,6 +61,9 @@ const Step2 = () => {
   const requestAndLocate = async () => {
     setIsLocating(true);
     try {
+      if(Capacitor.isNativePlatform()){
+        await Geolocation.requestPermissions();
+      }
       const coordinates = await Geolocation.getCurrentPosition();
       const { latitude, longitude } = coordinates.coords;
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`);
