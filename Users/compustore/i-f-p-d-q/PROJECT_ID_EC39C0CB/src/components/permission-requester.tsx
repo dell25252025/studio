@@ -1,9 +1,11 @@
+
 'use client';
 
 import { useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { useToast } from '@/hooks/use-toast';
-import { PermissionState, Permissions } from '@capacitor/permissions';
+import { Permissions } from '@capacitor/permissions';
+import type { PermissionState } from '@capacitor/permissions';
 
 const PermissionRequester = () => {
   const { toast } = useToast();
@@ -14,11 +16,7 @@ const PermissionRequester = () => {
         try {
           console.log('Requesting all necessary permissions...');
 
-          const permissionsToRequest = [
-            { name: 'camera' as const }, 
-            { name: 'geolocation' as const }, 
-            { name: 'microphone' as const }
-          ];
+          const permissionsToRequest = ['camera', 'geolocation', 'microphone'] as const;
 
           const result = await Permissions.request({ permissions: permissionsToRequest });
 
@@ -32,10 +30,11 @@ const PermissionRequester = () => {
             console.log('All permissions granted.');
           } else {
             console.warn('Not all permissions were granted.');
-            // Optionally, inform the user they might need to grant permissions manually.
+            // You can optionally inform the user that some features might not be available
             // toast({
             //   title: 'Permissions partielles',
             //   description: "Certaines fonctionnalités pourraient ne pas être disponibles. Veuillez vérifier les autorisations de l'application dans les paramètres de votre téléphone.",
+            //   duration: 5000,
             // });
           }
 
@@ -50,7 +49,7 @@ const PermissionRequester = () => {
       }
     };
 
-    // Delay the request slightly to ensure the app is fully initialized.
+    // Delay the request slightly to ensure the app is fully initialized and visible.
     const timeoutId = setTimeout(requestAllPermissions, 1500);
     
     return () => clearTimeout(timeoutId);
