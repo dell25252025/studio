@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useFormContext } from 'react-hook-form';
@@ -17,7 +16,6 @@ import { Button } from '@/components/ui/button';
 import { Crosshair, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
 
 const allLanguages = [
@@ -62,28 +60,8 @@ const Step2 = () => {
   const requestAndLocate = async () => {
     setIsLocating(true);
     try {
-        if (!Capacitor.isPluginAvailable('Geolocation')) {
-          // Fallback for web browsers
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async (position) => {
-              const { latitude, longitude } = position.coords;
-              const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`);
-              const data = await response.json();
-              if (data?.address?.country) {
-                setValue('location', data.address.country, { shouldValidate: true });
-                toast({ title: "Position trouvée !", description: `Pays défini sur : ${data.address.country}` });
-              } else { throw new Error("Pays non trouvé."); }
-            }, () => {
-               toast({ variant: 'destructive', title: 'Permission refusée', description: "Veuillez autoriser l'accès à la localisation."});
-            });
-          } else {
-             throw new Error("La géolocalisation n'est pas disponible sur cet appareil.");
-          }
-          return;
-        }
-
-      const position = await Geolocation.getCurrentPosition();
-      const { latitude, longitude } = position.coords;
+      const coordinates = await Geolocation.getCurrentPosition();
+      const { latitude, longitude } = coordinates.coords;
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`);
       const data = await response.json();
 

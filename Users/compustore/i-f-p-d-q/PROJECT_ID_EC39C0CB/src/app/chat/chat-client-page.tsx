@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -658,5 +657,3 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     </div>
   );
 }
-
-    

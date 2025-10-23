@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Suspense, useEffect, useState, useRef } from 'react';
@@ -149,7 +148,7 @@ function ReceiveCallUI() {
       handleEndCall(false);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [callId]);
 
   const handleEndCall = async (notify = true) => {
     setCallStatus('ended');
@@ -157,14 +156,14 @@ function ReceiveCallUI() {
     localStream.current?.getTracks().forEach((track) => track.stop());
 
     if (callId) {
-      const callDocRef = doc(db, 'calls', callId);
-      const docExists = (await getDoc(callDocRef)).exists();
-       if(docExists){
-        try {
+      try {
+        const callDocRef = doc(db, 'calls', callId);
+        const docExists = (await getDoc(callDocRef)).exists();
+        if(docExists){
           await deleteDoc(callDocRef);
-        } catch (error) {
-            console.warn("Could not delete call document, it might have been deleted already.");
         }
+      } catch (error) {
+        console.warn("Could not delete call document, it might have been deleted already:", error);
       }
     }
     
@@ -290,5 +289,3 @@ export default function ReceiveCallPage() {
         </Suspense>
     )
 }
-
-    
