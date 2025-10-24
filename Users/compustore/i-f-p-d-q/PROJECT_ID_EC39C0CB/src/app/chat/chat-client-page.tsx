@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2, Plus, Play, Pause, CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getUserProfile, submitAbuseReport } from '@/lib/firebase-actions';
+import { getUserProfile } from '@/lib/firebase-actions';
 import type { DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
@@ -24,6 +24,7 @@ import { Progress } from '@/components/ui/progress';
 import { ReportAbuseDialog } from '@/components/report-abuse-dialog';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { collection, addDoc } from 'firebase/firestore';
+import { requestPermission } from '@/hooks/usePermission';
 
 
 interface Message {
@@ -49,6 +50,17 @@ const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void
 
   useEffect(() => {
     const getCameraPermission = async () => {
+        const perm = await requestPermission("camera");
+        if (perm.state !== "granted") {
+            setHasCameraPermission(false);
+            toast({
+                variant: 'destructive',
+                title: 'Accès à la caméra refusé',
+                description: 'Veuillez autoriser l\'accès à la caméra dans les paramètres de votre navigateur ou de l\'application.',
+            });
+            return;
+        }
+
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         setHasCameraPermission(true);
@@ -60,8 +72,8 @@ const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void
         setHasCameraPermission(false);
         toast({
           variant: 'destructive',
-          title: 'Accès à la caméra refusé',
-          description: 'Veuillez autoriser l\'accès à la caméra dans les paramètres de votre navigateur.',
+          title: 'Erreur Caméra',
+          description: 'Impossible d\'accéder à la caméra.',
         });
       }
     };
@@ -298,6 +310,12 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   };
   
   const startRecording = async () => {
+    const micPerm = await requestPermission("microphone");
+    if (micPerm.state !== "granted") {
+        toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible d'accéder au microphone. Veuillez vérifier les autorisations." });
+        return;
+    }
+    
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorderRef.current = new MediaRecorder(stream);
@@ -318,7 +336,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
       setIsRecording(true);
     } catch (err) {
       console.error("Error starting recording:", err);
-      toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible d'accéder au microphone. Veuillez vérifier les autorisations." });
+      toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible de démarrer l'enregistrement." });
     }
   };
 

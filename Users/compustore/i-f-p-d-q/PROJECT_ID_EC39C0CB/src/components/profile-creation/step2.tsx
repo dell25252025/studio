@@ -17,6 +17,7 @@ import { Crosshair, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Geolocation } from '@capacitor/geolocation';
+import { requestPermission } from '@/hooks/usePermission';
 
 const allLanguages = [
     { id: 'fr', label: 'Français' },
@@ -59,7 +60,19 @@ const Step2 = () => {
 
   const requestAndLocate = async () => {
     setIsLocating(true);
+    
     try {
+        const perm = await requestPermission("geolocation");
+        if (perm.state !== "granted") {
+            toast({
+                variant: 'destructive',
+                title: "Permission de géolocalisation refusée",
+                description: 'Activez-la dans les paramètres de l’application.',
+            });
+            setIsLocating(false);
+            return;
+        }
+
       const coordinates = await Geolocation.getCurrentPosition();
       const { latitude, longitude } = coordinates.coords;
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`);

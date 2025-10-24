@@ -6,11 +6,12 @@ import { PhoneOff, Mic, MicOff, Volume2, VolumeX, Loader2, Video, VideoOff } fro
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getUserProfile } from '@/lib/firebase-actions';
-import { auth, db } from '@/lib/firebase';
-import { doc, getDoc, setDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { requestPermission } from '@/hooks/usePermission';
 
 // Configuration du serveur STUN de Google (public et gratuit)
 const servers = {
@@ -70,11 +71,23 @@ function CallUI() {
       setOtherUser(profile);
       setLoading(false);
       
+      // Demander les permissions
+      const camPerm = await requestPermission('camera');
+      const micPerm = await requestPermission('microphone');
+
+      if (camPerm.state !== 'granted' || micPerm.state !== 'granted') {
+          setHasMediaPermission(false);
+          toast({ variant: 'destructive', title: 'Accès Média Refusé', description: 'Permissions caméra et micro nécessaires pour l\'appel. Activez-les dans les paramètres.' });
+          // Ne pas quitter la page immédiatement, laisser l'alerte s'afficher
+          return;
+      }
+
+      setHasMediaPermission(true);
+
       // Obtenir le flux audio/vidéo local
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
         localStream.current = stream;
-        setHasMediaPermission(true);
 
         // Initialiser WebRTC SEULEMENT après avoir obtenu les permissions
         pc.current = new RTCPeerConnection(servers);
@@ -102,9 +115,7 @@ function CallUI() {
 
       } catch (error) {
         console.error("Error getting user media", error);
-        setHasMediaPermission(false);
-        toast({ variant: 'destructive', title: 'Accès Média Refusé', description: 'Veuillez autoriser l\'accès au micro et à la caméra.' });
-        // Ne pas quitter la page immédiatement, laisser l'alerte s'afficher
+        toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible de démarrer le flux vidéo/audio.' });
         return;
       }
     };
