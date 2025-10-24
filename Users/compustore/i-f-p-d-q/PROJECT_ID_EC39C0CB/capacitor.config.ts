@@ -1,4 +1,3 @@
-
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
@@ -6,9 +5,9 @@ const config: CapacitorConfig = {
   appName: 'WanderLink',
   webDir: 'out',
   server: {
-    url: 'http://192.168.100.26:3000', 
-    cleartext: true
-  }
+    url: 'http://192.168.100.26:3000',
+    cleartext: true,
+  },
 };
 
 export default config;

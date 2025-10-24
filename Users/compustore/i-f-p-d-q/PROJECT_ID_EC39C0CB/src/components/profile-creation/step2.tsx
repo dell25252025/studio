@@ -17,7 +17,12 @@ import { Crosshair, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Geolocation } from '@capacitor/geolocation';
+<<<<<<< HEAD
 import { requestPermission } from '@/hooks/usePermission';
+=======
+import { Capacitor } from '@capacitor/core';
+import { Permissions } from '@capacitor/permissions';
+>>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
 
 const allLanguages = [
     { id: 'fr', label: 'Français' },
@@ -62,6 +67,7 @@ const Step2 = () => {
     setIsLocating(true);
     
     try {
+<<<<<<< HEAD
         const perm = await requestPermission("geolocation");
         if (perm.state !== "granted") {
             toast({
@@ -73,7 +79,20 @@ const Step2 = () => {
             return;
         }
 
+=======
+      if (Capacitor.isNativePlatform()) {
+        console.log("Requesting location permissions on native...");
+        const permResult = await Geolocation.requestPermissions();
+        console.log("Permission status:", permResult.location);
+        if (permResult.location !== 'granted') {
+          throw new Error("L'autorisation d'accès à la localisation a été refusée.");
+        }
+      }
+      
+      console.log("Getting current position...");
+>>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
       const coordinates = await Geolocation.getCurrentPosition();
+      console.log("Coordinates found:", coordinates);
       const { latitude, longitude } = coordinates.coords;
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`);
       const data = await response.json();
@@ -98,9 +117,12 @@ const Step2 = () => {
   };
   
   useEffect(() => {
-    const currentLocation = getValues('location');
-    if (!currentLocation) {
-      requestAndLocate();
+    // Only attempt auto-location if on a native platform and no location is set
+    if (Capacitor.isNativePlatform()) {
+        const currentLocation = getValues('location');
+        if (!currentLocation) {
+          requestAndLocate();
+        }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

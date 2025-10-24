@@ -11,7 +11,13 @@ import { doc, getDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc } fro
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+<<<<<<< HEAD
 import { requestPermission } from '@/hooks/usePermission';
+=======
+import { Capacitor } from '@capacitor/core';
+import { Camera } from '@capacitor/camera';
+
+>>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
 
 const servers = {
   iceServers: [
@@ -43,6 +49,36 @@ function ReceiveCallUI() {
 
   const callId = searchParams.get('callId');
   const isVideoCall = searchParams.get('video') === 'true';
+  
+  const getMediaPermissions = async () => {
+    if (typeof window === 'undefined') return;
+    try {
+        if (Capacitor.isNativePlatform()) {
+            console.log("Requesting camera permissions on native...");
+            const cameraPerms = await Camera.requestPermissions();
+            console.log("Camera permission status:", cameraPerms.camera);
+            if (cameraPerms.camera !== 'granted' || cameraPerms.photos !== 'granted') {
+                throw new Error("Autorisation caméra refusée.");
+            }
+        }
+        
+        console.log("Getting user media stream...");
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
+        localStream.current = stream;
+        setHasMediaPermission(true);
+        console.log("Media stream obtained.");
+        
+        if (localVideoRef.current) {
+            localVideoRef.current.srcObject = stream;
+        }
+
+    } catch (error) {
+        console.error("Error getting media permissions:", error);
+        setHasMediaPermission(false);
+        toast({ variant: 'destructive', title: 'Accès Média Refusé', description: 'Veuillez autoriser l\'accès au micro et à la caméra.' });
+    }
+  };
+
 
   useEffect(() => {
     setIsVideoOn(isVideoCall);
@@ -69,6 +105,7 @@ function ReceiveCallUI() {
       setOtherUser(profile);
       setLoading(false);
 
+<<<<<<< HEAD
       // Demander les permissions
       const camPerm = await requestPermission('camera');
       const micPerm = await requestPermission('microphone');
@@ -152,6 +189,9 @@ function ReceiveCallUI() {
                 setTimeout(() => handleEndCall(false), 1500);
             }
         });
+=======
+      await getMediaPermissions();
+>>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
     };
 
     initialize();
@@ -161,6 +201,87 @@ function ReceiveCallUI() {
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callId]);
+  
+  useEffect(() => {
+    if (hasMediaPermission === true && localStream.current && callId) {
+        const callDocRef = doc(db, 'calls', callId);
+        getDoc(callDocRef).then(callDocSnap => {
+            if (callDocSnap.exists()) {
+                const callData = callDocSnap.data();
+                const initializeWebRTC = async () => {
+                    console.log("Initializing WebRTC connection for receiver...");
+                    pc.current = new RTCPeerConnection(servers);
+                    remoteStream.current = new MediaStream();
+
+                    localStream.current!.getTracks().forEach((track) => {
+                      pc.current?.addTrack(track, localStream.current!);
+                    });
+                    
+                    pc.current.ontrack = (event) => {
+                        event.streams[0].getTracks().forEach((track) => {
+                        remoteStream.current?.addTrack(track);
+                        });
+                        if (remoteVideoRef.current && remoteStream.current) {
+                            remoteVideoRef.current.srcObject = remoteStream.current;
+                        }
+                    };
+
+                    await answerCall(callDocRef, callData.offer);
+                    console.log("WebRTC initialized and call answered.");
+                };
+                initializeWebRTC();
+            }
+        });
+    } else if (hasMediaPermission === false) {
+        handleDeclineCall();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasMediaPermission, callId]);
+
+  const answerCall = async (callDocRef: any, offer: any) => {
+    if (!pc.current) return;
+
+    const answerCandidates = collection(callDocRef, 'answerCandidates');
+    const offerCandidates = collection(callDocRef, 'offerCandidates');
+
+    pc.current.onicecandidate = (event) => {
+        event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
+    };
+
+    await pc.current.setRemoteDescription(new RTCSessionDescription(offer));
+    
+    const answerDescription = await pc.current.createAnswer();
+    await pc.current.setLocalDescription(answerDescription);
+
+    const answer = {
+        type: answerDescription.type,
+        sdp: answerDescription.sdp,
+    };
+
+    await updateDoc(callDocRef, { answer, status: 'connected' });
+    setCallStatus('connected');
+
+    const unsubscribeOffer = onSnapshot(offerCandidates, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+            if (change.type === 'added') {
+                pc.current?.addIceCandidate(new RTCIceCandidate(change.doc.data()));
+            }
+        });
+    });
+
+    const unsubscribeCall = onSnapshot(callDocRef, (snapshot) => {
+         if (!snapshot.exists()) {
+            setCallStatus('ended');
+            toast({ title: 'Appel terminé', description: 'Votre correspondant a raccroché.' });
+            setTimeout(() => handleEndCall(false), 1500);
+        }
+    });
+
+    return () => {
+      unsubscribeOffer();
+      unsubscribeCall();
+    }
+  };
 
   const handleEndCall = async (notify = true) => {
     setCallStatus('ended');
@@ -186,6 +307,13 @@ function ReceiveCallUI() {
     if (notify) {
         router.back();
     }
+  };
+
+  const handleDeclineCall = async () => {
+    if (!callId) return;
+    const callDocRef = doc(db, 'calls', callId);
+    await updateDoc(callDocRef, { status: 'declined' });
+    handleEndCall();
   };
   
   const toggleMute = () => {
@@ -225,9 +353,9 @@ function ReceiveCallUI() {
       <video ref={localVideoRef} autoPlay muted playsInline className={cn(
           "absolute top-4 right-4 w-1/4 max-w-[150px] rounded-lg shadow-lg border-2 border-white/50",
           !isVideoOn && "hidden",
-          hasMediaPermission === false && 'hidden'
+          hasMediaPermission !== true && 'hidden'
       )} />
-      {hasMediaPermission === false && (
+      {hasMediaPermission !== true && (
           <div className="absolute top-4 right-4 w-1/4 max-w-[150px] aspect-video rounded-lg bg-black flex items-center justify-center p-1">
               <Alert variant="destructive" className="p-2 text-[10px] bg-red-900/80 border-red-500/50 text-white">
                 <AlertTitle className="text-xs">Caméra Désactivée</AlertTitle>

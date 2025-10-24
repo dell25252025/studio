@@ -11,7 +11,13 @@ import { doc, getDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc } fro
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+<<<<<<< HEAD
 import { requestPermission } from '@/hooks/usePermission';
+=======
+import { Capacitor } from '@capacitor/core';
+import { Camera } from '@capacitor/camera';
+
+>>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
 
 // Configuration du serveur STUN de Google (public et gratuit)
 const servers = {
@@ -45,6 +51,36 @@ function CallUI() {
 
   const callId = searchParams.get('callId');
   const isVideoCall = searchParams.get('video') === 'true';
+  
+  const getMediaPermissions = async () => {
+    if (typeof window === 'undefined') return;
+    try {
+        if (Capacitor.isNativePlatform()) {
+            console.log("Requesting camera permissions on native...");
+            const cameraPerms = await Camera.requestPermissions();
+            console.log("Camera permission status:", cameraPerms.camera);
+            if (cameraPerms.camera !== 'granted' || cameraPerms.photos !== 'granted') {
+                throw new Error("Autorisation caméra refusée.");
+            }
+        }
+        
+        console.log("Getting user media stream...");
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
+        localStream.current = stream;
+        setHasMediaPermission(true);
+        console.log("Media stream obtained.");
+        
+        if (localVideoRef.current) {
+            localVideoRef.current.srcObject = stream;
+        }
+
+    } catch (error) {
+        console.error("Error getting media permissions:", error);
+        setHasMediaPermission(false);
+        toast({ variant: 'destructive', title: 'Accès Média Refusé', description: 'Veuillez autoriser l\'accès au micro et à la caméra.' });
+    }
+  };
+
 
   useEffect(() => {
     setIsVideoOn(isVideoCall);
@@ -71,6 +107,7 @@ function CallUI() {
       setOtherUser(profile);
       setLoading(false);
       
+<<<<<<< HEAD
       // Demander les permissions
       const camPerm = await requestPermission('camera');
       const micPerm = await requestPermission('microphone');
@@ -118,7 +155,53 @@ function CallUI() {
         toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible de démarrer le flux vidéo/audio.' });
         return;
       }
+=======
+      await getMediaPermissions();
+>>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
     };
+    
+    initialize();
+
+    return () => {
+      handleEndCall(false); // Cleanup on component unmount
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [callId]);
+  
+  useEffect(() => {
+    // This effect runs after media permissions are granted (or denied)
+    if (hasMediaPermission === true && localStream.current) {
+        const initializeWebRTC = async () => {
+            if (!callId) return;
+            const callDocRef = doc(db, 'calls', callId);
+            
+            console.log("Initializing WebRTC connection...");
+            pc.current = new RTCPeerConnection(servers);
+            remoteStream.current = new MediaStream();
+
+            localStream.current!.getTracks().forEach((track) => {
+                pc.current?.addTrack(track, localStream.current!);
+            });
+            
+            pc.current.ontrack = (event) => {
+                event.streams[0].getTracks().forEach((track) => {
+                remoteStream.current?.addTrack(track);
+                });
+                if (remoteVideoRef.current && remoteStream.current) {
+                    remoteVideoRef.current.srcObject = remoteStream.current;
+                }
+            };
+            
+            await createAndManageCall(callDocRef);
+            console.log("WebRTC initialized and call managed.");
+        }
+        initializeWebRTC();
+    } else if (hasMediaPermission === false) {
+        // If permission was denied, we might want to end the call attempt after a delay
+        setTimeout(() => handleEndCall(), 3000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasMediaPermission, callId]);
 
     const createAndManageCall = async (callDocRef: any) => {
         if (!pc.current) return;
@@ -140,8 +223,7 @@ function CallUI() {
 
         await updateDoc(callDocRef, { offer });
 
-        // Écouter la réponse et le statut
-        onSnapshot(callDocRef, (snapshot) => {
+        const unsubscribe = onSnapshot(callDocRef, (snapshot) => {
             const data = snapshot.data();
             if(data?.status === 'declined'){
                 setCallStatus('declined');
@@ -155,8 +237,7 @@ function CallUI() {
             }
         });
 
-        // Écouter les candidats ICE de la réponse
-        onSnapshot(answerCandidates, (snapshot) => {
+        const unsubscribeCandidates = onSnapshot(answerCandidates, (snapshot) => {
             snapshot.docChanges().forEach((change) => {
                 if (change.type === 'added') {
                     const candidate = new RTCIceCandidate(change.doc.data());
@@ -164,24 +245,19 @@ function CallUI() {
                 }
             });
         });
+
+        return () => {
+          unsubscribe();
+          unsubscribeCandidates();
+        }
     }
-
-    initialize();
-
-    return () => {
-      handleEndCall(false); // Cleanup on component unmount
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [callId]);
 
   const handleEndCall = async (notify = true) => {
     setCallStatus('ended');
 
-    // Nettoyage WebRTC
     pc.current?.close();
     localStream.current?.getTracks().forEach((track) => track.stop());
 
-    // Nettoyage Firestore
     if (callId) {
       try {
         const callDocRef = doc(db, 'calls', callId);
@@ -235,17 +311,15 @@ function CallUI() {
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-between bg-slate-900 text-white p-8">
-       {/* Vidéo de l'interlocuteur en arrière-plan */}
-      <video ref={remoteVideoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-cover" />
+       <video ref={remoteVideoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0 bg-black/30" />
 
-       {/* Vidéo locale en miniature */}
       <video ref={localVideoRef} autoPlay muted playsInline className={cn(
           "absolute top-4 right-4 w-1/4 max-w-[150px] rounded-lg shadow-lg border-2 border-white/50",
           !isVideoOn && "hidden",
-          hasMediaPermission === false && 'hidden'
+          hasMediaPermission !== true && 'hidden'
       )} />
-      {hasMediaPermission === false && (
+      {hasMediaPermission !== true && (
           <div className="absolute top-4 right-4 w-1/4 max-w-[150px] aspect-video rounded-lg bg-black flex items-center justify-center p-1">
               <Alert variant="destructive" className="p-2 text-[10px] bg-red-900/80 border-red-500/50 text-white">
                 <AlertTitle className="text-xs">Caméra Désactivée</AlertTitle>
@@ -255,7 +329,6 @@ function CallUI() {
       )}
 
 
-      {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center text-center mt-16 [text-shadow:_0_1px_4px_rgb(0_0_0_/_50%)]">
         <Avatar className="h-32 w-32 border-4 border-white/50">
           <AvatarImage src={otherUserImage} alt={otherUserName} />
@@ -270,7 +343,6 @@ function CallUI() {
         </p>
       </div>
 
-      {/* Action Buttons */}
       <div className="relative z-10 flex w-full max-w-sm flex-col items-center">
         <div className="flex items-center justify-center gap-4 mb-8">
           <Button
@@ -295,7 +367,7 @@ function CallUI() {
             size="icon"
             className="h-16 w-16 rounded-full bg-white/10 hover:bg-white/20"
             onClick={() => setIsDeafened(!isDeafened)}
-            disabled // Non implémenté
+            disabled
           >
             {isDeafened ? <VolumeX className="h-7 w-7" /> : <Volume2 className="h-7 w-7" />}
           </Button>
