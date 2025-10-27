@@ -474,7 +474,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         </Drawer>
       </header>
 
-      <main className="flex-1 overflow-y-auto pt-12 pb-20">
+      <main className="flex-1 overflow-y-auto pt-12 pb-24">
         <div className="space-y-4 p-4">
           {messages.map((message) => (
             <div
