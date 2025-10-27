@@ -372,7 +372,10 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         calleeId: otherUserId,
         status: 'ringing',
         type: isVideo ? 'video' : 'audio',
+<<<<<<< HEAD
         createdAt: new Date(),
+=======
+>>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
       });
       router.push(`/call?callId=${callDocRef.id}&video=${isVideo}`);
     } catch (error) {
