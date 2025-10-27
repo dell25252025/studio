@@ -11,25 +11,43 @@ const PermissionRequester = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const requestInitialPermissions = async () => {
+    const requestPermissions = async () => {
       if (Capacitor.isNativePlatform()) {
         try {
-          // Uniquement demander les permissions non-bloquantes au démarrage.
-          // La géolocalisation est souvent moins intrusive.
+          // Demande de permission pour la caméra
+          await Camera.requestPermissions();
+
+          // Demande de permission pour la géolocalisation
           await Geolocation.requestPermissions();
           
-          // Les permissions pour la caméra et le micro seront demandées
-          // au moment de l'action (clic sur le bouton d'appel).
-          // Cela évite de surcharger l'application au démarrage.
+          // Demande de permission pour le microphone via l'API web standard
+          // C'est la méthode recommandée pour le micro, même dans Capacitor.
+          await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
 
         } catch (error: any) {
-            console.error('Erreur lors de la demande de permission de géolocalisation:', error);
-            // On ne bloque pas l'utilisateur pour ça, on log juste l'erreur.
+          // Gérer les erreurs spécifiques au micro
+          if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+             console.log('Permission pour le microphone refusée.');
+             // On peut choisir d'afficher un toast pour informer l'utilisateur
+             toast({
+                variant: 'destructive',
+                title: 'Accès au microphone refusé',
+                description: 'Les appels audio/vidéo ne fonctionneront pas sans cette autorisation.',
+             });
+          } else {
+            console.error('Erreur lors de la demande de permissions:', error);
+            toast({
+              variant: 'destructive',
+              title: 'Erreur de permissions',
+              description: 'Impossible de demander toutes les autorisations nécessaires.',
+            });
+          }
         }
       }
     };
 
-    const timeoutId = setTimeout(requestInitialPermissions, 2000);
+    // On attend un court instant avant de demander pour s'assurer que l'UI est prête
+    const timeoutId = setTimeout(requestPermissions, 2000);
     
     return () => clearTimeout(timeoutId);
 
