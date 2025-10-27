@@ -44,8 +44,43 @@ function CallUI() {
   const callId = searchParams.get('callId');
   const isVideoCall = searchParams.get('video') === 'true';
 
+  const handleEndCall = React.useCallback(async (shouldRouteBack = true) => {
+    // Utilisation de React.useCallback pour stabiliser la fonction
+    setCallStatus((prevStatus) => {
+        if (prevStatus === 'ended') return 'ended'; // Empêche les exécutions multiples
+
+        // Nettoyage WebRTC
+        localStream.current?.getTracks().forEach((track) => track.stop());
+        pc.current?.close();
+        pc.current = null;
+
+        // Nettoyage Firestore de manière asynchrone
+        if (callId) {
+            const callDocRef = doc(db, 'calls', callId);
+            getDoc(callDocRef).then(docSnap => {
+                if (docSnap.exists()) {
+                    deleteDoc(callDocRef).catch(e => console.error("Error deleting call doc:", e));
+                }
+            });
+        }
+        
+        if (shouldRouteBack) {
+            try {
+                router.back();
+            } catch(e) {
+                router.push('/');
+            }
+        }
+        return 'ended';
+    });
+  }, [callId, router]);
+
+
   useEffect(() => {
     setIsVideoOn(isVideoCall);
+    let isCancelled = false;
+    let unsubscribeCall: () => void = () => {};
+    let unsubscribeCandidates: () => void = () => {};
 
     const initialize = async () => {
       if (!callId) {
@@ -62,6 +97,7 @@ function CallUI() {
         router.back();
         return;
       }
+      if (isCancelled) return;
       
       const callData = callDocSnap.data();
       const calleeId = callData.calleeId;
@@ -85,7 +121,7 @@ function CallUI() {
       } catch (error) {
         console.error("Error getting user media", error);
         toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible d\'accéder au microphone ou à la caméra.' });
-        await handleEndCall(true);
+        handleEndCall(true);
         return;
       }
 
@@ -100,11 +136,13 @@ function CallUI() {
       };
 
       // Créer et gérer l'appel
-      await createAndManageCall(callDocRef);
+      const cleanup = await createAndManageCall(callDocRef);
+      unsubscribeCall = cleanup.unsubscribe;
+      unsubscribeCandidates = cleanup.unsubscribeCandidates;
     };
 
     const createAndManageCall = async (callDocRef: any) => {
-        if (!pc.current) return;
+        if (!pc.current) return { unsubscribe: () => {}, unsubscribeCandidates: () => {} };
 
         const offerCandidates = collection(callDocRef, 'offerCandidates');
         const answerCandidates = collection(callDocRef, 'answerCandidates');
@@ -127,7 +165,6 @@ function CallUI() {
         const unsubscribe = onSnapshot(callDocRef, (snapshot) => {
             const data = snapshot.data();
             if(data?.status === 'declined'){
-                setCallStatus('declined');
                  toast({ variant: 'destructive', title: 'Appel refusé' });
                 setTimeout(() => handleEndCall(true), 2000);
             }
@@ -143,53 +180,25 @@ function CallUI() {
             snapshot.docChanges().forEach((change) => {
                 if (change.type === 'added') {
                     const candidate = new RTCIceCandidate(change.doc.data());
-                    pc.current?.addIceCandidate(candidate);
+                    pc.current?.addIceCandidate(candidate).catch(e => console.error("Error adding ICE candidate", e));
                 }
             });
         });
 
-        return () => {
-            unsubscribe();
-            unsubscribeCandidates();
-        }
+        return { unsubscribe, unsubscribeCandidates };
     }
 
     initialize();
 
     return () => {
-      handleEndCall(true); // Cleanup on component unmount
+      isCancelled = true;
+      unsubscribeCall();
+      unsubscribeCandidates();
+      handleEndCall(false); // Cleanup on component unmount
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [callId, isVideoCall]);
 
-  const handleEndCall = async (shouldRouteBack = true) => {
-    if (callStatus === 'ended') return;
-    setCallStatus('ended');
-
-    // Nettoyage WebRTC
-    localStream.current?.getTracks().forEach((track) => track.stop());
-    pc.current?.close();
-
-    // Nettoyage Firestore
-    if (callId) {
-      try {
-        const callDocRef = doc(db, 'calls', callId);
-        if ((await getDoc(callDocRef)).exists()) {
-          await deleteDoc(callDocRef);
-        }
-      } catch (error) {
-        console.error("Error deleting call document:", error);
-      }
-    }
-    
-    pc.current = null;
-    localStream.current = null;
-    remoteStream.current = null;
-    
-    if(shouldRouteBack) {
-        router.back();
-    }
-  };
   
   const toggleMute = () => {
     if (localStream.current) {
@@ -301,5 +310,3 @@ export default function CallPage() {
         </Suspense>
     )
 }
-
-    

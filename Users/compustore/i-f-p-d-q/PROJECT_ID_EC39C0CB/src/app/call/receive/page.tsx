@@ -11,6 +11,7 @@ import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import React from 'react';
 
 const servers = {
   iceServers: [
@@ -42,8 +43,39 @@ function ReceiveCallUI() {
   const callId = searchParams.get('callId');
   const isVideoCall = searchParams.get('video') === 'true';
 
+  const handleEndCall = React.useCallback(async (shouldRouteBack = true) => {
+    setCallStatus((prevStatus) => {
+      if (prevStatus === 'ended') return 'ended';
+
+      localStream.current?.getTracks().forEach((track) => track.stop());
+      pc.current?.close();
+      pc.current = null;
+
+      if (callId) {
+        const callDocRef = doc(db, 'calls', callId);
+        getDoc(callDocRef).then(docSnap => {
+            if (docSnap.exists()) {
+                deleteDoc(callDocRef).catch(e => console.error("Error deleting call doc:", e));
+            }
+        });
+      }
+      
+      if (shouldRouteBack) {
+        try {
+            router.back();
+        } catch(e) {
+            router.push('/');
+        }
+      }
+      return 'ended';
+    });
+  }, [callId, router]);
+
+
   useEffect(() => {
     setIsVideoOn(isVideoCall);
+    let isCancelled = false;
+    let unsubscribeCall: () => void = () => {};
 
     const initialize = async () => {
       if (!callId) {
@@ -60,6 +92,7 @@ function ReceiveCallUI() {
         router.back();
         return;
       }
+      if (isCancelled) return;
       
       const callData = callDocSnap.data();
       const callerId = callData.callerId;
@@ -80,7 +113,7 @@ function ReceiveCallUI() {
         }
       } catch (error) {
         toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible d\'accéder au microphone ou à la caméra.' });
-        await handleEndCall(true);
+        handleEndCall(true);
         return;
       }
 
@@ -93,11 +126,12 @@ function ReceiveCallUI() {
         }
       };
 
-      await answerCall(callDocRef, callData.offer);
+      const cleanup = await answerCall(callDocRef, callData.offer);
+      unsubscribeCall = cleanup;
     };
 
     const answerCall = async (callDocRef: any, offer: any) => {
-        if (!pc.current) return;
+        if (!pc.current) return () => {};
 
         const answerCandidates = collection(callDocRef, 'answerCandidates');
         const offerCandidates = collection(callDocRef, 'offerCandidates');
@@ -122,7 +156,7 @@ function ReceiveCallUI() {
         onSnapshot(offerCandidates, (snapshot) => {
             snapshot.docChanges().forEach((change) => {
                 if (change.type === 'added') {
-                    pc.current?.addIceCandidate(new RTCIceCandidate(change.doc.data()));
+                    pc.current?.addIceCandidate(new RTCIceCandidate(change.doc.data())).catch(e => console.error("Error adding ICE candidate:", e));
                 }
             });
         });
@@ -130,49 +164,24 @@ function ReceiveCallUI() {
         // Listen for call termination
         const unsubscribe = onSnapshot(callDocRef, (snapshot) => {
              if (!snapshot.exists()) {
-                setCallStatus('ended');
                 toast({ title: 'Appel terminé', description: 'Votre correspondant a raccroché.' });
                 setTimeout(() => handleEndCall(true), 1500);
             }
         });
 
-        return () => unsubscribe();
+        return unsubscribe;
     };
 
     initialize();
 
     return () => {
+      isCancelled = true;
+      unsubscribeCall();
       handleEndCall(false);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [callId, isVideoCall]);
 
-  const handleEndCall = async (shouldRouteBack = true) => {
-    if (callStatus === 'ended') return;
-    setCallStatus('ended');
-
-    localStream.current?.getTracks().forEach((track) => track.stop());
-    pc.current?.close();
-
-    if (callId) {
-      try {
-        const callDocRef = doc(db, 'calls', callId);
-        if((await getDoc(callDocRef)).exists()){
-          await deleteDoc(callDocRef);
-        }
-      } catch (error) {
-        console.error("Error deleting call document:", error);
-      }
-    }
-    
-    pc.current = null;
-    localStream.current = null;
-    remoteStream.current = null;
-
-    if (shouldRouteBack) {
-        router.back();
-    }
-  };
   
   const toggleMute = () => {
     if (localStream.current) {
@@ -278,5 +287,3 @@ export default function ReceiveCallPage() {
         </Suspense>
     )
 }
-
-    
