@@ -441,7 +441,7 @@ export default function ProfileClientPage() {
       return (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="flex-1 text-xs h-9">
               <UserCheck className="mr-2 h-4 w-4" />
               Amis
             </Button>
@@ -462,7 +462,7 @@ export default function ProfileClientPage() {
       );
     }
     return (
-      <Button variant="outline" size="sm" onClick={handleFriendAction}>
+      <Button variant="outline" size="sm" onClick={handleFriendAction} className="flex-1 text-xs h-9">
         <UserPlus className="mr-2 h-4 w-4" />
         Ajouter
       </Button>
@@ -764,17 +764,13 @@ export default function ProfileClientPage() {
         {!isOwner && profileId && (
              <div className="fixed bottom-0 left-0 right-0 z-10 p-2 bg-background/80 backdrop-blur-sm border-t md:hidden">
                 <div className="flex items-center justify-center gap-2">
-                    <div className="flex-1">
-                        <Button asChild className="w-full text-sm">
-                            <Link href={`/chat?id=${profileId}`}>
-                                <Send className="mr-2 h-4 w-4" />
-                                Message
-                            </Link>
-                        </Button>
-                    </div>
-                    <div className="flex-1">
-                         <FriendButton />
-                    </div>
+                    <Button asChild className="flex-1 text-sm h-9">
+                        <Link href={`/chat?id=${profileId}`}>
+                            <Send className="mr-2 h-4 w-4" />
+                            Message
+                        </Link>
+                    </Button>
+                    <FriendButton />
                 </div>
             </div>
         )}
