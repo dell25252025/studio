@@ -50,7 +50,7 @@ function CallUI() {
     const initialize = async () => {
       if (!callId) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'ID d\'appel manquant.' });
-        router.push('/');
+        router.back();
         return;
       }
       
@@ -59,7 +59,7 @@ function CallUI() {
 
       if (!callDocSnap.exists()) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'Appel non trouvé.' });
-        router.push('/');
+        router.back();
         return;
       }
       
@@ -85,7 +85,7 @@ function CallUI() {
       } catch (error) {
         console.error("Error getting user media", error);
         toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible d\'accéder au microphone ou à la caméra.' });
-        handleEndCall();
+        await handleEndCall(true);
         return;
       }
 
@@ -124,12 +124,12 @@ function CallUI() {
         await updateDoc(callDocRef, { offer });
 
         // Écouter la réponse et le statut
-        onSnapshot(callDocRef, (snapshot) => {
+        const unsubscribe = onSnapshot(callDocRef, (snapshot) => {
             const data = snapshot.data();
             if(data?.status === 'declined'){
                 setCallStatus('declined');
                  toast({ variant: 'destructive', title: 'Appel refusé' });
-                setTimeout(() => handleEndCall(), 2000);
+                setTimeout(() => handleEndCall(true), 2000);
             }
             if (!pc.current?.currentRemoteDescription && data?.answer) {
                 const answerDescription = new RTCSessionDescription(data.answer);
@@ -139,7 +139,7 @@ function CallUI() {
         });
 
         // Écouter les candidats ICE de la réponse
-        onSnapshot(answerCandidates, (snapshot) => {
+        const unsubscribeCandidates = onSnapshot(answerCandidates, (snapshot) => {
             snapshot.docChanges().forEach((change) => {
                 if (change.type === 'added') {
                     const candidate = new RTCIceCandidate(change.doc.data());
@@ -147,29 +147,38 @@ function CallUI() {
                 }
             });
         });
+
+        return () => {
+            unsubscribe();
+            unsubscribeCandidates();
+        }
     }
 
     initialize();
 
     return () => {
-      handleEndCall(false); // Cleanup on component unmount
+      handleEndCall(true); // Cleanup on component unmount
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleEndCall = async (notify = true) => {
+  const handleEndCall = async (shouldRouteBack = true) => {
+    if (callStatus === 'ended') return;
     setCallStatus('ended');
 
     // Nettoyage WebRTC
-    pc.current?.close();
     localStream.current?.getTracks().forEach((track) => track.stop());
+    pc.current?.close();
 
     // Nettoyage Firestore
     if (callId) {
-      const callDocRef = doc(db, 'calls', callId);
-      const docExists = (await getDoc(callDocRef)).exists();
-      if(docExists){
-        await deleteDoc(callDocRef);
+      try {
+        const callDocRef = doc(db, 'calls', callId);
+        if ((await getDoc(callDocRef)).exists()) {
+          await deleteDoc(callDocRef);
+        }
+      } catch (error) {
+        console.error("Error deleting call document:", error);
       }
     }
     
@@ -177,7 +186,7 @@ function CallUI() {
     localStream.current = null;
     remoteStream.current = null;
     
-    if(notify) {
+    if(shouldRouteBack) {
         router.back();
     }
   };
@@ -272,7 +281,7 @@ function CallUI() {
         <Button
           size="lg"
           className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700"
-          onClick={() => handleEndCall()}
+          onClick={() => handleEndCall(true)}
         >
           <PhoneOff className="h-7 w-7" />
         </Button>
@@ -292,3 +301,5 @@ export default function CallPage() {
         </Suspense>
     )
 }
+
+    

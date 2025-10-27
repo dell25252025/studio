@@ -48,7 +48,7 @@ function ReceiveCallUI() {
     const initialize = async () => {
       if (!callId) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'ID d\'appel manquant.' });
-        router.push('/');
+        router.back();
         return;
       }
       
@@ -57,7 +57,7 @@ function ReceiveCallUI() {
 
       if (!callDocSnap.exists()) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'Appel non trouvé.' });
-        router.push('/');
+        router.back();
         return;
       }
       
@@ -80,7 +80,7 @@ function ReceiveCallUI() {
         }
       } catch (error) {
         toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible d\'accéder au microphone ou à la caméra.' });
-        handleEndCall();
+        await handleEndCall(true);
         return;
       }
 
@@ -128,13 +128,15 @@ function ReceiveCallUI() {
         });
 
         // Listen for call termination
-        onSnapshot(callDocRef, (snapshot) => {
+        const unsubscribe = onSnapshot(callDocRef, (snapshot) => {
              if (!snapshot.exists()) {
                 setCallStatus('ended');
                 toast({ title: 'Appel terminé', description: 'Votre correspondant a raccroché.' });
-                setTimeout(() => handleEndCall(false), 1500);
+                setTimeout(() => handleEndCall(true), 1500);
             }
         });
+
+        return () => unsubscribe();
     };
 
     initialize();
@@ -145,16 +147,21 @@ function ReceiveCallUI() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleEndCall = async (notify = true) => {
+  const handleEndCall = async (shouldRouteBack = true) => {
+    if (callStatus === 'ended') return;
     setCallStatus('ended');
-    pc.current?.close();
+
     localStream.current?.getTracks().forEach((track) => track.stop());
+    pc.current?.close();
 
     if (callId) {
-      const callDocRef = doc(db, 'calls', callId);
-      const docExists = (await getDoc(callDocRef)).exists();
-       if(docExists){
-        await deleteDoc(callDocRef);
+      try {
+        const callDocRef = doc(db, 'calls', callId);
+        if((await getDoc(callDocRef)).exists()){
+          await deleteDoc(callDocRef);
+        }
+      } catch (error) {
+        console.error("Error deleting call document:", error);
       }
     }
     
@@ -162,7 +169,7 @@ function ReceiveCallUI() {
     localStream.current = null;
     remoteStream.current = null;
 
-    if (notify) {
+    if (shouldRouteBack) {
         router.back();
     }
   };
@@ -251,7 +258,7 @@ function ReceiveCallUI() {
         <Button
           size="lg"
           className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700"
-          onClick={() => handleEndCall()}
+          onClick={() => handleEndCall(true)}
         >
           <PhoneOff className="h-7 w-7" />
         </Button>
@@ -271,3 +278,5 @@ export default function ReceiveCallPage() {
         </Suspense>
     )
 }
+
+    
