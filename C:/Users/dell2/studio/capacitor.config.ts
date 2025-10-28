@@ -6,7 +6,8 @@ const config: CapacitorConfig = {
   appName: 'WanderLink',
   webDir: 'out',
   server: {
-    url: 'http://192.168.100.26:3000', 
+    // Android Studio's emulator uses 10.0.2.2 to refer to the host machine's localhost.
+    url: 'http://10.0.2.2:3000', 
     cleartext: true
   }
 };
