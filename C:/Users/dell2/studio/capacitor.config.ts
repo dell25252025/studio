@@ -6,8 +6,8 @@ const config: CapacitorConfig = {
   appName: 'WanderLink',
   webDir: 'out',
   server: {
-    // Android Studio's emulator uses 10.0.2.2 to refer to the host machine's localhost.
-    url: 'http://10.0.2.2:3000', 
+    // URL pour se connecter au serveur de développement Next.js depuis un appareil sur le même réseau.
+    url: 'http://192.168.100.26:3000', 
     cleartext: true
   }
 };
