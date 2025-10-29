@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
@@ -33,7 +32,7 @@ function DiscoverPage({ user }: { user: User }) {
         // Let's limit the number of users we fetch to improve performance
         const [userProfile, users] = await Promise.all([
           getUserProfile(user.uid),
-          getAllUsers(12), // Fetch a limited number of users
+          getAllUsers(20), // Fetch a limited number of users
         ]);
         setCurrentUserProfile(userProfile);
         const otherUsers = users.filter(u => u.id !== user.uid);
@@ -41,7 +40,7 @@ function DiscoverPage({ user }: { user: User }) {
         setDisplayMatches(otherUsers); // Initially display the fetched users
       } catch (error) {
         console.error("Failed to fetch profiles:", error);
-        toast({ variant: 'destructive', title: 'Error fetching profiles' });
+        toast({ variant: 'destructive', title: 'Erreur de chargement des profils' });
       } finally {
         setProfilesLoading(false);
       }
