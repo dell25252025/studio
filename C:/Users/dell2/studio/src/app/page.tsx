@@ -89,7 +89,7 @@ function DiscoverPage({ user }: { user: User }) {
             {profilesLoading ? (
               <div className="flex flex-col items-center justify-center text-center h-96">
                 <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                <h2 className="mt-6 text-2xl font-semibold">Recherche des profils en cours...</h2>
+                <h2 className="mt-6 text-2xl font-semibold">Chargement des profils...</h2>
               </div>
             ) : (
               <>

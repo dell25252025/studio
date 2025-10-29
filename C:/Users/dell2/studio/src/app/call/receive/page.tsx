@@ -11,15 +11,9 @@ import { doc, getDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc } fro
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-<<<<<<< HEAD
 import { requestPermission } from '@/hooks/usePermission';
-=======
-import { Capacitor } from '@capacitor/core';
-import { Camera } from '@capacitor/camera';
 
->>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
 
-// Configuration du serveur STUN de Google (public et gratuit)
 const servers = {
   iceServers: [
     {
@@ -29,17 +23,16 @@ const servers = {
   iceCandidatePoolSize: 10,
 };
 
-
-function CallUI() {
+function ReceiveCallUI() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
   
   const [otherUser, setOtherUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
-  const [callStatus, setCallStatus] = useState('calling'); // calling, connected, ended, declined
+  const [callStatus, setCallStatus] = useState('connecting'); // connecting, connected, ended
   const [isMuted, setIsMuted] = useState(false);
-  const [isDeafened, setIsDeafened] = useState(false); // Non implémenté
+  const [isDeafened, setIsDeafened] = useState(false);
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [hasMediaPermission, setHasMediaPermission] = useState<boolean | null>(null);
 
@@ -52,78 +45,14 @@ function CallUI() {
   const callId = searchParams.get('callId');
   const isVideoCall = searchParams.get('video') === 'true';
   
-  const getMediaPermissions = async () => {
-    if (typeof window === 'undefined') return;
-    try {
-        if (Capacitor.isNativePlatform()) {
-            console.log("Requesting camera permissions on native...");
-            const cameraPerms = await Camera.requestPermissions();
-            console.log("Camera permission status:", cameraPerms.camera);
-            if (cameraPerms.camera !== 'granted' || cameraPerms.photos !== 'granted') {
-                throw new Error("Autorisation caméra refusée.");
-            }
-        }
-        
-        console.log("Getting user media stream...");
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
-        localStream.current = stream;
-        setHasMediaPermission(true);
-        console.log("Media stream obtained.");
-        
-        if (localVideoRef.current) {
-            localVideoRef.current.srcObject = stream;
-        }
-
-    } catch (error) {
-        console.error("Error getting media permissions:", error);
-        setHasMediaPermission(false);
-        toast({ variant: 'destructive', title: 'Accès Média Refusé', description: 'Veuillez autoriser l\'accès au micro et à la caméra.' });
-    }
-  };
-
-
-  const handleEndCall = React.useCallback(async (shouldRouteBack = true) => {
-    // Utilisation de React.useCallback pour stabiliser la fonction
-    setCallStatus((prevStatus) => {
-        if (prevStatus === 'ended') return 'ended'; // Empêche les exécutions multiples
-
-        // Nettoyage WebRTC
-        localStream.current?.getTracks().forEach((track) => track.stop());
-        pc.current?.close();
-        pc.current = null;
-
-        // Nettoyage Firestore de manière asynchrone
-        if (callId) {
-            const callDocRef = doc(db, 'calls', callId);
-            getDoc(callDocRef).then(docSnap => {
-                if (docSnap.exists()) {
-                    deleteDoc(callDocRef).catch(e => console.error("Error deleting call doc:", e));
-                }
-            });
-        }
-        
-        if (shouldRouteBack) {
-            try {
-                router.back();
-            } catch(e) {
-                router.push('/');
-            }
-        }
-        return 'ended';
-    });
-  }, [callId, router]);
-
 
   useEffect(() => {
     setIsVideoOn(isVideoCall);
-    let isCancelled = false;
-    let unsubscribeCall: () => void = () => {};
-    let unsubscribeCandidates: () => void = () => {};
 
     const initialize = async () => {
       if (!callId) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'ID d\'appel manquant.' });
-        router.back();
+        router.push('/');
         return;
       }
       
@@ -132,18 +61,16 @@ function CallUI() {
 
       if (!callDocSnap.exists()) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'Appel non trouvé.' });
-        router.back();
+        router.push('/');
         return;
       }
-      if (isCancelled) return;
       
       const callData = callDocSnap.data();
-      const calleeId = callData.calleeId;
-      const profile = await getUserProfile(calleeId);
+      const callerId = callData.callerId;
+      const profile = await getUserProfile(callerId);
       setOtherUser(profile);
       setLoading(false);
-      
-<<<<<<< HEAD
+
       // Demander les permissions
       const camPerm = await requestPermission('camera');
       const micPerm = await requestPermission('microphone');
@@ -157,12 +84,10 @@ function CallUI() {
 
       setHasMediaPermission(true);
 
-      // Obtenir le flux audio/vidéo local
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
         localStream.current = stream;
 
-        // Initialiser WebRTC SEULEMENT après avoir obtenu les permissions
         pc.current = new RTCPeerConnection(servers);
         remoteStream.current = new MediaStream();
 
@@ -173,7 +98,6 @@ function CallUI() {
             localVideoRef.current.srcObject = localStream.current;
         }
         
-        // Gérer les pistes distantes
         pc.current.ontrack = (event) => {
             event.streams[0].getTracks().forEach((track) => {
             remoteStream.current?.addTrack(track);
@@ -183,159 +107,65 @@ function CallUI() {
             }
         };
 
-        // Créer et gérer l'appel
-        await createAndManageCall(callDocRef);
-
+        await answerCall(callDocRef, callData.offer);
       } catch (error) {
         console.error("Error getting user media", error);
-<<<<<<< HEAD
-        toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible d\'accéder au microphone ou à la caméra.' });
-        handleEndCall(true);
-        return;
-      }
-
-      // Gérer les pistes distantes
-      pc.current.ontrack = (event) => {
-        event.streams[0].getTracks().forEach((track) => {
-          remoteStream.current?.addTrack(track);
-        });
-        if (remoteVideoRef.current && remoteStream.current) {
-            remoteVideoRef.current.srcObject = remoteStream.current;
-        }
-      };
-
-      // Créer et gérer l'appel
-      const cleanup = await createAndManageCall(callDocRef);
-      unsubscribeCall = cleanup.unsubscribe;
-      unsubscribeCandidates = cleanup.unsubscribeCandidates;
-=======
         toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible de démarrer le flux vidéo/audio.' });
         return;
       }
-=======
-      await getMediaPermissions();
->>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
     };
-    
+
+    const answerCall = async (callDocRef: any, offer: any) => {
+        if (!pc.current) return;
+
+        const answerCandidates = collection(callDocRef, 'answerCandidates');
+        const offerCandidates = collection(callDocRef, 'offerCandidates');
+
+        pc.current.onicecandidate = (event) => {
+            event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
+        };
+
+        await pc.current.setRemoteDescription(new RTCSessionDescription(offer));
+        
+        const answerDescription = await pc.current.createAnswer();
+        await pc.current.setLocalDescription(answerDescription);
+
+        const answer = {
+            type: answerDescription.type,
+            sdp: answerDescription.sdp,
+        };
+
+        await updateDoc(callDocRef, { answer, status: 'connected' });
+        setCallStatus('connected');
+
+        onSnapshot(offerCandidates, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === 'added') {
+                    pc.current?.addIceCandidate(new RTCIceCandidate(change.doc.data()));
+                }
+            });
+        });
+
+        // Listen for call termination
+        onSnapshot(callDocRef, (snapshot) => {
+             if (!snapshot.exists()) {
+                setCallStatus('ended');
+                toast({ title: 'Appel terminé', description: 'Votre correspondant a raccroché.' });
+                setTimeout(() => handleEndCall(false), 1500);
+            }
+        });
+    };
+
     initialize();
 
     return () => {
-      handleEndCall(false); // Cleanup on component unmount
+      handleEndCall(false);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callId]);
   
-  useEffect(() => {
-    // This effect runs after media permissions are granted (or denied)
-    if (hasMediaPermission === true && localStream.current) {
-        const initializeWebRTC = async () => {
-            if (!callId) return;
-            const callDocRef = doc(db, 'calls', callId);
-            
-            console.log("Initializing WebRTC connection...");
-            pc.current = new RTCPeerConnection(servers);
-            remoteStream.current = new MediaStream();
-
-            localStream.current!.getTracks().forEach((track) => {
-                pc.current?.addTrack(track, localStream.current!);
-            });
-            
-            pc.current.ontrack = (event) => {
-                event.streams[0].getTracks().forEach((track) => {
-                remoteStream.current?.addTrack(track);
-                });
-                if (remoteVideoRef.current && remoteStream.current) {
-                    remoteVideoRef.current.srcObject = remoteStream.current;
-                }
-            };
-            
-            await createAndManageCall(callDocRef);
-            console.log("WebRTC initialized and call managed.");
-        }
-        initializeWebRTC();
-    } else if (hasMediaPermission === false) {
-        // If permission was denied, we might want to end the call attempt after a delay
-        setTimeout(() => handleEndCall(), 3000);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasMediaPermission, callId]);
-
-    const createAndManageCall = async (callDocRef: any) => {
-        if (!pc.current) return { unsubscribe: () => {}, unsubscribeCandidates: () => {} };
-
-        const offerCandidates = collection(callDocRef, 'offerCandidates');
-        const answerCandidates = collection(callDocRef, 'answerCandidates');
-
-        pc.current.onicecandidate = (event) => {
-            event.candidate && addDoc(offerCandidates, event.candidate.toJSON());
-        };
-
-        const offerDescription = await pc.current.createOffer();
-        await pc.current.setLocalDescription(offerDescription);
-
-        const offer = {
-            sdp: offerDescription.sdp,
-            type: offerDescription.type,
-        };
-
-        await updateDoc(callDocRef, { offer });
-
-<<<<<<< HEAD
-        // Écouter la réponse et le statut
-=======
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
-        const unsubscribe = onSnapshot(callDocRef, (snapshot) => {
-            const data = snapshot.data();
-            if(data?.status === 'declined'){
-                 toast({ variant: 'destructive', title: 'Appel refusé' });
-                setTimeout(() => handleEndCall(true), 2000);
-            }
-            if (pc.current && !pc.current.currentRemoteDescription && data?.answer) {
-                const answerDescription = new RTCSessionDescription(data.answer);
-                pc.current?.setRemoteDescription(answerDescription);
-                setCallStatus('connected');
-            }
-        });
-
-<<<<<<< HEAD
-        // Écouter les candidats ICE de la réponse
-=======
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
-        const unsubscribeCandidates = onSnapshot(answerCandidates, (snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === 'added') {
-                    const candidate = new RTCIceCandidate(change.doc.data());
-                    pc.current?.addIceCandidate(candidate).catch(e => console.error("Error adding ICE candidate", e));
-                }
-            });
-        });
-
-<<<<<<< HEAD
-        return { unsubscribe, unsubscribeCandidates };
-    }
-
-    initialize();
-
-    return () => {
-      isCancelled = true;
-      unsubscribeCall();
-      unsubscribeCandidates();
-      handleEndCall(false); // Cleanup on component unmount
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [callId, isVideoCall]);
-
-=======
-        return () => {
-          unsubscribe();
-          unsubscribeCandidates();
-        }
-    }
-
   const handleEndCall = async (notify = true) => {
     setCallStatus('ended');
-
     pc.current?.close();
     localStream.current?.getTracks().forEach((track) => track.stop());
 
@@ -344,22 +174,28 @@ function CallUI() {
         const callDocRef = doc(db, 'calls', callId);
         const docExists = (await getDoc(callDocRef)).exists();
         if(docExists){
-            await deleteDoc(callDocRef);
+          await deleteDoc(callDocRef);
         }
       } catch (error) {
-          console.warn("Could not delete call document, it might have been deleted already:", error);
+        console.warn("Could not delete call document, it might have been deleted already:", error);
       }
     }
     
     pc.current = null;
     localStream.current = null;
     remoteStream.current = null;
-    
-    if(notify) {
+
+    if (notify) {
         router.back();
     }
   };
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
+
+  const handleDeclineCall = async () => {
+    if (!callId) return;
+    const callDocRef = doc(db, 'calls', callId);
+    await updateDoc(callDocRef, { status: 'declined' });
+    handleEndCall();
+  };
   
   const toggleMute = () => {
     if (localStream.current) {
@@ -370,7 +206,7 @@ function CallUI() {
     }
   };
 
-  const toggleVideo = () => {
+   const toggleVideo = () => {
     if (localStream.current) {
         localStream.current.getVideoTracks().forEach(track => {
             track.enabled = !track.enabled;
@@ -378,7 +214,6 @@ function CallUI() {
         setIsVideoOn(!isVideoOn);
     }
   };
-
 
   if (loading) {
     return (
@@ -410,7 +245,6 @@ function CallUI() {
           </div>
       )}
 
-
       <div className="relative z-10 flex flex-col items-center text-center mt-16 [text-shadow:_0_1px_4px_rgb(0_0_0_/_50%)]">
         <Avatar className="h-32 w-32 border-4 border-white/50">
           <AvatarImage src={otherUserImage} alt={otherUserName} />
@@ -418,10 +252,9 @@ function CallUI() {
         </Avatar>
         <h1 className="mt-6 text-3xl font-bold">{otherUserName}</h1>
         <p className="mt-2 text-lg text-slate-300">
-          {callStatus === 'calling' && 'Appel en cours...'}
+          {callStatus === 'connecting' && 'Connexion...'}
           {callStatus === 'connected' && 'Connecté'}
           {callStatus === 'ended' && 'Appel terminé'}
-          {callStatus === 'declined' && 'Appel refusé'}
         </p>
       </div>
 
@@ -457,7 +290,7 @@ function CallUI() {
         <Button
           size="lg"
           className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700"
-          onClick={() => handleEndCall(true)}
+          onClick={() => handleEndCall()}
         >
           <PhoneOff className="h-7 w-7" />
         </Button>
@@ -466,14 +299,14 @@ function CallUI() {
   );
 }
 
-export default function CallPage() {
+export default function ReceiveCallPage() {
     return (
         <Suspense fallback={
             <div className="flex h-screen w-full flex-col items-center justify-center bg-slate-900 text-white">
               <Loader2 className="h-16 w-16 animate-spin" />
             </div>
         }>
-            <CallUI />
+            <ReceiveCallUI />
         </Suspense>
     )
 }

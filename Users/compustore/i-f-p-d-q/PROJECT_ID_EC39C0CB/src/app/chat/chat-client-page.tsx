@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2, Plus, Play, Pause, CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getUserProfile, submitAbuseReport } from '@/lib/firebase-actions';
+import { getUserProfile } from '@/lib/firebase-actions';
 import type { DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
@@ -24,6 +24,13 @@ import { Progress } from '@/components/ui/progress';
 import { ReportAbuseDialog } from '@/components/report-abuse-dialog';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { collection, addDoc } from 'firebase/firestore';
+<<<<<<< HEAD
+import { requestPermission } from '@/hooks/usePermission';
+=======
+import { Capacitor } from '@capacitor/core';
+import { Camera as CapacitorCamera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Permissions } from '@capacitor/permissions';
+>>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
 
 
 interface Message {
@@ -45,23 +52,42 @@ const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [stream, setStream] = useState<MediaStream | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     const getCameraPermission = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        setHasCameraPermission(true);
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
+        const perm = await requestPermission("camera");
+        if (perm.state !== "granted") {
+            setHasCameraPermission(false);
+            toast({
+                variant: 'destructive',
+                title: 'Accès à la caméra refusé',
+                description: 'Veuillez autoriser l\'accès à la caméra dans les paramètres de votre navigateur ou de l\'application.',
+            });
+            return;
         }
+
+      try {
+        if (Capacitor.isNativePlatform()) {
+            const perm = await CapacitorCamera.requestPermissions();
+            if (perm.camera !== 'granted') {
+                throw new Error("L'autorisation d'accès à la caméra est requise.");
+            }
+        }
+        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setStream(mediaStream);
+        if (videoRef.current) {
+          videoRef.current.srcObject = mediaStream;
+        }
+        setHasCameraPermission(true);
       } catch (error) {
         console.error('Error accessing camera:', error);
         setHasCameraPermission(false);
         toast({
           variant: 'destructive',
-          title: 'Accès à la caméra refusé',
-          description: 'Veuillez autoriser l\'accès à la caméra dans les paramètres de votre navigateur.',
+          title: 'Erreur Caméra',
+          description: 'Impossible d\'accéder à la caméra.',
         });
       }
     };
@@ -69,11 +95,9 @@ const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void
     getCameraPermission();
 
     return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-         (videoRef.current.srcObject as MediaStream).getTracks().forEach(track => track.stop());
-      }
+      stream?.getTracks().forEach(track => track.stop());
     };
-  }, [toast]);
+  }, [stream, toast]);
 
   const handleCapture = () => {
     if (videoRef.current && canvasRef.current) {
@@ -297,7 +321,41 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     }
   };
   
+  const requestMicrophonePermission = async () => {
+    if (typeof window === 'undefined') return false;
+    try {
+        if (Capacitor.isNativePlatform()) {
+            console.log("Requesting microphone permissions on native...");
+            const permResult = await Permissions.request({ permissions: ['microphone'] });
+            console.log("Microphone permission status:", permResult.microphone);
+            if (permResult.microphone !== 'granted') {
+                throw new Error("L'autorisation d'accès au microphone est requise.");
+            }
+            return true;
+        }
+        // For web, getUserMedia will trigger the prompt
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        return true;
+    } catch (err) {
+        console.error("Error requesting microphone permission:", err);
+        toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible d'accéder au microphone. Veuillez vérifier les autorisations." });
+        return false;
+    }
+  };
+
+
   const startRecording = async () => {
+<<<<<<< HEAD
+    const micPerm = await requestPermission("microphone");
+    if (micPerm.state !== "granted") {
+        toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible d'accéder au microphone. Veuillez vérifier les autorisations." });
+        return;
+    }
+=======
+    const hasPermission = await requestMicrophonePermission();
+    if (!hasPermission) return;
+>>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
+    
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorderRef.current = new MediaRecorder(stream);
@@ -311,14 +369,14 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         const audioUrl = URL.createObjectURL(audioBlob);
         setMessages(prev => [...prev, { id: Date.now(), text: '', sender: 'me', image: null, audio: audioUrl }]);
-        stream.getTracks().forEach(track => track.stop()); // Stop microphone access
+        stream.getTracks().forEach(track => track.stop());
       };
 
       mediaRecorderRef.current.start();
       setIsRecording(true);
     } catch (err) {
       console.error("Error starting recording:", err);
-      toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible d'accéder au microphone. Veuillez vérifier les autorisations." });
+      toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible de démarrer l'enregistrement." });
     }
   };
 

@@ -11,13 +11,8 @@ import { doc, getDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc } fro
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-<<<<<<< HEAD
 import { requestPermission } from '@/hooks/usePermission';
-=======
-import { Capacitor } from '@capacitor/core';
-import { Camera } from '@capacitor/camera';
 
->>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
 
 // Configuration du serveur STUN de Google (public et gratuit)
 const servers = {
@@ -52,78 +47,14 @@ function CallUI() {
   const callId = searchParams.get('callId');
   const isVideoCall = searchParams.get('video') === 'true';
   
-  const getMediaPermissions = async () => {
-    if (typeof window === 'undefined') return;
-    try {
-        if (Capacitor.isNativePlatform()) {
-            console.log("Requesting camera permissions on native...");
-            const cameraPerms = await Camera.requestPermissions();
-            console.log("Camera permission status:", cameraPerms.camera);
-            if (cameraPerms.camera !== 'granted' || cameraPerms.photos !== 'granted') {
-                throw new Error("Autorisation caméra refusée.");
-            }
-        }
-        
-        console.log("Getting user media stream...");
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
-        localStream.current = stream;
-        setHasMediaPermission(true);
-        console.log("Media stream obtained.");
-        
-        if (localVideoRef.current) {
-            localVideoRef.current.srcObject = stream;
-        }
-
-    } catch (error) {
-        console.error("Error getting media permissions:", error);
-        setHasMediaPermission(false);
-        toast({ variant: 'destructive', title: 'Accès Média Refusé', description: 'Veuillez autoriser l\'accès au micro et à la caméra.' });
-    }
-  };
-
-
-  const handleEndCall = React.useCallback(async (shouldRouteBack = true) => {
-    // Utilisation de React.useCallback pour stabiliser la fonction
-    setCallStatus((prevStatus) => {
-        if (prevStatus === 'ended') return 'ended'; // Empêche les exécutions multiples
-
-        // Nettoyage WebRTC
-        localStream.current?.getTracks().forEach((track) => track.stop());
-        pc.current?.close();
-        pc.current = null;
-
-        // Nettoyage Firestore de manière asynchrone
-        if (callId) {
-            const callDocRef = doc(db, 'calls', callId);
-            getDoc(callDocRef).then(docSnap => {
-                if (docSnap.exists()) {
-                    deleteDoc(callDocRef).catch(e => console.error("Error deleting call doc:", e));
-                }
-            });
-        }
-        
-        if (shouldRouteBack) {
-            try {
-                router.back();
-            } catch(e) {
-                router.push('/');
-            }
-        }
-        return 'ended';
-    });
-  }, [callId, router]);
-
-
+  
   useEffect(() => {
     setIsVideoOn(isVideoCall);
-    let isCancelled = false;
-    let unsubscribeCall: () => void = () => {};
-    let unsubscribeCandidates: () => void = () => {};
 
     const initialize = async () => {
       if (!callId) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'ID d\'appel manquant.' });
-        router.back();
+        router.push('/');
         return;
       }
       
@@ -132,10 +63,9 @@ function CallUI() {
 
       if (!callDocSnap.exists()) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'Appel non trouvé.' });
-        router.back();
+        router.push('/');
         return;
       }
-      if (isCancelled) return;
       
       const callData = callDocSnap.data();
       const calleeId = callData.calleeId;
@@ -143,7 +73,6 @@ function CallUI() {
       setOtherUser(profile);
       setLoading(false);
       
-<<<<<<< HEAD
       // Demander les permissions
       const camPerm = await requestPermission('camera');
       const micPerm = await requestPermission('microphone');
@@ -188,34 +117,9 @@ function CallUI() {
 
       } catch (error) {
         console.error("Error getting user media", error);
-<<<<<<< HEAD
-        toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible d\'accéder au microphone ou à la caméra.' });
-        handleEndCall(true);
-        return;
-      }
-
-      // Gérer les pistes distantes
-      pc.current.ontrack = (event) => {
-        event.streams[0].getTracks().forEach((track) => {
-          remoteStream.current?.addTrack(track);
-        });
-        if (remoteVideoRef.current && remoteStream.current) {
-            remoteVideoRef.current.srcObject = remoteStream.current;
-        }
-      };
-
-      // Créer et gérer l'appel
-      const cleanup = await createAndManageCall(callDocRef);
-      unsubscribeCall = cleanup.unsubscribe;
-      unsubscribeCandidates = cleanup.unsubscribeCandidates;
-=======
         toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible de démarrer le flux vidéo/audio.' });
         return;
       }
-=======
-      await getMediaPermissions();
->>>>>>> ba8f327e8f1a5e00451faf7e1aad3fefd3a3c8fd
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
     };
     
     initialize();
@@ -226,43 +130,9 @@ function CallUI() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callId]);
   
-  useEffect(() => {
-    // This effect runs after media permissions are granted (or denied)
-    if (hasMediaPermission === true && localStream.current) {
-        const initializeWebRTC = async () => {
-            if (!callId) return;
-            const callDocRef = doc(db, 'calls', callId);
-            
-            console.log("Initializing WebRTC connection...");
-            pc.current = new RTCPeerConnection(servers);
-            remoteStream.current = new MediaStream();
-
-            localStream.current!.getTracks().forEach((track) => {
-                pc.current?.addTrack(track, localStream.current!);
-            });
-            
-            pc.current.ontrack = (event) => {
-                event.streams[0].getTracks().forEach((track) => {
-                remoteStream.current?.addTrack(track);
-                });
-                if (remoteVideoRef.current && remoteStream.current) {
-                    remoteVideoRef.current.srcObject = remoteStream.current;
-                }
-            };
-            
-            await createAndManageCall(callDocRef);
-            console.log("WebRTC initialized and call managed.");
-        }
-        initializeWebRTC();
-    } else if (hasMediaPermission === false) {
-        // If permission was denied, we might want to end the call attempt after a delay
-        setTimeout(() => handleEndCall(), 3000);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasMediaPermission, callId]);
 
     const createAndManageCall = async (callDocRef: any) => {
-        if (!pc.current) return { unsubscribe: () => {}, unsubscribeCandidates: () => {} };
+        if (!pc.current) return;
 
         const offerCandidates = collection(callDocRef, 'offerCandidates');
         const answerCandidates = collection(callDocRef, 'answerCandidates');
@@ -281,15 +151,12 @@ function CallUI() {
 
         await updateDoc(callDocRef, { offer });
 
-<<<<<<< HEAD
-        // Écouter la réponse et le statut
-=======
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
         const unsubscribe = onSnapshot(callDocRef, (snapshot) => {
             const data = snapshot.data();
             if(data?.status === 'declined'){
+                setCallStatus('declined');
                  toast({ variant: 'destructive', title: 'Appel refusé' });
-                setTimeout(() => handleEndCall(true), 2000);
+                setTimeout(() => handleEndCall(), 2000);
             }
             if (pc.current && !pc.current.currentRemoteDescription && data?.answer) {
                 const answerDescription = new RTCSessionDescription(data.answer);
@@ -298,35 +165,15 @@ function CallUI() {
             }
         });
 
-<<<<<<< HEAD
-        // Écouter les candidats ICE de la réponse
-=======
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
         const unsubscribeCandidates = onSnapshot(answerCandidates, (snapshot) => {
             snapshot.docChanges().forEach((change) => {
                 if (change.type === 'added') {
                     const candidate = new RTCIceCandidate(change.doc.data());
-                    pc.current?.addIceCandidate(candidate).catch(e => console.error("Error adding ICE candidate", e));
+                    pc.current?.addIceCandidate(candidate);
                 }
             });
         });
 
-<<<<<<< HEAD
-        return { unsubscribe, unsubscribeCandidates };
-    }
-
-    initialize();
-
-    return () => {
-      isCancelled = true;
-      unsubscribeCall();
-      unsubscribeCandidates();
-      handleEndCall(false); // Cleanup on component unmount
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [callId, isVideoCall]);
-
-=======
         return () => {
           unsubscribe();
           unsubscribeCandidates();
@@ -359,7 +206,6 @@ function CallUI() {
         router.back();
     }
   };
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
   
   const toggleMute = () => {
     if (localStream.current) {
@@ -457,7 +303,7 @@ function CallUI() {
         <Button
           size="lg"
           className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700"
-          onClick={() => handleEndCall(true)}
+          onClick={() => handleEndCall()}
         >
           <PhoneOff className="h-7 w-7" />
         </Button>

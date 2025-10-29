@@ -372,6 +372,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         calleeId: otherUserId,
         status: 'ringing',
         type: isVideo ? 'video' : 'audio',
+        createdAt: new Date(),
       });
       router.push(`/call?callId=${callDocRef.id}&video=${isVideo}`);
     } catch (error) {
@@ -473,7 +474,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         </Drawer>
       </header>
 
-      <main className="flex-1 overflow-y-auto pt-12 pb-20">
+      <main className="flex-1 overflow-y-auto pt-12 pb-24">
         <div className="space-y-4 p-4">
           {messages.map((message) => (
             <div
@@ -543,84 +544,86 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         </div>
       </main>
 
-       <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm px-2 py-1.5">
-         {isRecording && (
-          <div className="absolute -top-10 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-destructive text-destructive-foreground px-3 py-1 rounded-full text-sm">
-            <div className="h-2 w-2 rounded-full bg-white animate-pulse"></div>
-            Enregistrement...
-          </div>
-        )}
-        <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button type="button" variant="ghost" size="icon" className="shrink-0 h-8 w-8">
-                    <Plus className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-1 mb-2">
-                <div className="flex gap-1">
-                  <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
-                      <DialogTrigger asChild>
-                          <Button type="button" variant="ghost" size="icon">
-                              <Camera className="h-4 w-4" />
-                          </Button>
-                      </DialogTrigger>
-                      {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
-                  </Dialog>
-                  <Button type="button" variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()}>
-                      <ImageIcon className="h-4 w-4" />
-                  </Button>
+       <footer className="fixed bottom-0 left-0 right-0 z-10 bg-background md:bg-transparent">
+         <div className="mx-auto max-w-4xl p-2">
+            {isRecording && (
+                <div className="absolute -top-10 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-destructive text-destructive-foreground px-3 py-1 rounded-full text-sm">
+                    <div className="h-2 w-2 rounded-full bg-white animate-pulse"></div>
+                    Enregistrement...
                 </div>
-              </PopoverContent>
-            </Popover>
-          
-            <div className="flex-1 relative flex items-center min-w-0 bg-secondary rounded-xl">
-                <Textarea
-                    ref={textareaRef}
-                    rows={1}
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Message..."
-                    className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-2.5 px-3 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
-                    autoComplete="off"
-                />
-                
-                <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+            )}
+            <form onSubmit={handleSendMessage} className="flex items-end gap-1.5 w-full md:bg-background md:border md:rounded-xl md:p-1 md:shadow-sm">
+                <Popover>
                   <PopoverTrigger asChild>
-                      <Button type="button" variant="ghost" size="icon" className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6">
-                          <Smile className="h-4 w-4 text-muted-foreground" />
-                      </Button>
+                    <Button type="button" variant="ghost" size="icon" className="shrink-0 h-9 w-9 md:h-9 md:w-9">
+                        <Plus className="h-5 w-5 text-muted-foreground" />
+                    </Button>
                   </PopoverTrigger>
-                  <PopoverContent side="top" align="end" className="w-full max-w-[320px] p-0 border-none mb-2">
-                    <EmojiPickerContent 
-                      onEmojiClick={handleEmojiClick} 
-                      onOutsideClick={() => setIsEmojiPickerOpen(false)}
-                    />
+                  <PopoverContent className="w-auto p-1 mb-2">
+                    <div className="flex gap-1">
+                      <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                          <DialogTrigger asChild>
+                              <Button type="button" variant="ghost" size="icon">
+                                  <Camera className="h-5 w-5" />
+                              </Button>
+                          </DialogTrigger>
+                          {isCameraOpen && <CameraView onCapture={handleCapturePhoto} onClose={() => setIsCameraOpen(false)} />}
+                      </Dialog>
+                      <Button type="button" variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()}>
+                          <ImageIcon className="h-5 w-5" />
+                      </Button>
+                    </div>
                   </PopoverContent>
                 </Popover>
-            </div>
-          
-            <div className="shrink-0">
-              <Button
-                  type={showSendButton ? "submit" : "button"}
-                  variant="ghost"
-                  size="icon"
-                  className={cn("shrink-0 h-8 w-8", showSendButton ? "text-primary" : "text-muted-foreground")}
-                  onMouseDown={!showSendButton ? startRecording : undefined}
-                  onMouseUp={!showSendButton ? stopRecording : undefined}
-                  onTouchStart={!showSendButton ? startRecording : undefined}
-                  onTouchEnd={!showSendButton ? stopRecording : undefined}
-                  aria-label={showSendButton ? "Envoyer" : "Envoyer un message vocal"}
-              >
-                  {showSendButton ? (
-                      <Send className="h-4 w-4" />
-                  ) : (
-                      <Mic className="h-4 w-4" />
-                  )}
-              </Button>
-            </div>
-        </form>
+              
+                <div className="flex-1 relative flex items-center min-w-0">
+                    <Textarea
+                        ref={textareaRef}
+                        rows={1}
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Message..."
+                        className="w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent py-2.5 px-3 pr-8 min-h-[20px] max-h-32 overflow-y-auto text-sm"
+                        autoComplete="off"
+                    />
+                    
+                    <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+                      <PopoverTrigger asChild>
+                          <Button type="button" variant="ghost" size="icon" className="absolute right-0.5 top-1/2 -translate-y-1/2 h-8 w-8">
+                              <Smile className="h-5 w-5 text-muted-foreground" />
+                          </Button>
+                      </PopoverTrigger>
+                      <PopoverContent side="top" align="end" className="w-full max-w-[320px] p-0 border-none mb-2">
+                        <EmojiPickerContent 
+                          onEmojiClick={handleEmojiClick} 
+                          onOutsideClick={() => setIsEmojiPickerOpen(false)}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                </div>
+              
+                <div className="shrink-0">
+                  <Button
+                      type={showSendButton ? "submit" : "button"}
+                      variant="ghost"
+                      size="icon"
+                      className={cn("shrink-0 h-9 w-9 md:h-9 md:w-9", showSendButton ? "text-primary" : "text-muted-foreground")}
+                      onMouseDown={!showSendButton ? startRecording : undefined}
+                      onMouseUp={!showSendButton ? stopRecording : undefined}
+                      onTouchStart={!showSendButton ? startRecording : undefined}
+                      onTouchEnd={!showSendButton ? stopRecording : undefined}
+                      aria-label={showSendButton ? "Envoyer" : "Envoyer un message vocal"}
+                  >
+                      {showSendButton ? (
+                          <Send className="h-5 w-5" />
+                      ) : (
+                          <Mic className="h-5 w-5" />
+                      )}
+                  </Button>
+                </div>
+            </form>
+         </div>
          <input
           type="file"
           ref={fileInputRef}

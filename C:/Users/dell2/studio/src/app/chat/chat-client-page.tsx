@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -6,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Send, MoreVertical, Ban, ShieldAlert, Image as ImageIcon, Mic, Camera, Smile, Circle, X, Phone, Video, Trash2, Plus, Play, Pause, CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getUserProfile, submitAbuseReport } from '@/lib/firebase-actions';
+import { getUserProfile } from '@/lib/firebase-actions';
 import type { DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
@@ -25,6 +24,7 @@ import { Progress } from '@/components/ui/progress';
 import { ReportAbuseDialog } from '@/components/report-abuse-dialog';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { collection, addDoc } from 'firebase/firestore';
+import { requestPermission } from '@/hooks/usePermission';
 
 
 interface Message {
@@ -51,6 +51,17 @@ const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void
 
   useEffect(() => {
     const getCameraPermission = async () => {
+        const perm = await requestPermission("camera");
+        if (perm.state !== "granted") {
+            setHasCameraPermission(false);
+            toast({
+                variant: 'destructive',
+                title: 'Accès à la caméra refusé',
+                description: 'Veuillez autoriser l\'accès à la caméra dans les paramètres de votre navigateur ou de l\'application.',
+            });
+            return;
+        }
+
       try {
         const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
         setStream(mediaStream);
@@ -63,8 +74,8 @@ const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void
         setHasCameraPermission(false);
         toast({
           variant: 'destructive',
-          title: 'Accès à la caméra refusé',
-          description: 'Veuillez autoriser l\'accès à la caméra dans les paramètres de votre navigateur.',
+          title: 'Erreur Caméra',
+          description: 'Impossible d\'accéder à la caméra.',
         });
       }
     };
@@ -299,6 +310,12 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   };
   
   const startRecording = async () => {
+    const micPerm = await requestPermission("microphone");
+    if (micPerm.state !== "granted") {
+        toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible d'accéder au microphone. Veuillez vérifier les autorisations." });
+        return;
+    }
+    
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorderRef.current = new MediaRecorder(stream);
@@ -312,14 +329,14 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         const audioUrl = URL.createObjectURL(audioBlob);
         setMessages(prev => [...prev, { id: Date.now(), text: '', sender: 'me', image: null, audio: audioUrl }]);
-        stream.getTracks().forEach(track => track.stop()); // Stop microphone access
+        stream.getTracks().forEach(track => track.stop());
       };
 
       mediaRecorderRef.current.start();
       setIsRecording(true);
     } catch (err) {
       console.error("Error starting recording:", err);
-      toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible d'accéder au microphone. Veuillez vérifier les autorisations." });
+      toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible de démarrer l'enregistrement." });
     }
   };
 
@@ -366,16 +383,14 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
   
   const handleStartCall = async (isVideo: boolean) => {
     if (!otherUserId || !currentUser) return;
+
      try {
       const callDocRef = await addDoc(collection(db, 'calls'), {
         callerId: currentUser.uid,
         calleeId: otherUserId,
         status: 'ringing',
         type: isVideo ? 'video' : 'audio',
-<<<<<<< HEAD
-        createdAt: new Date(),
-=======
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
+        createdAt: new Date().toISOString(),
       });
       router.push(`/call?callId=${callDocRef.id}&video=${isVideo}`);
     } catch (error) {
@@ -477,7 +492,7 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
         </Drawer>
       </header>
 
-      <main className="flex-1 overflow-y-auto pt-12 pb-24">
+      <main className="flex-1 overflow-y-auto pt-12 pb-20">
         <div className="space-y-4 p-4">
           {messages.map((message) => (
             <div
