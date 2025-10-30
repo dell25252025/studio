@@ -13,12 +13,12 @@
     "android:build": "npm run build && npx cap sync android"
   },
   "dependencies": {
+    "@capacitor-community/google-signin": "^2.0.0",
     "@capacitor/android": "^6.1.1",
     "@capacitor/app": "^6.0.0",
     "@capacitor/camera": "^6.0.0",
     "@capacitor/core": "^6.1.1",
     "@capacitor/geolocation": "^6.0.0",
-    "@capacitor/google-auth": "^2.0.2",
     "@capacitor/permissions": "^6.0.1",
     "@genkit-ai/googleai": "^1.14.1",
     "@genkit-ai/next": "^1.14.1",
