@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Geolocation } from '@capacitor/geolocation';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -15,6 +16,30 @@ export default function AuthPage() {
   const [isEmailFormVisible, setIsEmailFormVisible] = useState(false);
   const isMobile = useIsMobile();
   const router = useRouter();
+
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      try {
+        // Demande les permissions pour la localisation
+        const permissions = await Geolocation.requestPermissions({ permissions: ['location'] });
+        console.log('Statut de la permission:', permissions.location);
+
+        if (permissions.location === 'granted') {
+          console.log('Permission de localisation accordée.');
+          // Optionnel : Récupérer la position actuelle pour confirmer que ça marche
+          // const coordinates = await Geolocation.getCurrentPosition();
+          // console.log('Position actuelle:', coordinates);
+        } else {
+          console.log('Permission de localisation refusée.');
+        }
+      } catch (e) {
+        console.error('Erreur lors de la demande de permission de localisation', e);
+      }
+    };
+
+    // Appelle la fonction de demande de permission
+    requestLocationPermission();
+  }, []); // Le tableau vide assure que cela ne s'exécute qu'une seule fois
 
   const resetAuthState = () => {
     setIsEmailFormVisible(false);
