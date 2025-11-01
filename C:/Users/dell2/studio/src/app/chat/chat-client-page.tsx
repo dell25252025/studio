@@ -24,7 +24,9 @@ import { Progress } from '@/components/ui/progress';
 import { ReportAbuseDialog } from '@/components/report-abuse-dialog';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { collection, addDoc } from 'firebase/firestore';
-import { requestPermission } from '@/hooks/usePermission';
+import { Capacitor } from '@capacitor/core';
+import { Camera as CapacitorCamera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Permissions } from '@capacitor/permissions';
 
 
 interface Message {
@@ -51,18 +53,13 @@ const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void
 
   useEffect(() => {
     const getCameraPermission = async () => {
-        const perm = await requestPermission("camera");
-        if (perm.state !== "granted") {
-            setHasCameraPermission(false);
-            toast({
-                variant: 'destructive',
-                title: 'Accès à la caméra refusé',
-                description: 'Veuillez autoriser l\'accès à la caméra dans les paramètres de votre navigateur ou de l\'application.',
-            });
-            return;
-        }
-
       try {
+        if (Capacitor.isNativePlatform()) {
+            const perm = await CapacitorCamera.requestPermissions();
+            if (perm.camera !== 'granted') {
+                throw new Error("L'autorisation d'accès à la caméra est requise.");
+            }
+        }
         const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
         setStream(mediaStream);
         if (videoRef.current) {
@@ -309,12 +306,32 @@ export default function ChatClientPage({ otherUserId }: { otherUserId: string })
     }
   };
   
-  const startRecording = async () => {
-    const micPerm = await requestPermission("microphone");
-    if (micPerm.state !== "granted") {
+  const requestMicrophonePermission = async () => {
+    if (typeof window === 'undefined') return false;
+    try {
+        if (Capacitor.isNativePlatform()) {
+            console.log("Requesting microphone permissions on native...");
+            const permResult = await Permissions.request({ permissions: ['microphone'] });
+            console.log("Microphone permission status:", permResult.microphone);
+            if (permResult.microphone !== 'granted') {
+                throw new Error("L'autorisation d'accès au microphone est requise.");
+            }
+            return true;
+        }
+        // For web, getUserMedia will trigger the prompt
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        return true;
+    } catch (err) {
+        console.error("Error requesting microphone permission:", err);
         toast({ variant: 'destructive', title: 'Erreur de microphone', description: "Impossible d'accéder au microphone. Veuillez vérifier les autorisations." });
-        return;
+        return false;
     }
+  };
+
+
+  const startRecording = async () => {
+    const hasPermission = await requestMicrophonePermission();
+    if (!hasPermission) return;
     
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });

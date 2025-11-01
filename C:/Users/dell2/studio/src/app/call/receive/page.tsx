@@ -11,7 +11,9 @@ import { doc, getDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc } fro
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { requestPermission } from '@/hooks/usePermission';
+import React from 'react';
+import { Capacitor } from '@capacitor/core';
+import { Camera } from '@capacitor/camera';
 
 
 const servers = {
@@ -44,15 +46,45 @@ function ReceiveCallUI() {
 
   const callId = searchParams.get('callId');
   const isVideoCall = searchParams.get('video') === 'true';
+
+   const handleEndCall = React.useCallback(async (shouldRouteBack = true) => {
+    setCallStatus((prevStatus) => {
+      if (prevStatus === 'ended') return 'ended';
+
+      localStream.current?.getTracks().forEach((track) => track.stop());
+      pc.current?.close();
+      pc.current = null;
+
+      if (callId) {
+        const callDocRef = doc(db, 'calls', callId);
+        getDoc(callDocRef).then(docSnap => {
+            if (docSnap.exists()) {
+                deleteDoc(callDocRef).catch(e => console.error("Error deleting call doc:", e));
+            }
+        });
+      }
+      
+      if (shouldRouteBack) {
+        try {
+            router.back();
+        } catch(e) {
+            router.push('/');
+        }
+      }
+      return 'ended';
+    });
+  }, [callId, router]);
   
 
   useEffect(() => {
     setIsVideoOn(isVideoCall);
+    let isCancelled = false;
+    let unsubscribeCall: () => void = () => {};
 
     const initialize = async () => {
       if (!callId) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'ID d\'appel manquant.' });
-        router.push('/');
+        router.back();
         return;
       }
       
@@ -61,9 +93,10 @@ function ReceiveCallUI() {
 
       if (!callDocSnap.exists()) {
         toast({ variant: 'destructive', title: 'Erreur', description: 'Appel non trouvé.' });
-        router.push('/');
+        router.back();
         return;
       }
+      if (isCancelled) return;
       
       const callData = callDocSnap.data();
       const callerId = callData.callerId;
@@ -72,21 +105,23 @@ function ReceiveCallUI() {
       setLoading(false);
 
       // Demander les permissions
-      const camPerm = await requestPermission('camera');
-      const micPerm = await requestPermission('microphone');
-
-      if (camPerm.state !== 'granted' || micPerm.state !== 'granted') {
-          setHasMediaPermission(false);
-          toast({ variant: 'destructive', title: 'Accès Média Refusé', description: 'Permissions caméra et micro nécessaires pour l\'appel. Activez-les dans les paramètres.' });
-          // Ne pas quitter la page immédiatement, laisser l'alerte s'afficher
-          return;
-      }
-
-      setHasMediaPermission(true);
+      if (typeof window === 'undefined') return;
 
       try {
+         if (Capacitor.isNativePlatform()) {
+          const perm = await Camera.requestPermissions({ permissions: ['camera', 'microphone'] });
+          if (perm.camera !== 'granted' || perm.microphone !== 'granted') {
+            throw new Error('Permissions caméra et micro refusées.');
+          }
+        }
+        
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall });
         localStream.current = stream;
+        setHasMediaPermission(true);
+
+        if (localVideoRef.current) {
+            localVideoRef.current.srcObject = stream;
+        }
 
         pc.current = new RTCPeerConnection(servers);
         remoteStream.current = new MediaStream();
@@ -94,9 +129,6 @@ function ReceiveCallUI() {
         localStream.current.getTracks().forEach((track) => {
           pc.current?.addTrack(track, localStream.current!);
         });
-        if (localVideoRef.current) {
-            localVideoRef.current.srcObject = localStream.current;
-        }
         
         pc.current.ontrack = (event) => {
             event.streams[0].getTracks().forEach((track) => {
@@ -107,16 +139,19 @@ function ReceiveCallUI() {
             }
         };
 
-        await answerCall(callDocRef, callData.offer);
+        const cleanup = await answerCall(callDocRef, callData.offer);
+        unsubscribeCall = cleanup;
+
       } catch (error) {
         console.error("Error getting user media", error);
-        toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible de démarrer le flux vidéo/audio.' });
+        toast({ variant: 'destructive', title: 'Erreur Média', description: 'Impossible d\'accéder au microphone ou à la caméra.' });
+        handleEndCall(true);
         return;
       }
     };
 
     const answerCall = async (callDocRef: any, offer: any) => {
-        if (!pc.current) return;
+        if (!pc.current) return () => {};
 
         const answerCandidates = collection(callDocRef, 'answerCandidates');
         const offerCandidates = collection(callDocRef, 'offerCandidates');
@@ -141,55 +176,32 @@ function ReceiveCallUI() {
         onSnapshot(offerCandidates, (snapshot) => {
             snapshot.docChanges().forEach((change) => {
                 if (change.type === 'added') {
-                    pc.current?.addIceCandidate(new RTCIceCandidate(change.doc.data()));
+                    pc.current?.addIceCandidate(new RTCIceCandidate(change.doc.data())).catch(e => console.error("Error adding ICE candidate:", e));
                 }
             });
         });
 
         // Listen for call termination
-        onSnapshot(callDocRef, (snapshot) => {
+        const unsubscribe = onSnapshot(callDocRef, (snapshot) => {
              if (!snapshot.exists()) {
-                setCallStatus('ended');
                 toast({ title: 'Appel terminé', description: 'Votre correspondant a raccroché.' });
-                setTimeout(() => handleEndCall(false), 1500);
+                setTimeout(() => handleEndCall(true), 1500);
             }
         });
+
+        return unsubscribe;
     };
 
     initialize();
 
     return () => {
+      isCancelled = true;
+      unsubscribeCall();
       handleEndCall(false);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [callId]);
+  }, [callId, isVideoCall]);
   
-  const handleEndCall = async (notify = true) => {
-    setCallStatus('ended');
-    pc.current?.close();
-    localStream.current?.getTracks().forEach((track) => track.stop());
-
-    if (callId) {
-      try {
-        const callDocRef = doc(db, 'calls', callId);
-        const docExists = (await getDoc(callDocRef)).exists();
-        if(docExists){
-          await deleteDoc(callDocRef);
-        }
-      } catch (error) {
-        console.warn("Could not delete call document, it might have been deleted already:", error);
-      }
-    }
-    
-    pc.current = null;
-    localStream.current = null;
-    remoteStream.current = null;
-
-    if (notify) {
-        router.back();
-    }
-  };
-
   const handleDeclineCall = async () => {
     if (!callId) return;
     const callDocRef = doc(db, 'calls', callId);
@@ -290,7 +302,7 @@ function ReceiveCallUI() {
         <Button
           size="lg"
           className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700"
-          onClick={() => handleEndCall()}
+          onClick={() => handleEndCall(true)}
         >
           <PhoneOff className="h-7 w-7" />
         </Button>
