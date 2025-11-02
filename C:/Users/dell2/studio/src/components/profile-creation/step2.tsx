@@ -54,8 +54,60 @@ const allLanguages = [
 
 
 const Step2 = () => {
-  const { control, setValue } = useFormContext();
-  
+  const { control, setValue, getValues } = useFormContext();
+  const [isLocating, setIsLocating] = useState(false);
+  const { toast } = useToast();
+
+  const requestAndLocate = async () => {
+    setIsLocating(true);
+    try {
+      const coordinates = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 10000,
+      });
+
+      const { latitude, longitude } = coordinates.coords;
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Erreur réseau: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (data?.address?.country) {
+        setValue('location', data.address.country, { shouldValidate: true });
+        toast({ title: "Position trouvée !", description: `Pays défini sur : ${data.address.country}` });
+      } else {
+        throw new Error("Pays non trouvé dans la réponse de l'API.");
+      }
+    } catch (error: any) {
+      console.error("Erreur de géolocalisation:", error);
+      let description = "Impossible de récupérer votre position. Veuillez la sélectionner manuellement.";
+      if (error.code === 1) { // PERMISSION_DENIED
+        description = "L'accès à la localisation a été refusé. Veuillez l'activer dans les paramètres.";
+      }
+      toast({
+        variant: 'destructive',
+        title: "Erreur de géolocalisation",
+        description,
+      });
+    } finally {
+      setIsLocating(false);
+    }
+  };
+
+  useEffect(() => {
+    const currentLocation = getValues('location');
+    if (!currentLocation) {
+        // Automatically try to locate user on component mount if no location is set
+        requestAndLocate();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="space-y-6">
       {/* Section Position */}
@@ -80,6 +132,15 @@ const Step2 = () => {
                   </FormItem>
                 )}
               />
+              <Separator />
+               <Button type="button" variant="outline" onClick={requestAndLocate} disabled={isLocating} className="w-full">
+                  {isLocating ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Crosshair className="mr-2 h-4 w-4" />
+                  )}
+                  Utiliser ma position actuelle
+                </Button>
           </div>
       </div>
 
