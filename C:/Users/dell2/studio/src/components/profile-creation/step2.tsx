@@ -55,7 +55,7 @@ const allLanguages = [
 
 
 const Step2 = () => {
-  const { control, setValue, getValues } = useFormContext();
+  const { control, setValue } = useFormContext();
   const [isLocating, setIsLocating] = useState(false);
   const { toast } = useToast();
 
@@ -99,15 +99,6 @@ const Step2 = () => {
     }
   };
   
-  useEffect(() => {
-    // Only attempt auto-location if no location is set
-    const currentLocation = getValues('location');
-    if (!currentLocation) {
-        requestAndLocate();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <div className="space-y-6">
       {/* Section Position */}
