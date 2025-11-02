@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useFormContext } from 'react-hook-form';
@@ -17,6 +18,7 @@ import { Crosshair, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Geolocation } from '@capacitor/geolocation';
+import { getCountryFromCoordinates } from '@/lib/firebase-actions';
 
 
 const allLanguages = [
@@ -67,21 +69,13 @@ const Step2 = () => {
       });
 
       const { latitude, longitude } = coordinates.coords;
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Erreur réseau: ${response.statusText}`);
-      }
+      const result = await getCountryFromCoordinates(latitude, longitude);
 
-      const data = await response.json();
-
-      if (data?.address?.country) {
-        setValue('location', data.address.country, { shouldValidate: true });
-        toast({ title: "Position trouvée !", description: `Pays défini sur : ${data.address.country}` });
+      if (result.country) {
+        setValue('location', result.country, { shouldValidate: true });
+        toast({ title: "Position trouvée !", description: `Pays défini sur : ${result.country}` });
       } else {
-        throw new Error("Pays non trouvé dans la réponse de l'API.");
+        throw new Error(result.error || "Pays non trouvé.");
       }
     } catch (error: any) {
       console.error("Erreur de géolocalisation:", error);
