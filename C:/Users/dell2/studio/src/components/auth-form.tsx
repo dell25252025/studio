@@ -251,5 +251,3 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
     </div>
   );
 }
-
-    
