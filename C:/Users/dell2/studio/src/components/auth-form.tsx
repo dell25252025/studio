@@ -86,55 +86,41 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
     }
   }
 
-  async function handleNativeGoogleSignIn() {
+  async function handleGoogleSignIn() {
+    setIsGoogleLoading(true);
     try {
         const googleUser = await GoogleAuth.signIn();
         const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
         const result = await signInWithCredential(auth, credential);
-        return result.user;
-    } catch (error) {
-        console.error("Native Google sign-in error", error);
-        // If native sign-in fails, we can fall back to the web method.
-        // For simplicity, we just log the error here.
-        throw new Error("La connexion native avec Google a échoué.");
-    }
-  }
-
-  async function handleWebGoogleSignIn() {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      return result.user;
-  }
-
-  async function handleGoogleSignIn() {
-    setIsGoogleLoading(true);
-    try {
-        const user = Capacitor.isNativePlatform() 
-            ? await handleNativeGoogleSignIn() 
-            : await handleWebGoogleSignIn();
+        const user = result.user;
       
-      const profileResult = await createOrUpdateGoogleUserProfile(user.uid, {
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL
-      });
+        const profileResult = await createOrUpdateGoogleUserProfile(user.uid, {
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL
+        });
 
-      if (!profileResult.success) {
-        throw new Error(profileResult.error || "Failed to create or update profile.");
-      }
+        if (!profileResult.success) {
+            throw new Error(profileResult.error || "Failed to create or update profile.");
+        }
       
-      toast({ title: 'Connexion réussie !', description: 'Bienvenue sur WanderLink.' });
+        toast({ title: 'Connexion réussie !', description: 'Bienvenue sur WanderLink.' });
       
-      if (profileResult.isNewUser) {
-        router.push(`/create-profile`);
+        if (profileResult.isNewUser) {
+            router.push(`/create-profile`);
+        } else {
+            router.push('/');
+        }
+      
+    } catch (error: any) {
+      // Ignorer l'erreur si l'utilisateur a fermé la fenêtre de connexion
+      if (error?.message?.includes('popup-closed-by-user') || error?.code === 10) {
+        console.log("Google Sign-In cancelled by user.");
       } else {
-        router.push('/');
+        console.error("Erreur de connexion Google:", error);
+        const errorMessage = error instanceof Error ? error.message : "Une erreur inattendue s'est produite.";
+        toast({ variant: 'destructive', title: 'Erreur de connexion Google', description: errorMessage });
       }
-      
-    } catch (error) {
-      console.error("Erreur de connexion Google:", error);
-      const errorMessage = error instanceof Error ? error.message : "Une erreur inattendue s'est produite.";
-      toast({ variant: 'destructive', title: 'Erreur de connexion Google', description: errorMessage });
     } finally {
       setIsGoogleLoading(false);
     }
@@ -265,3 +251,5 @@ export default function AuthForm({ isLogin, setIsLogin, isEmailFormVisible, setI
     </div>
   );
 }
+
+    
