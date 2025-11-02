@@ -61,23 +61,29 @@ const Step2 = () => {
   const requestAndLocate = async () => {
     setIsLocating(true);
     
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' || !navigator.geolocation) {
+        toast({ variant: 'destructive', title: "Géolocalisation non supportée", description: "Votre navigateur ne supporte pas la géolocalisation." });
         setIsLocating(false);
         return;
     }
 
     try {
-      // getCurrentPosition handles permission prompts on both web and native.
+      // getCurrentPosition handles permission prompts on both web and native through Capacitor.
       const coordinates = await Geolocation.getCurrentPosition();
       const { latitude, longitude } = coordinates.coords;
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`);
+      
+      if (!response.ok) {
+        throw new Error(`Erreur réseau: ${response.statusText}`);
+      }
+      
       const data = await response.json();
 
       if (data?.address?.country) {
         setValue('location', data.address.country, { shouldValidate: true });
         toast({ title: "Position trouvée !", description: `Pays défini sur : ${data.address.country}` });
       } else {
-        throw new Error("Pays non trouvé dans la réponse de l'API.");
+        throw new Error("Pays non trouvé dans la réponse de l'API de géolocalisation.");
       }
 
     } catch (error: any) {
