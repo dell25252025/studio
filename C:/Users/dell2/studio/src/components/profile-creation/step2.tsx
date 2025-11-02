@@ -70,11 +70,7 @@ const Step2 = () => {
       // getCurrentPosition handles permission prompts on both web and native.
       const coordinates = await Geolocation.getCurrentPosition();
       const { latitude, longitude } = coordinates.coords;
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`, {
-          headers: {
-              'User-Agent': 'WanderLinkApp/1.0 (contact@wanderlink.app)'
-          }
-      });
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`);
       const data = await response.json();
 
       if (data?.address?.country) {
@@ -88,7 +84,7 @@ const Step2 = () => {
       console.error("Error during geolocation:", error);
        toast({
         variant: 'destructive',
-        title: "Erreur de géolocalisation",
+        title: "Erreur de localisation",
         description: error.message || 'Impossible de récupérer la position. Veuillez la sélectionner manuellement.',
       });
     } finally {
