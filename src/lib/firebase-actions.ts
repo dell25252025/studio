@@ -405,4 +405,28 @@ export async function getFriends(userId: string) {
   }
 }
 
+export async function getCountryFromCoordinates(latitude: number, longitude: number): Promise<{ success: boolean; country?: string; error?: string }> {
+  try {
+    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`, {
+      headers: {
+        'User-Agent': 'WanderLinkApp/1.0 (contact@wanderlink.app)'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data?.address?.country) {
+      return { success: true, country: data.address.country };
+    } else {
+      return { success: false, error: "Pays non trouvé dans la réponse de l'API." };
+    }
+  } catch (error: any) {
+    console.error("Error reverse geocoding:", error);
+    return { success: false, error: error.message || "Impossible de déterminer le pays." };
+  }
+}
     
