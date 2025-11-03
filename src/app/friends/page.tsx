@@ -13,7 +13,7 @@ import { getFriends } from '@/lib/firebase-actions';
 import { auth } from '@/lib/firebase';
 import type { User } from 'firebase/auth';
 import type { DocumentData } from 'firebase/firestore';
-import { SettingsHeader } from '@/components/settings/settings-header';
+import { SettingsHeader } from '@/components/settings-header';
 
 export default function FriendsPage() {
   const router = useRouter();
