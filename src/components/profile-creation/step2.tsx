@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Crosshair, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { getCountryFromCoordinates } from '@/lib/firebase-actions';
 
 const allLanguages = [
     { id: 'fr', label: 'Français' },
@@ -69,13 +70,12 @@ const Step2 = () => {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=fr`);
-          const data = await response.json();
-          if (data?.address?.country) {
-            setValue('location', data.address.country, { shouldValidate: true });
-            toast({ title: "Position trouvée !", description: `Pays défini sur : ${data.address.country}` });
+          const result = await getCountryFromCoordinates(latitude, longitude);
+          if (result.success && result.country) {
+            setValue('location', result.country, { shouldValidate: true });
+            toast({ title: "Position trouvée !", description: `Pays défini sur : ${result.country}` });
           } else {
-            throw new Error("Pays non trouvé dans la réponse de l'API.");
+            throw new Error(result.error || "Impossible de déterminer le pays.");
           }
         } catch (error) {
           console.error("Error reverse geocoding:", error);
@@ -102,7 +102,7 @@ const Step2 = () => {
     if (!currentLocation) {
       handleLocate();
     }
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, []); 
 
   return (
     <div className="space-y-6">
