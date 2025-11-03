@@ -1,7 +1,9 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { Geolocation } from '@capacitor/geolocation';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -16,9 +18,33 @@ export default function AuthPage() {
   const isMobile = useIsMobile();
   const router = useRouter();
 
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      // Ne s'exécute que sur les plateformes natives (iOS, Android)
+      if (Capacitor.isNativePlatform()) {
+        try {
+          const permissions = await Geolocation.requestPermissions({ permissions: ['location'] });
+          console.log('Statut de la permission (native):', permissions.location);
+
+          if (permissions.location === 'granted') {
+            console.log('Permission de localisation accordée.');
+          } else {
+            console.log('Permission de localisation refusée.');
+          }
+        } catch (e) {
+          console.error('Erreur lors de la demande de permission de localisation', e);
+        }
+      }
+    };
+
+    requestLocationPermission();
+  }, []);
+
   const resetAuthState = () => {
     setIsEmailFormVisible(false);
   };
+
+  // ... (le reste du code reste inchangé)
 
   if (isMobile && isEmailFormVisible) {
     return (
