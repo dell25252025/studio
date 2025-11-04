@@ -187,7 +187,7 @@ const EmojiPickerContent = ({ onEmojiClick, onOutsideClick }: { onEmojiClick: (e
             searchDisabled
             skinTonesDisabled
             emojiStyle={EmojiStyle.NATIVE}
-            emojiSize={22}
+            size={22}
             width="100%"
             height="100%"
             categories={[

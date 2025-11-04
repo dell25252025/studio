@@ -124,7 +124,7 @@ function CallUI() {
         await updateDoc(callDocRef, { offer });
 
         // Écouter la réponse et le statut
-        onSnapshot(callDocRef, (snapshot) => {
+        onSnapshot(callDocRef, (snapshot: any) => {
             const data = snapshot.data();
             if(data?.status === 'declined'){
                 setCallStatus('declined');
@@ -139,8 +139,8 @@ function CallUI() {
         });
 
         // Écouter les candidats ICE de la réponse
-        onSnapshot(answerCandidates, (snapshot) => {
-            snapshot.docChanges().forEach((change) => {
+        onSnapshot(answerCandidates, (snapshot: any) => {
+            snapshot.docChanges().forEach((change: any) => {
                 if (change.type === 'added') {
                     const candidate = new RTCIceCandidate(change.doc.data());
                     pc.current?.addIceCandidate(candidate);

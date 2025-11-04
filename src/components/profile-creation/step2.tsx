@@ -1,267 +1,194 @@
 
 'use client';
 
-import { useFormContext } from 'react-hook-form';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Separator } from '@/components/ui/separator';
-import { CountrySelect } from '@/components/country-select';
+import { useState, useTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { updateUserProfile } from '@/lib/firebase-actions';
+import { useToast } from '@/components/ui/toast';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Crosshair, Loader2 } from 'lucide-react';
-import { useState } from 'react';
-import { useToast } from '@/components/ui/use-toast';
-import { getCountryFromCoordinates } from '@/lib/firebase-actions';
-import { Geolocation } from '@capacitor/geolocation';
-import { Capacitor } from '@capacitor/core';
-
-const allLanguages = [
-    { id: 'fr', label: 'Français' },
-    { id: 'en', label: 'Anglais' },
-    { id: 'es', label: 'Espagnol' },
-    { id: 'ar', label: 'Arabe' },
-    { id: 'zh', label: 'Mandarin' },
-    { id: 'hi', label: 'Hindi' },
-    { id: 'bn', label: 'Bengali' },
-    { id: 'pt', label: 'Portugais' },
-    { id: 'ru', label: 'Russe' },
-    { id: 'ja', label: 'Japonais' },
-    { id: 'de', label: 'Allemand' },
-    { id: 'jv', label: 'Javanais' },
-    { id: 'ko', label: 'Coréen' },
-    { id: 'te', label: 'Télougou' },
-    { id: 'mr', label: 'Marathi' },
-    { id: 'tr', label: 'Turc' },
-    { id: 'ta', label: 'Tamoul' },
-    { id: 'vi', label: 'Vietnamien' },
-    { id: 'ur', label: 'Ourdou' },
-    { id: 'it', label: 'Italien' },
-    { id: 'th', label: 'Thaï' },
-    { id: 'gu', label: 'Gujarati' },
-    { id: 'fa', label: 'Persan' },
-    { id: 'pl', label: 'Polonais' },
-    { id: 'uk', label: 'Ukrainien' },
-    { id: 'ro', label: 'Roumain' },
-    { id: 'nl', label: 'Néerlandais' },
-    { id: 'el', label: 'Grec' },
-    { id: 'sv', label: 'Suédois' },
-    { id: 'he', label: 'Hébreu' },
-];
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Loader2 } from 'lucide-react';
 
 
-const Step2 = () => {
-  const { control, setValue } = useFormContext();
-  const [isLocating, setIsLocating] = useState(false);
+const profileStep2Schema = z.object({
+  travelStyle: z.string().min(1, "Le style de voyage est requis."),
+  destination: z.string().min(1, "La destination est requise."),
+  languages: z.string().min(1, "Au moins une langue est requise."),
+  bio: z.string().min(20, "La biographie doit contenir au moins 20 caractères.").max(500, "La biographie ne peut pas dépasser 500 caractères."),
+  intention: z.enum(['explore', 'friendship', 'romance', 'mix'], { required_error: "Veuillez sélectionner une intention." }),
+});
+
+
+export default function ProfileStep2() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
 
-  const handleLocate = async () => {
-    setIsLocating(true);
-    
-    const processCoordinates = async (latitude: number, longitude: number) => {
-        try {
-            const result = await getCountryFromCoordinates(latitude, longitude);
-            if (result.success && result.country) {
-                setValue('location', result.country, { shouldValidate: true });
-                toast({ title: "Position trouvée !", description: `Pays défini sur : ${result.country}` });
-            } else {
-                throw new Error(result.error || "Impossible de déterminer le pays.");
-            }
-        } catch (error) {
-            console.error("Error reverse geocoding:", error);
-            toast({ variant: 'destructive', title: "Erreur de localisation", description: "Impossible de déterminer votre pays. Veuillez le sélectionner manuellement." });
-        } finally {
-            setIsLocating(false);
-        }
-    };
-    
-    if (Capacitor.isNativePlatform()) {
-      try {
-        // Request permissions for mobile
-        const permissionStatus = await Geolocation.requestPermissions();
-        if (permissionStatus.location !== 'granted' && permissionStatus.coarseLocation !== 'granted') {
-          toast({
-            variant: 'destructive',
-            title: 'Permission refusée',
-            description: "Veuillez autoriser l'accès à la localisation dans les paramètres de votre appareil.",
-          });
-          setIsLocating(false);
-          return;
-        }
-        
-        // Get coordinates
-        const position = await Geolocation.getCurrentPosition();
-        await processCoordinates(position.coords.latitude, position.coords.longitude);
-      } catch (error) {
-        console.error("Capacitor Geolocation error:", error);
+  const form = useForm<z.infer<typeof profileStep2Schema>>({
+    resolver: zodResolver(profileStep2Schema),
+    defaultValues: {
+      travelStyle: '',
+      destination: '',
+      languages: '',
+      bio: '',
+      intention: 'mix',
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof profileStep2Schema>) => {
+    startTransition(async () => {
+      const uid = searchParams.get('uid');
+      if (!uid) {
         toast({
           variant: 'destructive',
-          title: 'Erreur de géolocalisation',
-          description: 'Impossible de récupérer votre position. Assurez-vous que les services de localisation sont activés.',
+          title: 'Erreur',
+          description: 'Une erreur est survenue, veuillez réessayer.',
         });
-        setIsLocating(false);
-      }
-    } else {
-      // Web Geolocation API
-      if (!navigator.geolocation) {
-        toast({ variant: 'destructive', title: "Géolocalisation non supportée", description: "Votre navigateur ne supporte pas la géolocalisation." });
-        setIsLocating(false);
         return;
       }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          processCoordinates(position.coords.latitude, position.coords.longitude);
-        },
-        (error) => {
-          let description = "Une erreur est survenue lors de la récupération de votre position.";
-          if (error.code === error.PERMISSION_DENIED) {
-            description = "Vous avez refusé l'accès à votre position. Veuillez l'autoriser dans les paramètres de votre navigateur pour utiliser cette fonctionnalité.";
-          } else if (error.code === error.POSITION_UNAVAILABLE) {
-            description = "Les informations de localisation ne sont pas disponibles actuellement.";
-          }
-          toast({ variant: 'destructive', title: "Erreur de géolocalisation", description });
-          setIsLocating(false);
-        }
-      );
-    }
+      try {
+        const profileData = {
+          ...values,
+          languages: values.languages.split(',').map(lang => lang.trim()),
+          travelIntention: values.intention,
+        };
+        await updateUserProfile(uid, profileData);
+        toast({
+          title: 'Profil mis à jour',
+          description: 'Votre profil a été complété avec succès.',
+        });
+        router.push('/'); // Redirect to home/dashboard
+      } catch (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Échec de la mise à jour',
+          description: 'Impossible de sauvegarder vos informations. Veuillez réessayer.',
+        });
+      }
+    });
   };
 
   return (
-    <div className="space-y-6">
-      {/* Section Position */}
-      <div className="space-y-2">
-          <h2 className="text-xl font-bold font-headline">Votre Position</h2>
-          <p className="text-muted-foreground">Où êtes-vous basé ?</p>
-          <div className="rounded-lg border bg-card p-4 space-y-4">
-              <FormField
-                control={control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between">
-                    <FormLabel>Pays de résidence</FormLabel>
+    <Card className="w-full max-w-lg">
+      <CardHeader>
+        <CardTitle>Complétez votre profil</CardTitle>
+        <CardDescription>Dites-en plus sur vos aventures.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            
+            <FormField
+              control={form.control}
+              name="travelStyle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Style de voyage</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <CountrySelect 
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        className="w-auto md:w-[250px]"
-                      />
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionnez votre style" />
+                      </SelectTrigger>
                     </FormControl>
-                    <FormMessage className="col-span-full" />
-                  </FormItem>
-                )}
-              />
-              <Separator />
-               <Button type="button" variant="outline" onClick={handleLocate} disabled={isLocating} className="w-full">
-                  {isLocating ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Crosshair className="mr-2 h-4 w-4" />
-                  )}
-                  Utiliser ma position actuelle
-                </Button>
-          </div>
-      </div>
-
-      <Separator />
-
-      {/* Section Informations complémentaires */}
-       <div className="space-y-2">
-        <h2 className="text-xl font-bold font-headline">Informations complémentaires</h2>
-         <p className="text-muted-foreground">Aidez les autres à en savoir plus sur vous.</p>
-        <div className="rounded-lg border bg-card p-4 space-y-4">
-          <FormField
-              control={control}
-              name="languages"
-              render={() => (
-                  <FormItem>
-                      <div className="mb-4">
-                      <FormLabel className="text-base">Langues que je parle</FormLabel>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-60 overflow-y-auto p-2 border rounded-md">
-                          {allLanguages.map((item) => (
-                          <FormField
-                              key={item.id}
-                              control={control}
-                              name="languages"
-                              render={({ field }) => {
-                              return (
-                                  <FormItem
-                                  key={item.id}
-                                  className="flex flex-row items-start space-x-3 space-y-0"
-                                  >
-                                  <FormControl>
-                                      <Checkbox
-                                      checked={field.value?.includes(item.label)}
-                                      onCheckedChange={(checked) => {
-                                          return checked
-                                          ? field.onChange([...(field.value || []), item.label])
-                                          : field.onChange(
-                                              field.value?.filter(
-                                                  (value: string) => value !== item.label
-                                              )
-                                              )
-                                      }}
-                                      />
-                                  </FormControl>
-                                  <FormLabel className="font-normal">
-                                      {item.label}
-                                  </FormLabel>
-                                  </FormItem>
-                              )
-                              }}
-                          />
-                          ))}
-                      </div>
-                      <FormMessage />
-                  </FormItem>
+                    <SelectContent>
+                      <SelectItem value="backpack">Backpacker</SelectItem>
+                      <SelectItem value="luxury">Luxe</SelectItem>
+                      <SelectItem value="adventure">Aventure</SelectItem>
+                      <SelectItem value="culture">Culturel</SelectItem>
+                      <SelectItem value="relax">Détente</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
               )}
-          />
-          <FormField
-            control={control}
-            name="height"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Taille (en cm) <span className="text-muted-foreground">(optionnel)</span></FormLabel>
-                <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="Ex: 175" 
-                    {...field} 
-                    value={field.value ?? ''}
-                    onChange={e => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value))} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="weight"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Poids (en kg) <span className="text-muted-foreground">(optionnel)</span></FormLabel>
-                <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="Ex: 70" 
-                    {...field} 
-                    value={field.value ?? ''}
-                    onChange={e => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value))} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
+            />
 
-export default Step2;
+            <FormField
+              control={form.control}
+              name="destination"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Prochaine destination de rêve</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Ex: Tokyo, Japon" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="languages"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Langues parlées</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Français, Anglais, Espagnol..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Votre biographie</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Décrivez-vous en quelques mots..."
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="intention"
+              render={({ field }) => (
+                <FormItem>
+                   <FormLabel>Que recherchez-vous ?</FormLabel>
+                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionnez une intention" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="explore">Explorer ensemble</SelectItem>
+                      <SelectItem value="friendship">Amitié et voyage</SelectItem>
+                      <SelectItem value="romance">Partenaire de voyage romantique</SelectItem>
+                       <SelectItem value="mix">Ouvert à tout</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" disabled={isPending} className="w-full">
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Terminer
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+}

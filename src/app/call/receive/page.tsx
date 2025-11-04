@@ -119,8 +119,8 @@ function ReceiveCallUI() {
         await updateDoc(callDocRef, { answer, status: 'connected' });
         setCallStatus('connected');
 
-        onSnapshot(offerCandidates, (snapshot) => {
-            snapshot.docChanges().forEach((change) => {
+        onSnapshot(offerCandidates, (snapshot: any) => {
+            snapshot.docChanges().forEach((change: any) => {
                 if (change.type === 'added') {
                     pc.current?.addIceCandidate(new RTCIceCandidate(change.doc.data()));
                 }
@@ -128,7 +128,7 @@ function ReceiveCallUI() {
         });
 
         // Listen for call termination
-        onSnapshot(callDocRef, (snapshot) => {
+        onSnapshot(callDocRef, (snapshot: any) => {
              if (!snapshot.exists()) {
                 setCallStatus('ended');
                 toast({ title: 'Appel terminé', description: 'Votre correspondant a raccroché.' });
