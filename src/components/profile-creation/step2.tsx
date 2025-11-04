@@ -16,7 +16,7 @@ import { CountrySelect } from '@/components/country-select';
 import { Button } from '@/components/ui/button';
 import { Crosshair, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { getCountryFromCoordinates } from '@/lib/firebase-actions';
 import { Geolocation } from '@capacitor/geolocation';
 import { Capacitor } from '@capacitor/core';

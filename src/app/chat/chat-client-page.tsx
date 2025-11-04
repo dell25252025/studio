@@ -11,7 +11,7 @@ import type { DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/toast';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -94,7 +94,7 @@ const CameraView = ({ onCapture, onClose }: { onCapture: (image: string) => void
   return (
     <DialogContent className="p-0 m-0 w-full h-full max-w-full max-h-screen bg-black border-0 flex flex-col items-center justify-center">
         <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
-            <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+            <video ref={videoRef} className="w-full h-full object-contain" autoPlay muted playsInline />
             <canvas ref={canvasRef} className="hidden" />
 
             {hasCameraPermission === false && (

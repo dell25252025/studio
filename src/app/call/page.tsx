@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { getUserProfile } from '@/lib/firebase-actions';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
 
 // Configuration du serveur STUN de Google (public et gratuit)
@@ -214,7 +214,7 @@ function CallUI() {
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-between bg-slate-900 text-white p-8">
        {/* Vidéo de l'interlocuteur en arrière-plan */}
-      <video ref={remoteVideoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-cover" />
+      <video ref={remoteVideoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-contain" />
       <div className="absolute inset-0 bg-black/30" />
 
        {/* Vidéo locale en miniature */}

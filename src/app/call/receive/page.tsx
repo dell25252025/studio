@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { getUserProfile } from '@/lib/firebase-actions';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, onSnapshot, updateDoc, deleteDoc, collection, addDoc } from 'firebase/firestore';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
 
 const servers = {
@@ -197,7 +197,7 @@ function ReceiveCallUI() {
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-between bg-slate-900 text-white p-8">
-       <video ref={remoteVideoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-cover" />
+       <video ref={remoteVideoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-contain" />
       <div className="absolute inset-0 bg-black/30" />
 
       <video ref={localVideoRef} autoPlay muted playsInline className={cn(
@@ -235,7 +235,7 @@ function ReceiveCallUI() {
             onClick={toggleVideo}
             disabled={!isVideoCall}
           >
-            {isVideoOn ? <Video className="h-7 w-7" /> : <VideoOff className="h-7 w-7" />}
+            {isVideoOn ? <Video className="h-7 w-7" /> : <VideoOff className={cn("h-7 w-7",!isVideoCall && "text-gray-400")} />}
           </Button>
           <Button
             variant="ghost"

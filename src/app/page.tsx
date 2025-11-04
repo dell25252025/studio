@@ -9,7 +9,7 @@ import { Loader2 } from 'lucide-react';
 import { getAllUsers, getUserProfile } from '@/lib/firebase-actions';
 import BottomNav from '@/components/bottom-nav';
 import WanderlinkHeader from '@/components/wanderlink-header';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/toast';
 import type { DocumentData } from 'firebase/firestore';
 import type { UserProfile } from '@/lib/schema';
 import ProfileCard from '@/components/profile-card';
