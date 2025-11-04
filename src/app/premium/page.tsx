@@ -7,7 +7,7 @@ import { SettingsHeader } from '@/components/settings-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Crown, Loader2, Sparkles } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
 import { Capacitor } from '@capacitor/core';
 

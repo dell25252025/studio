@@ -7,7 +7,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Plane, Trash2, UploadCloud, X, Save, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/toast';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { getUserProfile, updateUserProfile, addProfilePicture, removeProfilePicture } from '@/lib/firebase-actions';
@@ -169,8 +169,48 @@ export default function EditProfileClientPage() {
                                     <FormField control={control} name="firstName" render={({ field }) => (<FormItem><FormLabel>Prénom</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
                                     <FormField control={control} name="age" render={({ field }) => (<FormItem><FormLabel>Âge</FormLabel><FormControl><Input type="number" {...field} onChange={(e) => field.onChange(parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
                                     <FormField control={control} name="gender" render={({ field }) => (<FormItem><FormLabel>Genre</FormLabel><RadioGroup onValueChange={field.onChange} value={field.value} className="flex space-x-4"><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Homme" /></FormControl><FormLabel>Homme</FormLabel></FormItem><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Femme" /></FormControl><FormLabel>Femme</FormLabel></FormItem><FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Autre" /></FormControl><FormLabel>Autre</FormLabel></FormItem></RadioGroup><FormMessage /></FormItem>)} />
-                                    <FormField control={control} name="height" render={({ field }) => (<FormItem><FormLabel>Taille (cm)</FormLabel><FormControl><Input type="number" {...field} placeholder="Ex: 175" onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
-                                    <FormField control={control} name="weight" render={({ field }) => (<FormItem><FormLabel>Poids (kg)</FormLabel><FormControl><Input type="number" {...field} placeholder="Ex: 70" onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseInt(e.target.value, 10))} /></FormControl><FormMessage /></FormItem>)} />
+                                    <FormField
+                                      control={control}
+                                      name="height"
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormLabel>Taille (cm)</FormLabel>
+                                          <FormControl>
+                                            <Input
+                                              type="number"
+                                              value={field.value ?? ""}
+                                              placeholder="Ex: 175"
+                                              onChange={(e) => {
+                                                const val = e.target.value;
+                                                field.onChange(val === "" ? undefined : Number(val));
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <FormField
+                                      control={control}
+                                      name="weight"
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormLabel>Poids (kg)</FormLabel>
+                                          <FormControl>
+                                            <Input
+                                              type="number"
+                                              value={field.value ?? ""}
+                                              placeholder="Ex: 70"
+                                              onChange={(e) => {
+                                                const val = e.target.value;
+                                                field.onChange(val === "" ? undefined : Number(val));
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
                                     <FormField control={control} name="bio" render={({ field }) => (<FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>)} />
                                 </div>
                                 
