@@ -1,7 +1,7 @@
 
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/toast';
 import { ThemeProvider } from '@/components/theme-provider';
 import BackButtonHandler from '@/components/back-button-handler';
 import { Playfair_Display, Poppins, PT_Sans } from 'next/font/google';
@@ -56,8 +56,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
           <Toaster />
+          {children}
           <BackButtonHandler />
           <IncomingCallManager />
         </ThemeProvider>

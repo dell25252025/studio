@@ -10,7 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
-import { SettingsHeader } from '@/components/settings/settings-header';
+import { SettingsHeader } from '@/components/settings-header';
 
 export default function PrivacySettingsPage() {
   const router = useRouter();

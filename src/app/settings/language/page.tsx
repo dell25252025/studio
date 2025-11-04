@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Check, Languages } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { SettingsHeader } from '@/components/settings/settings-header';
+import { SettingsHeader } from '@/components/settings-header';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';

@@ -116,6 +116,131 @@ type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>
 
 type ToastActionElement = React.ReactElement<typeof ToastAction>
 
+// --- useToast hook logic moved here ---
+
+type ToasterToast = ToastProps & {
+  id: string
+  title?: React.ReactNode
+  description?: React.ReactNode
+  action?: ToastActionElement
+}
+
+const TOAST_LIMIT = 5
+const TOAST_REMOVE_DELAY = 1000000
+
+type ToasterContext = {
+  toasts: ToasterToast[]
+  toast: (toast: Omit<ToasterToast, "id">) => {
+    id: string
+    dismiss: () => void
+    update: (props: ToasterToast) => void
+  }
+  dismiss: (toastId?: string) => void
+}
+
+const ToastContext = React.createContext<ToasterContext | undefined>(undefined)
+
+function useToast() {
+  const context = React.useContext(ToastContext)
+
+  if (context === undefined) {
+    throw new Error("useToast must be used within a Toaster")
+  }
+
+  return context
+}
+
+function reducer(state: ToasterToast[], action: any): ToasterToast[] {
+  switch (action.type) {
+    case "ADD_TOAST":
+      return [action.toast, ...state].slice(0, TOAST_LIMIT)
+    case "UPDATE_TOAST":
+      return state.map((t) =>
+        t.id === action.toast.id ? { ...t, ...action.toast } : t
+      )
+    case "DISMISS_TOAST":
+      const { toastId } = action
+      if (toastId) {
+        return state.filter((t) => t.id !== toastId)
+      }
+      return state.slice(1)
+    case "REMOVE_TOAST":
+      if (action.toastId) {
+        return state.filter((t) => t.id !== action.toastId)
+      }
+      return []
+    default:
+      return state
+  }
+}
+
+let count = 0
+
+function genId() {
+  count = (count + 1) % 100
+  return count.toString()
+}
+
+const Toaster = React.forwardRef<
+  HTMLOListElement,
+  React.ComponentPropsWithoutRef<"ol">
+>(({ ...props }, ref) => {
+  const [state, dispatch] = React.useReducer(reducer, [])
+
+  React.useEffect(() => {
+    const timers = state.map((toast) => {
+      return setTimeout(() => {
+        dispatch({ type: "DISMISS_TOAST", toastId: toast.id })
+      }, TOAST_REMOVE_DELAY)
+    })
+
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer))
+    }
+  }, [state])
+
+  const toast = React.useCallback(
+    ({ ...props }: Omit<ToasterToast, "id">) => {
+      const id = genId()
+
+      const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
+      const update = (props: ToasterToast) =>
+        dispatch({ type: "UPDATE_TOAST", toast: { ...props, id } })
+
+      dispatch({
+        type: "ADD_TOAST",
+        toast: {
+          ...props,
+          id,
+          open: true,
+          onOpenChange: (open) => {
+            if (!open) dismiss()
+          },
+        },
+      })
+
+      return {
+        id: id,
+        dismiss,
+        update,
+      }
+    },
+    []
+  )
+
+  const dismiss = React.useCallback(
+    (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+    []
+  )
+
+  return (
+    <ToastContext.Provider value={{ toasts: state, toast, dismiss }}>
+      {props.children}
+    </ToastContext.Provider>
+  )
+})
+Toaster.displayName = "Toaster"
+
 export {
   type ToastProps,
   type ToastActionElement,
@@ -126,4 +251,6 @@ export {
   ToastDescription,
   ToastClose,
   ToastAction,
+  Toaster,
+  useToast
 }

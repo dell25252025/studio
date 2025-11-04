@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Camera as CameraIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { SettingsHeader } from '@/components/settings/settings-header';
+import { SettingsHeader } from '@/components/settings-header';
 import Image from 'next/image';
 import placeholderImages from '@/lib/placeholder-images.json';
 import { useToast } from '@/hooks/use-toast';
