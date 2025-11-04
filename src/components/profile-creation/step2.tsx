@@ -15,9 +15,11 @@ import { Separator } from '@/components/ui/separator';
 import { CountrySelect } from '@/components/country-select';
 import { Button } from '@/components/ui/button';
 import { Crosshair, Loader2 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { getCountryFromCoordinates } from '@/lib/firebase-actions';
+import { Geolocation } from '@capacitor/geolocation';
+import { Capacitor } from '@capacitor/core';
 
 const allLanguages = [
     { id: 'fr', label: 'Français' },
@@ -54,55 +56,81 @@ const allLanguages = [
 
 
 const Step2 = () => {
-  const { control, setValue, getValues } = useFormContext();
+  const { control, setValue } = useFormContext();
   const [isLocating, setIsLocating] = useState(false);
   const { toast } = useToast();
 
-  const handleLocate = () => {
+  const handleLocate = async () => {
     setIsLocating(true);
-    if (!navigator.geolocation) {
-      toast({ variant: 'destructive', title: "Géolocalisation non supportée", description: "Votre navigateur ne supporte pas la géolocalisation." });
-      setIsLocating(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
+    
+    const processCoordinates = async (latitude: number, longitude: number) => {
         try {
-          const { latitude, longitude } = position.coords;
-          const result = await getCountryFromCoordinates(latitude, longitude);
-          if (result.success && result.country) {
-            setValue('location', result.country, { shouldValidate: true });
-            toast({ title: "Position trouvée !", description: `Pays défini sur : ${result.country}` });
-          } else {
-            throw new Error(result.error || "Impossible de déterminer le pays.");
-          }
+            const result = await getCountryFromCoordinates(latitude, longitude);
+            if (result.success && result.country) {
+                setValue('location', result.country, { shouldValidate: true });
+                toast({ title: "Position trouvée !", description: `Pays défini sur : ${result.country}` });
+            } else {
+                throw new Error(result.error || "Impossible de déterminer le pays.");
+            }
         } catch (error) {
-          console.error("Error reverse geocoding:", error);
-          toast({ variant: 'destructive', title: "Erreur de localisation", description: "Impossible de déterminer votre pays. Veuillez le sélectionner manuellement." });
+            console.error("Error reverse geocoding:", error);
+            toast({ variant: 'destructive', title: "Erreur de localisation", description: "Impossible de déterminer votre pays. Veuillez le sélectionner manuellement." });
         } finally {
+            setIsLocating(false);
+        }
+    };
+    
+    if (Capacitor.isNativePlatform()) {
+      try {
+        // Request permissions for mobile
+        const permissionStatus = await Geolocation.requestPermissions();
+        if (permissionStatus.location !== 'granted' && permissionStatus.coarseLocation !== 'granted') {
+          toast({
+            variant: 'destructive',
+            title: 'Permission refusée',
+            description: "Veuillez autoriser l'accès à la localisation dans les paramètres de votre appareil.",
+          });
           setIsLocating(false);
+          return;
         }
-      },
-      (error) => {
-        let description = "Une erreur est survenue.";
-        if (error.code === error.PERMISSION_DENIED) {
-          description = "Veuillez autoriser l'accès à votre position.";
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          description = "Les informations de localisation ne sont pas disponibles.";
-        }
-        toast({ variant: 'destructive', title: "Erreur de géolocalisation", description });
+        
+        // Get coordinates
+        const position = await Geolocation.getCurrentPosition();
+        await processCoordinates(position.coords.latitude, position.coords.longitude);
+      } catch (error) {
+        console.error("Capacitor Geolocation error:", error);
+        toast({
+          variant: 'destructive',
+          title: 'Erreur de géolocalisation',
+          description: 'Impossible de récupérer votre position. Assurez-vous que les services de localisation sont activés.',
+        });
         setIsLocating(false);
       }
-    );
-  };
+    } else {
+      // Web Geolocation API
+      if (!navigator.geolocation) {
+        toast({ variant: 'destructive', title: "Géolocalisation non supportée", description: "Votre navigateur ne supporte pas la géolocalisation." });
+        setIsLocating(false);
+        return;
+      }
 
-  useEffect(() => {
-    const currentLocation = getValues('location');
-    if (!currentLocation) {
-      handleLocate();
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          processCoordinates(position.coords.latitude, position.coords.longitude);
+        },
+        (error) => {
+          let description = "Une erreur est survenue lors de la récupération de votre position.";
+          if (error.code === error.PERMISSION_DENIED) {
+            description = "Vous avez refusé l'accès à votre position. Veuillez l'autoriser dans les paramètres de votre navigateur pour utiliser cette fonctionnalité.";
+          } else if (error.code === error.POSITION_UNAVAILABLE) {
+            description = "Les informations de localisation ne sont pas disponibles actuellement.";
+          }
+          toast({ variant: 'destructive', title: "Erreur de géolocalisation", description });
+          setIsLocating(false);
+        }
+      );
     }
-  }, []); 
+  };
 
   return (
     <div className="space-y-6">
