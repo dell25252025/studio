@@ -56,10 +56,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Toaster />
-          {children}
-          <BackButtonHandler />
-          <IncomingCallManager />
+          <Toaster>
+            {children}
+            <BackButtonHandler />
+            <IncomingCallManager />
+          </Toaster>
         </ThemeProvider>
       </body>
     </html>
