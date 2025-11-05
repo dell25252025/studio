@@ -1,6 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-<<<<<<< HEAD
     ext {
         // SDK and build tools versions
         buildToolsVersion = "34.0.0"
@@ -20,28 +19,16 @@ buildscript {
         googleServicesVersion = "4.4.1"
         kotlin_version = "1.9.22"
     }
-=======
-    
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-<<<<<<< HEAD
-<<<<<<< HEAD
         classpath "com.android.tools.build:gradle:8.3.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-=======
-        classpath 'com.android.tools.build:gradle:8.2.1'
-        classpath 'com.google.gms:google-services:4.4.0'
-
->>>>>>> 0d1192a5251aac79b7e20cc5776074323faf8589
+        classpath "com.google.gms:google-services:$googleServicesVersion"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-=======
-        classpath 'com.android.tools.build:gradle:8.13.0'
->>>>>>> 2f2d9c038ab1bf01c9811bad3974a68e756a6328
     }
 }
 

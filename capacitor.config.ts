@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'WanderLink',
   webDir: 'out',
   server: {
-    url: 'http://10.88.0.3:3000',
+    url: 'http://localhost:3000',
     cleartext: true
   }
 };
